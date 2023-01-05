@@ -22,7 +22,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 95%;
+  width: 100%;
   min-height: 60px;
   max-height: 90px;
   height: auto;
@@ -46,4 +46,10 @@
   padding: 0.25rem 1rem;
   margin: 0.5rem 0;
   cursor: pointer;
+}
+
+@media screen and (max-width: 500px) {
+  .header__order-container {
+    width: 95%;
+  }
 }

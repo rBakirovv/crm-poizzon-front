@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 
-export default function Timer() {
-  const [timeLeft, setTimeLeft] = useState(1 * 60);
+interface ITimerProps {
+  timeLeft: number;
+  setTimeLeft: (active: number) => void;
+}
 
+const Timer: FC<ITimerProps> = ({ timeLeft, setTimeLeft }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft((timeLeft) => (timeLeft >= 1 ? timeLeft - 1 : 0));
@@ -25,4 +28,6 @@ export default function Timer() {
       {seconds}
     </span>
   );
-}
+};
+
+export default Timer;

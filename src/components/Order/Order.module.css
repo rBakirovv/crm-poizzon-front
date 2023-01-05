@@ -7,6 +7,15 @@
   margin: auto;
 }
 
+.order-text {
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+}
+
+.order__bold-span {
+  font-weight: 700;
+}
+
 .order__shoes-image-container {
   position: relative;
   aspect-ratio: 1/.835;

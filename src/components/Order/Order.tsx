@@ -4,10 +4,12 @@ import Timer from "../UI/Timer/Timer";
 import styles from "./Order.module.css";
 
 export default function Order() {
-  const [isBrowser, setIsBrowser] = useState(false);
+  const [isBrowser, setIsBrowser] = useState<boolean>(false);
 
-  const [currentImage, setCurrentImage] = useState("");
-  const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
+  const [currentImage, setCurrentImage] = useState<string>("");
+  const [isImagePopupOpen, setIsImagePopupOpen] = useState<boolean>(false);
+
+  const [timeLeft, setTimeLeft] = useState<number>(1 * 60);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -18,16 +20,18 @@ export default function Order() {
   function openPoup(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
 
-    setCurrentImage(target.src)
+    setCurrentImage(target.src);
     setIsImagePopupOpen(true);
   }
 
   function closePopup() {
     setIsImagePopupOpen(false);
-  };
+  }
 
   function handleTimeLeft() {
-    alert("Время для оплаты заказа истекло. Стоимость товара могла измениться. \n\nЕсли вы готовы оплатить товар, сообщите менеджеру в @telegram")
+    alert(
+      "Время для оплаты заказа истекло. Стоимость товара могла измениться. \n\nЕсли вы готовы оплатить товар, сообщите менеджеру в @telegram"
+    );
   }
 
   return (
@@ -45,10 +49,10 @@ export default function Order() {
         </div>
         <ul className={styles["order__shoes-image-collection"]}>
           <li className={styles["order__shoes-image-collection-item"]}>
-            <img src="../images/size.png" onClick={openPoup} />
+            <img src="../images/snick-nike.webp" onClick={openPoup} />
           </li>
           <li className={styles["order__shoes-image-collection-item"]}>
-            <img src="../images/size-table.png" onClick={openPoup} />
+            <img src="../images/size-table-nike.png" onClick={openPoup} />
           </li>
           <li className={styles["order__shoes-image-collection-item"]}>
             <img src="../images/size.png" onClick={openPoup} />
@@ -84,7 +88,7 @@ export default function Order() {
         <div
           className={`${styles["order-divider"]} ${styles["order-divider_horizontal"]}`}
         ></div>
-        <h1 className={styles["order__title"]}>Итоговая сумма: 5650 ₽</h1>
+        <h2 className={styles["order__title"]}>Итоговая сумма: 5650 ₽</h2>
         {isBrowser && (
           <table cellPadding={"5px"} className={styles["order__price-table"]}>
             <tbody>
@@ -115,6 +119,11 @@ export default function Order() {
             </tbody>
           </table>
         )}
+        <div
+          className={`${styles["order-divider"]} ${styles["order-divider_horizontal"]}`}
+        ></div>
+        <p className={styles["order-text"]}><span className={styles["order__bold-span"]}>Способ доставки:</span> самовывоз из пункта выдачи СДЭК</p>
+        <p className={styles["order-text"]}><span className={styles["order__bold-span"]}>Адрес:</span> Санкт-Петербург пр-т Римского-Корсакова, 39</p>
         <div
           className={`${styles["order-divider"]} ${styles["order-divider_horizontal"]}`}
         ></div>
@@ -166,23 +175,28 @@ export default function Order() {
                 href="#"
                 target="_blank"
               >
-                Чек №1
+                Чек закупки №1
               </a>
               <a
                 className={styles["order-typography-screen-link"]}
                 href="#"
                 target="_blank"
               >
-                Чек №1
+                Чек закупки №2
               </a>
             </div>
           </li>
           <li className={styles["order-timeline-item"]}>
             <div className={styles["order-timeline-item-tail"]}></div>
-            <div className={`${styles["order-timeline-item-head"]}`}></div>
+            <div
+              className={`${styles["order-timeline-item-head"]} ${styles["order-timeline-item-head-green"]}`}
+            ></div>
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>
                 На складе в Китае
+                <p className={styles["order-typography-screen-text"]}>
+                  Трек номер Poizon: 455HUDN8DICK
+                </p>
               </div>
             </div>
           </li>
@@ -216,13 +230,20 @@ export default function Order() {
             </div>
           </li>
         </ul>
-        <button className={styles["order__pay-button"]} onClick={handleTimeLeft}>
-          <Timer />
+        <button
+          className={styles["order__pay-button"]}
+          onClick={handleTimeLeft}
+        >
+          <Timer timeLeft={timeLeft} setTimeLeft={setTimeLeft} />
           <span className={styles["order__pay-button-span"]}>Оплатить</span>
           <span>5832 ₽</span>
         </button>
       </div>
-      <ImagePopup currentImage={currentImage} isImagePopupOpen={isImagePopupOpen} closePopup={closePopup} />
+      <ImagePopup
+        currentImage={currentImage}
+        isImagePopupOpen={isImagePopupOpen}
+        closePopup={closePopup}
+      />
     </section>
   );
 }

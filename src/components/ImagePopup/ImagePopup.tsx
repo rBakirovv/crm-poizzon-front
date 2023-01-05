@@ -8,7 +8,7 @@ interface IImagePopupProps {
   closePopup: () => void;
 }
 
-const ImagePopup : FC<IImagePopupProps> = ({ currentImage, isImagePopupOpen, closePopup }) => {
+const ImagePopup: FC<IImagePopupProps> = ({ currentImage, isImagePopupOpen, closePopup }) => {
   const [isBrowser, setIsBrowser] = useState(false);
 
   useEffect(() => {
