@@ -31,9 +31,25 @@
   margin: 0.5rem auto 0;
 }
 
+.header__container {
+  display: flex;
+  align-items: center;
+  height: 65px;
+  background-color: #fff;
+  box-shadow: 10px 0px 15px 1px rgba(0, 0, 0, 0.25);
+  padding: 0 1rem;
+}
+
 .header__order-title {
   font-weight: 900;
-  color: rgba(0,0,0,.85);
+  color: rgba(0, 0, 0, .85);
+  margin: 0;
+}
+
+.header__container-title {
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 34px;
   margin: 0;
 }
 
@@ -46,6 +62,55 @@
   padding: 0.25rem 1rem;
   margin: 0.5rem 0;
   cursor: pointer;
+}
+
+.header__buttons-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 3rem;
+}
+
+.header__button {
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 27px;
+  width: 180px;
+  height: 50px;
+  border: 2px solid #000000;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+}
+
+.header__button:hover {
+  background: #ff7f00;
+  color: #fff;
+  border: 2px solid transparent;
+}
+
+.header__button:active {
+  background: #d96e3a;
+}
+
+.header__button_black {
+  background: #000;
+  color: #fff;
+}
+
+.header__button_white {
+  background: #fff;
+  color: #000;
+}
+
+.header__position-name {
+  font-weight: 700;
+  position: absolute;
+  right: 1rem;
+  margin: 0;
 }
 
 @media screen and (max-width: 500px) {

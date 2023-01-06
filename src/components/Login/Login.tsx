@@ -1,11 +1,38 @@
+import React, { FC, useState } from "react";
 import styles from "./Login.module.css";
 
-export default function Login() {
+interface ILoginProps {
+  handleAuthorization: (email: string, password: string) => void;
+  loginError: number;
+}
+
+const Login: FC<ILoginProps> = ({ handleAuthorization, loginError }) => {
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.SyntheticEvent) => {
+    const target = e.target as HTMLInputElement;
+
+    const { name, value } = target;
+
+    setData({
+      ...data,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    handleAuthorization(data.email, data.password);
+  };
+
   return (
     <section className={styles["login"]}>
       <div className={styles["login__container"]}>
         <h2 className={styles["login__title"]}>Рады видеть!</h2>
-        <form className={styles["login__form"]} noValidate>
+        <form className={styles["login__form"]} onSubmit={handleSubmit}>
           <label className={styles["login__label"]} htmlFor="email">
             E-mail
             <input
@@ -13,6 +40,7 @@ export default function Login() {
               type="email"
               id="email"
               name="email"
+              onChange={handleChange}
               required
             />
           </label>
@@ -24,13 +52,16 @@ export default function Login() {
               id="password"
               name="password"
               minLength={2}
+              onChange={handleChange}
               required
             />
           </label>
           <div className={styles["login__auth-container"]}>
-            <span className={styles["login__submit-span"]}>
-              Вы ввели неправильный логин или пароль.
-            </span>
+            {loginError === 401 && (
+              <span className={styles["login__submit-span"]}>
+                Вы ввели неправильный логин или пароль.
+              </span>
+            )}
             <button type="submit" className={styles["login__submit"]}>
               Войти
             </button>
@@ -39,4 +70,6 @@ export default function Login() {
       </div>
     </section>
   );
-}
+};
+
+export default Login;

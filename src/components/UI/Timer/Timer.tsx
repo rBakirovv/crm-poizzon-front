@@ -2,13 +2,13 @@ import { FC, useEffect } from "react";
 
 interface ITimerProps {
   timeLeft: number;
-  setTimeLeft: (active: number) => void;
+  setTimeLeft: any; // Косяк, нужно поправить
 }
 
 const Timer: FC<ITimerProps> = ({ timeLeft, setTimeLeft }) => {
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeLeft((timeLeft) => (timeLeft >= 1 ? timeLeft - 1 : 0));
+      setTimeLeft((timeLeft: number) => (timeLeft >= 1 ? timeLeft - 1 : 0));
     }, 1000);
 
     return () => {
