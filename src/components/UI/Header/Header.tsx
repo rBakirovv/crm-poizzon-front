@@ -1,14 +1,25 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useRouter } from "next/router";
 import styles from "./Header.module.css";
 import Link from "next/link";
+import Burger from "../Burger/Burger";
 
 interface IHeaderProps {
-  position?: string;
+  userPosition?: string;
 }
 
-const Header: FC<IHeaderProps> = ({ position }) => {
+const Header: FC<IHeaderProps> = ({ userPosition }) => {
   const router = useRouter();
+
+  const [isBurgerOpen, setIsBurgerOpen] = useState(false);
+
+  function handleBurgerClick() {
+    setIsBurgerOpen(!isBurgerOpen);
+  };
+
+  function closeBurger() {
+    setIsBurgerOpen(false);
+  }
 
   return (
     <header
@@ -39,18 +50,28 @@ const Header: FC<IHeaderProps> = ({ position }) => {
             POIZZONQQ CRM
           </Link>
           <div className={styles["header__buttons-container"]}>
-            <button
+            <Link
               className={`${styles["header__button"]} ${styles["header__button_black"]}`}
+              href="/"
             >
               Новый заказ
-            </button>
-            <button
+            </Link>
+            <Link
               className={`${styles["header__button"]} ${styles["header__button_white"]}`}
+              href="/"
             >
               Поиск
-            </button>
-            <p className={styles["header__position-name"]}>{position}</p>
+            </Link>
           </div>
+          <p className={styles["header__position-name"]}>{userPosition}</p>
+          <button className={styles["header__burger-button"]} onClick={handleBurgerClick}>
+            <svg viewBox="0 0 100 80" width="40" height="40">
+              <rect width="100" height="10"></rect>
+              <rect y="30" width="100" height="10"></rect>
+              <rect y="60" width="100" height="10"></rect>
+            </svg>
+          </button>
+          <Burger isBurgerOpen={isBurgerOpen} closeBurger={closeBurger} />
         </div>
       )}
     </header>

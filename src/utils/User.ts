@@ -1,16 +1,45 @@
-export const BASE_URL = 'http://localhost:3001';
+export const BASE_URL = "http://localhost:3001";
 
 const HEADERS = {
-  'Content-Type': 'application/json',
-}
+  "Content-Type": "application/json",
+};
+
+export const getUsers = () => {
+  return fetch(`${BASE_URL}/users`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
 
 export const getUserInfo = () => {
   return fetch(`${BASE_URL}/users/me`, {
-    credentials: 'include',
-    method: 'GET',
-    headers: HEADERS
-  })
-    .then(checkResponse);
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const createUser = (name: string, email: string, position: string, password: string) => {
+  return fetch(`${BASE_URL}/users/create`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      name: name,
+      email: email,
+      position: position,
+      password: password,
+    }),
+  }).then(checkResponse);
+};
+
+export const deleteUser = (email: string) => {
+  return fetch(`${BASE_URL}/users/${email}`, {
+    credentials: "include",
+    method: "DELETE",
+    headers: HEADERS,
+  }).then(checkResponse);
 };
 
 const checkResponse = (res: Response) => {

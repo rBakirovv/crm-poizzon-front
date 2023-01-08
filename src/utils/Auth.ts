@@ -25,7 +25,6 @@ export const logOut = () => {
 };
 
 const checkResponse = (res: Response) => {
-  console.log(res);
   if (res.ok) {
     return res.json();
   } else {

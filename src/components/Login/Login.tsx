@@ -62,7 +62,7 @@ const Login: FC<ILoginProps> = ({ handleAuthorization, loginError }) => {
                 Вы ввели неправильный логин или пароль.
               </span>
             )}
-            <button type="submit" className={styles["login__submit"]}>
+            <button onClick={handleSubmit} type="submit" className={styles["login__submit"]}>
               Войти
             </button>
           </div>

@@ -1,12 +1,25 @@
+import { FC, useEffect, useState } from "react";
 import Link from "next/link";
-import { logOut } from "../../../utils/Auth";
-import styles from "./Navigation.module.css";
+import ReactDOM from "react-dom";
 import { useRouter } from "next/router";
+import { logOut } from "../../../utils/Auth";
 import UserData from "../../../store/user";
 import Logged from "../../../store/logged";
+import styles from "./Burger.module.css";
 
-const Navigation = () => {
+interface IBurgerProps {
+  isBurgerOpen: boolean;
+  closeBurger: () => void;
+}
+
+const Burger: FC<IBurgerProps> = ({ isBurgerOpen, closeBurger }) => {
   const router = useRouter();
+
+  const [isBrowser, setIsBrowser] = useState(false);
+
+  useEffect(() => {
+    setIsBrowser(true);
+  });
 
   function handleLogOut() {
     logOut();
@@ -21,10 +34,28 @@ const Navigation = () => {
     setTimeout(() => router.push("/sign-in"), 200);
   }
 
-  return (
-    <nav className={styles["nav"]}>
+  const burgerElement = (
+    <div
+      className={`${styles["burger"]} ${
+        isBurgerOpen && styles["burger_active"]
+      }`}
+    >
+      <div className={styles["burger__buttons-container"]}>
+        <Link
+          className={`${styles["burger__button"]} ${styles["burger__button_black"]}`}
+          href="/"
+        >
+          Новый заказ
+        </Link>
+        <Link
+          className={`${styles["burger__button"]} ${styles["burger__button_white"]}`}
+          href="/"
+        >
+          Поиск
+        </Link>
+      </div>
       <ul className={styles["nav__list"]}>
-        <li className={styles["nav__list-item"]}>
+        <li onClick={closeBurger} className={styles["nav__list-item"]}>
           <Link
             className={`${styles["nav__list-item-link"]} ${
               router.pathname === "/" && styles["nav__list-item-link_active"]
@@ -34,19 +65,19 @@ const Navigation = () => {
             Заказы
           </Link>
         </li>
-        <li className={styles["nav__list-item"]}>
+        <li onClick={closeBurger} className={styles["nav__list-item"]}>
           <Link className={styles["nav__list-item-link"]} href="/">
             Заказы на выкуп
           </Link>
         </li>
-        <li className={styles["nav__list-item"]}>
+        <li onClick={closeBurger} className={styles["nav__list-item"]}>
           <Link className={styles["nav__list-item-link"]} href="/">
             Склад
           </Link>
         </li>
         {(UserData.userData.position === "Создатель" ||
           UserData.userData.position === "Администратор") && (
-          <li className={styles["nav__list-item"]}>
+          <li onClick={closeBurger} className={styles["nav__list-item"]}>
             <Link
               className={`${styles["nav__list-item-link"]} ${
                 router.pathname === "/payments" &&
@@ -60,7 +91,7 @@ const Navigation = () => {
         )}
         {(UserData.userData.position === "Создатель" ||
           UserData.userData.position === "Администратор") && (
-          <li className={styles["nav__list-item"]}>
+          <li onClick={closeBurger} className={styles["nav__list-item"]}>
             <Link
               className={`${styles["nav__list-item-link"]} ${
                 router.pathname === "/users" &&
@@ -72,20 +103,32 @@ const Navigation = () => {
             </Link>
           </li>
         )}
-        <li className={styles["nav__list-item"]}>
+        <li onClick={closeBurger} className={styles["nav__list-item"]}>
           <Link className={styles["nav__list-item-link"]} href="/">
             Промо-код
           </Link>
         </li>
         <li
-          onClick={handleLogOut}
+          onClick={() => {
+            closeBurger();
+            handleLogOut();
+          }}
           className={`${styles["nav__list-item"]} ${styles["nav__list-item_exit"]}`}
         >
           Выход из аккаунта
         </li>
       </ul>
-    </nav>
+    </div>
   );
+
+  if (isBrowser && document.getElementById("burger")) {
+    return ReactDOM.createPortal(
+      burgerElement,
+      document.getElementById("burger")!
+    );
+  } else {
+    return null;
+  }
 };
 
-export default Navigation;
+export default Burger;

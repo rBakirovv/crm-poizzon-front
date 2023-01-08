@@ -1,18 +1,12 @@
 import { makeAutoObservable } from "mobx";
-
-interface IUserData {
-  email: string,
-  name: string,
-  position: string,
-  _id: string,
-}
+import { IUserData } from "../types/interfaces";
 
 class UserData {
   userData: IUserData = {
-    email: '',
-    name: '',
-    position: '',
-    _id: '',
+    email: "",
+    name: "",
+    position: "",
+    _id: "",
   };
 
   constructor() {

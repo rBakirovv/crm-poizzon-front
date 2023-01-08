@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import Login from "../../components/Login/Login";
-import Preloader from "../../components/UI/Preloader/Preloader";
 import { authorize } from "../../utils/Auth";
 import { getUserInfo } from "../../utils/User";
 import UserData from "../../store/user";
@@ -62,13 +61,10 @@ const Home = observer(() => {
         <title>Poizonqq CRM - авторизация</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      {Logged.loggedIn && <Preloader />}
-      {!Logged.loggedIn && (
-        <Login
-          handleAuthorization={handleAuthorization}
-          loginError={loginError}
-        />
-      )}
+      <Login
+        handleAuthorization={handleAuthorization}
+        loginError={loginError}
+      />
     </>
   );
 });

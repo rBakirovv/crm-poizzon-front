@@ -1,0 +1,129 @@
+.burger {
+  position: fixed;
+  top: 65px;
+  left: 0;
+  background: #fff;
+  min-width: 100%;
+  min-height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-100%);
+  transition: all 0.2s ease-in-out;
+}
+
+.burger_active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
+.burger__buttons-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0 0 1rem;
+}
+
+.burger__button {
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  width: 160px;
+  height: 40px;
+  border: 2px solid #000000;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s ease-in-out;
+}
+
+.burger__button_black {
+  background: #000;
+  color: #fff;
+}
+
+.burger__button_white {
+  background: #fff;
+}
+
+.burger__button:active {
+  color: #fff;
+  background: #d96e3a;
+  border: 2px solid transparent;
+} 
+
+.nav {
+  position: fixed;
+  left: 1rem;
+  top: 6.5rem;
+}
+
+.nav__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style-type: none;
+  margin: 0;
+  padding: 1rem;
+}
+
+.nav__list-item {
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 27px;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+}
+
+.nav__list-item_exit {
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  position: fixed;
+  bottom: 5rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  color: #fff;
+  border-radius: 10rem;
+  padding: 0.25rem 0.2rem;
+  width: 200px;
+  height: 40px;
+  white-space: nowrap;
+  margin-top: 2rem;
+}
+
+.nav__list-item_exit:hover {
+  background: #ff7f00;
+  color: #fff !important;
+}
+
+.nav__list-item_exit:active {
+  background: #d96e3a;
+  color: #fff !important;
+}
+
+.nav__list-item-link_active {
+  font-weight: 700;
+}
+
+.nav__list-item:hover {
+  color: #ff7f00;
+}
+
+.nav__list-item:active {
+  color: #d96e3a;
+}
+
+.nav__list-line {
+  margin-top: 2rem;
+}
+
+@media screen and (min-width: 1200px) {
+  .nav {
+    display: none;
+  }
+}

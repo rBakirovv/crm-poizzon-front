@@ -8,6 +8,8 @@ export default function Document() {
         <Main />
         <NextScript />
         <div id='image-popup'></div>
+        <div id='burger'></div>
+        <div id='submit-popup'></div>
       </body>
     </Html>
   )
