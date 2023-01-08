@@ -1,0 +1,135 @@
+.red-star {
+  color: red;
+}
+
+.payments__create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 2.5rem 0 0 1.5rem;
+}
+
+.payments__title {
+  font-size: 1.5em;
+  margin: 0;
+}
+
+.payments__create-input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.payments__create-input {
+  width: 320px;
+  height: 30px;
+  border-radius: 0.5rem;
+  padding-left: 0.5rem;
+  border: 2px solid #000;
+  margin-top: 0.5rem;
+}
+
+.payments__create-submit {
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  width: 340px;
+  height: 40px;
+  background: #000;
+  color: #fff;
+  border-radius: 1rem;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.payments__create-submit:hover {
+  background: #ff7f00;
+}
+
+.payments__create-submit:active {
+  background: #d96e3a;
+}
+
+.payments__table-container {
+  margin: 2.5rem 0 0 1.5rem;
+}
+
+.payments__table-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 1rem 0 0;
+}
+
+.payments__table-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  border: 1px solid #000;
+  border-bottom: none;
+  margin-right: 1.5rem;
+}
+
+.payments__table-item:last-of-type {
+  border-bottom: 1px solid #000;
+}
+
+.payments__table-info-container {
+  padding: 1rem;
+}
+
+.payments__delete-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+.payments__delete-button path {
+  transition: all 0.4s ease-in-out;
+}
+
+.payments__delete-button:hover path {
+  fill: red;
+}
+
+.payments__table-info-title {
+  margin: 0;
+}
+
+.payments__table-info-number {
+  margin: 1rem 0 0;
+}
+
+@media screen and (max-width: 500px) {
+  .payments__create-form {
+    width: auto;
+    margin: 1.5rem 0 0 1rem;
+  }
+
+  .payments__table-container {
+    margin: 1.5rem 0 0 1rem;
+  }
+
+  .payments__table-item {
+    margin-right: 1rem;
+  }
+
+  .payments__create-submit:hover {
+    background: #000;
+  }
+
+  .payments__create-submit:active {
+    background: #d96e3a;
+  }
+}

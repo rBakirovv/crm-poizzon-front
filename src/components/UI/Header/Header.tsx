@@ -15,7 +15,7 @@ const Header: FC<IHeaderProps> = ({ userPosition }) => {
 
   function handleBurgerClick() {
     setIsBurgerOpen(!isBurgerOpen);
-  };
+  }
 
   function closeBurger() {
     setIsBurgerOpen(false);
@@ -64,13 +64,10 @@ const Header: FC<IHeaderProps> = ({ userPosition }) => {
             </Link>
           </div>
           <p className={styles["header__position-name"]}>{userPosition}</p>
-          <button className={styles["header__burger-button"]} onClick={handleBurgerClick}>
-            <svg viewBox="0 0 100 80" width="40" height="40">
-              <rect width="100" height="10"></rect>
-              <rect y="30" width="100" height="10"></rect>
-              <rect y="60" width="100" height="10"></rect>
-            </svg>
-          </button>
+          <button
+            className={`${styles["header__burger-button"]} ${isBurgerOpen && styles["header__burger-button_active"]}`}
+            onClick={handleBurgerClick}
+          ></button>
           <Burger isBurgerOpen={isBurgerOpen} closeBurger={closeBurger} />
         </div>
       )}

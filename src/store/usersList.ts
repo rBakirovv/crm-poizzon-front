@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 import { IUserData } from "../types/interfaces";
 
 class UsersDataList {
-  usersList: Array<IUserData> = [].reverse();
+  usersList: Array<IUserData> = [];
 
   constructor() {
     makeAutoObservable(this);

@@ -47,7 +47,9 @@ const Home = observer(() => {
   }, [Logged.loggedIn]);
 
   useEffect(() => {
-    getUsers().then((usersResponse) => UsersDataList.setUsersList(usersResponse));
+    getUsers().then((usersResponse) =>
+      UsersDataList.setUsersList(usersResponse)
+    );
   }, []);
 
   return (
@@ -62,7 +64,16 @@ const Home = observer(() => {
           <Header userPosition={UserData.userData.position} />
           <Navigation />
           <Main>
-            <Users userPosition={UserData.userData.position} userId={UserData.userData._id} users={UsersDataList.usersList} />
+            {UserData.userData.position === "Создатель" ||
+            UserData.userData.position === "Администратор" ? (
+              <Users
+                userPosition={UserData.userData.position}
+                userId={UserData.userData._id}
+                users={UsersDataList.usersList}
+              />
+            ) : (
+              <Preloader />
+            )}
           </Main>
         </>
       )}

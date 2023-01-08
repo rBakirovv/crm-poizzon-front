@@ -5,3 +5,9 @@ export interface IUserData {
   _id?: string,
   __v?: number,
 } 
+
+export interface IPayments {
+  title: string,
+  number: string,
+  _id: string,
+}

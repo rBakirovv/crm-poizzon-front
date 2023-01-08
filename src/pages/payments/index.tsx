@@ -7,8 +7,11 @@ import Header from "../../components/UI/Header/Header";
 import Preloader from "../../components/UI/Preloader/Preloader";
 import UserData from "../../store/user";
 import Logged from "../../store/logged";
+import Payment from "../../store/payments";
 import { getUserInfo } from "../../utils/User";
+import { getPayments } from "../../utils/Payment";
 import Navigation from "../../components/UI/Navigation/Navigation";
+import Payments from "../../components/Payments/Payments";
 
 const Home = observer(() => {
   const router = useRouter();
@@ -44,6 +47,12 @@ const Home = observer(() => {
     }
   }, [Logged.loggedIn]);
 
+  useEffect(() => {
+    getPayments().then((payments) => {
+      Payment.setPaymentsList(payments);
+    });
+  }, []);
+
   return (
     <>
       <Head>
@@ -56,7 +65,12 @@ const Home = observer(() => {
           <Header userPosition={UserData.userData.position} />
           <Navigation />
           <Main>
-            <h1> oplata </h1>
+            {UserData.userData.position === "Создатель" ||
+            UserData.userData.position === "Администратор" ? (
+              <Payments paymentsList={Payment.paymentsList} />
+            ) : (
+              <Preloader />
+            )}
           </Main>
         </>
       )}
