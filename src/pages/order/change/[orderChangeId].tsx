@@ -1,21 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { observer } from "mobx-react-lite";
 import Head from "next/head";
-import Main from "../../components/Main/Main";
-import Header from "../../components/UI/Header/Header";
-import Preloader from "../../components/UI/Preloader/Preloader";
-import UserData from "../../store/user";
-import Logged from "../../store/logged";
-import Payment from "../../store/payments";
-import { getUserInfo } from "../../utils/User";
-import { getPayments } from "../../utils/Payment";
-import Navigation from "../../components/UI/Navigation/Navigation";
-import Payments from "../../components/Payments/Payments";
-import { SUPERADMIN, ADMIN } from "../../utils/constants";
+import Main from "../../../components/Main/Main";
+import Header from "../../../components/UI/Header/Header";
+import Preloader from "../../../components/UI/Preloader/Preloader";
+import UserData from "../../../store/user";
+import Logged from "../../../store/logged";
+import { getUserInfo } from "../../../utils/User";
+import Navigation from "../../../components/UI/Navigation/Navigation";
+import { getCurrentOrder } from "../../../utils/Order";
+import OrderChange from "../../../components/OrderChange/OrderChange";
 
 const Home = observer(() => {
   const router = useRouter();
+
+  const [order, setOrder] = useState({});
 
   useEffect(() => {
     !Logged.loggedIn &&
@@ -49,29 +49,28 @@ const Home = observer(() => {
   }, [Logged.loggedIn]);
 
   useEffect(() => {
-    getPayments().then((payments) => {
-      Payment.setPaymentsList(payments);
-    });
-  }, []);
+    router.query.orderChangeId &&
+      getCurrentOrder(router.query.orderChangeId).then((order) => {
+        setOrder(order);
+      });
+  }, [router.query.orderChangeId]);
 
   return (
     <>
       <Head>
-        <title>Poizonqq CRM - Способы оплаты</title>
+        <title>{`Заказ #${order.orderId}`}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {!Logged.loggedIn && <Preloader />}
       {Logged.loggedIn && (
         <>
-          <Header userPosition={UserData.userData.position} userName={UserData.userData.name} />
+          <Header
+            userPosition={UserData.userData.position}
+            userName={UserData.userData.name}
+          />
           <Navigation />
           <Main>
-            {UserData.userData.position === SUPERADMIN ||
-            UserData.userData.position === ADMIN ? (
-              <Payments paymentsList={Payment.paymentsList} />
-            ) : (
-              <Preloader />
-            )}
+            {router.query.orderChangeId && <OrderChange order={order} />}
           </Main>
         </>
       )}

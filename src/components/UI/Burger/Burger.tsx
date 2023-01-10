@@ -10,9 +10,14 @@ import styles from "./Burger.module.css";
 interface IBurgerProps {
   isBurgerOpen: boolean;
   closeBurger: () => void;
+  createNewOrder: () => void;
 }
 
-const Burger: FC<IBurgerProps> = ({ isBurgerOpen, closeBurger }) => {
+const Burger: FC<IBurgerProps> = ({
+  isBurgerOpen,
+  closeBurger,
+  createNewOrder,
+}) => {
   const router = useRouter();
 
   const [isBrowser, setIsBrowser] = useState(false);
@@ -41,12 +46,12 @@ const Burger: FC<IBurgerProps> = ({ isBurgerOpen, closeBurger }) => {
       }`}
     >
       <div className={styles["burger__buttons-container"]}>
-        <Link
+        <button
           className={`${styles["burger__button"]} ${styles["burger__button_black"]}`}
-          href="/"
+          onClick={createNewOrder}
         >
           Новый заказ
-        </Link>
+        </button>
         <Link
           className={`${styles["burger__button"]} ${styles["burger__button_white"]}`}
           href="/"
@@ -58,7 +63,9 @@ const Burger: FC<IBurgerProps> = ({ isBurgerOpen, closeBurger }) => {
         <li onClick={closeBurger} className={styles["nav__list-item"]}>
           <Link
             className={`${styles["nav__list-item-link"]} ${
-              router.pathname === "/" && styles["nav__list-item-link_active"]
+              (router.pathname === "/" ||
+                router.pathname.includes("/order/")) &&
+              styles["nav__list-item-link_active"]
             }`}
             href="/"
           >
@@ -75,6 +82,19 @@ const Burger: FC<IBurgerProps> = ({ isBurgerOpen, closeBurger }) => {
             Склад
           </Link>
         </li>
+        {UserData.userData.position === "Создатель" && (
+          <li onClick={closeBurger} className={styles["nav__list-item"]}>
+            <Link
+              className={`${styles["nav__list-item-link"]} ${
+                router.pathname === "/rate" &&
+                styles["nav__list-item-link_active"]
+              }`}
+              href="/rate"
+            >
+              Курс
+            </Link>
+          </li>
+        )}
         {(UserData.userData.position === "Создатель" ||
           UserData.userData.position === "Администратор") && (
           <li onClick={closeBurger} className={styles["nav__list-item"]}>

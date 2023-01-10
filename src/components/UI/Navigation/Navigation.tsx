@@ -27,7 +27,9 @@ const Navigation = () => {
         <li className={styles["nav__list-item"]}>
           <Link
             className={`${styles["nav__list-item-link"]} ${
-              router.pathname === "/" && styles["nav__list-item-link_active"]
+              (router.pathname === "/" ||
+                router.pathname.includes("/order/")) &&
+              styles["nav__list-item-link_active"]
             }`}
             href="/"
           >
@@ -44,6 +46,19 @@ const Navigation = () => {
             Склад
           </Link>
         </li>
+        {UserData.userData.position === "Создатель" && (
+          <li className={styles["nav__list-item"]}>
+            <Link
+              className={`${styles["nav__list-item-link"]} ${
+                router.pathname === "/rate" &&
+                styles["nav__list-item-link_active"]
+              }`}
+              href="/rate"
+            >
+              Курс
+            </Link>
+          </li>
+        )}
         {(UserData.userData.position === "Создатель" ||
           UserData.userData.position === "Администратор") && (
           <li className={styles["nav__list-item"]}>

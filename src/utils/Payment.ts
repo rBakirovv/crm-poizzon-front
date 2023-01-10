@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:3001";
+import { BASE_URL } from "./constants";
 
 const HEADERS = {
   "Content-Type": "application/json",

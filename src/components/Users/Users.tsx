@@ -5,6 +5,8 @@ import { deleteUser, createUser } from "../../utils/User";
 import UsersDataList from "../../store/usersList";
 import styles from "./Users.module.css";
 import usersList from "../../store/usersList";
+import { SUPERADMIN } from "../../utils/constants";
+import TextInput from "../UI/TextInput/TextInput";
 
 interface IUsersProps {
   userPosition: string;
@@ -82,7 +84,7 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
 
   return (
     <section className={styles["users"]}>
-      {userPosition === "Создатель" && (
+      {userPosition === SUPERADMIN && (
         <form
           onSubmit={handleCreateUser}
           className={styles["users__create-form"]}
@@ -90,32 +92,20 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
           <h2 className={styles["users__create-title"]}>
             Создать пользователя:
           </h2>
-          <div className={styles["users__create-input-container"]}>
-            <label className={styles["users__create-label"]}>
-              Имя<span className={styles["red-star"]}>*</span>
-            </label>
-            <input
-              className={styles["users__create-input"]}
-              type="text"
-              name="name"
-              onChange={handleChange}
-              value={userData.name}
-              required
-            />
-          </div>
-          <div className={styles["users__create-input-container"]}>
-            <label className={styles["users__create-label"]}>
-              E-mail<span className={styles["red-star"]}>*</span>
-            </label>
-            <input
-              className={styles["users__create-input"]}
-              type="text"
-              name="email"
-              onChange={handleChange}
-              value={userData.email}
-              required
-            />
-          </div>
+          <TextInput
+            label="Имя"
+            name="name"
+            handleChange={handleChange}
+            value={userData.name}
+            required={true}
+          />
+          <TextInput
+            label="E-mail"
+            name="email"
+            handleChange={handleChange}
+            value={userData.email}
+            required={true}
+          />
           <div className={styles["users__create-input-container"]}>
             <label className={styles["users__create-label"]}>
               Должность<span className={styles["red-star"]}>*</span>
@@ -135,19 +125,13 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
               <option value="Администратор">Администратор</option>
             </select>
           </div>
-          <div className={styles["users__create-input-container"]}>
-            <label className={styles["users__create-label"]}>
-              Пароль<span className={styles["red-star"]}>*</span>
-            </label>
-            <input
-              className={styles["users__create-input"]}
-              type="text"
-              name="password"
-              onChange={handleChange}
-              value={userData.password}
-              required
-            />
-          </div>
+          <TextInput
+            label="Пароль"
+            name="password"
+            handleChange={handleChange}
+            value={userData.password}
+            required={true}
+          />
           <button className={styles["users__create-submit"]} type="submit">
             Cоздать
           </button>
@@ -155,7 +139,7 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
       )}
       <h2 className={styles["users__table-title"]}>Пользователи:</h2>
       <div className={styles["users__table-container"]}>
-        {userPosition === "Создатель" && (
+        {userPosition === SUPERADMIN && (
           <button
             className={styles["users__table-item-delete"]}
             onClick={handleDeleteButtonClick}
@@ -186,7 +170,7 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
                     {userItem.position}
                   </p>
                   {userId !== userItem._id &&
-                    userPosition === "Создатель" &&
+                    userPosition === SUPERADMIN &&
                     isDelete && (
                       <button
                         className={styles["users__table-delete"]}

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { observer } from "mobx-react-lite";
 import Head from "next/head";
@@ -7,14 +7,17 @@ import Header from "../../components/UI/Header/Header";
 import Preloader from "../../components/UI/Preloader/Preloader";
 import UserData from "../../store/user";
 import Logged from "../../store/logged";
-import UsersDataList from "../../store/usersList";
-import { getUserInfo, getUsers } from "../../utils/User";
+import { getUserInfo } from "../../utils/User";
+import { getRate } from "../../utils/Rate";
+import RateData from "../../store/rate";
 import Navigation from "../../components/UI/Navigation/Navigation";
-import Users from "../../components/Users/Users";
-import { SUPERADMIN, ADMIN } from "../../utils/constants";
+import { SUPERADMIN } from "../../utils/constants";
+import RateComponent from "../../components/RateComponent/RateComponent";
 
 const Home = observer(() => {
   const router = useRouter();
+
+  const [isFirstRate, setIsFirstRate] = useState(false);
 
   useEffect(() => {
     !Logged.loggedIn &&
@@ -48,29 +51,30 @@ const Home = observer(() => {
   }, [Logged.loggedIn]);
 
   useEffect(() => {
-    getUsers().then((usersResponse) =>
-      UsersDataList.setUsersList(usersResponse)
-    );
+    getRate().then((rates) => {
+      rates.length > 0 ? RateData.setNewRate(rates[0]) : setIsFirstRate(true);
+    });
   }, []);
 
   return (
     <>
       <Head>
-        <title>Poizonqq CRM - Пользователи</title>
+        <title>Poizonqq CRM - Курс СNY</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {!Logged.loggedIn && <Preloader />}
       {Logged.loggedIn && (
         <>
-          <Header userPosition={UserData.userData.position} userName={UserData.userData.name} />
+          <Header
+            userPosition={UserData.userData.position}
+            userName={UserData.userData.name}
+          />
           <Navigation />
           <Main>
-            {UserData.userData.position === SUPERADMIN ||
-            UserData.userData.position === ADMIN ? (
-              <Users
-                userPosition={UserData.userData.position}
-                userId={UserData.userData._id}
-                users={UsersDataList.usersList}
+            {UserData.userData.position === SUPERADMIN ? (
+              <RateComponent
+                currentRate={RateData.rate}
+                isFirstRate={isFirstRate}
               />
             ) : (
               <Preloader />

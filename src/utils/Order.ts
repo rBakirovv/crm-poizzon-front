@@ -4,38 +4,35 @@ const HEADERS = {
   "Content-Type": "application/json",
 };
 
-export const getUsers = () => {
-  return fetch(`${BASE_URL}/users`, {
+export const getOrders = () => {
+  return fetch(`${BASE_URL}/orders`, {
     credentials: "include",
     method: "GET",
     headers: HEADERS,
   }).then(checkResponse);
 };
 
-export const getUserInfo = () => {
-  return fetch(`${BASE_URL}/users/me`, {
+export const getCurrentOrder = (orderId: string | string[]) => {
+  return fetch(`${BASE_URL}/order/${orderId}`, {
     credentials: "include",
     method: "GET",
     headers: HEADERS,
   }).then(checkResponse);
 };
 
-export const createUser = (name: string, email: string, position: string, password: string) => {
-  return fetch(`${BASE_URL}/users/create`, {
+export const createOrder = (creater: string) => {
+  return fetch(`${BASE_URL}/orders/create`, {
     credentials: "include",
     method: "POST",
     headers: HEADERS,
     body: JSON.stringify({
-      name: name,
-      email: email,
-      position: position,
-      password: password,
+      creater: creater,
     }),
   }).then(checkResponse);
 };
 
-export const deleteUser = (email: string) => {
-  return fetch(`${BASE_URL}/users/${email}`, {
+export const deleteOrder = (id: string) => {
+  return fetch(`${BASE_URL}/orders/${id}`, {
     credentials: "include",
     method: "DELETE",
     headers: HEADERS,

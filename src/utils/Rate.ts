@@ -4,23 +4,30 @@ const HEADERS = {
   "Content-Type": "application/json",
 };
 
-export const authorize = (email: string, password: string) => {
-  return fetch(`${BASE_URL}/signin`, {
+export const getRate = () => {
+  return fetch(`${BASE_URL}/rate`, {
     credentials: "include",
-    method: "POST",
+    method: "GET",
     headers: HEADERS,
-    body: JSON.stringify({
-      email,
-      password,
-    }),
   }).then(checkResponse);
 };
 
-export const logOut = () => {
-  return fetch(`${BASE_URL}/signout`, {
+export const createRate = () => {
+  return fetch(`${BASE_URL}/rate/create`, {
     credentials: "include",
-    method: "DELETE",
+    method: "POST",
     headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const updateRate = (id: string, newRate: string) => {
+  return fetch(`${BASE_URL}/rate/${id}`, {
+    credentials: "include",
+    method: "PUT",
+    headers: HEADERS,
+    body: JSON.stringify({
+      newRate,
+    }),
   }).then(checkResponse);
 };
 

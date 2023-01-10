@@ -50,7 +50,7 @@
 }
 
 .nav__list-item-link_active {
-  font-weight: 700;
+  color: #ff7f00;
 }
 
 .nav__list-item:hover {

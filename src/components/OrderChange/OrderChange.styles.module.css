@@ -1,0 +1,25 @@
+.order-change {
+  width: auto;
+  margin: 0 1rem;
+}
+
+.order-change__title {
+  font-weight: 500;
+  margin: 1.5rem 0 0 ;
+}
+
+.order-change__public-link-container {
+  width: auto;
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.order-change__public-link-text {
+  margin: 0 0 1rem;
+}
+
+.order-change__public-link {
+  color: #4e7fea;
+  word-wrap: break-word;
+}

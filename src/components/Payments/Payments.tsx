@@ -4,6 +4,7 @@ import { FC, useState } from "react";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { deletePayment, createPayment } from "../../utils/Payment";
 import Payment from "../../store/payments";
+import TextInput from "../UI/TextInput/TextInput";
 
 interface IPaymentsProps {
   paymentsList: Array<IPayments>;
@@ -74,34 +75,22 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
         className={styles["payments__create-form"]}
       >
         <h2 className={styles["payments__title"]}>Cоздать способ оплаты</h2>
-        <div className={styles["payments__create-input-container"]}>
-          <label className={styles["payments__create-input-label"]}>
-            Название<span className={styles["red-star"]}>*</span>
-          </label>
-          <input
-            className={styles["payments__create-input"]}
-            type="text"
-            name="title"
-            placeholder="Перевод на «Тинькофф» по номеру карты"
-            onChange={handleChange}
-            value={paymentData.title}
-            required
-          />
-        </div>
-        <div className={styles["payments__create-input-container"]}>
-          <label className={styles["payments__create-input-label"]}>
-            Номер<span className={styles["red-star"]}>*</span>
-          </label>
-          <input
-            className={styles["payments__create-input"]}
-            type="text"
-            name="number"
-            placeholder="9345 4023 8990 0901"
-            onChange={handleChange}
-            value={paymentData.number}
-            required
-          />
-        </div>
+        <TextInput
+          label="Способ оплаты"
+          name="title"
+          placeholder="Перевод на «Тинькофф» по номеру карты"
+          handleChange={handleChange}
+          value={paymentData.title}
+          required={true}
+        />
+        <TextInput
+          label="Номер"
+          name="number"
+          placeholder="9345 4023 8990 0901"
+          handleChange={handleChange}
+          value={paymentData.number}
+          required={true}
+        />
         <button className={styles["payments__create-submit"]}>Создать</button>
       </form>
       <div className={styles["payments__table-container"]}>

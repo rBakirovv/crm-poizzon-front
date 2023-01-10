@@ -53,7 +53,7 @@ const Home = observer(() => {
       {!Logged.loggedIn && <Preloader />}
       {Logged.loggedIn && (
         <>
-          <Header userPosition={UserData.userData.position} />
+          <Header userPosition={UserData.userData.position} userName={UserData.userData.name} />
           <Navigation />
           <Main>
             <h1>hello!</h1>

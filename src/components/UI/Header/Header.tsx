@@ -3,12 +3,14 @@ import { useRouter } from "next/router";
 import styles from "./Header.module.css";
 import Link from "next/link";
 import Burger from "../Burger/Burger";
+import { createOrder } from "../../../utils/Order";
 
 interface IHeaderProps {
   userPosition?: string;
+  userName?: string;
 }
 
-const Header: FC<IHeaderProps> = ({ userPosition }) => {
+const Header: FC<IHeaderProps> = ({ userPosition, userName }) => {
   const router = useRouter();
 
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
@@ -21,41 +23,51 @@ const Header: FC<IHeaderProps> = ({ userPosition }) => {
     setIsBurgerOpen(false);
   }
 
+  function createNewOrder() {
+    createOrder(userName!).then((order) => {
+      router.push(`/order/change/${order._id}`);
+    });
+  }
+
   return (
     <header
       className={`${styles["header"]} ${
-        router.pathname.includes("/order/") && styles["header_order"]
+        router.pathname.includes("/order/") &&
+        !router.pathname.includes("/order/change/") &&
+        styles["header_order"]
       }`}
     >
-      {router.pathname.includes("/order/") && (
-        <div className={styles["header__order-container"]}>
-          <h2 className={styles["header__order-title"]}>Заказ №1450</h2>
-          <button
-            className={styles["header__order-pay"]}
-            onClick={() =>
-              window.scrollTo({
-                left: 0,
-                top: document.body.scrollHeight,
-                behavior: "smooth",
-              })
-            }
-          >
-            Оплатить
-          </button>
-        </div>
-      )}
-      {!router.pathname.includes("/order/") && (
+      {router.pathname.includes("/order/") &&
+        !router.pathname.includes("/order/change/") && (
+          <div className={styles["header__order-container"]}>
+            <h2 className={styles["header__order-title"]}>Заказ №1450</h2>
+            <button
+              className={styles["header__order-pay"]}
+              onClick={() =>
+                window.scrollTo({
+                  left: 0,
+                  top: document.body.scrollHeight,
+                  behavior: "smooth",
+                })
+              }
+            >
+              Оплатить
+            </button>
+          </div>
+        )}
+      {(!router.pathname.includes("/order/") ||
+        router.pathname.includes("/order/change/")) && (
         <div className={styles["header__container"]}>
           <Link className={styles["header__container-title"]} href="/">
             POIZZONQQ CRM
           </Link>
           <div className={styles["header__buttons-container"]}>
-            <Link
+            <button
               className={`${styles["header__button"]} ${styles["header__button_black"]}`}
-              href="/"
+              onClick={createNewOrder}
             >
               Новый заказ
-            </Link>
+            </button>
             <Link
               className={`${styles["header__button"]} ${styles["header__button_white"]}`}
               href="/"
@@ -65,10 +77,16 @@ const Header: FC<IHeaderProps> = ({ userPosition }) => {
           </div>
           <p className={styles["header__position-name"]}>{userPosition}</p>
           <button
-            className={`${styles["header__burger-button"]} ${isBurgerOpen && styles["header__burger-button_active"]}`}
+            className={`${styles["header__burger-button"]} ${
+              isBurgerOpen && styles["header__burger-button_active"]
+            }`}
             onClick={handleBurgerClick}
           ></button>
-          <Burger isBurgerOpen={isBurgerOpen} closeBurger={closeBurger} />
+          <Burger
+            isBurgerOpen={isBurgerOpen}
+            closeBurger={closeBurger}
+            createNewOrder={createNewOrder}
+          />
         </div>
       )}
     </header>
