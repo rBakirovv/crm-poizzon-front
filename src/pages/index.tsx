@@ -9,6 +9,8 @@ import UserData from "../store/user";
 import Logged from "../store/logged";
 import { getUserInfo } from "../utils/User";
 import Navigation from "../components/UI/Navigation/Navigation";
+import { getRate } from "../utils/Rate";
+import RateData from "../store/rate";
 
 const Home = observer(() => {
   const router = useRouter();
@@ -44,6 +46,16 @@ const Home = observer(() => {
     }
   }, [Logged.loggedIn]);
 
+  useEffect(() => {
+    getRate()
+      .then((rates) => {
+        RateData.setNewRate(rates[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <>
       <Head>
@@ -53,7 +65,11 @@ const Home = observer(() => {
       {!Logged.loggedIn && <Preloader />}
       {Logged.loggedIn && (
         <>
-          <Header userPosition={UserData.userData.position} userName={UserData.userData.name} />
+          <Header
+            userPosition={UserData.userData.position}
+            userName={UserData.userData.name}
+            currentRate={RateData.rate.rate}
+          />
           <Navigation />
           <Main>
             <h1>hello!</h1>

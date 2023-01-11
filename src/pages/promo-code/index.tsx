@@ -7,13 +7,14 @@ import Header from "../../components/UI/Header/Header";
 import Preloader from "../../components/UI/Preloader/Preloader";
 import UserData from "../../store/user";
 import Logged from "../../store/logged";
-import UsersDataList from "../../store/usersList";
-import { getUserInfo, getUsers } from "../../utils/User";
+import { getUserInfo } from "../../utils/User";
 import Navigation from "../../components/UI/Navigation/Navigation";
-import Users from "../../components/Users/Users";
 import { SUPERADMIN, ADMIN } from "../../utils/constants";
-import RateData from "../../store/rate";
+import PoromoCode from "../../components/PoromoCode/PoromoCode";
+import PromoCodeData from "../../store/promo-code";
+import { getPoromoCodes } from "../../utils/PoromoCode";
 import { getRate } from "../../utils/Rate";
+import RateData from "../../store/rate";
 
 const Home = observer(() => {
   const router = useRouter();
@@ -50,9 +51,9 @@ const Home = observer(() => {
   }, [Logged.loggedIn]);
 
   useEffect(() => {
-    getUsers().then((usersResponse) =>
-      UsersDataList.setUsersList(usersResponse)
-    );
+    getPoromoCodes().then((promoCodes) => {
+      PromoCodeData.setPromoCodeList(promoCodes);
+    });
   }, []);
 
   useEffect(() => {
@@ -68,7 +69,7 @@ const Home = observer(() => {
   return (
     <>
       <Head>
-        <title>Poizonqq CRM - Пользователи</title>
+        <title>Poizonqq CRM - Промо-код</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {!Logged.loggedIn && <Preloader />}
@@ -83,11 +84,7 @@ const Home = observer(() => {
           <Main>
             {UserData.userData.position === SUPERADMIN ||
             UserData.userData.position === ADMIN ? (
-              <Users
-                userPosition={UserData.userData.position}
-                userId={UserData.userData._id}
-                users={UsersDataList.usersList}
-              />
+              <PoromoCode promoCodes={PromoCodeData.promoCodeList} />
             ) : (
               <Preloader />
             )}

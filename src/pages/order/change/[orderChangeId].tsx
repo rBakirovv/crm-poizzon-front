@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { observer } from "mobx-react-lite";
 import Head from "next/head";
@@ -11,11 +11,16 @@ import { getUserInfo } from "../../../utils/User";
 import Navigation from "../../../components/UI/Navigation/Navigation";
 import { getCurrentOrder } from "../../../utils/Order";
 import OrderChange from "../../../components/OrderChange/OrderChange";
+import OrderData from "../../../store/order";
+import RateData from "../../../store/rate";
+import { getRate } from "../../../utils/Rate";
+import { getPayments } from "../../../utils/Payment";
+import { getPoromoCodes } from "../../../utils/PoromoCode";
+import PaymentsData from "../../../store/payments";
+import PromoCodeData from "../../../store/promo-code";
 
 const Home = observer(() => {
   const router = useRouter();
-
-  const [order, setOrder] = useState({});
 
   useEffect(() => {
     !Logged.loggedIn &&
@@ -50,15 +55,41 @@ const Home = observer(() => {
 
   useEffect(() => {
     router.query.orderChangeId &&
-      getCurrentOrder(router.query.orderChangeId).then((order) => {
-        setOrder(order);
-      });
+      getCurrentOrder(router.query.orderChangeId)
+        .then((order) => {
+          OrderData.setOrder(order);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
   }, [router.query.orderChangeId]);
+
+  useEffect(() => {
+    getRate()
+      .then((rates) => {
+        RateData.setNewRate(rates[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    getPayments().then((payments) => {
+      PaymentsData.setPaymentsList(payments);
+    });
+  }, []);
+
+  useEffect(() => {
+    getPoromoCodes().then((promoCodes) => {
+      PromoCodeData.setPromoCodeList(promoCodes);
+    });
+  }, []);
 
   return (
     <>
       <Head>
-        <title>{`Заказ #${order.orderId}`}</title>
+        <title>{`Заказ #${OrderData.order.orderId}`}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {!Logged.loggedIn && <Preloader />}
@@ -67,10 +98,16 @@ const Home = observer(() => {
           <Header
             userPosition={UserData.userData.position}
             userName={UserData.userData.name}
+            currentRate={RateData.rate.rate}
           />
           <Navigation />
           <Main>
-            {router.query.orderChangeId && <OrderChange order={order} />}
+            {router.query.orderChangeId && OrderData.order._id && PaymentsData.paymentsList && (
+              <OrderChange
+                order={OrderData.order}
+                payments={PaymentsData.paymentsList}
+              />
+            )}
           </Main>
         </>
       )}

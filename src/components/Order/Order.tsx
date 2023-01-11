@@ -94,27 +94,31 @@ export default function Order() {
             <tbody>
               <tr>
                 <td>Цена в CNY</td>
-                <td>289&nbsp;¥</td>
+                <td>289 ¥</td>
               </tr>
               <tr>
                 <td>Курс обмена</td>
-                <td>11.7&nbsp;₽</td>
+                <td>11.7 ₽</td>
               </tr>
               <tr>
                 <td>Цена в RUB</td>
-                <td>3&nbsp;382&nbsp;₽</td>
+                <td>3382 ₽</td>
               </tr>
               <tr>
                 <td>Доставка по Китаю</td>
-                <td>350&nbsp;₽</td>
+                <td>350 ₽</td>
               </tr>
               <tr>
                 <td>Доставка в РФ</td>
-                <td>1&nbsp;100&nbsp;₽</td>
+                <td>1100 ₽</td>
               </tr>
               <tr>
                 <td>Комиссия сервиса</td>
-                <td>1&nbsp;000&nbsp;₽</td>
+                <td>1000 ₽</td>
+              </tr>
+              <tr>
+                <td>Промо-код</td>
+                <td>20 %</td>
               </tr>
             </tbody>
           </table>

@@ -23,7 +23,7 @@ export const createRate = () => {
 export const updateRate = (id: string, newRate: string) => {
   return fetch(`${BASE_URL}/rate/${id}`, {
     credentials: "include",
-    method: "PUT",
+    method: "PATCH",
     headers: HEADERS,
     body: JSON.stringify({
       newRate,

@@ -1,24 +1,22 @@
 import { FC } from "react";
-import styles from "./TextInput.module.css";
+import styles from "./NumberInput.module.css";
 
 interface IInputProps {
   label: string;
   name: string;
   placeholder?: string;
-  value: string;
+  value: number;
   handleChange?: (e: React.SyntheticEvent) => void;
-  required: boolean;
-  readonly?: boolean; 
+  required?: boolean;
 }
 
-const TextInput: FC<IInputProps> = ({
+const NumberInput: FC<IInputProps> = ({
   label,
   name,
   placeholder,
   value,
   handleChange,
   required,
-  readonly,
 }) => {
   return (
     <div className={styles["input__container"]}>
@@ -27,17 +25,16 @@ const TextInput: FC<IInputProps> = ({
         {required && <span className={styles["red-star"]}>*</span>}
       </label>
       <input
-        className={`${styles["input__item"]} ${readonly && styles["input__item_disabled"]}`}
-        type="text"
+        className={styles["input__item"]}
+        type="number"
         name={name}
         placeholder={placeholder}
         onChange={handleChange}
         value={value}
         required={required}
-        readOnly={readonly}
       />
     </div>
   );
 };
 
-export default TextInput;
+export default NumberInput;

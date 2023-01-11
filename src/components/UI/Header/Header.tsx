@@ -8,9 +8,10 @@ import { createOrder } from "../../../utils/Order";
 interface IHeaderProps {
   userPosition?: string;
   userName?: string;
+  currentRate?: string;
 }
 
-const Header: FC<IHeaderProps> = ({ userPosition, userName }) => {
+const Header: FC<IHeaderProps> = ({ userPosition, userName, currentRate }) => {
   const router = useRouter();
 
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
@@ -24,7 +25,7 @@ const Header: FC<IHeaderProps> = ({ userPosition, userName }) => {
   }
 
   function createNewOrder() {
-    createOrder(userName!).then((order) => {
+    createOrder(userName!, currentRate!).then((order) => {
       router.push(`/order/change/${order._id}`);
     });
   }

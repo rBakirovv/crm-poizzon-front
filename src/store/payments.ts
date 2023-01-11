@@ -12,8 +12,8 @@ class PaymentsData {
     this.paymentsList.push(payments);
   };
 
-  setPaymentsList(usersList: Array<IPayments>) {
-    this.paymentsList = usersList;
+  setPaymentsList(paymentsList: Array<IPayments>) {
+    this.paymentsList = paymentsList;
   }
 
   deletePayment = (payment: string) => {

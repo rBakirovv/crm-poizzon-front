@@ -26,6 +26,11 @@ const Burger: FC<IBurgerProps> = ({
     setIsBrowser(true);
   });
 
+  function handleCreateOrder() {
+    createNewOrder();
+    closeBurger();
+  }
+
   function handleLogOut() {
     logOut();
     Logged.setLoggedIn(false);
@@ -48,7 +53,7 @@ const Burger: FC<IBurgerProps> = ({
       <div className={styles["burger__buttons-container"]}>
         <button
           className={`${styles["burger__button"]} ${styles["burger__button_black"]}`}
-          onClick={createNewOrder}
+          onClick={handleCreateOrder}
         >
           Новый заказ
         </button>
@@ -123,11 +128,20 @@ const Burger: FC<IBurgerProps> = ({
             </Link>
           </li>
         )}
-        <li onClick={closeBurger} className={styles["nav__list-item"]}>
-          <Link className={styles["nav__list-item-link"]} href="/">
-            Промо-код
-          </Link>
-        </li>
+        {(UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Администратор") && (
+          <li onClick={closeBurger} className={styles["nav__list-item"]}>
+            <Link
+              className={`${styles["nav__list-item-link"]} ${
+                router.pathname === "/promo-code" &&
+                styles["nav__list-item-link_active"]
+              }`}
+              href="/promo-code"
+            >
+              Промо-код
+            </Link>
+          </li>
+        )}
         <li
           onClick={() => {
             closeBurger();

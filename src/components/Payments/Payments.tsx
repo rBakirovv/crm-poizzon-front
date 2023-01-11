@@ -139,7 +139,7 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
         </ul>
       </div>
       <SubmitPopup
-        submitText={`Удалить ${paymentTitle}: ${paymentNumber}`}
+        submitText={`Удалить ${paymentTitle} ${paymentNumber}`}
         isSubmitPopup={isSubmitPopup}
         closeSubmitPopup={closeSubmitPopup}
         onSubmit={submitPopupFunction}

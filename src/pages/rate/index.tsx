@@ -68,6 +68,7 @@ const Home = observer(() => {
           <Header
             userPosition={UserData.userData.position}
             userName={UserData.userData.name}
+            currentRate={RateData.rate.rate}
           />
           <Navigation />
           <Main>

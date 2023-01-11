@@ -87,11 +87,20 @@ const Navigation = () => {
             </Link>
           </li>
         )}
-        <li className={styles["nav__list-item"]}>
-          <Link className={styles["nav__list-item-link"]} href="/">
-            Промо-код
-          </Link>
-        </li>
+        {(UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Администратор") && (
+          <li className={styles["nav__list-item"]}>
+            <Link
+              className={`${styles["nav__list-item-link"]} ${
+                router.pathname === "/promo-code" &&
+                styles["nav__list-item-link_active"]
+              }`}
+              href="/promo-code"
+            >
+              Промо-код
+            </Link>
+          </li>
+        )}
         <li
           onClick={handleLogOut}
           className={`${styles["nav__list-item"]} ${styles["nav__list-item_exit"]}`}

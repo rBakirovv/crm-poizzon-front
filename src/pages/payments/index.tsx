@@ -13,6 +13,8 @@ import { getPayments } from "../../utils/Payment";
 import Navigation from "../../components/UI/Navigation/Navigation";
 import Payments from "../../components/Payments/Payments";
 import { SUPERADMIN, ADMIN } from "../../utils/constants";
+import { getRate } from "../../utils/Rate";
+import RateData from "../../store/rate";
 
 const Home = observer(() => {
   const router = useRouter();
@@ -54,6 +56,16 @@ const Home = observer(() => {
     });
   }, []);
 
+  useEffect(() => {
+    getRate()
+      .then((rates) => {
+        RateData.setNewRate(rates[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <>
       <Head>
@@ -63,7 +75,11 @@ const Home = observer(() => {
       {!Logged.loggedIn && <Preloader />}
       {Logged.loggedIn && (
         <>
-          <Header userPosition={UserData.userData.position} userName={UserData.userData.name} />
+          <Header
+            userPosition={UserData.userData.position}
+            userName={UserData.userData.name}
+            currentRate={RateData.rate.rate}
+          />
           <Navigation />
           <Main>
             {UserData.userData.position === SUPERADMIN ||
