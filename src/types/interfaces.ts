@@ -26,6 +26,7 @@ export interface IOrder {
   model: string;
   size: string;
   // images
+  orderImages: Array<IOrderImages>;
   payment: string;
   currentRate: string;
   priceCNY: string;
@@ -35,6 +36,13 @@ export interface IOrder {
   promoCodePercent: number;
   comment: string;
   __v?: number;
+}
+
+export interface IOrderImages {
+  _id: string;
+  name: string;
+  path: string;
+  size: string;
 }
 
 export interface IRate {

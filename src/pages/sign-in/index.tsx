@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import Login from "../../components/Login/Login";
-import { authorize } from "../../utils/Auth";
+import { authorize, verification } from "../../utils/Auth";
 import { getUserInfo } from "../../utils/User";
 import UserData from "../../store/user";
 import Logged from "../../store/logged";
@@ -12,6 +12,17 @@ const Home = observer(() => {
   const router = useRouter();
 
   const [loginError, setLoginError] = useState<number>(0);
+  const [loginPopupError, setLoginPopupError] = useState<boolean>(false);
+
+  const [loginPopup, setLoginPopup] = useState(false);
+
+  function openLoginPopup() {
+    setLoginPopup(true);
+  }
+
+  function closeLoginPopup() {
+    setLoginPopup(false);
+  }
 
   useEffect(() => {
     !Logged.loggedIn &&
@@ -44,14 +55,25 @@ const Home = observer(() => {
     }
   }, [Logged.loggedIn]);
 
-  function handleAuthorization(email: string, password: string) {
-    authorize(email, password)
+  function handleVerification(email: string, password: string) {
+    verification(email, password)
+      .then((res) => {
+        openLoginPopup();
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoginError(err);
+      });
+  }
+
+  function handleAuthorization(email: string, password: string, code: string) {
+    authorize(email, password, code)
       .then(() => {
         router.push("/");
       })
       .catch((err) => {
         console.log(err);
-        setLoginError(err);
+        setLoginPopupError(true)
       });
   }
 
@@ -63,7 +85,14 @@ const Home = observer(() => {
       </Head>
       <Login
         handleAuthorization={handleAuthorization}
+        handleVerification={handleVerification}
+        loginPopup={loginPopup}
+        closeLoginPopup={closeLoginPopup}
+        openLoginPopup={openLoginPopup}
         loginError={loginError}
+        setLoginError={setLoginError}
+        loginPopupError={loginPopupError}
+        setLoginPopupError={setLoginPopupError}
       />
     </>
   );

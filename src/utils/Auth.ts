@@ -4,8 +4,21 @@ const HEADERS = {
   "Content-Type": "application/json",
 };
 
-export const authorize = (email: string, password: string) => {
+export const authorize = (email: string, password: string, code: string) => {
   return fetch(`${BASE_URL}/signin`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      email,
+      password,
+      code,
+    }),
+  }).then(checkResponse);
+};
+
+export const verification = (email: string, password: string) => {
+  return fetch(`${BASE_URL}/signin-verification`, {
     credentials: "include",
     method: "POST",
     headers: HEADERS,

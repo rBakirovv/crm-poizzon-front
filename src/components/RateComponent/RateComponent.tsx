@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import styles from "./RateComponent.module.css";
 import { createRate, updateRate } from "../../utils/Rate";
@@ -15,6 +15,8 @@ const RateComponent: FC<IRateComponentProps> = ({
   isFirstRate,
 }) => {
   const [isSubmitPopup, setIsSubmitPopup] = useState(false);
+
+  const regexRate = /^\d+(?:[\.,]\d+)?$/;
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
@@ -55,6 +57,15 @@ const RateComponent: FC<IRateComponentProps> = ({
         console.log(err);
       });
   }
+
+  useEffect(() => {
+    if (!regexRate.test(RateData.rate.rate)) {
+      RateData.setNewRate({
+        rate: "0.00",
+        _id: currentRate._id,
+      });
+    }
+  }, [currentRate]);
 
   return (
     <section className={styles["rate"]}>

@@ -10,6 +10,7 @@ export default function Document() {
         <div id='image-popup'></div>
         <div id='burger'></div>
         <div id='submit-popup'></div>
+        <div id='login-popup'></div>
       </body>
     </Html>
   )

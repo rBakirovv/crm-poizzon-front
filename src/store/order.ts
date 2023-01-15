@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { IOrder } from "../types/interfaces";
+import { deleteOrder } from "../utils/Order";
 
 class OrderData {
   order: IOrder = {
@@ -16,6 +17,7 @@ class OrderData {
     model: "",
     size: "",
     // images
+    orderImages: [],
     payment: "",
     currentRate: "0",
     priceCNY: "0",
@@ -27,12 +29,26 @@ class OrderData {
     __v: 0,
   };
 
+  orders: Array<IOrder> = [];
+
   constructor() {
     makeAutoObservable(this);
   }
 
   setOrder(currentOrder: IOrder) {
     this.order = currentOrder;
+  }
+
+  deleteOrder(orderId: string) {
+    this.orders = this.orders.filter((orderItem) => orderItem._id !== orderId);
+  }
+
+  setOrders(ordersList: Array<IOrder>) {
+    this.orders = ordersList;
+  }
+
+  pushOrder(orderItem: IOrder) {
+    this.orders.push(orderItem);
   }
 
   setCurrentRate(rate: string) {

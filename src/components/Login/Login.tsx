@@ -1,12 +1,30 @@
 import React, { FC, useState } from "react";
+import LoginPopup from "../LoginPopup/LoginPopup";
 import styles from "./Login.module.css";
 
 interface ILoginProps {
-  handleAuthorization: (email: string, password: string) => void;
+  handleAuthorization: (email: string, password: string, code: string) => void;
+  handleVerification: (email: string, password: string) => void;
+  loginPopup: boolean;
+  closeLoginPopup: () => void;
+  openLoginPopup: () => void;
   loginError: number;
+  setLoginError: React.Dispatch<React.SetStateAction<number>>;
+  loginPopupError: boolean;
+  setLoginPopupError: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Login: FC<ILoginProps> = ({ handleAuthorization, loginError }) => {
+const Login: FC<ILoginProps> = ({
+  handleAuthorization,
+  handleVerification,
+  loginPopup,
+  closeLoginPopup,
+  openLoginPopup,
+  loginError,
+  setLoginError,
+  loginPopupError,
+  setLoginPopupError,
+}) => {
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -17,6 +35,8 @@ const Login: FC<ILoginProps> = ({ handleAuthorization, loginError }) => {
 
     const { name, value } = target;
 
+    setLoginError(0);
+
     setData({
       ...data,
       [name]: value,
@@ -25,7 +45,7 @@ const Login: FC<ILoginProps> = ({ handleAuthorization, loginError }) => {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    handleAuthorization(data.email, data.password);
+    handleVerification(data.email, data.password);
   };
 
   return (
@@ -62,12 +82,30 @@ const Login: FC<ILoginProps> = ({ handleAuthorization, loginError }) => {
                 Вы ввели неправильный логин или пароль.
               </span>
             )}
-            <button onClick={handleSubmit} type="submit" className={styles["login__submit"]}>
+            {loginError >= 500 && (
+              <span className={styles["login__submit-span"]}>
+                Произошла ошибка, возможно неверный логин или пароль.
+              </span>
+            )}
+            <button
+              onClick={handleSubmit}
+              type="submit"
+              className={styles["login__submit"]}
+            >
               Войти
             </button>
           </div>
         </form>
       </div>
+      <LoginPopup
+        loginPopup={loginPopup}
+        closeLoginPopup={closeLoginPopup}
+        email={data.email}
+        password={data.password}
+        handleAuthorization={handleAuthorization}
+        loginPopupError={loginPopupError}
+        setLoginPopupError={setLoginPopupError}
+      />
     </section>
   );
 };

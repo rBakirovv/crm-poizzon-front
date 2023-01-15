@@ -154,7 +154,7 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
             <div className={styles["users__table-name"]}>Должность</div>
           </div>
           <ul className={styles["users__table-list"]}>
-            {users.map((userItem: IUserData) => {
+            {users.slice().reverse().map((userItem: IUserData) => {
               return (
                 <li
                   key={userItem._id}

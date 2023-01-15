@@ -8,9 +8,12 @@ import Preloader from "../components/UI/Preloader/Preloader";
 import UserData from "../store/user";
 import Logged from "../store/logged";
 import { getUserInfo } from "../utils/User";
+import { getOrders } from "../utils/Order";
+import OrderData from "../store/order";
 import Navigation from "../components/UI/Navigation/Navigation";
 import { getRate } from "../utils/Rate";
 import RateData from "../store/rate";
+import OrdersList from "../components/OrdersList/OrdersList";
 
 const Home = observer(() => {
   const router = useRouter();
@@ -56,6 +59,10 @@ const Home = observer(() => {
       });
   }, []);
 
+  useEffect(() => {
+    getOrders().then((orders) => OrderData.setOrders(orders));
+  }, []);
+
   return (
     <>
       <Head>
@@ -72,7 +79,7 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            <h1>hello!</h1>
+            <OrdersList />
           </Main>
         </>
       )}

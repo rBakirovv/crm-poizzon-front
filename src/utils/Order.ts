@@ -1,3 +1,4 @@
+import { IOrderImages } from "../types/interfaces";
 import { BASE_URL } from "./constants";
 
 const HEADERS = {
@@ -48,7 +49,6 @@ export const updateOrderDraft = (
   brand: string,
   model: string,
   size: string,
-  // img
   payment: string,
   priceCNY: string,
   priceDeliveryChina: string,
@@ -76,6 +76,44 @@ export const updateOrderDraft = (
       promoCodePercent: promoCodePercent,
       comment: comment,
     }),
+  }).then(checkResponse);
+};
+
+export const updateOrderImages = (
+  id: string,
+  orderImages: Array<IOrderImages>
+) => {
+  return fetch(`${BASE_URL}/order/order-images/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      orderImages: orderImages,
+    }),
+  }).then(checkResponse);
+};
+
+export const deleteImage = (
+  imageName: string,
+  id: string,
+) => {
+  return fetch(`${BASE_URL}/order/order-images/${id}`, {
+    credentials: "include",
+    method: "DELETE",
+    headers: HEADERS,
+    body: JSON.stringify({
+      imageName: imageName,
+    }),
+  }).then(checkResponse);
+};
+
+export const uploadImages = (files: FormData, folder: string) => {
+  return fetch(`${BASE_URL}/images-upload/`, {
+    method: "POST",
+    headers: {
+      "Folder": folder,
+    },
+    body: files,
   }).then(checkResponse);
 };
 

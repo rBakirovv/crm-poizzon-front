@@ -4,6 +4,7 @@ import styles from "./Header.module.css";
 import Link from "next/link";
 import Burger from "../Burger/Burger";
 import { createOrder } from "../../../utils/Order";
+import OrderData from "../../../store/order";
 
 interface IHeaderProps {
   userPosition?: string;
@@ -26,6 +27,7 @@ const Header: FC<IHeaderProps> = ({ userPosition, userName, currentRate }) => {
 
   function createNewOrder() {
     createOrder(userName!, currentRate!).then((order) => {
+      OrderData.pushOrder(order);
       router.push(`/order/change/${order._id}`);
     });
   }
@@ -60,7 +62,7 @@ const Header: FC<IHeaderProps> = ({ userPosition, userName, currentRate }) => {
         router.pathname.includes("/order/change/")) && (
         <div className={styles["header__container"]}>
           <Link className={styles["header__container-title"]} href="/">
-            POIZZONQQ CRM
+            POIZZON<span className={styles["header__container-title-span"]}>QQ</span> CRM
           </Link>
           <div className={styles["header__buttons-container"]}>
             <button

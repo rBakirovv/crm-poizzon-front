@@ -22,7 +22,7 @@ const ImagePopup: FC<IImagePopupProps> = ({ currentImage, isImagePopupOpen, clos
         isImagePopupOpen && styles["image-popup_visible"]
       }`}
     >
-      <img src={currentImage} className={styles["image-popup__main-image"]} />
+      <img src={currentImage} className={styles["image-popup__main-image"]} crossOrigin="anonymous" />
     </section>
   );
 

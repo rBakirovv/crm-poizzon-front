@@ -2,7 +2,7 @@ import { FC, useEffect } from "react";
 
 interface ITimerProps {
   timeLeft: number;
-  setTimeLeft: any; // Косяк, нужно поправить
+  setTimeLeft: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Timer: FC<ITimerProps> = ({ timeLeft, setTimeLeft }) => {

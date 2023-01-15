@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import NumberInput from "../UI/NumberInput/NumberInput";
 import TextInput from "../UI/TextInput/TextInput";
 import styles from "./PoromoCode.module.css";
@@ -51,16 +51,22 @@ const PoromoCode: FC<IPoromoCodeProps> = ({ promoCodes }) => {
       });
   }
 
-  function createPoromoCodeFunction() {
-    createPoromoCode(promoCodeData.code, promoCodeData.percent).then(
-      (promo) => {
+  function createPoromoCodeFunction(e: React.SyntheticEvent) {
+    e.preventDefault();
+    createPoromoCode(promoCodeData.code, promoCodeData.percent)
+      .then((promo) => {
         PromoCodeData.createPromoCode(promo);
-      }
-    );
+      })
+      .then(() => {
+        setPromoCodeData({
+          code: "",
+          percent: 0,
+        });
+      });
   }
 
   useEffect(() => {
-    if (promoCodeData.percent <= -1 || promoCodeData.percent > 20) {
+    if (promoCodeData.percent <= -1 || promoCodeData.percent > 500) {
       setPromoCodeData({
         code: promoCodeData.code,
         percent: 0,
@@ -84,9 +90,9 @@ const PoromoCode: FC<IPoromoCodeProps> = ({ promoCodes }) => {
           required={true}
         />
         <NumberInput
-          label="Процент скидки (число)"
+          label="Скидка (число)"
           name="percent"
-          placeholder="Максимум 20%"
+          placeholder="Максимум 500₽"
           value={promoCodeData.percent}
           handleChange={handleChange}
           required={true}
@@ -128,7 +134,7 @@ const PoromoCode: FC<IPoromoCodeProps> = ({ promoCodes }) => {
                     {promoCodeItem.code}
                   </h4>
                   <p className={styles["promo-code__table-info-number"]}>
-                    {promoCodeItem.percent} %
+                    {promoCodeItem.percent} ₽
                   </p>
                 </div>
               </li>

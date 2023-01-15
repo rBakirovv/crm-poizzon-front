@@ -77,6 +77,9 @@
 }
 
 .users__table-item-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: 600;
   position: absolute;
   left: 0rem;
@@ -120,8 +123,13 @@
   width: 100%;
   background: #f9f9f9;
   border: 1px solid #000;
+  border-right: none;
   min-width: 250px;
   max-width: 250px;
+}
+
+.users__table-name:last-of-type {
+  border-right: 1px solid #000;
 }
 
 .users__table-list {
@@ -174,9 +182,12 @@
   min-width: 250px;
   max-width: 250px;
   border-left: 1px solid #000;
-  border-right: 1px solid #000;
   margin: 0;
   padding: 1rem 0;
+}
+
+.users__table-list-text:last-of-type {
+  border-right: 1px solid #000;
 }
 
 @media screen and (max-width: 500px) {
