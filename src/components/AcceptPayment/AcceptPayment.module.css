@@ -1,0 +1,52 @@
+.accept-payment__image-container {
+  position: relative;
+  max-width: 150px;
+  max-height: 150px;
+  overflow: hidden;
+  border: 2px solid #f5f5f5;
+  border-radius: 0.5rem;
+}
+
+.accept-payment__image {
+  width: 100%;
+  cursor: pointer;
+}
+
+.accept-payment__submit {
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 35px;
+  background: #000;
+  color: #fff;
+  border-radius: 1rem;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+  margin-top: 2rem;
+}
+
+.accept-payment__submit:hover {
+  background: #ff7f00;
+}
+
+.accept-payment__submit:active {
+  background: #d96e3a;
+}
+
+@media screen and (max-width: 500px) {
+  .accept-payment__submit:hover {
+    background: #000;
+  }
+
+  .accept-payment__submit:active {
+    background: #d96e3a;
+  }
+}

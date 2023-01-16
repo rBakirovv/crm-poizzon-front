@@ -1,0 +1,157 @@
+.order-pay {
+  padding: 70px 20px 20px;
+}
+
+.order-pay__container {
+  max-width: 500px;
+  margin: auto;
+}
+
+.order-pay__title {
+  font-weight: 700;
+  font-size: 1.5em;
+  margin: 1rem 0 0;
+}
+
+.order-pay__text {
+  font-weight: 400;
+  font-size: 1.2rem;
+  margin: 1rem 0 0;
+}
+
+.order-pay__pay-submit {
+  width: 100%;
+  height: 60px;
+  max-width: 370px;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 1rem;
+  padding: 0 1rem 0 1rem;
+  border-radius: 0.5rem;
+  font-size: 1.2em;
+  font-family: inherit;
+  background: #000;
+  color: #fff;
+  font-weight: 500;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s ease-in-out;
+  margin-top: 2rem;
+}
+
+.order-pay__pay-submit_disabled {
+  background: #676767;
+  opacity: 0.8;
+  cursor: default;
+}
+
+.order-pay__pay-submit:active {
+  background-color: #d96e3a;
+}
+
+.drag-n-drop-container {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  text-align: center;
+  border-radius: 0.5rem;
+  border: 2px dashed #000;
+  color: #000;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.drag-n-drop-text {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.order-pay__images-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  list-style-type: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+.order-pay__image {
+  position: relative;
+  max-width: 150px;
+  max-height: 150px;
+  overflow: hidden;
+  border: 2px solid #f5f5f5;
+  border-radius: 0.5rem;
+}
+
+.order-pay__image-item {
+  width: 100%;
+  cursor: pointer;
+}
+
+.order-pay__delete-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 18px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.order-pay__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.red-star {
+  color: red;
+}
+
+.order-pay__select-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-pay__select {
+  width: 334px;
+  height: 36px;
+  border-radius: 0.5rem;
+  padding-left: 0.5rem;
+  border: 2px solid #000;
+  margin-top: 0.5rem;
+  background: #fff;
+}
+
+.order-pay__personal-data {
+  display: inline-block;
+  width: 100%;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+  position: fixed;
+  left: 50%;
+  bottom: 6rem;
+  transform: translateX(-50%);
+  margin-top: -0.5rem;
+}
+
+@media screen and (max-width: 500px) {
+  .order-pay__select {
+    width: 314px;
+  }
+}

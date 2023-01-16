@@ -104,7 +104,6 @@ const Home = observer(() => {
           <Main>
             {router.query.orderChangeId && OrderData.order._id && PaymentsData.paymentsList && (
               <OrderChange
-                order={OrderData.order}
                 payments={PaymentsData.paymentsList}
               />
             )}

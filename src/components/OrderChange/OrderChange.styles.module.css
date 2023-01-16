@@ -136,6 +136,10 @@
   margin-top: 1rem;
 }
 
+.order-change__order-submit_disable {
+  opacity: 0.7;
+}
+
 .order-change__order-submit:hover {
   background: #ff7f00;
 }

@@ -1,13 +1,16 @@
 import { makeAutoObservable } from "mobx";
 import { IOrder } from "../types/interfaces";
-import { deleteOrder } from "../utils/Order";
 
 class OrderData {
   order: IOrder = {
     _id: "",
     creater: "",
+    buyer: "",
+    postman: "",
     createdAt: new Date(Date.now()),
     overudeAfter: new Date(Date.now()),
+    buyAt: "",
+    inChinaStockAt: "",
     orderId: 0,
     status: "",
     link: "",
@@ -16,8 +19,9 @@ class OrderData {
     brand: "",
     model: "",
     size: "",
-    // images
     orderImages: [],
+    payProofImages: [],
+    buyProofImages: [],
     payment: "",
     currentRate: "0",
     priceCNY: "0",
@@ -26,6 +30,14 @@ class OrderData {
     commission: "0",
     promoCodePercent: 0,
     comment: "",
+    poizonCode: "",
+    deliveryCode: "",
+    deliveryName: "",
+    deliveryNameRecipient: "",
+    deliveryPhone: "",
+    deliveryPhoneRecipient: "",
+    deliveryMethod: "",
+    deliveryAddress: "",
     __v: 0,
   };
 

@@ -9,12 +9,13 @@ import {
   updateOrderDraft,
   updateOrderImages,
   uploadImages,
-  deleteImage,
+  deleteOrderImage,
 } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { BASE_URL } from "../../utils/constants";
 import Dropzone from "react-dropzone";
 import ImagePopup from "../ImagePopup/ImagePopup";
+import AcceptPayment from "../AcceptPayment/acceptPayment";
 
 interface IOrderChangeProps {
   payments: Array<IPayments>;
@@ -151,8 +152,12 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
         OrderData.setOrder({
           _id: OrderData.order._id,
           creater: OrderData.order.creater,
+          buyer: OrderData.order.buyer,
+          postman: OrderData.order.postman,
           createdAt: OrderData.order.createdAt,
           overudeAfter: OrderData.order.overudeAfter,
+          buyAt: OrderData.order.buyAt,
+          inChinaStockAt: OrderData.order.inChinaStockAt,
           orderId: OrderData.order.orderId,
           status: OrderData.order.status,
           link: OrderData.order.link,
@@ -162,6 +167,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           model: OrderData.order.model,
           size: OrderData.order.size,
           orderImages: OrderData.order.orderImages.concat(data.data),
+          payProofImages: OrderData.order.payProofImages,
+          buyProofImages: OrderData.order.buyProofImages,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
           priceCNY: OrderData.order.priceCNY,
@@ -170,6 +177,14 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           commission: OrderData.order.commission,
           promoCodePercent: OrderData.order.promoCodePercent,
           comment: OrderData.order.comment,
+          poizonCode: OrderData.order.poizonCode,
+          deliveryCode: OrderData.order.deliveryCode,
+          deliveryName: OrderData.order.deliveryName,
+          deliveryNameRecipient: OrderData.order.deliveryNameRecipient,
+          deliveryPhone: OrderData.order.deliveryPhone,
+          deliveryPhoneRecipient: OrderData.order.deliveryPhoneRecipient,
+          deliveryMethod: OrderData.order.deliveryMethod,
+          deliveryAddress: OrderData.order.deliveryAddress,
           __v: OrderData.order.__v,
         });
       });
@@ -182,13 +197,17 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
   };
 
   function deleteImageHandler(imageName: string) {
-    deleteImage(imageName, OrderData.order._id)
+    deleteOrderImage(imageName, OrderData.order._id)
       .then(() => {
         OrderData.setOrder({
           _id: OrderData.order._id,
           creater: OrderData.order.creater,
+          buyer: OrderData.order.buyer,
+          postman: OrderData.order.postman,
           createdAt: OrderData.order.createdAt,
           overudeAfter: OrderData.order.overudeAfter,
+          buyAt: OrderData.order.buyAt,
+          inChinaStockAt: OrderData.order.inChinaStockAt,
           orderId: OrderData.order.orderId,
           status: OrderData.order.status,
           link: OrderData.order.link,
@@ -200,6 +219,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           orderImages: OrderData.order.orderImages.filter(
             (imageItem) => imageItem.name !== imageName
           ),
+          payProofImages: OrderData.order.payProofImages,
+          buyProofImages: OrderData.order.buyProofImages,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
           priceCNY: OrderData.order.priceCNY,
@@ -208,6 +229,14 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           commission: OrderData.order.commission,
           promoCodePercent: OrderData.order.promoCodePercent,
           comment: OrderData.order.comment,
+          poizonCode: OrderData.order.poizonCode,
+          deliveryCode: OrderData.order.deliveryCode,
+          deliveryName: OrderData.order.deliveryName,
+          deliveryNameRecipient: OrderData.order.deliveryNameRecipient,
+          deliveryPhone: OrderData.order.deliveryPhone,
+          deliveryPhoneRecipient: OrderData.order.deliveryPhoneRecipient,
+          deliveryMethod: OrderData.order.deliveryMethod,
+          deliveryAddress: OrderData.order.deliveryAddress,
           __v: OrderData.order.__v,
         });
       })
@@ -248,8 +277,12 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
     OrderData.setOrder({
       _id: OrderData.order._id,
       creater: OrderData.order.creater,
+      buyer: OrderData.order.buyer,
+      postman: OrderData.order.postman,
       createdAt: OrderData.order.createdAt,
       overudeAfter: OrderData.order.overudeAfter,
+      buyAt: OrderData.order.buyAt,
+      inChinaStockAt: OrderData.order.inChinaStockAt,
       orderId: OrderData.order.orderId,
       status: OrderData.order.status,
       link: data.link,
@@ -259,6 +292,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       model: data.model,
       size: data.size,
       orderImages: OrderData.order.orderImages,
+      payProofImages: OrderData.order.payProofImages,
+      buyProofImages: OrderData.order.buyProofImages,
       payment: data.payment,
       currentRate: OrderData.order.currentRate,
       priceCNY: data.priceCNY,
@@ -267,6 +302,14 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       commission: data.commission,
       promoCodePercent: data.promoCodePercent,
       comment: data.comment,
+      poizonCode: OrderData.order.poizonCode,
+      deliveryCode: OrderData.order.deliveryCode,
+      deliveryName: OrderData.order.deliveryName,
+      deliveryNameRecipient: OrderData.order.deliveryNameRecipient,
+      deliveryPhone: OrderData.order.deliveryPhone,
+      deliveryPhoneRecipient: OrderData.order.deliveryPhoneRecipient,
+      deliveryMethod: OrderData.order.deliveryMethod,
+      deliveryAddress: OrderData.order.deliveryAddress,
       __v: OrderData.order.__v,
     });
   }, [data]);
@@ -423,45 +466,50 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               Изображения товара<span className={styles["red-star"]}>*</span>
             </label>
             <ul className={styles["order-change__images-list"]}>
-              {OrderData.order.orderImages.map((image) => {
-                return (
-                  <li
-                    key={image.name}
-                    className={styles["order-change__image"]}
-                  >
-                    {OrderData.order.status === "Черновик" && (
-                      <div
-                        className={styles["order-change__delete-image"]}
-                        onClick={() => deleteImageHandler(image.name)}
-                      >
-                        <svg
-                          width="18"
-                          height="20"
-                          viewBox="0 0 18 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+              {OrderData.order.orderImages
+                .slice()
+                .reverse()
+                .map((image) => {
+                  return (
+                    <li
+                      key={image.name}
+                      className={styles["order-change__image"]}
+                    >
+                      {OrderData.order.status === "Черновик" && (
+                        <div
+                          className={styles["order-change__delete-image"]}
+                          onClick={() => deleteImageHandler(image.name)}
                         >
-                          <path
-                            d="M2.45763 18.1422C2.51857 18.8126 3.06711 19.3002 3.73754 19.3002H14.2612C14.9317 19.3002 15.4802 18.7923 15.5411 18.1422L16.7195 5.79004H1.2793L2.45763 18.1422Z"
-                            fill="black"
-                          />
-                          <path
-                            d="M16.7201 1.93002H11.5801V1.27991C11.5801 0.568849 11.0113 0 10.3002 0H7.72009C7.00903 0 6.44018 0.568849 6.44018 1.27991V1.93002H1.27991C0.568849 1.93002 0 2.49887 0 3.20993C0 3.92099 0.568849 4.48984 1.27991 4.48984H16.7201C17.4312 4.48984 18 3.92099 18 3.20993C18 2.49887 17.4312 1.93002 16.7201 1.93002Z"
-                            fill="black"
-                          />
-                        </svg>
-                      </div>
-                    )}
-                    <img
-                      className={styles["order-change__image-item"]}
-                      src={`${BASE_URL}${image.path}`}
-                      alt={image.name}
-                      crossOrigin="anonymous"
-                      onClick={() => openImagePopup(`${BASE_URL}${image.path}`)}
-                    />
-                  </li>
-                );
-              })}
+                          <svg
+                            width="18"
+                            height="20"
+                            viewBox="0 0 18 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M2.45763 18.1422C2.51857 18.8126 3.06711 19.3002 3.73754 19.3002H14.2612C14.9317 19.3002 15.4802 18.7923 15.5411 18.1422L16.7195 5.79004H1.2793L2.45763 18.1422Z"
+                              fill="black"
+                            />
+                            <path
+                              d="M16.7201 1.93002H11.5801V1.27991C11.5801 0.568849 11.0113 0 10.3002 0H7.72009C7.00903 0 6.44018 0.568849 6.44018 1.27991V1.93002H1.27991C0.568849 1.93002 0 2.49887 0 3.20993C0 3.92099 0.568849 4.48984 1.27991 4.48984H16.7201C17.4312 4.48984 18 3.92099 18 3.20993C18 2.49887 17.4312 1.93002 16.7201 1.93002Z"
+                              fill="black"
+                            />
+                          </svg>
+                        </div>
+                      )}
+                      <img
+                        className={styles["order-change__image-item"]}
+                        src={`${BASE_URL}${image.path}`}
+                        alt={image.name}
+                        crossOrigin="anonymous"
+                        onClick={() =>
+                          openImagePopup(`${BASE_URL}${image.path}`)
+                        }
+                      />
+                    </li>
+                  );
+                })}
             </ul>
             {OrderData.order.status === "Черновик" && (
               <Dropzone
@@ -636,14 +684,16 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               required={false}
             />
             <button
-              className={styles["order-change__order-submit"]}
+              className={`${styles["order-change__order-submit"]} ${OrderData.order.status !== "Черновик" && styles["order-change__order-submit_disable"]}`}
               type="submit"
+              disabled={OrderData.order.status !== "Черновик"}
             >
               Cохранить
             </button>
           </form>
         </div>
       )}
+      {orderСhapter === "Pay" && <AcceptPayment />}
       <ImagePopup
         isImagePopupOpen={isImagePopupOpen}
         currentImage={currentImage}

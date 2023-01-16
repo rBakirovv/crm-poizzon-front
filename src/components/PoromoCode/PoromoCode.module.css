@@ -68,23 +68,16 @@
 }
 
 .promo-code__delete-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 30px;
-  height: 30px;
+  width: 15px;
+  height: 15px;
+  background-image: url(../../../public/images/close-icon.svg);
+  background-position: center;
+  background-repeat: no-repeat;
   background-color: transparent;
+  background-size: contain;
   border: none;
-  margin-right: 0.5rem;
+  margin-right: 1rem;
   cursor: pointer;
-}
-
-.promo-code__delete-button path {
-  transition: all 0.4s ease-in-out;
-}
-
-.promo-code__delete-button:hover path {
-  fill: red;
 }
 
 .promo-code__table-info-title {

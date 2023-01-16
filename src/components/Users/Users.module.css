@@ -146,30 +146,18 @@
 
 .users__table-delete {
   position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  background: transparent;
+  background-image: url(../../../public/images/close-icon.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-size: contain;
+  width: 15px;
+  height: 15px;
   border: none;
-  border-radius: 0.5rem;
-  left: -3rem;
+  left: -2.5rem;
   bottom: 50%;
   transform: translateY(50%);
   cursor: pointer;
-}
-
-.users__table-delete path {
-  transition: all 0.4s ease-in-out;
-}
-
-.users__table-delete:hover path {
-  fill: red;
-}
-
-.users__table-delete:active {
-  background: #fff;
 }
 
 .users__table-list-text {

@@ -1,15 +1,41 @@
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { FC, useEffect, useState } from "react";
+import { IOrder } from "../../types/interfaces";
+import { BASE_URL } from "../../utils/constants";
 import ImagePopup from "../ImagePopup/ImagePopup";
 import Timer from "../UI/Timer/Timer";
 import styles from "./Order.module.css";
 
-export default function Order() {
+interface IOrderProps {
+  currentOrder: IOrder;
+}
+
+const Order: FC<IOrderProps> = ({ currentOrder }) => {
+  const router = useRouter();
+
   const [isBrowser, setIsBrowser] = useState<boolean>(false);
 
   const [currentImage, setCurrentImage] = useState<string>("");
   const [isImagePopupOpen, setIsImagePopupOpen] = useState<boolean>(false);
 
-  const [timeLeft, setTimeLeft] = useState<number>(1 * 60);
+  const [timeLeft, setTimeLeft] = useState<number>(
+    Math.ceil(
+      Math.abs(
+        new Date(currentOrder.overudeAfter).getTime() -
+          new Date(Date.now()).getTime()
+      ) / 1000
+    )
+  );
+
+  const priceRub =
+    parseFloat(currentOrder.priceCNY) * parseFloat(currentOrder.currentRate);
+
+  const totalPrice =
+    priceRub +
+    parseFloat(currentOrder.priceDeliveryChina) +
+    parseFloat(currentOrder.priceDeliveryRussia) +
+    parseFloat(currentOrder.commission) -
+    currentOrder.promoCodePercent;
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -29,9 +55,11 @@ export default function Order() {
   }
 
   function handleTimeLeft() {
-    alert(
-      "Время для оплаты заказа истекло. Стоимость товара могла измениться. \n\nЕсли вы готовы оплатить товар, сообщите менеджеру в @telegram"
-    );
+    timeLeft <= 0
+      ? alert(
+          "Время для оплаты заказа истекло. Стоимость товара могла измениться. \n\nЕсли вы готовы оплатить товар, сообщите менеджеру в @telegram"
+        )
+      : router.push(`pay/${currentOrder._id}`);
   }
 
   return (
@@ -39,34 +67,44 @@ export default function Order() {
       <div className={styles["order__container"]}>
         <div className={styles["order__shoes-image-container"]}>
           <div className={styles["order__shoes-image-inner"]}>
-            <img
-              className={styles["order__shoes-image"]}
-              src="../images/snick.webp"
-              alt="Добавить имя обуви!"
-              onClick={openPoup}
-            />
+            {currentOrder.orderImages.length > 0 && (
+              <img
+                className={styles["order__shoes-image"]}
+                src={`${BASE_URL}${currentOrder.orderImages[0].path}`}
+                alt={currentOrder.model}
+                crossOrigin="anonymous"
+                onClick={openPoup}
+              />
+            )}
           </div>
         </div>
         <ul className={styles["order__shoes-image-collection"]}>
-          <li className={styles["order__shoes-image-collection-item"]}>
-            <img src="../images/snick-nike.webp" onClick={openPoup} />
-          </li>
-          <li className={styles["order__shoes-image-collection-item"]}>
-            <img src="../images/size-table-nike.png" onClick={openPoup} />
-          </li>
-          <li className={styles["order__shoes-image-collection-item"]}>
-            <img src="../images/size.png" onClick={openPoup} />
-          </li>
-          <li className={styles["order__shoes-image-collection-item"]}>
-            <img src="../images/size.png" onClick={openPoup} />
-          </li>
+          {currentOrder.orderImages.length > 0 &&
+            currentOrder.orderImages.slice(1).map((image) => {
+              return (
+                <li
+                  key={image._id}
+                  className={styles["order__shoes-image-collection-item"]}
+                >
+                  <img
+                    src={`${BASE_URL}${image.path}`}
+                    crossOrigin="anonymous"
+                    onClick={openPoup}
+                  />
+                </li>
+              );
+            })}
         </ul>
-        <h2 className={styles["order__shoes-title"]}>LiNing CF</h2>
+        <h2 className={styles["order__shoes-title"]}>
+          {currentOrder.brand} {currentOrder.model}
+        </h2>
         <div className={styles["order__shoes-size-container"]}>
-          <p className={styles["order__shoes-size"]}>Размер: 41.5</p>
+          <p className={styles["order__shoes-size"]}>
+            Размер: {currentOrder.size}
+          </p>
           <a
             className={styles["order__shoes-poizon-link"]}
-            href="https://m.dewu.com/router/product/ProductDetail?spuId=2841380&sourceName=shareDetail&outside_channel_type=0&share_platform_title=7&fromUserId=db6c570a3279c549c0deaa28d7055b94&skuId=611549517"
+            href={currentOrder.link}
             target="_blank"
             rel="noreferrer"
           >
@@ -88,46 +126,62 @@ export default function Order() {
         <div
           className={`${styles["order-divider"]} ${styles["order-divider_horizontal"]}`}
         ></div>
-        <h2 className={styles["order__title"]}>Итоговая сумма: 5650 ₽</h2>
-        {isBrowser && (
+        <h2 className={styles["order__title"]}>
+          Итоговая сумма: {totalPrice} ₽
+        </h2>
+        {isBrowser && currentOrder.priceCNY !== "0" && (
           <table cellPadding={"5px"} className={styles["order__price-table"]}>
             <tbody>
               <tr>
                 <td>Цена в CNY</td>
-                <td>289 ¥</td>
+                <td>{currentOrder.priceCNY} ¥</td>
               </tr>
               <tr>
                 <td>Курс обмена</td>
-                <td>11.7 ₽</td>
+                <td>{currentOrder.currentRate} ₽</td>
               </tr>
               <tr>
                 <td>Цена в RUB</td>
-                <td>3382 ₽</td>
+                <td>{priceRub} ₽</td>
               </tr>
               <tr>
                 <td>Доставка по Китаю</td>
-                <td>350 ₽</td>
+                <td>{currentOrder.priceDeliveryChina} ₽</td>
               </tr>
               <tr>
                 <td>Доставка в РФ</td>
-                <td>1100 ₽</td>
+                <td>{currentOrder.priceDeliveryRussia} ₽</td>
               </tr>
               <tr>
                 <td>Комиссия сервиса</td>
-                <td>1000 ₽</td>
+                <td>{currentOrder.commission} ₽</td>
               </tr>
-              <tr>
-                <td>Промо-код</td>
-                <td>20 %</td>
-              </tr>
+              {currentOrder.promoCodePercent !== 0 && (
+                <tr>
+                  <td>Скидка по промо-коду</td>
+                  <td>{currentOrder.promoCodePercent} ₽</td>
+                </tr>
+              )}
             </tbody>
           </table>
         )}
-        <div
-          className={`${styles["order-divider"]} ${styles["order-divider_horizontal"]}`}
-        ></div>
-        <p className={styles["order-text"]}><span className={styles["order__bold-span"]}>Способ доставки:</span> самовывоз из пункта выдачи СДЭК</p>
-        <p className={styles["order-text"]}><span className={styles["order__bold-span"]}>Адрес:</span> Санкт-Петербург пр-т Римского-Корсакова, 39</p>
+        {currentOrder.deliveryMethod !== "" && (
+          <>
+            <div
+              className={`${styles["order-divider"]} ${styles["order-divider_horizontal"]}`}
+            ></div>
+            <p className={styles["order-text"]}>
+              <span className={styles["order__bold-span"]}>
+                Способ доставки:
+              </span>{" "}
+              {currentOrder.deliveryMethod}
+            </p>
+            <p className={styles["order-text"]}>
+              <span className={styles["order__bold-span"]}>Адрес:</span>{" "}
+              {currentOrder.deliveryAddress}
+            </p>
+          </>
+        )}
         <div
           className={`${styles["order-divider"]} ${styles["order-divider_horizontal"]}`}
         ></div>
@@ -136,23 +190,46 @@ export default function Order() {
           <li className={styles["order-timeline-item"]}>
             <div className={styles["order-timeline-item-tail"]}></div>
             <div
-              className={`${styles["order-timeline-item-head"]} ${styles["order-timeline-item-head-green"]}`}
+              className={`${styles["order-timeline-item-head"]} ${
+                (currentOrder.status === "Проверка оплаты" ||
+                  currentOrder.status === "Оплачен" ||
+                  currentOrder.status === "На закупке" ||
+                  currentOrder.status === "Закуплен" ||
+                  currentOrder.status === "На складе в Китае" ||
+                  currentOrder.status === "Доставка в Москву" ||
+                  currentOrder.status === "На складе в РФ" ||
+                  currentOrder.status === "Доставляется" ||
+                  currentOrder.status === "Завершён") &&
+                styles["order-timeline-item-head-green"]
+              }`}
             ></div>
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>Проверка оплаты</div>
-              <a
-                className={styles["order-typography-screen-link"]}
-                href="#"
-                target="_blank"
-              >
-                Скриншот оплаты
-              </a>
+              {currentOrder.payProofImages.length > 0 && (
+                <a
+                  className={styles["order-typography-screen-link"]}
+                  href={`${BASE_URL}${currentOrder.payProofImages[0].path}`}
+                  target="_blank"
+                >
+                  Скриншот оплаты
+                </a>
+              )}
             </div>
           </li>
           <li className={styles["order-timeline-item"]}>
             <div className={styles["order-timeline-item-tail"]}></div>
             <div
-              className={`${styles["order-timeline-item-head"]} ${styles["order-timeline-item-head-green"]}`}
+              className={`${styles["order-timeline-item-head"]} ${
+                (currentOrder.status === "Оплачен" ||
+                  currentOrder.status === "На закупке" ||
+                  currentOrder.status === "Закуплен" ||
+                  currentOrder.status === "На складе в Китае" ||
+                  currentOrder.status === "Доставка в Москву" ||
+                  currentOrder.status === "На складе в РФ" ||
+                  currentOrder.status === "Доставляется" ||
+                  currentOrder.status === "Завершён") &&
+                styles["order-timeline-item-head-green"]
+              }`}
             ></div>
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>Оплачен</div>
@@ -161,7 +238,16 @@ export default function Order() {
           <li className={styles["order-timeline-item"]}>
             <div className={styles["order-timeline-item-tail"]}></div>
             <div
-              className={`${styles["order-timeline-item-head"]} ${styles["order-timeline-item-head-green"]}`}
+              className={`${styles["order-timeline-item-head"]} ${
+                (currentOrder.status === "На закупке" ||
+                  currentOrder.status === "Закуплен" ||
+                  currentOrder.status === "На складе в Китае" ||
+                  currentOrder.status === "Доставка в Москву" ||
+                  currentOrder.status === "На складе в РФ" ||
+                  currentOrder.status === "Доставляется" ||
+                  currentOrder.status === "Завершён") &&
+                styles["order-timeline-item-head-green"]
+              }`}
             ></div>
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>На закупке</div>
@@ -170,43 +256,67 @@ export default function Order() {
           <li className={styles["order-timeline-item"]}>
             <div className={styles["order-timeline-item-tail"]}></div>
             <div
-              className={`${styles["order-timeline-item-head"]} ${styles["order-timeline-item-head-green"]}`}
+              className={`${styles["order-timeline-item-head"]} ${
+                (currentOrder.status === "Закуплен" ||
+                  currentOrder.status === "На складе в Китае" ||
+                  currentOrder.status === "Доставка в Москву" ||
+                  currentOrder.status === "На складе в РФ" ||
+                  currentOrder.status === "Доставляется" ||
+                  currentOrder.status === "Завершён") &&
+                styles["order-timeline-item-head-green"]
+              }`}
             ></div>
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>Закуплен</div>
-              <a
-                className={styles["order-typography-screen-link"]}
-                href="#"
-                target="_blank"
-              >
-                Чек закупки №1
-              </a>
-              <a
-                className={styles["order-typography-screen-link"]}
-                href="#"
-                target="_blank"
-              >
-                Чек закупки №2
-              </a>
+              {currentOrder.buyProofImages.length > 0 &&
+                currentOrder.buyProofImages.map((image, index) => {
+                  return (
+                    <a
+                      key={image._id}
+                      className={styles["order-typography-screen-link"]}
+                      href={`${BASE_URL}${image.path}`}
+                      target="_blank"
+                    >
+                      Чек закупки №{index + 1}
+                    </a>
+                  );
+                })}
             </div>
           </li>
           <li className={styles["order-timeline-item"]}>
             <div className={styles["order-timeline-item-tail"]}></div>
             <div
-              className={`${styles["order-timeline-item-head"]} ${styles["order-timeline-item-head-green"]}`}
+              className={`${styles["order-timeline-item-head"]} ${
+                (currentOrder.status === "На складе в Китае" ||
+                  currentOrder.status === "Доставка в Москву" ||
+                  currentOrder.status === "На складе в РФ" ||
+                  currentOrder.status === "Доставляется" ||
+                  currentOrder.status === "Завершён") &&
+                styles["order-timeline-item-head-green"]
+              }`}
             ></div>
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>
-                На складе в Китае
-                <p className={styles["order-typography-screen-text"]}>
-                  Трек номер Poizon: 455HUDN8DICK
-                </p>
+                На складе в Китае СРАВНИТЬ ЧЕРЕЗ 7 ДНЕЙ!
+                {currentOrder.poizonCode !== "" && (
+                  <p className={styles["order-typography-screen-text"]}>
+                    Трек номер Poizon: 455HUDN8DICK
+                  </p>
+                )}
               </div>
             </div>
           </li>
           <li className={styles["order-timeline-item"]}>
             <div className={styles["order-timeline-item-tail"]}></div>
-            <div className={`${styles["order-timeline-item-head"]}`}></div>
+            <div
+              className={`${styles["order-timeline-item-head"]} ${
+                (currentOrder.status === "Доставка в Москву" ||
+                  currentOrder.status === "На складе в РФ" ||
+                  currentOrder.status === "Доставляется" ||
+                  currentOrder.status === "Завершён") &&
+                styles["order-timeline-item-head-green"]
+              }`}
+            ></div>
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>
                 Доставка в Москву
@@ -215,33 +325,60 @@ export default function Order() {
           </li>
           <li className={styles["order-timeline-item"]}>
             <div className={styles["order-timeline-item-tail"]}></div>
-            <div className={`${styles["order-timeline-item-head"]}`}></div>
+            <div
+              className={`${styles["order-timeline-item-head"]} ${
+                (currentOrder.status === "На складе в РФ" ||
+                  currentOrder.status === "Доставляется" ||
+                  currentOrder.status === "Завершён") &&
+                styles["order-timeline-item-head-green"]
+              }`}
+            ></div>
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>На складе в РФ</div>
             </div>
           </li>
           <li className={styles["order-timeline-item"]}>
             <div className={styles["order-timeline-item-tail"]}></div>
-            <div className={`${styles["order-timeline-item-head"]}`}></div>
+            <div
+              className={`${styles["order-timeline-item-head"]} ${
+                (currentOrder.status === "Доставляется" ||
+                  currentOrder.status === "Завершён") &&
+                styles["order-timeline-item-head-green"]
+              }`}
+            ></div>
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>Доставляется</div>
             </div>
           </li>
           <li className={styles["order-timeline-item"]}>
-            <div className={`${styles["order-timeline-item-head"]}`}></div>
+            <div
+              className={`${styles["order-timeline-item-head"]} ${
+                currentOrder.status === "Завершён" &&
+                styles["order-timeline-item-head-green"]
+              }`}
+            ></div>
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>Завершён</div>
             </div>
           </li>
         </ul>
-        <button
-          className={styles["order__pay-button"]}
-          onClick={handleTimeLeft}
-        >
-          <Timer timeLeft={timeLeft} setTimeLeft={setTimeLeft} />
-          <span className={styles["order__pay-button-span"]}>Оплатить</span>
-          <span>5832 ₽</span>
-        </button>
+        {currentOrder.status === "Черновик" && (
+          <button
+            className={styles["order__pay-button"]}
+            onClick={handleTimeLeft}
+          >
+            {isBrowser && (
+              <Timer
+                createdAt={currentOrder.createdAt}
+                dedline={currentOrder.overudeAfter}
+                timeLeft={timeLeft}
+                setTimeLeft={setTimeLeft}
+              />
+            )}
+            <span className={styles["order__pay-button-span"]}>Оплатить</span>
+            <span>5832 ₽</span>
+          </button>
+        )}
       </div>
       <ImagePopup
         currentImage={currentImage}
@@ -250,4 +387,6 @@ export default function Order() {
       />
     </section>
   );
-}
+};
+
+export default Order;

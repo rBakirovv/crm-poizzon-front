@@ -15,8 +15,12 @@ export interface IPayments {
 export interface IOrder {
   _id: string;
   creater: string;
+  buyer: string;
+  postman: string;
   createdAt: Date;
   overudeAfter: Date;
+  buyAt: Date | string;
+  inChinaStockAt: Date | string;
   orderId: number;
   status: string;
   link: string;
@@ -25,8 +29,9 @@ export interface IOrder {
   brand: string;
   model: string;
   size: string;
-  // images
   orderImages: Array<IOrderImages>;
+  payProofImages: Array<IOrderImages>;
+  buyProofImages: Array<IOrderImages>;
   payment: string;
   currentRate: string;
   priceCNY: string;
@@ -35,6 +40,14 @@ export interface IOrder {
   commission: string;
   promoCodePercent: number;
   comment: string;
+  poizonCode: string;
+  deliveryCode: string;
+  deliveryName: string;
+  deliveryNameRecipient: string;
+  deliveryPhone: string;
+  deliveryPhoneRecipient: string;
+  deliveryMethod: string;
+  deliveryAddress: string;
   __v?: number;
 }
 

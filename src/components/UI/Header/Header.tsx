@@ -10,9 +10,17 @@ interface IHeaderProps {
   userPosition?: string;
   userName?: string;
   currentRate?: string;
+  orderId?: number;
+  orderStatus?: string;
 }
 
-const Header: FC<IHeaderProps> = ({ userPosition, userName, currentRate }) => {
+const Header: FC<IHeaderProps> = ({
+  userPosition,
+  userName,
+  currentRate,
+  orderId,
+  orderStatus,
+}) => {
   const router = useRouter();
 
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
@@ -43,26 +51,32 @@ const Header: FC<IHeaderProps> = ({ userPosition, userName, currentRate }) => {
       {router.pathname.includes("/order/") &&
         !router.pathname.includes("/order/change/") && (
           <div className={styles["header__order-container"]}>
-            <h2 className={styles["header__order-title"]}>Заказ №1450</h2>
-            <button
-              className={styles["header__order-pay"]}
-              onClick={() =>
-                window.scrollTo({
-                  left: 0,
-                  top: document.body.scrollHeight,
-                  behavior: "smooth",
-                })
-              }
-            >
-              Оплатить
-            </button>
+            <h2 className={styles["header__order-title"]}>Заказ №{orderId}</h2>
+            {!router.pathname.includes("/pay/") && (
+              <button
+                className={styles["header__order-pay"]}
+                onClick={() =>
+                  window.scrollTo({
+                    left: 0,
+                    top: document.body.scrollHeight,
+                    behavior: "smooth",
+                  })
+                }
+              >
+                {orderStatus === "Черновик" ? "Оплатить" : "История заказа"}
+              </button>
+            )}
           </div>
         )}
       {(!router.pathname.includes("/order/") ||
         router.pathname.includes("/order/change/")) && (
         <div className={styles["header__container"]}>
           <Link className={styles["header__container-title"]} href="/">
-            POIZZON<span className={styles["header__container-title-span"]}>QQ</span> CRM
+            POIZZON
+            <span className={styles["header__container-title-span"]}>
+              QQ
+            </span>{" "}
+            CRM
           </Link>
           <div className={styles["header__buttons-container"]}>
             <button

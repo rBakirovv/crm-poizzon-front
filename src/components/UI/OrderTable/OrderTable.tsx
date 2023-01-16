@@ -6,7 +6,7 @@ import SubmitPopup from "../../SubmitPopup/SubmitPopup";
 import {
   deleteOrder,
   getCurrentOrder,
-  deleteImage,
+  deleteOrderImage,
 } from "../../../utils/Order";
 import { IOrderImages } from "../../../types/interfaces";
 
@@ -61,7 +61,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
       .then((order) => {
         if (order.orderImages.length !== 0) {
           order.orderImages.forEach((item: IOrderImages) => {
-            deleteImage(item.name, orderId);
+            deleteOrderImage(item.name, orderId);
           });
         }
       })
@@ -72,7 +72,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
         OrderData.deleteOrder(orderId);
       })
       .then(() => {
-        setOrderId(0)
+        setOrderId("");
       })
       .catch((err) => console.log(err));
   }
@@ -141,10 +141,10 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                     {orderItem.creater !== "" && orderItem.creater}
                   </div>
                   <div className={styles["orders-table__info-item"]}>
-                    Доделать пункт!
+                    {orderItem.buyer}
                   </div>
                   <div className={styles["orders-table__info-item"]}>
-                    Доделать пункт!
+                    {orderItem.postman}
                   </div>
                 </li>
               );

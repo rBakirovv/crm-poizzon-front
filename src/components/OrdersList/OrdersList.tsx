@@ -29,6 +29,10 @@ const OrdersList = () => {
     setOrdersStatus("На складе в РФ");
   }
 
+  function openSent() {
+    setOrdersStatus("Доставляется клиенту");
+  }
+
   function openСompleted() {
     setOrdersStatus("Завершён");
   }
@@ -115,6 +119,19 @@ const OrdersList = () => {
           </p>
         </li>
         <li
+          onClick={openSent}
+          className={styles["orders-list__navigation-item"]}
+        >
+          <p
+            className={`${styles["orders-list__navigation-text"]} ${
+              ordersStatus === "Доставляется клиенту" &&
+              styles["orders-list__navigation-text_active"]
+            }`}
+          >
+            Доставляется клиенту
+          </p>
+        </li>
+        <li
           onClick={openСompleted}
           className={styles["orders-list__navigation-item"]}
         >
@@ -129,6 +146,8 @@ const OrdersList = () => {
         </li>
       </ul>
       {ordersStatus === "Черновик" && <OrderTable status={"Черновик"} />}
+      {ordersStatus === "Проверка оплаты" && <OrderTable status={"Проверка оплаты"} />}
+      {ordersStatus === "Ожидает закупки" && <OrderTable status={"Ожидает закупки"} />}
     </section>
   );
 };
