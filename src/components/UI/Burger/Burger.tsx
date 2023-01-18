@@ -51,15 +51,18 @@ const Burger: FC<IBurgerProps> = ({
       }`}
     >
       <div className={styles["burger__buttons-container"]}>
-        <button
-          className={`${styles["burger__button"]} ${styles["burger__button_black"]}`}
-          onClick={handleCreateOrder}
-        >
-          Новый заказ
-        </button>
+        {UserData.userData.position !== "Байер" && (
+          <button
+            className={`${styles["burger__button"]} ${styles["burger__button_black"]}`}
+            onClick={handleCreateOrder}
+          >
+            Новый заказ
+          </button>
+        )}
         <Link
-          className={`${styles["burger__button"]} ${styles["burger__button_white"]}`}
-          href="/"
+          className={`${styles["burger__button"]} ${styles["burger__button_search"]}`}
+          href="/search-order"
+          onClick={closeBurger}
         >
           Поиск
         </Link>
@@ -75,16 +78,6 @@ const Burger: FC<IBurgerProps> = ({
             href="/"
           >
             Заказы
-          </Link>
-        </li>
-        <li onClick={closeBurger} className={styles["nav__list-item"]}>
-          <Link className={styles["nav__list-item-link"]} href="/">
-            Заказы на выкуп
-          </Link>
-        </li>
-        <li onClick={closeBurger} className={styles["nav__list-item"]}>
-          <Link className={styles["nav__list-item-link"]} href="/">
-            Склад
           </Link>
         </li>
         {UserData.userData.position === "Создатель" && (

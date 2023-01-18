@@ -13,7 +13,15 @@ export const getOrders = () => {
   }).then(checkResponse);
 };
 
-export const getCurrentOrder = (orderId: string | string[]) => {
+export const getCurrentClientOrder = (orderId: string) => {
+  return fetch(`${BASE_URL}/order/current/:id/${orderId}`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const getCurrentOrder = (orderId: string) => {
   return fetch(`${BASE_URL}/order/${orderId}`, {
     credentials: "include",
     method: "GET",
@@ -165,6 +173,99 @@ export const uploadImages = (files: FormData, folder: string) => {
 
 export const acceptPayment = (id: string) => {
   return fetch(`${BASE_URL}/order/order-accept-pay/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const inPurchase = (id: string, buyer: string) => {
+  return fetch(`${BASE_URL}/order/in-purchase/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      buyer: buyer,
+    }),
+  }).then(checkResponse);
+};
+
+export const cancelPurchase = (id: string) => {
+  return fetch(`${BASE_URL}/order/cancel-purchase/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const updatePurchaseData = (id: string, poizonCode: string) => {
+  return fetch(`${BASE_URL}/order/purchase/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      poizonCode: poizonCode,
+    }),
+  }).then(checkResponse);
+};
+
+export const updatePurchaseImages = (
+  id: string,
+  buyProofImages: Array<IOrderImages>
+) => {
+  return fetch(`${BASE_URL}/order/purchase-images/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      buyProofImages: buyProofImages,
+    }),
+  }).then(checkResponse);
+};
+
+export const deletePurchaseImage = (imageName: string, id: string) => {
+  return fetch(`${BASE_URL}/order/purchase-images/${id}`, {
+    credentials: "include",
+    method: "DELETE",
+    headers: HEADERS,
+    body: JSON.stringify({
+      imageName: imageName,
+    }),
+  }).then(checkResponse);
+};
+
+export const deliveryToMoscow = (id: string) => {
+  return fetch(`${BASE_URL}/order/delivery-to-Moscow/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const inStockInRussia = (id: string, stockman: string) => {
+  return fetch(`${BASE_URL}/order/in-stock-in-Russia/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      stockman: stockman,
+    }),
+  }).then(checkResponse);
+};
+
+export const orderSent = (id: string, deliveryCode: string) => {
+  return fetch(`${BASE_URL}/order/order-sent/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      deliveryCode: deliveryCode,
+    }),
+  }).then(checkResponse);
+};
+
+export const orderСompleted = (id: string) => {
+  return fetch(`${BASE_URL}/order/order-completed/${id}`, {
     credentials: "include",
     method: "PATCH",
     headers: HEADERS,

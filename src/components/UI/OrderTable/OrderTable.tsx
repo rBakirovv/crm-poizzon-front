@@ -7,8 +7,13 @@ import {
   deleteOrder,
   getCurrentOrder,
   deleteOrderImage,
+  inPurchase,
+  getOrders,
+  deletePayProofImage,
 } from "../../../utils/Order";
 import { IOrderImages } from "../../../types/interfaces";
+import { useRouter } from "next/router";
+import UserData from "../../../store/user";
 
 const dayjs = require("dayjs");
 
@@ -17,10 +22,16 @@ interface IOrderTable {
 }
 
 const OrderTable: FC<IOrderTable> = ({ status }) => {
+  const router = useRouter();
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
 
   const [isDeleteDraft, setIsDeleteDraft] = useState<boolean>(false);
+
+  const [isDeletePaidOrder, setIsDeletePaidOrder] = useState<boolean>(false);
+
+  const [isPurchase, setIsPurchase] = useState<boolean>(false);
 
   const [orderNumber, setOrderNumber] = useState<number>(0);
   const [orderId, setOrderId] = useState<string>("");
@@ -36,6 +47,14 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
 
   function handleDeleteDraftClick() {
     setIsDeleteDraft(!isDeleteDraft);
+  }
+
+  function handleDeletePaidClick() {
+    setIsDeletePaidOrder(!isDeletePaidOrder);
+  }
+
+  function handlePurchaseClick() {
+    setIsPurchase(!isPurchase);
   }
 
   function nextPage() {
@@ -77,6 +96,47 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
       .catch((err) => console.log(err));
   }
 
+  function onSubmitDeletePaid() {
+    getCurrentOrder(orderId)
+      .then((order) => {
+        if (order.orderImages.length !== 0) {
+          order.orderImages.forEach((item: IOrderImages) => {
+            deleteOrderImage(item.name, orderId);
+          });
+        }
+
+        if (order.payProofImages !== 0) {
+          order.orderImages.forEach((item: IOrderImages) => {
+            deletePayProofImage(item.name, orderId);
+          });
+        }
+      })
+      .then(() => {
+        deleteOrder(orderId);
+      })
+      .then(() => {
+        OrderData.deleteOrder(orderId);
+      })
+      .then(() => {
+        setOrderId("");
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function onSubmitPurchase() {
+    inPurchase(orderId, UserData.userData.name)
+      .then(() => {
+        getOrders().then((orders) => OrderData.setOrders(orders));
+      })
+      .then(() => {
+        OrderData.orders.filter((item) => item.status === status);
+      })
+      .then(() => {
+        router.push(`/order/change/${orderId}`);
+      })
+      .catch((err) => console.log(err));
+  }
+
   return (
     <>
       <div className={styles["orders-table__container"]}>
@@ -113,6 +173,26 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                       X
                     </button>
                   )}
+                  {status === "Проверка оплаты" && isDeletePaidOrder && (
+                    <button
+                      onClick={() =>
+                        openSubmitPopup(orderItem.orderId, orderItem._id)
+                      }
+                      className={styles["orders-table__delete-item"]}
+                    >
+                      X
+                    </button>
+                  )}
+                  {status === "Ожидает закупки" && isPurchase && (
+                    <button
+                      className={styles["orders-table__delete-item"]}
+                      onClick={() =>
+                        openSubmitPopup(orderItem.orderId, orderItem._id)
+                      }
+                    >
+                      ✓
+                    </button>
+                  )}
                   <Link
                     className={`${styles["orders-table__info-item"]} ${styles["orders-table__info-item_link"]}`}
                     href={`/order/change/${orderItem._id}`}
@@ -128,14 +208,32 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                       `${orderItem.subcategory} ${orderItem.brand} ${orderItem.model}`}
                   </div>
                   <div className={styles["orders-table__info-item"]}>
-                    {(
-                      parseFloat(orderItem.priceCNY) *
-                        parseFloat(orderItem.currentRate) +
-                      parseFloat(orderItem.priceDeliveryChina) +
-                      parseFloat(orderItem.priceDeliveryRussia) +
-                      parseFloat(orderItem.commission) -
-                      orderItem.promoCodePercent
-                    ).toFixed(2)}
+                    {orderItem.status === "Черновик" &&
+                      (Math.ceil(
+                        Math.round(
+                          new Date(orderItem.overudeAfter).getTime() -
+                            new Date(Date.now()).getTime()
+                        ) / 1000
+                      ) <= 0
+                        ? "Оплата просрочена"
+                        : (
+                            parseFloat(orderItem.priceCNY) *
+                              parseFloat(orderItem.currentRate) +
+                            parseFloat(orderItem.priceDeliveryChina) +
+                            parseFloat(orderItem.priceDeliveryRussia) +
+                            parseFloat(orderItem.commission) -
+                            orderItem.promoCodePercent
+                          ).toFixed(2))}
+                    {orderItem.status === "Черновик" && <br />}
+                    {orderItem.status !== "Черновик" &&
+                      (
+                        parseFloat(orderItem.priceCNY) *
+                          parseFloat(orderItem.currentRate) +
+                        parseFloat(orderItem.priceDeliveryChina) +
+                        parseFloat(orderItem.priceDeliveryRussia) +
+                        parseFloat(orderItem.commission) -
+                        orderItem.promoCodePercent
+                      ).toFixed(2)}
                   </div>
                   <div className={styles["orders-table__info-item"]}>
                     {orderItem.creater !== "" && orderItem.creater}
@@ -144,7 +242,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                     {orderItem.buyer}
                   </div>
                   <div className={styles["orders-table__info-item"]}>
-                    {orderItem.postman}
+                    {orderItem.stockman}
                   </div>
                 </li>
               );
@@ -166,7 +264,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
           <button
             className={styles["pagination__button"]}
             onClick={nextPage}
-            disabled={currentPage === lastPageIndex}
+            disabled={currentPage === lastPageIndex || lastPageIndex === 0}
           >
             {">"}
           </button>
@@ -179,6 +277,24 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
             {isDeleteDraft ? "Закрыть" : "Удалить черновик"}
           </button>
         )}
+        {status === "Ожидает закупки" && (
+          <button
+            className={styles["purchase-button"]}
+            onClick={handlePurchaseClick}
+          >
+            {isPurchase ? "Закрыть" : "В закупку"}
+          </button>
+        )}
+        {status === "Проверка оплаты" &&
+          (UserData.userData.position === "Создатель" ||
+            UserData.userData.position === "Администратор") && (
+            <button
+              className={styles["purchase-button"]}
+              onClick={handleDeletePaidClick}
+            >
+              {isDeleteDraft ? "Закрыть" : "Удалить"}
+            </button>
+          )}
       </div>
       {status === "Черновик" && (
         <SubmitPopup
@@ -186,6 +302,24 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
           onSubmit={onSubmitDeleteDraft}
           closeSubmitPopup={closeSubmitPopup}
           submitText={`Удалить заказ № ${orderNumber}`}
+        />
+      )}
+      {status === "Проверка оплаты" &&
+        (UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Администратор") && (
+          <SubmitPopup
+            isSubmitPopup={isSubmitPopup}
+            onSubmit={onSubmitDeletePaid}
+            closeSubmitPopup={closeSubmitPopup}
+            submitText={`Удалить заказ № ${orderNumber}`}
+          />
+        )}
+      {status === "Ожидает закупки" && (
+        <SubmitPopup
+          isSubmitPopup={isSubmitPopup}
+          onSubmit={onSubmitPurchase}
+          closeSubmitPopup={closeSubmitPopup}
+          submitText={`Взять в закупку заказ № ${orderNumber}`}
         />
       )}
     </>

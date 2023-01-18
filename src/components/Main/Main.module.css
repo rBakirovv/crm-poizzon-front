@@ -20,5 +20,7 @@
 @media screen and (max-width: 1200px) {
   .main__container {
     max-width: none;
+    width: 100%;
+    overflow: hidden;
   }
 }

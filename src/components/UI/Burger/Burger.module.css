@@ -45,8 +45,10 @@
   color: #fff;
 }
 
-.burger__button_white {
+.burger__button_search {
   background: #fff;
+  border-color: #ff7f00;
+  color: #ff7f00;
 }
 
 .burger__button:active {
@@ -80,8 +82,8 @@
 
 .nav__list-item_exit {
   font-weight: 700;
-  font-size: 1.2rem;
-  line-height: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.2rem;
   position: fixed;
   bottom: 5rem;
   left: 1rem;
@@ -92,8 +94,8 @@
   color: #fff;
   border-radius: 10rem;
   padding: 0.25rem 0.2rem;
-  width: 200px;
-  height: 40px;
+  width: 180px;
+  height: 35px;
   white-space: nowrap;
   margin-top: 2rem;
 }

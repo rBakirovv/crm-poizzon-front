@@ -13,10 +13,11 @@ const Page: NextPage<ICurrentOrderProps> = ({ currentOrder }) => {
   return (
     <>
       <Head>
-        {(currentOrder.brand && currentOrder.model) ? (
+        {currentOrder.brand && currentOrder.model ? (
           <title>
-            #{`${currentOrder.orderId} ${currentOrder.brand} ${currentOrder.model}`} —
-            купить в Poizonqq
+            #
+            {`${currentOrder.orderId} ${currentOrder.brand} ${currentOrder.model}`}{" "}
+            — купить в Poizonqq
           </title>
         ) : (
           <title>купить в Poizonqq</title>
@@ -33,7 +34,7 @@ const Page: NextPage<ICurrentOrderProps> = ({ currentOrder }) => {
 };
 
 Page.getInitialProps = async (ctx) => {
-  const res = await fetch(`${BASE_URL}/order/${ctx.query.orderId}`);
+  const res = await fetch(`${BASE_URL}/order/current/${ctx.query.orderId}`);
   const data = await res.json();
   return { currentOrder: data };
 };

@@ -36,16 +36,6 @@ const Navigation = () => {
             Заказы
           </Link>
         </li>
-        <li className={styles["nav__list-item"]}>
-          <Link className={styles["nav__list-item-link"]} href="/">
-            Заказы на выкуп
-          </Link>
-        </li>
-        <li className={styles["nav__list-item"]}>
-          <Link className={styles["nav__list-item-link"]} href="/">
-            Склад
-          </Link>
-        </li>
         {UserData.userData.position === "Создатель" && (
           <li className={styles["nav__list-item"]}>
             <Link

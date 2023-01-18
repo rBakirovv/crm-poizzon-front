@@ -20,7 +20,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
 
   const [timeLeft, setTimeLeft] = useState<number>(
     Math.ceil(
-      Math.abs(
+      Math.round(
         new Date(currentOrder.overudeAfter).getTime() -
           new Date(Date.now()).getTime()
       ) / 1000
@@ -83,7 +83,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
             currentOrder.orderImages.slice(1).map((image) => {
               return (
                 <li
-                  key={image._id}
+                  key={image.name}
                   className={styles["order__shoes-image-collection-item"]}
                 >
                   <img
@@ -193,6 +193,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
               className={`${styles["order-timeline-item-head"]} ${
                 (currentOrder.status === "Проверка оплаты" ||
                   currentOrder.status === "Оплачен" ||
+                  currentOrder.status === "Ожидает закупки" ||
                   currentOrder.status === "На закупке" ||
                   currentOrder.status === "Закуплен" ||
                   currentOrder.status === "На складе в Китае" ||
@@ -221,6 +222,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
             <div
               className={`${styles["order-timeline-item-head"]} ${
                 (currentOrder.status === "Оплачен" ||
+                  currentOrder.status === "Ожидает закупки" ||
                   currentOrder.status === "На закупке" ||
                   currentOrder.status === "Закуплен" ||
                   currentOrder.status === "На складе в Китае" ||
@@ -272,7 +274,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
                 currentOrder.buyProofImages.map((image, index) => {
                   return (
                     <a
-                      key={image._id}
+                      key={image.name}
                       className={styles["order-typography-screen-link"]}
                       href={`${BASE_URL}${image.path}`}
                       target="_blank"
@@ -291,16 +293,26 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
                   currentOrder.status === "Доставка в Москву" ||
                   currentOrder.status === "На складе в РФ" ||
                   currentOrder.status === "Доставляется" ||
-                  currentOrder.status === "Завершён") &&
+                  currentOrder.status === "Завершён" ||
+                  (Math.ceil(
+                    new Date(currentOrder.inChinaStockAt).getTime() -
+                      new Date(Date.now()).getTime()
+                  ) /
+                    1000 <
+                    0 &&
+                    currentOrder.inChinaStockAt !== null)) &&
                 styles["order-timeline-item-head-green"]
               }`}
             ></div>
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>
-                На складе в Китае СРАВНИТЬ ЧЕРЕЗ 7 ДНЕЙ!
+                На складе в Китае
                 {currentOrder.poizonCode !== "" && (
                   <p className={styles["order-typography-screen-text"]}>
-                    Трек номер Poizon: 455HUDN8DICK
+                    Трек номер Poizon:{" "}
+                    <span className={styles["order-span"]}>
+                      {currentOrder.poizonCode}
+                    </span>
                   </p>
                 )}
               </div>
@@ -348,6 +360,12 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
             ></div>
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>Доставляется</div>
+              {currentOrder.deliveryCode !== "" && (
+                <div className={styles["order-typography"]}>
+                  Трек-номер CDEK:{" "}
+                  <span className={styles["order-span"]}>FDFDF943Fd</span>
+                </div>
+              )}
             </div>
           </li>
           <li className={styles["order-timeline-item"]}>

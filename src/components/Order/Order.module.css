@@ -2,6 +2,10 @@
   padding: 60px 20px 20px;
 }
 
+.order-span {
+  font-weight: 600;
+}
+
 .order__container {
   max-width: 500px;
   margin: auto;

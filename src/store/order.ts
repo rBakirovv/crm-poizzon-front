@@ -12,6 +12,7 @@ class OrderData {
     buyAt: "",
     inChinaStockAt: "",
     orderId: 0,
+    combinedOrder: [],
     status: "",
     link: "",
     category: "",

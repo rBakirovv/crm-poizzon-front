@@ -58,11 +58,13 @@ const AcceptPayment = () => {
           Принять оплату
         </button>
       )}
-      <ImagePopup
-        isImagePopupOpen={isImagePaymentPopupOpen}
-        currentImage={`${BASE_URL}${OrderData.order.payProofImages[0].path}`}
-        closePopup={closeImagePopup}
-      />
+      {OrderData.order.payProofImages.length !== 0 && (
+        <ImagePopup
+          isImagePopupOpen={isImagePaymentPopupOpen}
+          currentImage={`${BASE_URL}${OrderData.order.payProofImages[0].path}`}
+          closePopup={closeImagePopup}
+        />
+      )}
       <SubmitPopup
         onSubmit={handlePaymentSubmit}
         isSubmitPopup={isSubmitPaymentPopupOpen}

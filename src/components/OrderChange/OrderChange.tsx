@@ -15,7 +15,10 @@ import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { BASE_URL } from "../../utils/constants";
 import Dropzone from "react-dropzone";
 import ImagePopup from "../ImagePopup/ImagePopup";
-import AcceptPayment from "../AcceptPayment/acceptPayment";
+import AcceptPayment from "../AcceptPayment/AcceptPayment";
+import Client from "../Client/Client";
+import Purchase from "../Purchase/Purchase";
+import Delivery from "../Delivery/Delivery";
 
 interface IOrderChangeProps {
   payments: Array<IPayments>;
@@ -113,6 +116,10 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
     setOrderСhapter("Client");
   }
 
+  function openPurchaseData() {
+    setOrderСhapter("Purchase");
+  }
+
   function openDelivery() {
     setOrderСhapter("Delivery");
   }
@@ -153,12 +160,13 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           _id: OrderData.order._id,
           creater: OrderData.order.creater,
           buyer: OrderData.order.buyer,
-          postman: OrderData.order.postman,
+          stockman: OrderData.order.stockman,
           createdAt: OrderData.order.createdAt,
           overudeAfter: OrderData.order.overudeAfter,
           buyAt: OrderData.order.buyAt,
           inChinaStockAt: OrderData.order.inChinaStockAt,
           orderId: OrderData.order.orderId,
+          combinedOrder: OrderData.order.combinedOrder,
           status: OrderData.order.status,
           link: OrderData.order.link,
           category: OrderData.order.category,
@@ -203,12 +211,13 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           _id: OrderData.order._id,
           creater: OrderData.order.creater,
           buyer: OrderData.order.buyer,
-          postman: OrderData.order.postman,
+          stockman: OrderData.order.stockman,
           createdAt: OrderData.order.createdAt,
           overudeAfter: OrderData.order.overudeAfter,
           buyAt: OrderData.order.buyAt,
           inChinaStockAt: OrderData.order.inChinaStockAt,
           orderId: OrderData.order.orderId,
+          combinedOrder: OrderData.order.combinedOrder,
           status: OrderData.order.status,
           link: OrderData.order.link,
           category: OrderData.order.category,
@@ -278,12 +287,13 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       _id: OrderData.order._id,
       creater: OrderData.order.creater,
       buyer: OrderData.order.buyer,
-      postman: OrderData.order.postman,
+      stockman: OrderData.order.stockman,
       createdAt: OrderData.order.createdAt,
       overudeAfter: OrderData.order.overudeAfter,
       buyAt: OrderData.order.buyAt,
       inChinaStockAt: OrderData.order.inChinaStockAt,
       orderId: OrderData.order.orderId,
+      combinedOrder: OrderData.order.combinedOrder,
       status: OrderData.order.status,
       link: data.link,
       category: data.category,
@@ -346,6 +356,15 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           onClick={openClientData}
         >
           Клиент
+        </p>
+        <p
+          className={`${styles["order-change__nav-item"]} ${
+            orderСhapter === "Purchase" &&
+            styles["order-change__nav-item_active"]
+          }`}
+          onClick={openPurchaseData}
+        >
+          Закупка
         </p>
         <p
           className={`${styles["order-change__nav-item"]} ${
@@ -684,7 +703,10 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               required={false}
             />
             <button
-              className={`${styles["order-change__order-submit"]} ${OrderData.order.status !== "Черновик" && styles["order-change__order-submit_disable"]}`}
+              className={`${styles["order-change__order-submit"]} ${
+                OrderData.order.status !== "Черновик" &&
+                styles["order-change__order-submit_disable"]
+              }`}
               type="submit"
               disabled={OrderData.order.status !== "Черновик"}
             >
@@ -694,6 +716,9 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
         </div>
       )}
       {orderСhapter === "Pay" && <AcceptPayment />}
+      {orderСhapter === "Client" && <Client />}
+      {orderСhapter === "Purchase" && <Purchase />}
+      {orderСhapter === "Delivery" && <Delivery />}
       <ImagePopup
         isImagePopupOpen={isImagePopupOpen}
         currentImage={currentImage}
