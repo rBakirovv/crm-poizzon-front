@@ -21,7 +21,7 @@ export const getCurrentClientOrder = (orderId: string) => {
   }).then(checkResponse);
 };
 
-export const getCurrentOrder = (orderId: string) => {
+export const getCurrentOrder = (orderId: string | string[]) => {
   return fetch(`${BASE_URL}/order/${orderId}`, {
     credentials: "include",
     method: "GET",

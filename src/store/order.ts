@@ -6,7 +6,7 @@ class OrderData {
     _id: "",
     creater: "",
     buyer: "",
-    postman: "",
+    stockman: "",
     createdAt: new Date(Date.now()),
     overudeAfter: new Date(Date.now()),
     buyAt: "",
