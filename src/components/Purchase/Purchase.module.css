@@ -33,6 +33,9 @@
 }
 
 .purchase__button-submit {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
   font-weight: 600;
   font-size: 1.2rem;
   line-height: 1.5rem;
