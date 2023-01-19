@@ -24,6 +24,7 @@ const Home = observer(() => {
     setLoginPopup(false);
   }
 
+  /*
   useEffect(() => {
     !Logged.loggedIn &&
       getUserInfo()
@@ -37,6 +38,7 @@ const Home = observer(() => {
           Logged.setLoggedIn(false);
         });
   });
+  */
 
   useEffect(() => {
     if (Logged.loggedIn) {
@@ -69,11 +71,12 @@ const Home = observer(() => {
   function handleAuthorization(email: string, password: string, code: string) {
     authorize(email, password, code)
       .then(() => {
+        Logged.setLoggedIn(true);
         router.push("/");
       })
       .catch((err) => {
         console.log(err);
-        setLoginPopupError(true)
+        setLoginPopupError(true);
       });
   }
 
