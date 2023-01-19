@@ -13,8 +13,8 @@ export const getOrders = () => {
   }).then(checkResponse);
 };
 
-export const getCurrentClientOrder = (orderId: string) => {
-  return fetch(`${BASE_URL}/order/current/:id/${orderId}`, {
+export const getCurrentClientOrder = (orderId: string | string[]) => {
+  return fetch(`${BASE_URL}/order/current/${orderId}`, {
     credentials: "include",
     method: "GET",
     headers: HEADERS,
@@ -253,14 +253,11 @@ export const inStockInRussia = (id: string, stockman: string) => {
   }).then(checkResponse);
 };
 
-export const orderSent = (id: string, deliveryCode: string) => {
+export const orderSent = (id: string) => {
   return fetch(`${BASE_URL}/order/order-sent/${id}`, {
     credentials: "include",
     method: "PATCH",
     headers: HEADERS,
-    body: JSON.stringify({
-      deliveryCode: deliveryCode,
-    }),
   }).then(checkResponse);
 };
 

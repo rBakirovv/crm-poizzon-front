@@ -206,8 +206,8 @@ const OrderPay: FC<IOrderPayProps> = () => {
       data.delivery_method,
       data.delivery_address
     ).then(() => {
-      window.open(`${BASE_URL_FRONT}/order/${OrderData.order._id}`, '_blank');
-    })
+      window.open(`${BASE_URL_FRONT}/order/${OrderData.order._id}`, "_blank");
+    });
   }
 
   return (
@@ -280,36 +280,42 @@ const OrderPay: FC<IOrderPayProps> = () => {
                     );
                   })}
               </ul>
-              {OrderData.order.payProofImages.length === 0 && (
-                <Dropzone
-                  onDrop={(e: any) =>
-                    uploadFileHandler(e, "/order-pay", setUploading)
-                  }
-                  maxSize={MAX_SIZE}
-                  multiple={false}
-                >
-                  {({ getRootProps, getInputProps }) => (
-                    <div className={styles["drag-n-drop-container"]}>
-                      <div {...getRootProps()}>
-                        <input {...getInputProps()} />
-                        <p className={styles["drag-n-drop-text"]}>
-                          Добавить фото{" "}
-                          <svg
-                            width="18px"
-                            height="18px"
-                            viewBox="0 0 48 48"
-                            focusable="false"
-                            fill="black"
-                          >
-                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                          </svg>
-                        </p>
+              {OrderData.order.payProofImages.length === 0 &&
+                Math.ceil(
+                  Math.round(
+                    new Date(OrderData.order.overudeAfter).getTime() -
+                      new Date(Date.now()).getTime()
+                  ) / 1000
+                ) > 0 && (
+                  <Dropzone
+                    onDrop={(e: any) =>
+                      uploadFileHandler(e, "/order-pay", setUploading)
+                    }
+                    maxSize={MAX_SIZE}
+                    multiple={false}
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <div className={styles["drag-n-drop-container"]}>
+                        <div {...getRootProps()}>
+                          <input {...getInputProps()} />
+                          <p className={styles["drag-n-drop-text"]}>
+                            Добавить фото{" "}
+                            <svg
+                              width="18px"
+                              height="18px"
+                              viewBox="0 0 48 48"
+                              focusable="false"
+                              fill="black"
+                            >
+                              <path fill="none" d="M0 0h48v48H0V0z"></path>
+                              <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                            </svg>
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </Dropzone>
-              )}
+                    )}
+                  </Dropzone>
+                )}
               <button
                 type="button"
                 className={`${styles["order-pay__pay-submit"]} ${
@@ -396,7 +402,11 @@ const OrderPay: FC<IOrderPayProps> = () => {
                 Нажимая кнопку "Отправить" вы соглашаетесь на обработку
                 персональных данных
               </span>
-              <button className={styles["order-pay__pay-submit"]} type="submit" onClick={handleSubmitDeliveyData}>
+              <button
+                className={styles["order-pay__pay-submit"]}
+                type="submit"
+                onClick={handleSubmitDeliveyData}
+              >
                 Отправить
               </button>
             </form>

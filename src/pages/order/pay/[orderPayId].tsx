@@ -3,7 +3,7 @@ import Head from "next/head";
 import Header from "../../../components/UI/Header/Header";
 import OrderPay from "../../../components/OrderPay/OrderPay";
 import { useEffect } from "react";
-import { getCurrentOrder } from "../../../utils/Order";
+import { getCurrentClientOrder } from "../../../utils/Order";
 import { useRouter } from "next/router";
 import OrderData from "../../../store/order";
 
@@ -12,7 +12,7 @@ const Page = observer(() => {
 
   useEffect(() => {
     router.query.orderPayId !== "undefined" &&
-      getCurrentOrder(router.query.orderPayId!).then((order) => {
+      getCurrentClientOrder(router.query.orderPayId!).then((order) => {
         OrderData.setOrder(order);
       });
   }, [router.query.orderPayId]);

@@ -53,7 +53,7 @@ const Delivery = () => {
   }
 
   function handleOrderSent() {
-    orderSent(OrderData.order._id, data.delivery_code).then((order) => {
+    orderSent(OrderData.order._id).then((order) => {
       OrderData.setOrder(order);
     });
   }
@@ -125,17 +125,6 @@ const Delivery = () => {
               className={styles["delivery__subit-button"]}
               type="button"
             >
-              Доставка в Москву
-            </button>
-          )}
-        {OrderData.order.status === "Доставка в Москву" &&
-          (UserData.userData.position === "Администратор" ||
-            UserData.userData.position === "Создатель") && (
-            <button
-              onClick={openSubmitPopup}
-              className={styles["delivery__subit-button"]}
-              type="button"
-            >
               На складе в РФ
             </button>
           )}
@@ -152,14 +141,6 @@ const Delivery = () => {
           )}
       </div>
       {OrderData.order.status === "Закуплен" && (
-        <SubmitPopup
-          isSubmitPopup={isSubmitPopup}
-          submitText="Изменить статус на Доставка в Москву"
-          onSubmit={handleDeliveryToMoscow}
-          closeSubmitPopup={closeSubmitPopup}
-        />
-      )}
-      {OrderData.order.status === "Доставка в Москву" && (
         <SubmitPopup
           isSubmitPopup={isSubmitPopup}
           submitText="Изменить статус на На складе в РФ"

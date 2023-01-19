@@ -24,10 +24,10 @@ const Search = () => {
   const searchedOrders = useMemo(() => {
     return OrderData.orders.filter((item) => {
       if (
-        item._id.toLowerCase().includes(filteredValue) ||
+        item._id.toLowerCase().includes(filteredValue.toLowerCase()) ||
         item.orderId.toString() === filteredValue ||
-        item.poizonCode.toLowerCase().includes(filteredValue) ||
-        item.deliveryCode.toLowerCase().includes(filteredValue)
+        item.poizonCode.toLowerCase().includes(filteredValue.toLowerCase()) ||
+        item.deliveryCode.toLowerCase().includes(filteredValue.toLowerCase())
       ) {
         return true;
       }
