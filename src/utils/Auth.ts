@@ -6,6 +6,7 @@ const HEADERS = {
 
 export const authorize = (email: string, password: string, code: string) => {
   return fetch(`${BASE_URL}/signin`, {
+    mode: "cors",
     credentials: "include",
     method: "POST",
     headers: HEADERS,
@@ -19,6 +20,7 @@ export const authorize = (email: string, password: string, code: string) => {
 
 export const verification = (email: string, password: string) => {
   return fetch(`${BASE_URL}/signin-verification`, {
+    mode: "cors",
     credentials: "include",
     method: "POST",
     headers: HEADERS,
@@ -31,6 +33,7 @@ export const verification = (email: string, password: string) => {
 
 export const logOut = () => {
   return fetch(`${BASE_URL}/signout`, {
+    mode: "cors",
     credentials: "include",
     method: "DELETE",
     headers: HEADERS,
