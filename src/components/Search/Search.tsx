@@ -97,7 +97,20 @@ const Search = () => {
                     className={styles["orders-table__item"]}
                   >
                     <Link
-                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__info-item_link"]}`}
+                      className={`${styles["orders-table__info-item"]} ${
+                        styles["orders-table__info-item_link"]
+                      } ${
+                        (orderItem.status === "На закупке" ||
+                          orderItem.status === "Закуплен" ||
+                          orderItem.status === "На складе в РФ") &&
+                        orderItem.poizonCode === "" &&
+                        styles["orders-table__info-item_poizon-code"]
+                      } ${
+                        (orderItem.status === "На складе в РФ" ||
+                          orderItem.status === "Доставляется") &&
+                        orderItem.deliveryCode === "" &&
+                        styles["orders-table__info-item_delivery-code"]
+                      }`}
                       href={`/order/change/${orderItem._id}`}
                     >
                       {orderItem.orderId}

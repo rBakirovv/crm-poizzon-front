@@ -17,6 +17,7 @@ const Delivery = () => {
   });
 
   const [isSubmitPopup, setIsSubmitPopup] = useState(false);
+  const [isSubmitChangePopup, setIsSubmitChangePopup] = useState(false);
 
   function openSubmitPopup(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -25,6 +26,15 @@ const Delivery = () => {
 
   function closeSubmitPopup() {
     setIsSubmitPopup(false);
+  }
+
+  function openSubmitChangePopup(e: React.SyntheticEvent) {
+    e.preventDefault();
+    setIsSubmitChangePopup(true);
+  }
+
+  function closeSubmitChangePopup() {
+    setIsSubmitChangePopup(false);
   }
 
   function handleChange(e: React.SyntheticEvent) {
@@ -53,7 +63,7 @@ const Delivery = () => {
   }
 
   function handleOrderSent() {
-    orderSent(OrderData.order._id).then((order) => {
+    orderSent(OrderData.order._id, data.delivery_code).then((order) => {
       OrderData.setOrder(order);
     });
   }
@@ -94,29 +104,27 @@ const Delivery = () => {
         <p>{OrderData.order.deliveryNameRecipient}</p>
         <h4>Номер телефона получателя</h4>
         <p>{OrderData.order.deliveryPhoneRecipient}</p>
-        {OrderData.order.status === "На складе в РФ" &&
-          (UserData.userData.position === "Администратор" ||
-            UserData.userData.position === "Создатель") && (
-            <form
-              onSubmit={openSubmitPopup}
-              className={styles["delivery-form"]}
-            >
-              <h2 className={styles["delivery-title"]}>Управление доставкой</h2>
-              <TextInput
-                label="Трек-номер CDEK"
-                name="delivery_code"
-                value={data.delivery_code}
-                required={true}
-                handleChange={handleChange}
-              />
-              <button
-                className={styles["delivery__subit-button"]}
-                type="submit"
-              >
-                Отправлено
-              </button>
-            </form>
-          )}
+        {(UserData.userData.position === "Администратор" ||
+          UserData.userData.position === "Создатель") && (
+          <form
+            onSubmit={openSubmitChangePopup}
+            className={styles["delivery-form"]}
+          >
+            <h2 className={styles["delivery-title"]}>Управление доставкой</h2>
+            <TextInput
+              label="Трек-номер CDEK"
+              name="delivery_code"
+              value={data.delivery_code}
+              required={false}
+              handleChange={handleChange}
+            />
+            <button className={styles["delivery__subit-button"]} type="submit">
+              {OrderData.order.status === "На складе в РФ"
+                ? "Отправлено"
+                : "Сохранить"}
+            </button>
+          </form>
+        )}
         {OrderData.order.status === "Закуплен" &&
           (UserData.userData.position === "Администратор" ||
             UserData.userData.position === "Создатель") && (
@@ -148,14 +156,12 @@ const Delivery = () => {
           closeSubmitPopup={closeSubmitPopup}
         />
       )}
-      {OrderData.order.status === "На складе в РФ" && (
-        <SubmitPopup
-          isSubmitPopup={isSubmitPopup}
-          submitText="Изменить статус на Доставляется"
-          onSubmit={handleOrderSent}
-          closeSubmitPopup={closeSubmitPopup}
-        />
-      )}
+      <SubmitPopup
+        isSubmitPopup={isSubmitChangePopup}
+        submitText="Сохранить код или изменить статус на Доставляется"
+        onSubmit={handleOrderSent}
+        closeSubmitPopup={closeSubmitChangePopup}
+      />
       {OrderData.order.status === "Доставляется" && (
         <SubmitPopup
           isSubmitPopup={isSubmitPopup}

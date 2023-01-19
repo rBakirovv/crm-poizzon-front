@@ -138,22 +138,6 @@ const OrdersList = () => {
         {(UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
           <li
-            onClick={openDeliveredToRussia}
-            className={styles["orders-list__navigation-item"]}
-          >
-            <p
-              className={`${styles["orders-list__navigation-text"]} ${
-                ordersStatus === "Доставка в Москву" &&
-                styles["orders-list__navigation-text_active"]
-              }`}
-            >
-              Доставка в Москву
-            </p>
-          </li>
-        )}
-        {(UserData.userData.position === ADMIN ||
-          UserData.userData.position === SUPERADMIN) && (
-          <li
             onClick={openInRussia}
             className={styles["orders-list__navigation-item"]}
           >

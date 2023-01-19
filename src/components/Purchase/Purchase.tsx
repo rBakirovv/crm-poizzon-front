@@ -198,8 +198,7 @@ const Purchase = () => {
         name="poizon_code"
         value={data.poizon_code}
         handleChange={handleChange}
-        required={true}
-        readonly={OrderData.order.status !== "На закупке"}
+        required={false}
       />
       <p>Скриншоты чеков закупки</p>
       <ul className={styles["purchase__images-list"]}>
@@ -277,24 +276,18 @@ const Purchase = () => {
         )}
       <div
         className={`${styles["purchase__buttons-container"]} ${
-          OrderData.order.status !== "На закупке" &&
-          UserData.userData.position !== "Менеджер" &&
+          UserData.userData.position === "Менеджер" &&
           styles["purchase__button-submit_disable"]
         }`}
       >
         <button
           className={`${styles["purchase__button-submit"]} ${
-            OrderData.order.status !== "На закупке" &&
-            UserData.userData.position !== "Менеджер" &&
+            UserData.userData.position === "Менеджер" &&
             styles["purchase__button-submit_disable"]
           }`}
           type="submit"
-          disabled={
-            OrderData.order.status !== "На закупке" &&
-            UserData.userData.position !== "Менеджер"
-          }
         >
-          Закуплено
+          Сохранить
         </button>
       </div>
       <ImagePopup
@@ -306,7 +299,7 @@ const Purchase = () => {
         onSubmit={handlePurchaseSubmit}
         isSubmitPopup={isSubmitPopupOpen}
         closeSubmitPopup={closeSubmitPopup}
-        submitText="Завершить закупку"
+        submitText="Изменить данные заказа или товар закуплен"
       />
     </form>
   );

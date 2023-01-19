@@ -69,6 +69,14 @@
   background: #f3f3f3;
 }
 
+.orders-table__info-item_poizon-code {
+  background: #00ddffbc;
+}
+
+.orders-table__info-item_delivery-code {
+  background: #12ff25bc;
+}
+
 .order-table__tools {
   display: flex;
   justify-content: space-between;

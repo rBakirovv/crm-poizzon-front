@@ -694,21 +694,18 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               required={true}
               readonly={true}
             />
-            <TextInput
-              name="comment"
-              label="Комментарий"
-              value={OrderData.order.comment}
-              handleChange={handleChange}
-              readonly={OrderData.order.status !== "Черновик"}
-              required={false}
-            />
+            <div className={styles["order-change__input-container"]}>
+              <label>Комментарий</label>
+              <textarea
+                className={`${styles["order-change__textarea"]}`}
+                name="comment"
+                onChange={handleChange}
+                value={OrderData.order.comment}
+              ></textarea>
+            </div>
             <button
-              className={`${styles["order-change__order-submit"]} ${
-                OrderData.order.status !== "Черновик" &&
-                styles["order-change__order-submit_disable"]
-              }`}
+              className={`${styles["order-change__order-submit"]}`}
               type="submit"
-              disabled={OrderData.order.status !== "Черновик"}
             >
               Cохранить
             </button>

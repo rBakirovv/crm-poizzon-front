@@ -322,10 +322,16 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
             <div className={styles["order-timeline-item-tail"]}></div>
             <div
               className={`${styles["order-timeline-item-head"]} ${
-                (currentOrder.status === "Доставка в Москву" ||
-                  currentOrder.status === "На складе в РФ" ||
+                (currentOrder.status === "На складе в РФ" ||
                   currentOrder.status === "Доставляется" ||
-                  currentOrder.status === "Завершён") &&
+                  currentOrder.status === "Завершён" ||
+                  (Math.ceil(
+                    new Date(currentOrder.inChinaStockAt).getTime() -
+                      new Date(Date.now()).getTime()
+                  ) /
+                    1000 <
+                    -43200 &&
+                    currentOrder.inChinaStockAt !== null)) &&
                 styles["order-timeline-item-head-green"]
               }`}
             ></div>
