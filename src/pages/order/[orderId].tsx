@@ -13,7 +13,7 @@ const Page: NextPage<ICurrentOrderProps> = ({ currentOrder }) => {
   return (
     <>
       <Head>
-        <title>{currentOrder.model} — купить в Poizonqq</title>
+        <title>{currentOrder.brand} {currentOrder.model} — купить в Poizonqq</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Header
