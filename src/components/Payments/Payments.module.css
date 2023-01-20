@@ -93,6 +93,7 @@
 
 .payments__table-info-number {
   margin: 1rem 0 0;
+  word-wrap: break-word;
 }
 
 @media screen and (max-width: 500px) {
