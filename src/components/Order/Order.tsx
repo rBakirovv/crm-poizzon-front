@@ -142,7 +142,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
               </tr>
               <tr>
                 <td>Цена в RUB</td>
-                <td>{priceRub} ₽</td>
+                <td>{priceRub.toFixed(2)} ₽</td>
               </tr>
               <tr>
                 <td>Доставка по Китаю</td>
