@@ -229,24 +229,24 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                         ) / 1000
                       ) <= 0
                         ? "Оплата просрочена"
-                        : (
+                        : Math.ceil(
                             parseFloat(orderItem.priceCNY) *
                               parseFloat(orderItem.currentRate) +
                             parseFloat(orderItem.priceDeliveryChina) +
                             parseFloat(orderItem.priceDeliveryRussia) +
                             parseFloat(orderItem.commission) -
                             orderItem.promoCodePercent
-                          ).toFixed(2))}
+                          ))}
                     {orderItem.status === "Черновик" && <br />}
                     {orderItem.status !== "Черновик" &&
-                      (
+                      Math.ceil(
                         parseFloat(orderItem.priceCNY) *
                           parseFloat(orderItem.currentRate) +
                         parseFloat(orderItem.priceDeliveryChina) +
                         parseFloat(orderItem.priceDeliveryRussia) +
                         parseFloat(orderItem.commission) -
                         orderItem.promoCodePercent
-                      ).toFixed(2)}
+                      )}
                   </div>
                   <div className={styles["orders-table__info-item"]}>
                     {orderItem.creater !== "" && orderItem.creater}

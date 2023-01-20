@@ -89,6 +89,7 @@
   transition: all 0.4s ease-in-out;
   cursor: pointer;
   margin-top: 1rem;
+  margin-bottom: 3rem;
 }
 
 .drag-n-drop-text {

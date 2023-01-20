@@ -611,7 +611,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
             <TextInput
               name="priceRUB"
               label="Цена RUB"
-              value={priceRub.toFixed(2).toString()}
+              value={priceRub.toString()}
               required={true}
               readonly={true}
             />
@@ -691,8 +691,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               value={
                 data.promoCodePercent > 0 ||
                 OrderData.order.promoCodePercent > 0
-                  ? totalPriceWithPromo.toFixed(2).toString()
-                  : totalPrice.toFixed(2).toString()
+                  ? totalPriceWithPromo.toString()
+                  : totalPrice.toString()
               }
               required={true}
               readonly={true}

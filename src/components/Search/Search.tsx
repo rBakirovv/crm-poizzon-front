@@ -39,7 +39,7 @@ const Search = () => {
           .includes(filteredValue.toLowerCase()) ||
         item
           .deliveryPhoneRecipient!.toLowerCase()
-          .includes(filteredValue.toLowerCase()) 
+          .includes(filteredValue.toLowerCase())
       ) {
         return true;
       }
@@ -147,24 +147,24 @@ const Search = () => {
                           ) / 1000
                         ) <= 0
                           ? "Оплата просрочена"
-                          : (
+                          : Math.ceil(
                               parseFloat(orderItem.priceCNY) *
                                 parseFloat(orderItem.currentRate) +
-                              parseFloat(orderItem.priceDeliveryChina) +
-                              parseFloat(orderItem.priceDeliveryRussia) +
-                              parseFloat(orderItem.commission) -
-                              orderItem.promoCodePercent
-                            ).toFixed(2))}
+                                parseFloat(orderItem.priceDeliveryChina) +
+                                parseFloat(orderItem.priceDeliveryRussia) +
+                                parseFloat(orderItem.commission) -
+                                orderItem.promoCodePercent
+                            ))}
                       {orderItem.status === "Черновик" && <br />}
                       {orderItem.status !== "Черновик" &&
-                        (
+                        Math.ceil(
                           parseFloat(orderItem.priceCNY) *
                             parseFloat(orderItem.currentRate) +
-                          parseFloat(orderItem.priceDeliveryChina) +
-                          parseFloat(orderItem.priceDeliveryRussia) +
-                          parseFloat(orderItem.commission) -
-                          orderItem.promoCodePercent
-                        ).toFixed(2)}
+                            parseFloat(orderItem.priceDeliveryChina) +
+                            parseFloat(orderItem.priceDeliveryRussia) +
+                            parseFloat(orderItem.commission) -
+                            orderItem.promoCodePercent
+                        )}
                     </div>
                     <div className={styles["orders-table__info-item"]}>
                       {orderItem.creater !== "" && orderItem.creater}
