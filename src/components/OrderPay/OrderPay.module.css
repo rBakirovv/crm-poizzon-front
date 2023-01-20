@@ -21,6 +21,24 @@
   word-break:break-all;
 }
 
+.order-pay__link {
+  color: #4e7fea;
+  cursor: pointer;
+}
+
+.qr-code__container {
+  display: flex;
+  flex-direction: column;
+}
+
+.qr-code {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 200px;
+}
+
 .order-pay__pay-submit {
   width: 100%;
   height: 60px;

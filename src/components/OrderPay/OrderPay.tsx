@@ -209,9 +209,14 @@ const OrderPay: FC<IOrderPayProps> = () => {
       data.delivery_method,
       data.delivery_address
     ).then(() => {
-      router.replace("/");
+      router.replace(`/order/${router.query.orderPayId}`);
     });
   }
+
+  const link =
+    /(?:(?:https?|ftp):\/\/|\b(?:[a-z\d]+\.))(?:(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))?\))+(?:\((?:[^\s()<>]+|(?:\(?:[^\s()<>]+\)))?\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))?/gi;
+
+  const result = OrderData.order.payment.match(link);
 
   return (
     <section className={styles["order-pay"]}>
@@ -229,9 +234,30 @@ const OrderPay: FC<IOrderPayProps> = () => {
             </div>
             <div className={styles["order-pay__payment-container"]}>
               <h4 className={styles["order-pay__title"]}>Cпособ оплаты</h4>
-              <p className={styles["order-pay__text"]}>
-                {OrderData.order.payment}
-              </p>
+              {OrderData.order.payment !== undefined && !result && (
+                <p className={styles["order-pay__text"]}>
+                  {OrderData.order.payment}
+                </p>
+              )}
+              {OrderData.order.payment !== undefined &&
+                result !== null &&
+                result?.length > 0 && (
+                  <div className={styles["qr-code__container"]}>
+                    <a
+                      className={`${styles["order-pay__text"]} ${styles["order-pay__link"]}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      href={result[0]}
+                    >
+                      Ссылка на оплату по QR-коду
+                    </a>
+                    <img
+                      className={styles["qr-code"]}
+                      src="../../images/qr-code.png"
+                      alt="qr-code"
+                    />
+                  </div>
+                )}
             </div>
             <form>
               <h4 className={styles["order-pay__title"]}>
