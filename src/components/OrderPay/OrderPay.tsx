@@ -11,10 +11,13 @@ import {
 import OrderData from "../../store/order";
 import ImagePopup from "../ImagePopup/ImagePopup";
 import TextInput from "../UI/TextInput/TextInput";
+import { useRouter } from "next/router";
 
 interface IOrderPayProps {}
 
 const OrderPay: FC<IOrderPayProps> = () => {
+  const router = useRouter();
+
   const [isDelivery, setIsDelivery] = useState<boolean>(false);
 
   const [uploading, setUploading] = useState<boolean>(false);
@@ -206,7 +209,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
       data.delivery_method,
       data.delivery_address
     ).then(() => {
-      window.open(`${BASE_URL_FRONT}/order/${OrderData.order._id}`, "_blank");
+      router.replace("/");
     });
   }
 
