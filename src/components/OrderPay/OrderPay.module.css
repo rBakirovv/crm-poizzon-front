@@ -18,16 +18,19 @@
   font-size: 1.2rem;
   margin: 1rem 0 0;
   max-width: 500px;
-  word-break:break-all;
 }
 
 .order-pay__link {
   color: #4e7fea;
+  border-bottom: 1px dotted #4e7fea;
   cursor: pointer;
+  display: inline-block;
+  margin: 0;
 }
 
 .qr-code__container {
   display: flex;
+  justify-content: flex-start;
   flex-direction: column;
 }
 
@@ -43,7 +46,7 @@
   width: 100%;
   height: 60px;
   max-width: 370px;
-  position: fixed;
+  position: relative;
   left: 50%;
   transform: translateX(-50%);
   bottom: 1rem;
@@ -61,7 +64,7 @@
   overflow: hidden;
   cursor: pointer;
   transition: all 0.4s ease-in-out;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
 .order-pay__pay-submit_disabled {
@@ -163,11 +166,7 @@
   font-size: 0.75rem;
   font-weight: 500;
   text-align: center;
-  position: fixed;
-  left: 50%;
-  bottom: 6rem;
-  transform: translateX(-50%);
-  margin-top: -0.5rem;
+  margin-top: 3rem;
 }
 
 @media screen and (max-width: 500px) {

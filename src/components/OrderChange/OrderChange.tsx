@@ -51,20 +51,23 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
   const [isImagePopupOpen, setIsImagePopupOpen] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState<string>("");
 
-  const priceRub =
+  const priceRub = Math.ceil(
     parseFloat(OrderData.order.priceCNY) *
-    parseFloat(OrderData.order.currentRate);
-  const totalPrice =
+      parseFloat(OrderData.order.currentRate)
+  );
+  const totalPrice = Math.ceil(
     priceRub +
-    parseFloat(OrderData.order.priceDeliveryChina) +
-    parseFloat(OrderData.order.priceDeliveryRussia) +
-    parseFloat(OrderData.order.commission);
-  const totalPriceWithPromo =
+      parseFloat(OrderData.order.priceDeliveryChina) +
+      parseFloat(OrderData.order.priceDeliveryRussia) +
+      parseFloat(OrderData.order.commission)
+  );
+  const totalPriceWithPromo = Math.ceil(
     priceRub +
-    parseFloat(OrderData.order.priceDeliveryChina) +
-    parseFloat(OrderData.order.priceDeliveryRussia) +
-    parseFloat(OrderData.order.commission) -
-    data.promoCodePercent;
+      parseFloat(OrderData.order.priceDeliveryChina) +
+      parseFloat(OrderData.order.priceDeliveryRussia) +
+      parseFloat(OrderData.order.commission) -
+      data.promoCodePercent
+  );
 
   const MAX_SIZE = 5242880;
 
@@ -614,7 +617,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
             />
             <TextInput
               name="priceDeliveryChina"
-              label="Стоимость доставки POIZZON - Cклад в Китае"
+              label="Стоимость доставки POIZON - Cклад в Китае"
               value={OrderData.order.priceDeliveryChina}
               handleChange={handleChange}
               readonly={OrderData.order.status !== "Черновик"}

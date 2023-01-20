@@ -27,7 +27,19 @@ const Search = () => {
         item._id.toLowerCase().includes(filteredValue.toLowerCase()) ||
         item.orderId.toString() === filteredValue ||
         item.poizonCode.toLowerCase().includes(filteredValue.toLowerCase()) ||
-        item.deliveryCode.toLowerCase().includes(filteredValue.toLowerCase())
+        item.deliveryCode.toLowerCase().includes(filteredValue.toLowerCase()) ||
+        item
+          .deliveryName!.toLowerCase()
+          .includes(filteredValue.toLowerCase()) ||
+        item
+          .deliveryNameRecipient!.toLowerCase()
+          .includes(filteredValue.toLowerCase()) ||
+        item
+          .deliveryPhone!.toLowerCase()
+          .includes(filteredValue.toLowerCase()) ||
+        item
+          .deliveryPhoneRecipient!.toLowerCase()
+          .includes(filteredValue.toLowerCase()) 
       ) {
         return true;
       }

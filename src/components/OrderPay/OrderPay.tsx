@@ -34,16 +34,18 @@ const OrderPay: FC<IOrderPayProps> = () => {
     delivery_address: "",
   });
 
-  const priceRub =
+  const priceRub = Math.ceil(
     parseFloat(OrderData.order.priceCNY) *
-    parseFloat(OrderData.order.currentRate);
+      parseFloat(OrderData.order.currentRate)
+  );
 
-  const totalPrice =
+  const totalPrice = Math.ceil(
     priceRub +
-    parseFloat(OrderData.order.priceDeliveryChina) +
-    parseFloat(OrderData.order.priceDeliveryRussia) +
-    parseFloat(OrderData.order.commission) -
-    OrderData.order.promoCodePercent;
+      parseFloat(OrderData.order.priceDeliveryChina) +
+      parseFloat(OrderData.order.priceDeliveryRussia) +
+      parseFloat(OrderData.order.commission) -
+      OrderData.order.promoCodePercent
+  );
 
   function openDelivery() {
     setIsDelivery(true);
@@ -243,14 +245,18 @@ const OrderPay: FC<IOrderPayProps> = () => {
                 result !== null &&
                 result?.length > 0 && (
                   <div className={styles["qr-code__container"]}>
-                    <a
-                      className={`${styles["order-pay__text"]} ${styles["order-pay__link"]}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      href={result[0]}
-                    >
-                      Ссылка на оплату по QR-коду
-                    </a>
+                    <p className={styles["order-pay__text"]}>
+                      Вы можете оплатить{" "}
+                      <a
+                        className={`${styles["order-pay__text"]} ${styles["order-pay__link"]}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        href={result[0]}
+                      >
+                        по ссылке
+                      </a>
+                      {" "}или отсканировав QR-код
+                    </p>
                     <img
                       className={styles["qr-code"]}
                       src="../../images/qr-code.png"
@@ -367,7 +373,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
               </h4>
               <TextInput
                 name="name"
-                label="Как к вам обращаться?"
+                label="Ваш в формате @Telegram"
                 value={data.name}
                 handleChange={handleChange}
                 readonly={OrderData.order.status !== "Черновик"}

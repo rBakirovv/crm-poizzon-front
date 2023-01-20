@@ -27,15 +27,17 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
     )
   );
 
-  const priceRub =
-    parseFloat(currentOrder.priceCNY) * parseFloat(currentOrder.currentRate);
+  const priceRub = Math.ceil(
+    parseFloat(currentOrder.priceCNY) * parseFloat(currentOrder.currentRate)
+  );
 
-  const totalPrice =
+  const totalPrice = Math.ceil(
     priceRub +
-    parseFloat(currentOrder.priceDeliveryChina) +
-    parseFloat(currentOrder.priceDeliveryRussia) +
-    parseFloat(currentOrder.commission) -
-    currentOrder.promoCodePercent;
+      parseFloat(currentOrder.priceDeliveryChina) +
+      parseFloat(currentOrder.priceDeliveryRussia) +
+      parseFloat(currentOrder.commission) -
+      currentOrder.promoCodePercent
+  );
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -142,7 +144,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
               </tr>
               <tr>
                 <td>Цена в RUB</td>
-                <td>{priceRub.toFixed(2)} ₽</td>
+                <td>{Math.ceil(priceRub)} ₽</td>
               </tr>
               <tr>
                 <td>Доставка по Китаю</td>
@@ -368,8 +370,10 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
               <div className={styles["order-typography"]}>Доставляется</div>
               {currentOrder.deliveryCode !== "" && (
                 <div className={styles["order-typography"]}>
-                  Трек-номер CDEK:{" "}
-                  <span className={styles["order-span"]}>FDFDF943Fd</span>
+                  Трек-номер CDEK:
+                  <span className={styles["order-span"]}>
+                    {currentOrder.deliveryCode}
+                  </span>
                 </div>
               )}
             </div>
@@ -400,7 +404,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
               />
             )}
             <span className={styles["order__pay-button-span"]}>Оплатить</span>
-            <span>5832 ₽</span>
+            <span>{totalPrice} ₽</span>
           </button>
         )}
       </div>

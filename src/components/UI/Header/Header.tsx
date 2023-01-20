@@ -72,7 +72,7 @@ const Header: FC<IHeaderProps> = ({
         router.pathname.includes("/order/change/")) && (
         <div className={styles["header__container"]}>
           <Link className={styles["header__container-title"]} href="/">
-            POIZZON
+            POIZON
             <span className={styles["header__container-title-span"]}>
               QQ
             </span>{" "}

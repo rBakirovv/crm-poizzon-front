@@ -55,6 +55,7 @@
   border: 1px solid #000;
   border-bottom: none;
   margin-right: 1.5rem;
+  width: auto;
 }
 
 .payments__table-item:last-of-type {
@@ -62,7 +63,9 @@
 }
 
 .payments__table-info-container {
+  width: 100%;
   padding: 1rem;
+  word-wrap: break-word;
 }
 
 .payments__delete-button {
@@ -93,6 +96,7 @@
 
 .payments__table-info-number {
   margin: 1rem 0 0;
+  width: auto;
   word-wrap: break-word;
 }
 
@@ -116,5 +120,12 @@
 
   .payments__create-submit:active {
     background: #d96e3a;
+  }
+
+  .payments__table-info-number {
+    margin: 1rem 0 0;
+    width: auto;
+    word-wrap: break-word;
+    max-width: 300px;
   }
 }
