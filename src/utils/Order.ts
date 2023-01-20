@@ -29,14 +29,45 @@ export const getCurrentOrder = (orderId: string | string[]) => {
   }).then(checkResponse);
 };
 
-export const createOrder = (creater: string, currentRate: string) => {
+export const createOrder = (
+  creater: string,
+  link: string,
+  category: string,
+  subcategory: string,
+  brand: string,
+  model: string,
+  size: string,
+  orderImages: Array<IOrderImages>,
+  payment: string,
+  currentRate: string,
+  priceCNY: string,
+  priceDeliveryChina: string,
+  priceDeliveryRussia: string,
+  commission: string,
+  promoCodePercent: number,
+  comment: string
+) => {
   return fetch(`${BASE_URL}/orders/create`, {
     credentials: "include",
     method: "POST",
     headers: HEADERS,
     body: JSON.stringify({
       creater: creater,
+      link: link,
+      category: category,
+      subcategory: subcategory,
+      brand: brand,
+      model: model,
+      size: size,
+      orderImages: orderImages,
+      payment: payment,
       currentRate: currentRate,
+      priceCNY: priceCNY,
+      priceDeliveryChina: priceDeliveryChina,
+      priceDeliveryRussia: priceDeliveryRussia,
+      commission: commission,
+      promoCodePercent: promoCodePercent,
+      comment: comment,
     }),
   }).then(checkResponse);
 };

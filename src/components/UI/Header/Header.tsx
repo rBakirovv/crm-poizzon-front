@@ -33,13 +33,6 @@ const Header: FC<IHeaderProps> = ({
     setIsBurgerOpen(false);
   }
 
-  function createNewOrder() {
-    createOrder(userName!, currentRate!).then((order) => {
-      OrderData.pushOrder(order);
-      router.push(`/order/change/${order._id}`);
-    });
-  }
-
   return (
     <header
       className={`${styles["header"]} ${
@@ -80,12 +73,12 @@ const Header: FC<IHeaderProps> = ({
           </Link>
           <div className={styles["header__buttons-container"]}>
             {userPosition !== "Байер" && (
-              <button
+              <Link
                 className={`${styles["header__button"]} ${styles["header__button_black"]}`}
-                onClick={createNewOrder}
+                href="/create-order"
               >
                 Новый заказ
-              </button>
+              </Link>
             )}
             <Link
               className={`${styles["header__button"]} ${styles["header__button_white"]}`}
@@ -104,7 +97,6 @@ const Header: FC<IHeaderProps> = ({
           <Burger
             isBurgerOpen={isBurgerOpen}
             closeBurger={closeBurger}
-            createNewOrder={createNewOrder}
           />
         </div>
       )}

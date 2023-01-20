@@ -10,13 +10,11 @@ import styles from "./Burger.module.css";
 interface IBurgerProps {
   isBurgerOpen: boolean;
   closeBurger: () => void;
-  createNewOrder: () => void;
 }
 
 const Burger: FC<IBurgerProps> = ({
   isBurgerOpen,
   closeBurger,
-  createNewOrder,
 }) => {
   const router = useRouter();
 
@@ -25,11 +23,6 @@ const Burger: FC<IBurgerProps> = ({
   useEffect(() => {
     setIsBrowser(true);
   });
-
-  function handleCreateOrder() {
-    createNewOrder();
-    closeBurger();
-  }
 
   function handleLogOut() {
     logOut();
@@ -52,12 +45,13 @@ const Burger: FC<IBurgerProps> = ({
     >
       <div className={styles["burger__buttons-container"]}>
         {UserData.userData.position !== "Байер" && (
-          <button
+          <Link
             className={`${styles["burger__button"]} ${styles["burger__button_black"]}`}
-            onClick={handleCreateOrder}
+            href="/create-order"
+            onClick={closeBurger}
           >
             Новый заказ
-          </button>
+          </Link>
         )}
         <Link
           className={`${styles["burger__button"]} ${styles["burger__button_search"]}`}
