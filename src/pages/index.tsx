@@ -67,6 +67,7 @@ const Home = observer(() => {
     <>
       <Head>
         <title>Poizonqq CRM</title>
+        <link type="Image/x-icon" href="../images/favicon.ico" rel="icon"></link>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {!Logged.loggedIn && <Preloader />}

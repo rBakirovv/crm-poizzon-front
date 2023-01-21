@@ -91,6 +91,7 @@ const Home = observer(() => {
       <Head>
         <title>{`Заказ #${OrderData.order.orderId}`}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link type="Image/x-icon" href="../images/favicon.ico" rel="icon"></link>
       </Head>
       {!Logged.loggedIn && <Preloader />}
       {Logged.loggedIn && (

@@ -14,6 +14,7 @@ const Page: NextPage<ICurrentOrderProps> = ({ currentOrder }) => {
     <>
       <Head>
         <title>{currentOrder.brand} {currentOrder.model} — купить в Poizonqq</title>
+        <link type="Image/x-icon" href="../images/favicon.ico" rel="icon"></link>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Header
