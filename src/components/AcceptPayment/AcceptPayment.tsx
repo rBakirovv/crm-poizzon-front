@@ -38,7 +38,7 @@ const AcceptPayment = () => {
   return (
     <div className={styles["accept-payment"]}>
       <h4>Cпособ оплаты</h4>
-      <p>{OrderData.order.payment}</p>
+      <p className={styles["accept-payment__text"]}>{OrderData.order.payment}</p>
       <h4>Подтверждение оплаты</h4>
       {OrderData.order.payProofImages.length !== 0 && (
         <div className={styles["accept-payment__image-container"]}>

@@ -4,6 +4,10 @@
   background: #fff;
 }
 
+.accept-payment__text {
+  word-wrap: break-word;
+}
+
 .accept-payment__image-container {
   position: relative;
   max-width: 150px;

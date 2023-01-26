@@ -7,6 +7,7 @@ import styles from "./Purchase.module.css";
 import { BASE_URL, MAX_SIZE } from "../../utils/constants";
 import {
   deletePurchaseImage,
+  inPurchase,
   updatePurchaseData,
   updatePurchaseImages,
   uploadImages,
@@ -25,6 +26,8 @@ const Purchase = () => {
   const [currentImage, setCurrentImage] = useState<string>("");
 
   const [isSubmitPopupOpen, setIsSubmitPopupOpen] = useState<boolean>(false);
+  const [isPurchasePopupOpen, setIsPurchasePopupOpen] =
+    useState<boolean>(false);
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
@@ -44,6 +47,10 @@ const Purchase = () => {
 
   function closeSubmitPopup() {
     setIsSubmitPopupOpen(false);
+  }
+
+  function closePurchasePopup() {
+    setIsPurchasePopupOpen(false);
   }
 
   function openImagePopup(imageSrc: string) {
@@ -191,6 +198,14 @@ const Purchase = () => {
       .then(() => closeSubmitPopup());
   }
 
+  function handleAcceptPurchaseSubmit() {
+    inPurchase(OrderData.order._id, UserData.userData.name)
+      .then((order) => {
+        OrderData.setOrder(order);
+      })
+      .then(() => closeSubmitPopup());
+  }
+
   return (
     <form onSubmit={openSubmitPopup} className={styles["purchase"]}>
       <TextInput
@@ -280,27 +295,51 @@ const Purchase = () => {
           styles["purchase__button-submit_disable"]
         }`}
       >
-        <button
-          className={`${styles["purchase__button-submit"]} ${
-            UserData.userData.position === "Менеджер" &&
-            styles["purchase__button-submit_disable"]
-          }`}
-          type="submit"
-        >
-          Сохранить
-        </button>
+        {OrderData.order.status === "Ожидает закупки" &&
+          UserData.userData.position !== "Менеджер" && (
+            <button
+              className={`${styles["purchase__button-submit"]} ${
+                UserData.userData.position === "Менеджер" &&
+                styles["purchase__button-submit_disable"]
+              }`}
+              type="submit"
+            >
+              На закупку
+            </button>
+          )}
+        {OrderData.order.status !== "Ожидает закупки" && (
+          <button
+            className={`${styles["purchase__button-submit"]} ${
+              UserData.userData.position === "Менеджер" &&
+              styles["purchase__button-submit_disable"]
+            }`}
+            type="submit"
+          >
+            Сохранить
+          </button>
+        )}
       </div>
       <ImagePopup
         isImagePopupOpen={isImagePopupOpen}
         currentImage={currentImage}
         closePopup={closeImagePopup}
       />
-      <SubmitPopup
-        onSubmit={handlePurchaseSubmit}
-        isSubmitPopup={isSubmitPopupOpen}
-        closeSubmitPopup={closeSubmitPopup}
-        submitText="Изменить данные заказа или товар закуплен"
-      />
+      {OrderData.order.status !== "Ожидает закупки" && (
+        <SubmitPopup
+          onSubmit={handlePurchaseSubmit}
+          isSubmitPopup={isSubmitPopupOpen}
+          closeSubmitPopup={closeSubmitPopup}
+          submitText="Изменить данные заказа или товар закуплен"
+        />
+      )}
+      {OrderData.order.status === "Ожидает закупки" && (
+        <SubmitPopup
+          onSubmit={handleAcceptPurchaseSubmit}
+          isSubmitPopup={isSubmitPopupOpen}
+          closeSubmitPopup={closeSubmitPopup}
+          submitText="Изменить статус товара На закупке"
+        />
+      )}
     </form>
   );
 };
