@@ -136,11 +136,11 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
             <tbody>
               <tr>
                 <td>Цена в CNY</td>
-                <td>{currentOrder.priceCNY} ¥</td>
+                <td>{parseInt(currentOrder.priceCNY)} ¥</td>
               </tr>
               <tr>
                 <td>Курс обмена</td>
-                <td>{currentOrder.currentRate} ₽</td>
+                <td>{parseInt(currentOrder.currentRate)} ₽</td>
               </tr>
               <tr>
                 <td>Цена в RUB</td>
@@ -148,15 +148,15 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
               </tr>
               <tr>
                 <td>Доставка по Китаю</td>
-                <td>{currentOrder.priceDeliveryChina} ₽</td>
+                <td>{parseInt(currentOrder.priceDeliveryChina)} ₽</td>
               </tr>
               <tr>
                 <td>Доставка в РФ</td>
-                <td>{currentOrder.priceDeliveryRussia} ₽</td>
+                <td>{parseInt(currentOrder.priceDeliveryRussia)} ₽</td>
               </tr>
               <tr>
                 <td>Комиссия сервиса</td>
-                <td>{currentOrder.commission} ₽</td>
+                <td>{parseInt(currentOrder.commission)} ₽</td>
               </tr>
               {currentOrder.promoCodePercent !== 0 && (
                 <tr>

@@ -341,6 +341,97 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
     });
   }, [data]);
 
+  useEffect(() => {
+    if (data.priceCNY.length > 1) {
+      if (data.priceCNY[0] === "0" && data.priceCNY[1] !== ".") {
+        setData({
+          _id: OrderData.order._id,
+          link: OrderData.order.link,
+          category: OrderData.order.category,
+          subcategory: OrderData.order.subcategory,
+          brand: OrderData.order.brand,
+          model: OrderData.order.model,
+          size: OrderData.order.size,
+          payment: OrderData.order.payment,
+          priceCNY: "0",
+          priceDeliveryChina: OrderData.order.priceDeliveryChina,
+          priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
+          commission: OrderData.order.commission,
+          promoCodePercent: OrderData.order.promoCodePercent,
+          comment: OrderData.order.comment,
+        });
+      }
+
+      if (
+        data.priceDeliveryChina[0] === "0" &&
+        data.priceDeliveryChina[1] !== "."
+      ) {
+        setData({
+          _id: OrderData.order._id,
+          link: OrderData.order.link,
+          category: OrderData.order.category,
+          subcategory: OrderData.order.subcategory,
+          brand: OrderData.order.brand,
+          model: OrderData.order.model,
+          size: OrderData.order.size,
+          payment: OrderData.order.payment,
+          priceCNY: OrderData.order.priceCNY,
+          priceDeliveryChina: "0",
+          priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
+          commission: OrderData.order.commission,
+          promoCodePercent: OrderData.order.promoCodePercent,
+          comment: OrderData.order.comment,
+        });
+      }
+
+      if (
+        data.priceDeliveryRussia[0] === "0" &&
+        data.priceDeliveryRussia[1] !== "."
+      ) {
+        setData({
+          _id: OrderData.order._id,
+          link: OrderData.order.link,
+          category: OrderData.order.category,
+          subcategory: OrderData.order.subcategory,
+          brand: OrderData.order.brand,
+          model: OrderData.order.model,
+          size: OrderData.order.size,
+          payment: OrderData.order.payment,
+          priceCNY: OrderData.order.priceCNY,
+          priceDeliveryChina: OrderData.order.priceDeliveryChina,
+          priceDeliveryRussia: "0",
+          commission: OrderData.order.commission,
+          promoCodePercent: OrderData.order.promoCodePercent,
+          comment: OrderData.order.comment,
+        });
+      }
+
+      if (data.commission[0] === "0" && data.commission[1] !== ".") {
+        setData({
+          _id: OrderData.order._id,
+          link: OrderData.order.link,
+          category: OrderData.order.category,
+          subcategory: OrderData.order.subcategory,
+          brand: OrderData.order.brand,
+          model: OrderData.order.model,
+          size: OrderData.order.size,
+          payment: OrderData.order.payment,
+          priceCNY: OrderData.order.priceCNY,
+          priceDeliveryChina: OrderData.order.priceDeliveryChina,
+          priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
+          commission: "0",
+          promoCodePercent: OrderData.order.promoCodePercent,
+          comment: OrderData.order.comment,
+        });
+      }
+    }
+  }, [
+    data.priceCNY,
+    data.priceDeliveryChina,
+    data.priceDeliveryRussia,
+    data.commission,
+  ]);
+
   return (
     <section className={styles["order-change"]}>
       <h2 className={styles["order-change__title"]}>
