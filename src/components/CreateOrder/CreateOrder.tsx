@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import TextInput from "../UI/TextInput/TextInput";
 import styles from "./CreateOrder.module.css";
 import PromoCodeData from "../../store/promo-code";
@@ -173,6 +173,103 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
         router.replace(`/order/change/${OrderData.order._id}`);
       });
   }
+
+  useEffect(() => {
+    if (data.priceCNY.length > 1) {
+      if (data.priceCNY[0] === "0" && data.priceCNY[1] !== ".") {
+        setData({
+          link: data.link,
+          category: data.category,
+          subcategory: data.subcategory,
+          brand: data.brand,
+          model: data.model,
+          size: data.size,
+          payment: data.payment,
+          currentRate: RateData.rate.rate,
+          priceCNY: "0",
+          priceDeliveryChina: data.priceDeliveryChina,
+          priceDeliveryRussia: data.priceDeliveryRussia,
+          commission: data.commission,
+          promoCodePercent: data.promoCodePercent,
+          comment: data.comment,
+        });
+      }
+    }
+
+    if (data.priceDeliveryChina.length > 1) {
+      if (
+        data.priceDeliveryChina[0] === "0" &&
+        data.priceDeliveryChina[1] !== "."
+      ) {
+        setData({
+          link: data.link,
+          category: data.category,
+          subcategory: data.subcategory,
+          brand: data.brand,
+          model: data.model,
+          size: data.size,
+          payment: data.payment,
+          currentRate: RateData.rate.rate,
+          priceCNY: data.priceCNY,
+          priceDeliveryChina: "0",
+          priceDeliveryRussia: data.priceDeliveryRussia,
+          commission: data.commission,
+          promoCodePercent: data.promoCodePercent,
+          comment: data.comment,
+        });
+      }
+    }
+
+    if (data.priceDeliveryRussia.length > 1) {
+      if (
+        data.priceDeliveryRussia[0] === "0" &&
+        data.priceDeliveryRussia[1] !== "."
+      ) {
+        setData({
+          link: data.link,
+          category: data.category,
+          subcategory: data.subcategory,
+          brand: data.brand,
+          model: data.model,
+          size: data.size,
+          payment: data.payment,
+          currentRate: RateData.rate.rate,
+          priceCNY: data.priceCNY,
+          priceDeliveryChina: data.priceDeliveryChina,
+          priceDeliveryRussia: "0",
+          commission: data.commission,
+          promoCodePercent: data.promoCodePercent,
+          comment: data.comment,
+        });
+      }
+    }
+
+    if (data.commission.length > 1) {
+      if (data.commission[0] === "0" && data.commission[1] !== ".") {
+        setData({
+          link: data.link,
+          category: data.category,
+          subcategory: data.subcategory,
+          brand: data.brand,
+          model: data.model,
+          size: data.size,
+          payment: data.payment,
+          currentRate: RateData.rate.rate,
+          priceCNY: data.priceCNY,
+          priceDeliveryChina: data.priceDeliveryChina,
+          priceDeliveryRussia: data.priceDeliveryRussia,
+          commission: "0",
+          promoCodePercent: data.promoCodePercent,
+          comment: data.comment,
+        });
+      }
+    }
+  }, [
+    data.priceCNY,
+    data.priceDeliveryChina,
+    data.priceDeliveryRussia,
+    data.commission,
+  ]);
 
   return (
     <section className={styles["create-order"]}>

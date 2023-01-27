@@ -361,7 +361,9 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           comment: OrderData.order.comment,
         });
       }
+    }
 
+    if (data.priceDeliveryChina.length > 1) {
       if (
         data.priceDeliveryChina[0] === "0" &&
         data.priceDeliveryChina[1] !== "."
@@ -383,7 +385,9 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           comment: OrderData.order.comment,
         });
       }
+    }
 
+    if (data.priceDeliveryRussia.length > 1) {
       if (
         data.priceDeliveryRussia[0] === "0" &&
         data.priceDeliveryRussia[1] !== "."
@@ -405,7 +409,9 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           comment: OrderData.order.comment,
         });
       }
+    }
 
+    if (data.commission.length > 1) {
       if (data.commission[0] === "0" && data.commission[1] !== ".") {
         setData({
           _id: OrderData.order._id,
