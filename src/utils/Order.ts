@@ -181,6 +181,17 @@ export const deleteOrderImage = (imageName: string, id: string) => {
   }).then(checkResponse);
 };
 
+export const deleteDraftImage = (imageName: string) => {
+  return fetch(`${BASE_URL}/order/order-draft-images`, {
+    credentials: "include",
+    method: "DELETE",
+    headers: HEADERS,
+    body: JSON.stringify({
+      imageName: imageName,
+    }),
+  }).then(checkResponse);
+};
+
 export const deletePayProofImage = (imageName: string, id: string) => {
   return fetch(`${BASE_URL}/order/pay-proof-images/${id}`, {
     credentials: "include",

@@ -22,6 +22,8 @@ const OrderPay: FC<IOrderPayProps> = () => {
 
   const [uploading, setUploading] = useState<boolean>(false);
 
+  const [isCopy, setIsCopy] = useState<boolean>(false);
+
   const [isImagePopupOpen, setIsImagePopupOpen] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState<string>("");
 
@@ -218,8 +220,21 @@ const OrderPay: FC<IOrderPayProps> = () => {
   const link =
     /(?:(?:https?|ftp):\/\/|\b(?:[a-z\d]+\.))(?:(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))?\))+(?:\((?:[^\s()<>]+|(?:\(?:[^\s()<>]+\)))?\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))?/gi;
 
+  const numbers = /(\d+(\.\d+)?)/g;
+
   const result = OrderData.order.payment.match(link);
 
+  function copyLink() {
+    navigator.clipboard.writeText(
+      OrderData.order.payment.match(numbers)?.join("")!
+    );
+
+    setIsCopy(true);
+
+    setTimeout(() => {
+      setIsCopy(false);
+    }, 2000);
+  }
   return (
     <section className={styles["order-pay"]}>
       <div className={styles["order-pay__container"]}>
@@ -237,9 +252,28 @@ const OrderPay: FC<IOrderPayProps> = () => {
             <div className={styles["order-pay__payment-container"]}>
               <h4 className={styles["order-pay__title"]}>Cпособ оплаты</h4>
               {OrderData.order.payment !== undefined && !result && (
-                <p className={styles["order-pay__text"]}>
-                  {OrderData.order.payment}
-                </p>
+                <>
+                  <p className={styles["order-pay__text"]}>
+                    {OrderData.order.payment}
+                    <div
+                      onClick={copyLink}
+                      className={styles["order-change__public-link-text-copy"]}
+                    >
+                      {!isCopy ? "Скопировать" : "Cкопировано в буфер обмена"}{" "}
+                      <svg
+                        x="0px"
+                        y="0px"
+                        width="24px"
+                        height="24px"
+                        viewBox="0 0 24 24"
+                        focusable="false"
+                        fill="currentColor"
+                      >
+                        <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+                      </svg>
+                    </div>
+                  </p>
+                </>
               )}
               {OrderData.order.payment !== undefined &&
                 result !== null &&
@@ -254,8 +288,8 @@ const OrderPay: FC<IOrderPayProps> = () => {
                         href={result[0]}
                       >
                         по ссылке
-                      </a>
-                      {" "}или отсканировав QR-код
+                      </a>{" "}
+                      или отсканировав QR-код
                     </p>
                     <img
                       className={styles["qr-code"]}
@@ -373,7 +407,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
               </h4>
               <TextInput
                 name="name"
-                label="Ваш в формате @Telegram"
+                label="Ваш Телеграм в формате @Telegram"
                 value={data.name}
                 handleChange={handleChange}
                 readonly={OrderData.order.status !== "Черновик"}
@@ -420,19 +454,29 @@ const OrderPay: FC<IOrderPayProps> = () => {
                   <option value="Самовывоз из пункта выдачи CDEK">
                     Самовывоз из пункта выдачи CDEK
                   </option>
-                  <option value="Самовывоз из пункта выдачи CDEK">
-                    Курьером CDEK
-                  </option>
+                  <option value="Курьером CDEK">Курьером CDEK</option>
                 </select>
               </div>
-              <TextInput
-                name="delivery_address"
-                label="Адрес доставки"
-                value={data.delivery_address}
-                handleChange={handleChange}
-                readonly={OrderData.order.status !== "Черновик"}
-                required={true}
-              />
+              {data.delivery_method === "Курьером CDEK" && (
+                <TextInput
+                  name="delivery_address"
+                  label="Адрес доставки"
+                  value={data.delivery_address}
+                  handleChange={handleChange}
+                  readonly={OrderData.order.status !== "Черновик"}
+                  required={true}
+                />
+              )}
+              {data.delivery_method === "Самовывоз из пункта выдачи CDEK" && (
+                <TextInput
+                  name="delivery_address"
+                  label="Адрес ближайшего пункта выдачи СDEK"
+                  value={data.delivery_address}
+                  handleChange={handleChange}
+                  readonly={OrderData.order.status !== "Черновик"}
+                  required={true}
+                />
+              )}
               <span className={styles["order-pay__personal-data"]}>
                 Нажимая кнопку "Отправить" вы соглашаетесь на обработку
                 персональных данных

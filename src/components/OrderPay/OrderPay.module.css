@@ -170,6 +170,20 @@
   margin-top: 3rem;
 }
 
+.order-change__public-link-text-copy {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  color: #ff7f00;
+  cursor: pointer;
+}
+
+.order-change__public-link-text-copy svg {
+  margin-top: 2px;
+}
+
 @media screen and (max-width: 500px) {
   .order-pay__select {
     width: 314px;

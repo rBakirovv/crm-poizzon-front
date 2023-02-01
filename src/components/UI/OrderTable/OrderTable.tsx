@@ -216,9 +216,8 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                     {dayjs(orderItem.createdAt).format("DD-MM-YYYY")}
                   </div>
                   <div className={styles["orders-table__info-item"]}>
-                    {orderItem.brand !== "" &&
-                      orderItem.model !== "" &&
-                      `${orderItem.subcategory} ${orderItem.brand} ${orderItem.model}`}
+                    {orderItem.model !== "" &&
+                      `${orderItem.subcategory} ${orderItem.model}`}
                   </div>
                   <div className={styles["orders-table__info-item"]}>
                     {orderItem.status === "Черновик" &&

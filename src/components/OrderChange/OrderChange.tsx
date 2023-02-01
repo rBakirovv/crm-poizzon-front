@@ -544,30 +544,6 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
                   OrderData.order.status !== "Черновик" &&
                   styles["order-change__select_disabled"]
                 }`}
-                name="category"
-                value={OrderData.order.category}
-                onChange={handleChange}
-                disabled={OrderData.order.status !== "Черновик"}
-                required
-              >
-                <option value="" selected disabled>
-                  -- Выберите --
-                </option>
-                <option value="Обувь">Обувь</option>
-                <option value="Одежда">Одежда</option>
-                <option value="Аксесуары">Аксесуары</option>
-                <option value="Прочее">Прочее</option>
-              </select>
-            </div>
-            <div className={styles["order-change__input-container"]}>
-              <label>
-                Подкатегория<span className={styles["red-star"]}>*</span>
-              </label>
-              <select
-                className={`${styles["order-change__select"]} ${
-                  OrderData.order.status !== "Черновик" &&
-                  styles["order-change__select_disabled"]
-                }`}
                 name="subcategory"
                 value={OrderData.order.subcategory}
                 onChange={handleChange}
@@ -588,14 +564,6 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
                 <option value="Прочее">Прочее</option>
               </select>
             </div>
-            <TextInput
-              name="brand"
-              label="Брэнд"
-              value={OrderData.order.brand}
-              handleChange={handleChange}
-              readonly={OrderData.order.status !== "Черновик"}
-              required={true}
-            />
             <TextInput
               name="model"
               label="Модель"

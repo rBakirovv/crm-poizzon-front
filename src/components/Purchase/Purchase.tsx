@@ -49,9 +49,11 @@ const Purchase = () => {
     setIsSubmitPopupOpen(false);
   }
 
+  /*
   function closePurchasePopup() {
     setIsPurchasePopupOpen(false);
   }
+  */
 
   function openImagePopup(imageSrc: string) {
     setCurrentImage(imageSrc);
@@ -191,11 +193,15 @@ const Purchase = () => {
   }
 
   function handlePurchaseSubmit() {
-    updatePurchaseData(OrderData.order._id, data.poizon_code)
-      .then((order) => {
-        OrderData.setOrder(order);
-      })
-      .then(() => closeSubmitPopup());
+    if (OrderData.order.buyProofImages.length !== 0) {
+      updatePurchaseData(OrderData.order._id, data.poizon_code)
+        .then((order) => {
+          OrderData.setOrder(order);
+        })
+        .then(() => closeSubmitPopup());
+    } else {
+      alert("Необходимо прикрепить скриншоты чеков закупки")
+    }
   }
 
   function handleAcceptPurchaseSubmit() {
@@ -258,37 +264,36 @@ const Purchase = () => {
               );
             })}
       </ul>
-      {OrderData.order.status === "На закупке" &&
-        UserData.userData.position !== "Менеджер" && (
-          <Dropzone
-            onDrop={(e: any) =>
-              uploadFileHandler(e, "/order-purchase", setUploading)
-            }
-            maxSize={MAX_SIZE}
-            multiple={true}
-          >
-            {({ getRootProps, getInputProps }) => (
-              <div className={styles["drag-n-drop-container"]}>
-                <div {...getRootProps()}>
-                  <input {...getInputProps()} />
-                  <p className={styles["drag-n-drop-text"]}>
-                    Добавить фото
-                    <svg
-                      width="18px"
-                      height="18px"
-                      viewBox="0 0 48 48"
-                      focusable="false"
-                      fill="black"
-                    >
-                      <path fill="none" d="M0 0h48v48H0V0z"></path>
-                      <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                    </svg>
-                  </p>
-                </div>
+      {OrderData.order.status === "На закупке" && UserData.userData.position !== "Менеджер" && (
+        <Dropzone
+          onDrop={(e: any) =>
+            uploadFileHandler(e, "/order-purchase", setUploading)
+          }
+          maxSize={MAX_SIZE}
+          multiple={true}
+        >
+          {({ getRootProps, getInputProps }) => (
+            <div className={styles["drag-n-drop-container"]}>
+              <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                <p className={styles["drag-n-drop-text"]}>
+                  Добавить фото
+                  <svg
+                    width="18px"
+                    height="18px"
+                    viewBox="0 0 48 48"
+                    focusable="false"
+                    fill="black"
+                  >
+                    <path fill="none" d="M0 0h48v48H0V0z"></path>
+                    <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                  </svg>
+                </p>
               </div>
-            )}
-          </Dropzone>
-        )}
+            </div>
+          )}
+        </Dropzone>
+      )}
       <div
         className={`${styles["purchase__buttons-container"]} ${
           UserData.userData.position === "Менеджер" &&

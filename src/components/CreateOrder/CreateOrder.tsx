@@ -8,7 +8,7 @@ import OrderData from "../../store/order";
 import { IOrderImages, IPayments } from "../../types/interfaces";
 import Dropzone from "react-dropzone";
 import { BASE_URL, MAX_SIZE } from "../../utils/constants";
-import { createOrder, uploadImages } from "../../utils/Order";
+import { createOrder, deleteDraftImage, uploadImages } from "../../utils/Order";
 import ImagePopup from "../ImagePopup/ImagePopup";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { useRouter } from "next/router";
@@ -105,6 +105,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
   };
 
   function deleteImageHandler(imageName: string) {
+    deleteDraftImage(imageName);
+    
     setImages(images.filter((item) => item.name !== imageName));
   }
 
@@ -179,9 +181,9 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       if (data.priceCNY[0] === "0" && data.priceCNY[1] !== ".") {
         setData({
           link: data.link,
-          category: data.category,
+          category: "",
           subcategory: data.subcategory,
-          brand: data.brand,
+          brand: "",
           model: data.model,
           size: data.size,
           payment: data.payment,
@@ -203,9 +205,9 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       ) {
         setData({
           link: data.link,
-          category: data.category,
+          category: "",
           subcategory: data.subcategory,
-          brand: data.brand,
+          brand: "",
           model: data.model,
           size: data.size,
           payment: data.payment,
@@ -227,9 +229,9 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       ) {
         setData({
           link: data.link,
-          category: data.category,
+          category: "",
           subcategory: data.subcategory,
-          brand: data.brand,
+          brand: "",
           model: data.model,
           size: data.size,
           payment: data.payment,
@@ -248,9 +250,9 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       if (data.commission[0] === "0" && data.commission[1] !== ".") {
         setData({
           link: data.link,
-          category: data.category,
+          category: "",
           subcategory: data.subcategory,
-          brand: data.brand,
+          brand: "",
           model: data.model,
           size: data.size,
           payment: data.payment,
@@ -292,26 +294,6 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
             </label>
             <select
               className={`${styles["order-change__select"]}`}
-              name="category"
-              value={data.category}
-              onChange={handleChange}
-              required
-            >
-              <option value="" selected disabled>
-                -- Выберите --
-              </option>
-              <option value="Обувь">Обувь</option>
-              <option value="Одежда">Одежда</option>
-              <option value="Аксесуары">Аксесуары</option>
-              <option value="Прочее">Прочее</option>
-            </select>
-          </div>
-          <div className={styles["order-change__input-container"]}>
-            <label>
-              Подкатегория<span className={styles["red-star"]}>*</span>
-            </label>
-            <select
-              className={`${styles["order-change__select"]}`}
               name="subcategory"
               value={data.subcategory}
               onChange={handleChange}
@@ -331,13 +313,6 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
               <option value="Прочее">Прочее</option>
             </select>
           </div>
-          <TextInput
-            name="brand"
-            label="Брэнд"
-            value={data.brand}
-            handleChange={handleChange}
-            required={true}
-          />
           <TextInput
             name="model"
             label="Модель"
