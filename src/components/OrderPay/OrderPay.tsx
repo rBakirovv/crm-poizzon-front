@@ -130,7 +130,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
             deliveryName: OrderData.order.deliveryName,
             deliveryNameRecipient: OrderData.order.deliveryNameRecipient,
             deliveryPhone: OrderData.order.deliveryPhone,
-            deliveryPhoneRecipient: OrderData.order.deliveryPhoneRecipient,
+            deliveryPhoneRecipient: "",
             deliveryMethod: OrderData.order.deliveryMethod,
             deliveryAddress: OrderData.order.deliveryAddress,
             __v: OrderData.order.__v,
@@ -186,7 +186,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
           deliveryName: OrderData.order.deliveryName,
           deliveryNameRecipient: OrderData.order.deliveryNameRecipient,
           deliveryPhone: OrderData.order.deliveryPhone,
-          deliveryPhoneRecipient: OrderData.order.deliveryPhoneRecipient,
+          deliveryPhoneRecipient: "",
           deliveryMethod: OrderData.order.deliveryMethod,
           deliveryAddress: OrderData.order.deliveryAddress,
           __v: OrderData.order.__v,
@@ -209,7 +209,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
       data.name,
       data.name_recipient,
       data.phone,
-      data.phone_recipient,
+      "",
       data.delivery_method,
       data.delivery_address
     ).then(() => {
@@ -425,14 +425,6 @@ const OrderPay: FC<IOrderPayProps> = () => {
                 name="name_recipient"
                 label="ФИО получателя"
                 value={data.name_recipient}
-                handleChange={handleChange}
-                readonly={OrderData.order.status !== "Черновик"}
-                required={true}
-              />
-              <TextInput
-                name="phone_recipient"
-                label="Номер телефона получателя"
-                value={data.phone_recipient}
                 handleChange={handleChange}
                 readonly={OrderData.order.status !== "Черновик"}
                 required={true}

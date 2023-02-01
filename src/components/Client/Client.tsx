@@ -12,8 +12,6 @@ const Client = () => {
           <p>{OrderData.order.deliveryPhone}</p>
           <h4>ФИО получателя</h4>
           <p>{OrderData.order.deliveryNameRecipient}</p>
-          <h4>Номер телефона получателя</h4>
-          <p>{OrderData.order.deliveryPhoneRecipient}</p>
         </>
       )}
     </div>

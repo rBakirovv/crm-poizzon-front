@@ -36,9 +36,6 @@ const Search = () => {
           .includes(filteredValue.toLowerCase()) ||
         item
           .deliveryPhone!.toLowerCase()
-          .includes(filteredValue.toLowerCase()) ||
-        item
-          .deliveryPhoneRecipient!.toLowerCase()
           .includes(filteredValue.toLowerCase())
       ) {
         return true;
