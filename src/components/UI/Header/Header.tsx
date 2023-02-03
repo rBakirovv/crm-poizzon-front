@@ -14,13 +14,7 @@ interface IHeaderProps {
   orderStatus?: string;
 }
 
-const Header: FC<IHeaderProps> = ({
-  userPosition,
-  userName,
-  currentRate,
-  orderId,
-  orderStatus,
-}) => {
+const Header: FC<IHeaderProps> = ({ userPosition, orderId, orderStatus }) => {
   const router = useRouter();
 
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
@@ -87,17 +81,17 @@ const Header: FC<IHeaderProps> = ({
               Поиск
             </Link>
           </div>
-          <p className={styles["header__position-name"]}>{userPosition}</p>
+          <Link className={styles["header__position-name"]} href="/account">
+            {userPosition}
+            <div className={styles["header__position-icon"]}></div>
+          </Link>
           <button
             className={`${styles["header__burger-button"]} ${
               isBurgerOpen && styles["header__burger-button_active"]
             }`}
             onClick={handleBurgerClick}
           ></button>
-          <Burger
-            isBurgerOpen={isBurgerOpen}
-            closeBurger={closeBurger}
-          />
+          <Burger isBurgerOpen={isBurgerOpen} closeBurger={closeBurger} />
         </div>
       )}
     </header>

@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
 import { IOrder } from "../../types/interfaces";
 import { BASE_URL } from "../../utils/constants";
-import ImagePopup from "../ImagePopup/ImagePopup";
+import Carousel from "../UI/Carousel/Carousel";
 import Timer from "../UI/Timer/Timer";
 import styles from "./Order.module.css";
 
@@ -15,7 +15,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
 
   const [isBrowser, setIsBrowser] = useState<boolean>(false);
 
-  const [currentImage, setCurrentImage] = useState<string>("");
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState<boolean>(false);
 
   const [timeLeft, setTimeLeft] = useState<number>(
@@ -45,15 +45,25 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
     }
   });
 
-  function openPoup(e: React.SyntheticEvent) {
-    const target = e.target as HTMLInputElement;
-
-    setCurrentImage(target.src);
+  function openPopup(index: number) {
     setIsImagePopupOpen(true);
+    setCurrentImageIndex(index);
   }
 
   function closePopup() {
     setIsImagePopupOpen(false);
+  }
+
+  function nextImage() {
+    currentImageIndex === currentOrder.orderImages.length - 1
+      ? setCurrentImageIndex(0)
+      : setCurrentImageIndex(currentImageIndex + 1);
+  }
+
+  function prevImage() {
+    currentImageIndex === 0
+      ? setCurrentImageIndex(currentOrder.orderImages.length - 1)
+      : setCurrentImageIndex(currentImageIndex - 1);
   }
 
   function handleTimeLeft() {
@@ -75,14 +85,14 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
                 src={`${BASE_URL}${currentOrder.orderImages[0].path}`}
                 alt={currentOrder.model}
                 crossOrigin="anonymous"
-                onClick={openPoup}
+                onClick={() => openPopup(0)}
               />
             )}
           </div>
         </div>
         <ul className={styles["order__shoes-image-collection"]}>
           {currentOrder.orderImages.length > 0 &&
-            currentOrder.orderImages.slice(1).map((image) => {
+            currentOrder.orderImages.slice(1).map((image, index) => {
               return (
                 <li
                   key={image.name}
@@ -91,7 +101,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
                   <img
                     src={`${BASE_URL}${image.path}`}
                     crossOrigin="anonymous"
-                    onClick={openPoup}
+                    onClick={() => openPopup(index + 1)}
                   />
                 </li>
               );
@@ -408,10 +418,13 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
           </button>
         )}
       </div>
-      <ImagePopup
-        currentImage={currentImage}
+      <Carousel
         isImagePopupOpen={isImagePopupOpen}
+        images={currentOrder.orderImages}
+        currentImageIndex={currentImageIndex}
         closePopup={closePopup}
+        nextImage={nextImage}
+        prevImage={prevImage}
       />
     </section>
   );

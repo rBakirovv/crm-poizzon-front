@@ -31,12 +31,7 @@ const Search = () => {
         item
           .deliveryName!.toLowerCase()
           .includes(filteredValue.toLowerCase()) ||
-        item
-          .deliveryNameRecipient!.toLowerCase()
-          .includes(filteredValue.toLowerCase()) ||
-        item
-          .deliveryPhone!.toLowerCase()
-          .includes(filteredValue.toLowerCase())
+        item.deliveryPhone!.toLowerCase().includes(filteredValue.toLowerCase())
       ) {
         return true;
       }
@@ -87,6 +82,9 @@ const Search = () => {
           <div className={styles["orders-table__header-item"]}>Дата</div>
           <div className={styles["orders-table__header-item"]}>Товар</div>
           <div className={styles["orders-table__header-item"]}>Сумма</div>
+          <div className={styles["orders-table__header-item"]}>Заказчик</div>
+          <div className={styles["orders-table__header-item"]}>POIZON</div>
+          <div className={styles["orders-table__header-item"]}>CDEK</div>
           <div className={styles["orders-table__header-item"]}>Менеджер</div>
           <div className={styles["orders-table__header-item"]}>Байер</div>
           <div className={styles["orders-table__header-item"]}>
@@ -161,6 +159,15 @@ const Search = () => {
                             parseFloat(orderItem.commission) -
                             orderItem.promoCodePercent
                         )}
+                    </div>
+                    <div className={styles["orders-table__info-item"]}>
+                      {orderItem.deliveryName !== "" && orderItem.deliveryName}
+                    </div>
+                    <div className={styles["orders-table__info-item"]}>
+                      {orderItem.poizonCode !== "" && orderItem.poizonCode}
+                    </div>
+                    <div className={styles["orders-table__info-item"]}>
+                      {orderItem.deliveryCode !== "" && orderItem.deliveryCode}
                     </div>
                     <div className={styles["orders-table__info-item"]}>
                       {orderItem.creater !== "" && orderItem.creater}

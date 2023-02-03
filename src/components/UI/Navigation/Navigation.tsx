@@ -4,8 +4,10 @@ import styles from "./Navigation.module.css";
 import { useRouter } from "next/router";
 import UserData from "../../../store/user";
 import Logged from "../../../store/logged";
+import OrdersBar from "../../../store/ordersBar";
+import { observer } from "mobx-react-lite";
 
-const Navigation = () => {
+const Navigation = observer(() => {
   const router = useRouter();
 
   function handleLogOut() {
@@ -19,6 +21,46 @@ const Navigation = () => {
     });
 
     setTimeout(() => router.push("/sign-in"), 200);
+  }
+
+  function openDraft() {
+    OrdersBar.setNewStatus("Черновик");
+    router.replace("/");
+  }
+
+  function openPaymentVerification() {
+    OrdersBar.setNewStatus("Проверка оплаты");
+    router.replace("/");
+  }
+
+  function openAwaitingPurchase() {
+    OrdersBar.setNewStatus("Ожидает закупки");
+    router.replace("/");
+  }
+
+  function openOnPurchase() {
+    OrdersBar.setNewStatus("На закупке");
+    router.replace("/");
+  }
+
+  function openPurchased() {
+    OrdersBar.setNewStatus("Закуплен");
+    router.replace("/");
+  }
+
+  function openInRussia() {
+    OrdersBar.setNewStatus("На складе в РФ");
+    router.replace("/");
+  }
+
+  function openSent() {
+    OrdersBar.setNewStatus("Доставляется");
+    router.replace("/");
+  }
+
+  function openСompleted() {
+    OrdersBar.setNewStatus("Завершён");
+    router.replace("/");
   }
 
   return (
@@ -35,6 +77,75 @@ const Navigation = () => {
           >
             Заказы
           </Link>
+          <div className={styles["nav__list-item-order-container"]}>
+            {UserData.userData.position !== "Байер" && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openDraft}
+              >
+                Черновик
+              </button>
+            )}
+            {UserData.userData.position !== "Байер" && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openPaymentVerification}
+              >
+                Проверка оплаты
+              </button>
+            )}
+            {UserData.userData.position !== "Менеджер" && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openAwaitingPurchase}
+              >
+                Ожидает закупки
+              </button>
+            )}
+            {UserData.userData.position !== "Менеджер" && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openOnPurchase}
+              >
+                На закупке
+              </button>
+            )}
+            {UserData.userData.position !== "Менеджер" && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openPurchased}
+              >
+                Закуплен
+              </button>
+            )}
+            {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Создатель") && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openInRussia}
+              >
+                На складе в РФ
+              </button>
+            )}
+            {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Создатель") && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openSent}
+              >
+                Доставляется
+              </button>
+            )}
+            {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Создатель") && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openСompleted}
+              >
+                Завершён
+              </button>
+            )}
+          </div>
         </li>
         {UserData.userData.position === "Создатель" && (
           <li className={styles["nav__list-item"]}>
@@ -100,6 +211,6 @@ const Navigation = () => {
       </ul>
     </nav>
   );
-};
+});
 
 export default Navigation;

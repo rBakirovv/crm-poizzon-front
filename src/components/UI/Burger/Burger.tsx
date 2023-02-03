@@ -6,16 +6,15 @@ import { logOut } from "../../../utils/Auth";
 import UserData from "../../../store/user";
 import Logged from "../../../store/logged";
 import styles from "./Burger.module.css";
+import OrdersBar from "../../../store/ordersBar";
+import { observer } from "mobx-react-lite";
 
 interface IBurgerProps {
   isBurgerOpen: boolean;
   closeBurger: () => void;
 }
 
-const Burger: FC<IBurgerProps> = ({
-  isBurgerOpen,
-  closeBurger,
-}) => {
+const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
   const router = useRouter();
 
   const [isBrowser, setIsBrowser] = useState(false);
@@ -35,6 +34,46 @@ const Burger: FC<IBurgerProps> = ({
     });
 
     setTimeout(() => router.push("/sign-in"), 200);
+  }
+
+  function openDraft() {
+    OrdersBar.setNewStatus("Черновик");
+    router.replace("/");
+  }
+
+  function openPaymentVerification() {
+    OrdersBar.setNewStatus("Проверка оплаты");
+    router.replace("/");
+  }
+
+  function openAwaitingPurchase() {
+    OrdersBar.setNewStatus("Ожидает закупки");
+    router.replace("/");
+  }
+
+  function openOnPurchase() {
+    OrdersBar.setNewStatus("На закупке");
+    router.replace("/");
+  }
+
+  function openPurchased() {
+    OrdersBar.setNewStatus("Закуплен");
+    router.replace("/");
+  }
+
+  function openInRussia() {
+    OrdersBar.setNewStatus("На складе в РФ");
+    router.replace("/");
+  }
+
+  function openSent() {
+    OrdersBar.setNewStatus("Доставляется");
+    router.replace("/");
+  }
+
+  function openСompleted() {
+    OrdersBar.setNewStatus("Завершён");
+    router.replace("/");
   }
 
   const burgerElement = (
@@ -73,6 +112,75 @@ const Burger: FC<IBurgerProps> = ({
           >
             Заказы
           </Link>
+          <div className={styles["nav__list-item-order-container"]}>
+            {UserData.userData.position !== "Байер" && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openDraft}
+              >
+                Черновик
+              </button>
+            )}
+            {UserData.userData.position !== "Байер" && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openPaymentVerification}
+              >
+                Проверка оплаты
+              </button>
+            )}
+            {UserData.userData.position !== "Менеджер" && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openAwaitingPurchase}
+              >
+                Ожидает закупки
+              </button>
+            )}
+            {UserData.userData.position !== "Менеджер" && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openOnPurchase}
+              >
+                На закупке
+              </button>
+            )}
+            {UserData.userData.position !== "Менеджер" && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openPurchased}
+              >
+                Закуплен
+              </button>
+            )}
+            {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Создатель") && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openInRussia}
+              >
+                На складе в РФ
+              </button>
+            )}
+            {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Создатель") && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openSent}
+              >
+                Доставляется
+              </button>
+            )}
+            {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Создатель") && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openСompleted}
+              >
+                Завершён
+              </button>
+            )}
+          </div>
         </li>
         {UserData.userData.position === "Создатель" && (
           <li onClick={closeBurger} className={styles["nav__list-item"]}>
@@ -150,6 +258,6 @@ const Burger: FC<IBurgerProps> = ({
   } else {
     return null;
   }
-};
+});
 
 export default Burger;

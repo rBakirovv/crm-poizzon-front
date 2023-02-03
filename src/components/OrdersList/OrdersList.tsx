@@ -2,51 +2,48 @@ import { useEffect, useState } from "react";
 import OrderTable from "../UI/OrderTable/OrderTable";
 import styles from "./OrdersList.module.css";
 import UserData from "../../store/user";
+import OrdersBar from "../../store/ordersBar";
+import { observer } from "mobx-react-lite";
 import { ADMIN, BUYER, SUPERADMIN } from "../../utils/constants";
 
-const OrdersList = () => {
-  const [ordersStatus, setOrdersStatus] = useState<string>("Черновик");
+const OrdersList = observer(() => {
 
   function openDraft() {
-    setOrdersStatus("Черновик");
+    OrdersBar.setNewStatus("Черновик");
   }
 
   function openPaymentVerification() {
-    setOrdersStatus("Проверка оплаты");
+    OrdersBar.setNewStatus("Проверка оплаты");
   }
 
   function openAwaitingPurchase() {
-    setOrdersStatus("Ожидает закупки");
+    OrdersBar.setNewStatus("Ожидает закупки");
   }
 
   function openOnPurchase() {
-    setOrdersStatus("На закупке");
+    OrdersBar.setNewStatus("На закупке");
   }
 
   function openPurchased() {
-    setOrdersStatus("Закуплен");
-  }
-
-  function openDeliveredToRussia() {
-    setOrdersStatus("Доставка в Москву");
+    OrdersBar.setNewStatus("Закуплен");
   }
 
   function openInRussia() {
-    setOrdersStatus("На складе в РФ");
+    OrdersBar.setNewStatus("На складе в РФ");
   }
 
   function openSent() {
-    setOrdersStatus("Доставляется");
+    OrdersBar.setNewStatus("Доставляется");
   }
 
   function openСompleted() {
-    setOrdersStatus("Завершён");
+    OrdersBar.setNewStatus("Завершён");
   }
 
   useEffect(() => {
     if (UserData.userData.position) {
       if (UserData.userData.position === BUYER) {
-        setOrdersStatus("Ожидает закупки");
+        OrdersBar.setNewStatus("Ожидает закупки");
       }
     }
   }, [UserData.userData.position]);
@@ -61,7 +58,7 @@ const OrdersList = () => {
           >
             <p
               className={`${styles["orders-list__navigation-text"]} ${
-                ordersStatus === "Черновик" &&
+                OrdersBar.orderStatus === "Черновик" &&
                 styles["orders-list__navigation-text_active"]
               }`}
             >
@@ -76,7 +73,7 @@ const OrdersList = () => {
           >
             <p
               className={`${styles["orders-list__navigation-text"]} ${
-                ordersStatus === "Проверка оплаты" &&
+                OrdersBar.orderStatus === "Проверка оплаты" &&
                 styles["orders-list__navigation-text_active"]
               }`}
             >
@@ -93,7 +90,7 @@ const OrdersList = () => {
           >
             <p
               className={`${styles["orders-list__navigation-text"]} ${
-                ordersStatus === "Ожидает закупки" &&
+                OrdersBar.orderStatus === "Ожидает закупки" &&
                 styles["orders-list__navigation-text_active"]
               }`}
             >
@@ -110,7 +107,7 @@ const OrdersList = () => {
           >
             <p
               className={`${styles["orders-list__navigation-text"]} ${
-                ordersStatus === "На закупке" &&
+                OrdersBar.orderStatus === "На закупке" &&
                 styles["orders-list__navigation-text_active"]
               }`}
             >
@@ -127,7 +124,7 @@ const OrdersList = () => {
           >
             <p
               className={`${styles["orders-list__navigation-text"]} ${
-                ordersStatus === "Закуплен" &&
+                OrdersBar.orderStatus === "Закуплен" &&
                 styles["orders-list__navigation-text_active"]
               }`}
             >
@@ -143,7 +140,7 @@ const OrdersList = () => {
           >
             <p
               className={`${styles["orders-list__navigation-text"]} ${
-                ordersStatus === "На складе в РФ" &&
+                OrdersBar.orderStatus === "На складе в РФ" &&
                 styles["orders-list__navigation-text_active"]
               }`}
             >
@@ -159,7 +156,7 @@ const OrdersList = () => {
           >
             <p
               className={`${styles["orders-list__navigation-text"]} ${
-                ordersStatus === "Доставляется" &&
+                OrdersBar.orderStatus === "Доставляется" &&
                 styles["orders-list__navigation-text_active"]
               }`}
             >
@@ -175,7 +172,7 @@ const OrdersList = () => {
           >
             <p
               className={`${styles["orders-list__navigation-text"]} ${
-                ordersStatus === "Завершён" &&
+                OrdersBar.orderStatus === "Завершён" &&
                 styles["orders-list__navigation-text_active"]
               }`}
             >
@@ -184,58 +181,58 @@ const OrdersList = () => {
           </li>
         )}
       </ul>
-      {ordersStatus === "Черновик" && UserData.userData.position !== BUYER && (
+      {OrdersBar.orderStatus === "Черновик" && UserData.userData.position !== BUYER && (
         <OrderTable status={"Черновик"} />
       )}
-      {ordersStatus === "Проверка оплаты" &&
+      {OrdersBar.orderStatus === "Проверка оплаты" &&
         UserData.userData.position !== BUYER && (
           <OrderTable status={"Проверка оплаты"} />
         )}
-      {ordersStatus === "Ожидает закупки" &&
+      {OrdersBar.orderStatus === "Ожидает закупки" &&
         (UserData.userData.position === BUYER ||
           UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
           <OrderTable status={"Ожидает закупки"} />
         )}
-      {ordersStatus === "На закупке" &&
+      {OrdersBar.orderStatus === "На закупке" &&
         (UserData.userData.position === BUYER ||
           UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
           <OrderTable status={"На закупке"} />
         )}
-      {ordersStatus === "Закуплен" &&
+      {OrdersBar.orderStatus === "Закуплен" &&
         (UserData.userData.position === BUYER ||
           UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
           <OrderTable status={"Закуплен"} />
         )}
-      {ordersStatus === "Доставляется в РФ" &&
+      {OrdersBar.orderStatus === "Доставляется в РФ" &&
         (UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
           <OrderTable status={"Доставляется в РФ"} />
         )}
-      {ordersStatus === "Доставка в Москву" &&
+      {OrdersBar.orderStatus === "Доставка в Москву" &&
         (UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
           <OrderTable status={"Доставка в Москву"} />
         )}
-      {ordersStatus === "На складе в РФ" &&
+      {OrdersBar.orderStatus === "На складе в РФ" &&
         (UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
           <OrderTable status={"На складе в РФ"} />
         )}
-      {ordersStatus === "Доставляется" &&
+      {OrdersBar.orderStatus === "Доставляется" &&
         (UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
           <OrderTable status={"Доставляется"} />
         )}
-      {ordersStatus === "Завершён" &&
+      {OrdersBar.orderStatus === "Завершён" &&
         (UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
           <OrderTable status={"Завершён"} />
         )}
     </section>
   );
-};
+});
 
 export default OrdersList;

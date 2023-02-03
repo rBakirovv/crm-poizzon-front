@@ -21,6 +21,34 @@
   cursor: pointer;
 }
 
+.nav__list-item-order-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.nav__list-item-order {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  transition: all 0.4s ease-in-out;
+  cursor: pointer;
+}
+
+.nav__list-item-order:hover {
+  background: #ff7f00;
+  color: #fff !important;
+}
+
+.nav__list-item-order:active {
+  background: #d96e3a;
+  color: #fff !important;
+}
+
 .nav__list-item_exit {
   font-weight: 700;
   font-size: 1.2rem;

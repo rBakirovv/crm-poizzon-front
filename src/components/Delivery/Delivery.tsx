@@ -48,11 +48,13 @@ const Delivery = () => {
     });
   }
 
+  /*
   function handleDeliveryToMoscow() {
     deliveryToMoscow(OrderData.order._id).then((order) => {
       OrderData.setOrder(order);
     });
   }
+  */
 
   function handleInStockInRussia() {
     inStockInRussia(OrderData.order._id, UserData.userData.name).then(

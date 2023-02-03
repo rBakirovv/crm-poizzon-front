@@ -112,10 +112,23 @@
 }
 
 .header__position-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-weight: 700;
   position: absolute;
   right: 1rem;
+  cursor: pointer;
   margin: 0;
+}
+
+.header__position-icon {
+  width: 30px;
+  height: 30px;
+  background-image: url(../../../../public/images/acc-icon.svg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .header__burger-button {

@@ -20,7 +20,12 @@ export const getUserInfo = () => {
   }).then(checkResponse);
 };
 
-export const createUser = (name: string, email: string, position: string, password: string) => {
+export const createUser = (
+  name: string,
+  email: string,
+  position: string,
+  password: string
+) => {
   return fetch(`${BASE_URL}/users/create`, {
     credentials: "include",
     method: "POST",
@@ -39,6 +44,17 @@ export const deleteUser = (email: string) => {
     credentials: "include",
     method: "DELETE",
     headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const changePassword = (password: string) => {
+  return fetch(`${BASE_URL}/users/me`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      password: password,
+    }),
   }).then(checkResponse);
 };
 
