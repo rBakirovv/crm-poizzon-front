@@ -117,6 +117,9 @@ const Search = () => {
                           orderItem.status === "Доставляется") &&
                         orderItem.deliveryCode === "" &&
                         styles["orders-table__info-item_delivery-code"]
+                      } ${
+                        orderItem.combinedOrder.length !== 0 &&
+                        styles["orders-table__combined"]
                       }`}
                       href={`/order/change/${orderItem._id}`}
                     >

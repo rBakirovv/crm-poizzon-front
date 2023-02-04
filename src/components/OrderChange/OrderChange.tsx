@@ -446,6 +446,27 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       <p className={styles["order-change__status"]}>
         Статус: {OrderData.order.status}
       </p>
+      {OrderData.order.combinedOrder.length > 0 && (
+        <p
+          className={`${styles["order-change__status"]} ${styles["order-change__flex-status"]}`}
+        >
+          <span className={styles["order-change__status_orange"]}>
+            Объединён с:
+          </span>
+          {OrderData.order.combinedOrder[0].combinedOrder.map((id) => {
+            return (
+              id !== OrderData.order._id && (
+                <a
+                  className={styles["order-change__order-link"]}
+                  href={`${BASE_URL_FRONT}/order/change/${id}`}
+                >
+                  {id}
+                </a>
+              )
+            );
+          })}
+        </p>
+      )}
       <div className={styles["order-change__nav-bar"]}>
         <p
           className={`${styles["order-change__nav-item"]} ${

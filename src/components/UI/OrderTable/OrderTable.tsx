@@ -207,6 +207,9 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                         orderItem.status === "Доставляется") &&
                       orderItem.deliveryCode === "" &&
                       styles["orders-table__info-item_delivery-code"]
+                    } ${
+                      orderItem.combinedOrder.length !== 0 &&
+                      styles["orders-table__combined"]
                     }`}
                     href={`/order/change/${orderItem._id}`}
                   >
@@ -231,20 +234,20 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                         : Math.ceil(
                             parseFloat(orderItem.priceCNY) *
                               parseFloat(orderItem.currentRate) +
-                            parseFloat(orderItem.priceDeliveryChina) +
-                            parseFloat(orderItem.priceDeliveryRussia) +
-                            parseFloat(orderItem.commission) -
-                            orderItem.promoCodePercent
+                              parseFloat(orderItem.priceDeliveryChina) +
+                              parseFloat(orderItem.priceDeliveryRussia) +
+                              parseFloat(orderItem.commission) -
+                              orderItem.promoCodePercent
                           ))}
                     {orderItem.status === "Черновик" && <br />}
                     {orderItem.status !== "Черновик" &&
                       Math.ceil(
                         parseFloat(orderItem.priceCNY) *
                           parseFloat(orderItem.currentRate) +
-                        parseFloat(orderItem.priceDeliveryChina) +
-                        parseFloat(orderItem.priceDeliveryRussia) +
-                        parseFloat(orderItem.commission) -
-                        orderItem.promoCodePercent
+                          parseFloat(orderItem.priceDeliveryChina) +
+                          parseFloat(orderItem.priceDeliveryRussia) +
+                          parseFloat(orderItem.commission) -
+                          orderItem.promoCodePercent
                       )}
                   </div>
                   <div className={styles["orders-table__info-item"]}>
@@ -301,10 +304,10 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
           (UserData.userData.position === "Создатель" ||
             UserData.userData.position === "Администратор") && (
             <button
-              className={styles["purchase-button"]}
+              className={styles["delete-draft-button"]}
               onClick={handleDeletePaidClick}
             >
-              {isDeleteDraft ? "Закрыть" : "Удалить"}
+              {isDeletePaidOrder ? "Закрыть" : "Удалить"}
             </button>
           )}
       </div>

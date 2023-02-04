@@ -4,17 +4,28 @@ import Order from "../../components/Order/Order";
 import Header from "../../components/UI/Header/Header";
 import { IOrder } from "../../types/interfaces";
 import { BASE_URL } from "../../utils/constants";
+import { getCurrentClientOrder } from "../../utils/Order";
+import { useEffect, useState } from "react";
 
 interface ICurrentOrderProps {
   currentOrder: IOrder;
 }
 
 const Page: NextPage<ICurrentOrderProps> = ({ currentOrder }) => {
+
   return (
     <>
       <Head>
-        <title>{currentOrder.brand} {currentOrder.model} — купить в Poizonqq</title>
-        <link type="Image/x-icon" href="../images/favicon.ico" rel="icon"></link>
+        <title>
+          {currentOrder.combinedOrder.length === 0
+            ? `${currentOrder.model} — купить в Poizonqq`
+            : `Poizonqq заказ №${currentOrder.orderId}`}
+        </title>
+        <link
+          type="Image/x-icon"
+          href="../images/favicon.ico"
+          rel="icon"
+        ></link>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Header

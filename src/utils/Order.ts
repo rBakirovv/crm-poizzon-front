@@ -29,6 +29,25 @@ export const getCurrentOrder = (orderId: string | string[]) => {
   }).then(checkResponse);
 };
 
+export const getOrderByNumber = (orderId: string | string[]) => {
+  return fetch(`${BASE_URL}/order-number/${orderId}`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const mergeOrders = (id: string, combinedOrder: Array<string>) => {
+  return fetch(`${BASE_URL}/order/merge/${id}`, {
+    credentials: "include",
+    method: "PUT",
+    headers: HEADERS,
+    body: JSON.stringify({
+      combinedOrder: combinedOrder,
+    }),
+  }).then(checkResponse);
+};
+
 export const createOrder = (
   creater: string,
   link: string,

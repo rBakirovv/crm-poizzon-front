@@ -147,6 +147,20 @@ const Navigation = observer(() => {
             )}
           </div>
         </li>
+        {(UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Администратор") && (
+          <li className={styles["nav__list-item"]}>
+            <Link
+              className={`${styles["nav__list-item-link"]} ${
+                router.pathname === "/merged" &&
+                styles["nav__list-item-link_active"]
+              }`}
+              href="/merged"
+            >
+              Объединить
+            </Link>
+          </li>
+        )}
         {UserData.userData.position === "Создатель" && (
           <li className={styles["nav__list-item"]}>
             <Link

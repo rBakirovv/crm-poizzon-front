@@ -34,6 +34,14 @@
   margin: 0;
 }
 
+.orders-table__combined::after {
+  content: "O6!";
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+  font-size: 0.75rem;
+}
+
 .orders-table__item {
   position: relative;
   display: flex;

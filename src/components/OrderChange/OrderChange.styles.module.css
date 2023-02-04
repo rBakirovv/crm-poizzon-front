@@ -12,6 +12,28 @@
   margin: 1.5rem 0 0;
 }
 
+.order-change__status_orange {
+  color: #ff7f00;
+  font-weight: 500;
+}
+
+.order-change__flex-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.order-change__order-link {
+  border-bottom: 1px dashed #000;
+  cursor: pointer;
+  transition: all 0.4s ease-in-out;
+}
+
+.order-change__order-link:hover {
+  border-bottom: 1px dashed transparent;
+}
+
 .order-change__public-link-container {
   width: auto;
   background: #fff;

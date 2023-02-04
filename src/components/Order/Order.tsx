@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
 import { IOrder } from "../../types/interfaces";
-import { BASE_URL } from "../../utils/constants";
+import { BASE_URL, BASE_URL_FRONT } from "../../utils/constants";
+import { getCurrentClientOrder } from "../../utils/Order";
 import Carousel from "../UI/Carousel/Carousel";
 import Timer from "../UI/Timer/Timer";
 import styles from "./Order.module.css";
@@ -17,6 +18,8 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
 
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState<boolean>(false);
+
+  const ordersPull = currentOrder.combinedOrder[0];
 
   const [timeLeft, setTimeLeft] = useState<number>(
     Math.ceil(
@@ -416,6 +419,31 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
             <span className={styles["order__pay-button-span"]}>Оплатить</span>
             <span>{totalPrice} ₽</span>
           </button>
+        )}
+        {ordersPull && (
+          <div
+            className={`${styles["order-divider"]} ${styles["order-divider_horizontal"]}`}
+          ></div>
+        )}
+        {ordersPull && (
+          <h2 className={styles["order__title"]}>К остальным заказам</h2>
+        )}
+        {ordersPull && (
+          <div className={styles["combined-order__links"]}>
+            {ordersPull &&
+              ordersPull.combinedOrder.map((id, index) => {
+                return (
+                  id !== currentOrder._id && (
+                    <a
+                      className={styles["combined-order__link"]}
+                      href={`${BASE_URL_FRONT}/order/${id}`}
+                    >
+                      {index + 1}. заказ в списке
+                    </a>
+                  )
+                );
+              })}
+          </div>
         )}
       </div>
       <Carousel

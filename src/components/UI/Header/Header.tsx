@@ -3,8 +3,6 @@ import { useRouter } from "next/router";
 import styles from "./Header.module.css";
 import Link from "next/link";
 import Burger from "../Burger/Burger";
-import { createOrder } from "../../../utils/Order";
-import OrderData from "../../../store/order";
 
 interface IHeaderProps {
   userPosition?: string;
@@ -39,20 +37,21 @@ const Header: FC<IHeaderProps> = ({ userPosition, orderId, orderStatus }) => {
         !router.pathname.includes("/order/change/") && (
           <div className={styles["header__order-container"]}>
             <h2 className={styles["header__order-title"]}>Заказ №{orderId}</h2>
-            {!router.pathname.includes("/pay/") && (
-              <button
-                className={styles["header__order-pay"]}
-                onClick={() =>
-                  window.scrollTo({
-                    left: 0,
-                    top: document.body.scrollHeight,
-                    behavior: "smooth",
-                  })
-                }
-              >
-                {orderStatus === "Черновик" ? "Оплатить" : "История заказа"}
-              </button>
-            )}
+            {!router.pathname.includes("/pay/") &&
+              orderStatus === "Черновик" && (
+                <button
+                  className={styles["header__order-pay"]}
+                  onClick={() =>
+                    window.scrollTo({
+                      left: 0,
+                      top: document.body.scrollHeight,
+                      behavior: "smooth",
+                    })
+                  }
+                >
+                  Оплатить
+                </button>
+              )}
           </div>
         )}
       {(!router.pathname.includes("/order/") ||

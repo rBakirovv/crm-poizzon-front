@@ -22,7 +22,7 @@ export interface IOrder {
   buyAt: Date | string;
   inChinaStockAt: Date | string;
   orderId: number;
-  combinedOrder: Array<string>;
+  combinedOrder: Array<ICombinedOrder>;
   status: string;
   link: string;
   category: string;
@@ -50,6 +50,10 @@ export interface IOrder {
   deliveryMethod: string;
   deliveryAddress: string;
   __v?: number;
+}
+
+interface ICombinedOrder {
+  combinedOrder: Array<string>
 }
 
 export interface IOrderImages {
