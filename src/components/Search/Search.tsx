@@ -31,7 +31,12 @@ const Search = () => {
         item
           .deliveryName!.toLowerCase()
           .includes(filteredValue.toLowerCase()) ||
-        item.deliveryPhone!.toLowerCase().includes(filteredValue.toLowerCase())
+        item
+          .deliveryPhone!.toLowerCase()
+          .includes(filteredValue.toLowerCase()) ||
+        item
+          .deliveryNameRecipient!.toLowerCase()
+          .includes(filteredValue.toLowerCase())
       ) {
         return true;
       }
