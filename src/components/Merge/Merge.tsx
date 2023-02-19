@@ -36,8 +36,8 @@ const Merge = () => {
     });
   };
 
-  function handleSubmit() {
-    data.orders.match(/(-?\d+(\.\d+)?)/g)?.map((item) => {
+  async function handleSubmit() {
+    await data.orders.match(/(-?\d+(\.\d+)?)/g)?.map((item) => {
       getOrderByNumber(item)
         .then((order) => {
           order.map((orderItem: IOrder) => {
@@ -45,13 +45,15 @@ const Merge = () => {
           });
         })
         .then(() => {
-          ordersList.map((item, index) => {
-            mergeOrders(ordersList[index], ordersList);
-          });
+          ordersList.length === data.orders.match(/(-?\d+(\.\d+)?)/g)?.length &&
+            ordersList.map((item, index) => {
+              mergeOrders(ordersList[index], ordersList);
+            });
         })
-        .then(() => setData({ orders: "" }))
         .catch((err) => console.log(err));
     });
+
+    await setData({ orders: "" });
   }
 
   return (

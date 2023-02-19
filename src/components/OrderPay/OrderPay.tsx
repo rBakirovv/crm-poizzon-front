@@ -476,6 +476,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
               <button
                 className={styles["order-pay__pay-submit"]}
                 type="submit"
+                disabled={data.delivery_address === "" || data.delivery_method === ""}
                 onClick={handleSubmitDeliveyData}
               >
                 Отправить
