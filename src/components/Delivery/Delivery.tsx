@@ -97,6 +97,10 @@ const Delivery = () => {
     setIsChangeAddress(true);
   }
 
+  function copyTelegram() {
+    navigator.clipboard.writeText(OrderData.order.deliveryPhone!);
+  }
+
   function handleUpdateDeliveryAddress() {
     updateDeliveryAddress(OrderData.order._id, data.delivery_address)
       .then((order) => {
@@ -211,7 +215,7 @@ const Delivery = () => {
         <h4>ФИО получателя</h4>
         <p>{OrderData.order.deliveryNameRecipient}</p>
         <h4>Номер телефона получателя</h4>
-        <p>{OrderData.order.deliveryPhoneRecipient}</p>
+        <p className={styles["delivery-copy"]} onClick={copyTelegram}>{OrderData.order.deliveryPhone}</p>
         {(UserData.userData.position === "Администратор" ||
           UserData.userData.position === "Создатель") && (
           <form
