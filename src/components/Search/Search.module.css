@@ -68,6 +68,7 @@
   min-width: 160px !important;
   max-width: 160px !important;
   white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .orders-table__header-item:last-of-type {

@@ -45,8 +45,21 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
   const firstItemIndex = lastItemIndex - itemsPerPage;
 
   const lastPageIndex = Math.ceil(
-    OrderData.orders.filter((item) => item.status === status).length /
-      itemsPerPage
+    OrderData.orders.filter((item) => {
+      return (
+        item.status === status &&
+        (status === "Закуплен"
+          ? filterPurchased !== ""
+            ? item.poizonCode === ""
+            : item.status === status
+          : item.status === status) &&
+        (status === "Проверка оплаты"
+          ? filterPayment === ""
+            ? item.status === status
+            : item.payment === filterPayment
+          : item.status === status)
+      );
+    }).length / itemsPerPage
   );
 
   function hanfleFilterPurchased(e: React.SyntheticEvent) {
@@ -225,7 +238,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                     ? item.status === status
                     : item.payment === filterPayment
                   : item.status === status)
-              ); //? filterPayment === "" ? item.status === status : item.payment === filterPayment
+              );
             })
             .slice()
             .reverse()
