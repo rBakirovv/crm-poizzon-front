@@ -108,7 +108,7 @@ const Search = () => {
             Сумма
           </div>
           <div
-            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_person"]}`}
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_client"]}`}
           >
             Заказчик
           </div>
@@ -211,7 +211,7 @@ const Search = () => {
                         )}
                     </div>
                     <div
-                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_client"]}`}
                     >
                       {orderItem.deliveryName !== "" && orderItem.deliveryName}
                     </div>

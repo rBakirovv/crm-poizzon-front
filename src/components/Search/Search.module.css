@@ -64,6 +64,12 @@
   text-align: center;
 }
 
+.orders-table__header-item_client {
+  min-width: 160px !important;
+  max-width: 160px !important;
+  white-space: pre-wrap;
+}
+
 .orders-table__header-item:last-of-type {
   border-right: 1px solid #b4b3b3;
 }
