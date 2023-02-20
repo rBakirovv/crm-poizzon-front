@@ -30,8 +30,8 @@
 
 
 .orders-table__header-item_number {
-  min-width: 60px !important;
-  max-width: 60px !important;
+  min-width: 120px !important;
+  max-width: 120px !important;
 }
 
 .orders-table__header-item_date {
