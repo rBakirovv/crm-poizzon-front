@@ -26,7 +26,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
   const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(20);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
 
   const [isDeleteDraft, setIsDeleteDraft] = useState<boolean>(false);
 
