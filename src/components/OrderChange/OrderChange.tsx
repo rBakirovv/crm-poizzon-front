@@ -150,6 +150,102 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       ...data,
       [name]: value,
     });
+
+    if (target.value === "Кроссовки") {
+      setData({
+        ...data,
+        subcategory: "Кроссовки",
+        priceDeliveryRussia: "1200",
+      });
+    }
+
+    if (target.value === "Зимняя обувь") {
+      setData({
+        ...data,
+        subcategory: "Зимняя обувь",
+        priceDeliveryRussia: "1500",
+      });
+    }
+
+    if (target.value === "Куртка") {
+      setData({
+        ...data,
+        subcategory: "Куртка",
+        priceDeliveryRussia: "1300",
+      });
+    }
+
+    if (target.value === "Толстовка") {
+      setData({
+        ...data,
+        subcategory: "Толстовка",
+        priceDeliveryRussia: "900",
+      });
+    }
+
+    if (target.value === "Футболка") {
+      setData({
+        ...data,
+        subcategory: "Футболка",
+        priceDeliveryRussia: "700",
+      });
+    }
+
+    if (target.value === "Носки") {
+      setData({
+        ...data,
+        subcategory: "Носки",
+        priceDeliveryRussia: "300",
+      });
+    }
+
+    if (target.value === "Сумка") {
+      setData({
+        ...data,
+        subcategory: "Сумка",
+        priceDeliveryRussia: "900",
+      });
+    }
+
+    if (target.value === "Духи") {
+      setData({
+        ...data,
+        subcategory: "Духи",
+        priceDeliveryRussia: "650",
+      });
+    }
+
+    if (target.value === "Штаны") {
+      setData({
+        ...data,
+        subcategory: "Штаны",
+        priceDeliveryRussia: "1000",
+      });
+    }
+
+    if (target.value === "Головной убор") {
+      setData({
+        ...data,
+        subcategory: "Головной убор",
+        priceDeliveryRussia: "650",
+      });
+    }
+
+    if (target.value === "Техника") {
+      setData({
+        ...data,
+        subcategory: "Техника",
+        priceDeliveryRussia: "0",
+      });
+    }
+
+    if (target.value === "Прочее") {
+      setData({
+        ...data,
+        subcategory: "Прочее",
+        priceDeliveryRussia: "0",
+      });
+    }
   }
 
   const uploadFileHandler = async (
@@ -581,6 +677,9 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
                 <option value="Футболка">Футболка</option>
                 <option value="Носки">Носки</option>
                 <option value="Сумка">Сумка</option>
+                <option value="Духи">Духи</option>
+                <option value="Штаны">Штаны</option>
+                <option value="Головной убор">Головной убор</option>
                 <option value="Техника">Техника</option>
                 <option value="Прочее">Прочее</option>
               </select>

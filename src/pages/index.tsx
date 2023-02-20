@@ -14,9 +14,58 @@ import Navigation from "../components/UI/Navigation/Navigation";
 import { getRate } from "../utils/Rate";
 import RateData from "../store/rate";
 import OrdersList from "../components/OrdersList/OrdersList";
+import { deleteOrder, getCurrentOrder, deleteOrderImage } from "../utils/Order";
+import { IOrderImages } from "../types/interfaces";
+import { getPayments } from "../utils/Payment";
+import PaymentsData from "../store/payments";
 
 const Home = observer(() => {
   const router = useRouter();
+
+  useEffect(() => {
+    getOrders()
+      .then((orders) => OrderData.setOrders(orders))
+      .then(() => {
+        return OrderData.orders.filter((item) => {
+          if (
+            item.status === "Черновик" &&
+            Math.ceil(
+              Math.round(
+                new Date(item.overudeAfter).getTime() -
+                  new Date(Date.now()).getTime()
+              ) / 1000
+            ) <= -172800
+          ) {
+            return true;
+          }
+        });
+      })
+      .then((overudeOrders) => {
+        overudeOrders.length > 0 &&
+          overudeOrders.map((item) => {
+            getCurrentOrder(item._id)
+              .then((order) => {
+                if (order.orderImages.length !== 0) {
+                  order.orderImages.map((imageItem: IOrderImages) => {
+                    order.orderImages.length !== 0 &&
+                      deleteOrderImage(imageItem.name, order._id).catch((err) =>
+                        console.log(err)
+                      );
+                  });
+                }
+              })
+              .then(() => {
+                deleteOrder(item._id);
+              })
+              .then(() => {
+                OrderData.deleteOrder(item._id);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          });
+      });
+  }, []);
 
   useEffect(() => {
     !Logged.loggedIn &&
@@ -50,9 +99,9 @@ const Home = observer(() => {
   }, [Logged.loggedIn]);
 
   useEffect(() => {
-    getRate()
-      .then((rates) => {
-        RateData.setNewRate(rates[0]);
+    getPayments()
+      .then((payments) => {
+        PaymentsData.setPaymentsList(payments);
       })
       .catch((err) => {
         console.log(err);
@@ -60,7 +109,13 @@ const Home = observer(() => {
   }, []);
 
   useEffect(() => {
-    getOrders().then((orders) => OrderData.setOrders(orders));
+    getRate()
+      .then((rates) => {
+        RateData.setNewRate(rates[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   return (
@@ -84,9 +139,8 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            {
-              (OrderData.orders.length === 0 || !OrderData.orders.length) && typeof window === "undefined" && <Preloader />
-            }
+            {(OrderData.orders.length === 0 || !OrderData.orders.length) &&
+              typeof window === "undefined" && <Preloader />}
             {OrderData.orders.length > 0 && typeof window !== "undefined" && (
               <OrdersList />
             )}

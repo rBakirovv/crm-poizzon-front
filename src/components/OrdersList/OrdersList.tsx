@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import OrderTable from "../UI/OrderTable/OrderTable";
 import styles from "./OrdersList.module.css";
 import UserData from "../../store/user";
 import OrdersBar from "../../store/ordersBar";
 import { observer } from "mobx-react-lite";
-import { ADMIN, BUYER, SUPERADMIN } from "../../utils/constants";
+import { ADMIN, BUYER, SUPERADMIN, MANAGER } from "../../utils/constants";
 
 const OrdersList = observer(() => {
-
   function openDraft() {
     OrdersBar.setNewStatus("Черновик");
   }
@@ -66,21 +65,22 @@ const OrdersList = observer(() => {
             </p>
           </li>
         )}
-        {UserData.userData.position !== BUYER && (
-          <li
-            onClick={openPaymentVerification}
-            className={styles["orders-list__navigation-item"]}
-          >
-            <p
-              className={`${styles["orders-list__navigation-text"]} ${
-                OrdersBar.orderStatus === "Проверка оплаты" &&
-                styles["orders-list__navigation-text_active"]
-              }`}
+        {UserData.userData.position !== BUYER &&
+          UserData.userData.position !== MANAGER && (
+            <li
+              onClick={openPaymentVerification}
+              className={styles["orders-list__navigation-item"]}
             >
-              Проверка оплаты
-            </p>
-          </li>
-        )}
+              <p
+                className={`${styles["orders-list__navigation-text"]} ${
+                  OrdersBar.orderStatus === "Проверка оплаты" &&
+                  styles["orders-list__navigation-text_active"]
+                }`}
+              >
+                Проверка оплаты
+              </p>
+            </li>
+          )}
         {(UserData.userData.position === BUYER ||
           UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
@@ -181,9 +181,10 @@ const OrdersList = observer(() => {
           </li>
         )}
       </ul>
-      {OrdersBar.orderStatus === "Черновик" && UserData.userData.position !== BUYER && (
-        <OrderTable status={"Черновик"} />
-      )}
+      {OrdersBar.orderStatus === "Черновик" &&
+        UserData.userData.position !== BUYER && (
+          <OrderTable status={"Черновик"} />
+        )}
       {OrdersBar.orderStatus === "Проверка оплаты" &&
         UserData.userData.position !== BUYER && (
           <OrderTable status={"Проверка оплаты"} />

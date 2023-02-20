@@ -14,6 +14,7 @@ import {
 import { IOrderImages } from "../../../types/interfaces";
 import { useRouter } from "next/router";
 import UserData from "../../../store/user";
+import PaymentsData from "../../../store/payments";
 
 const dayjs = require("dayjs");
 
@@ -25,7 +26,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
   const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(20);
 
   const [isDeleteDraft, setIsDeleteDraft] = useState<boolean>(false);
 
@@ -37,6 +38,9 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
   const [orderId, setOrderId] = useState<string>("");
   const [isSubmitPopup, setIsSubmitPopup] = useState<boolean>(false);
 
+  const [filterPurchased, setFilterPurchased] = useState("");
+  const [filterPayment, setFilterPayment] = useState("");
+
   const lastItemIndex = currentPage * itemsPerPage;
   const firstItemIndex = lastItemIndex - itemsPerPage;
 
@@ -44,6 +48,18 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
     OrderData.orders.filter((item) => item.status === status).length /
       itemsPerPage
   );
+
+  function hanfleFilterPurchased(e: React.SyntheticEvent) {
+    const target = e.target as HTMLInputElement;
+
+    setFilterPurchased(target.value);
+  }
+
+  function hanfleFilterPayment(e: React.SyntheticEvent) {
+    const target = e.target as HTMLInputElement;
+
+    setFilterPayment(target.value);
+  }
 
   function handleDeleteDraftClick() {
     setIsDeleteDraft(!isDeleteDraft);
@@ -141,19 +157,76 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
     <>
       <div className={styles["orders-table__container"]}>
         <div className={styles["orders-table__header"]}>
-          <div className={styles["orders-table__header-item"]}>Номер</div>
-          <div className={styles["orders-table__header-item"]}>Дата</div>
-          <div className={styles["orders-table__header-item"]}>Товар</div>
-          <div className={styles["orders-table__header-item"]}>Сумма</div>
-          <div className={styles["orders-table__header-item"]}>Менеджер</div>
-          <div className={styles["orders-table__header-item"]}>Байер</div>
-          <div className={styles["orders-table__header-item"]}>
-            Принял на складе
+          <div
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_number"]}`}
+          >
+            Номер
           </div>
+          <div
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_date"]}`}
+          >
+            Дата
+          </div>
+          <div
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_product"]}`}
+          >
+            Товар
+          </div>
+          <div
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_price"]}`}
+          >
+            Сумма
+          </div>
+          {status === "Проверка оплаты" && (
+            <div
+              className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_payment"]}`}
+            >
+              Оплата
+            </div>
+          )}
+          <div
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_person"]}`}
+          >
+            Менеджер
+          </div>
+          {!(
+            status === "Черновик" ||
+            status === "Проверка оплаты" ||
+            status === "Ожидает закупки"
+          ) && (
+            <div
+              className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_person"]}`}
+            >
+              Байер
+            </div>
+          )}
+          {(status === "На складе в РФ" ||
+            status === "Доставляется" ||
+            status === "Завершён") && (
+            <div
+              className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_person"]}`}
+            >
+              Принял на складе
+            </div>
+          )}
         </div>
         <ul className={styles["orders-table__table"]}>
           {OrderData.orders
-            .filter((item) => item.status === status)
+            .filter((item) => {
+              return (
+                item.status === status &&
+                (status === "Закуплен"
+                  ? filterPurchased !== ""
+                    ? item.poizonCode === ""
+                    : item.status === status
+                  : item.status === status) &&
+                (status === "Проверка оплаты"
+                  ? filterPayment === ""
+                    ? item.status === status
+                    : item.payment === filterPayment
+                  : item.status === status)
+              ); //? filterPayment === "" ? item.status === status : item.payment === filterPayment
+            })
             .slice()
             .reverse()
             .slice(firstItemIndex, lastItemIndex)
@@ -210,19 +283,25 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                     } ${
                       orderItem.combinedOrder.length !== 0 &&
                       styles["orders-table__combined"]
-                    }`}
+                    } ${styles["orders-table__header-item_number"]}`}
                     href={`/order/change/${orderItem._id}`}
                   >
                     {orderItem.orderId}
                   </Link>
-                  <div className={styles["orders-table__info-item"]}>
+                  <div
+                    className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_date"]}`}
+                  >
                     {dayjs(orderItem.createdAt).format("DD-MM-YYYY")}
                   </div>
-                  <div className={styles["orders-table__info-item"]}>
+                  <div
+                    className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_product"]}`}
+                  >
                     {orderItem.model !== "" &&
                       `${orderItem.subcategory} ${orderItem.model}`}
                   </div>
-                  <div className={styles["orders-table__info-item"]}>
+                  <div
+                    className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_price"]}`}
+                  >
                     {orderItem.status === "Черновик" &&
                       (Math.ceil(
                         Math.round(
@@ -250,15 +329,42 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                           orderItem.promoCodePercent
                       )}
                   </div>
-                  <div className={styles["orders-table__info-item"]}>
-                    {orderItem.creater !== "" && orderItem.creater}
+                  {orderItem.status === "Проверка оплаты" && (
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_payment"]}`}
+                    >
+                      {orderItem.payment
+                        .toLowerCase()
+                        .includes("QR".toLowerCase())
+                        ? "Перевод по QR-коду"
+                        : orderItem.payment}
+                    </div>
+                  )}
+                  <div
+                    className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
+                  >
+                    {orderItem.creater}
                   </div>
-                  <div className={styles["orders-table__info-item"]}>
-                    {orderItem.buyer}
-                  </div>
-                  <div className={styles["orders-table__info-item"]}>
-                    {orderItem.stockman}
-                  </div>
+                  {!(
+                    orderItem.status === "Черновик" ||
+                    orderItem.status === "Проверка оплаты" ||
+                    orderItem.status === "Ожидает закупки"
+                  ) && (
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
+                    >
+                      {orderItem.buyer}
+                    </div>
+                  )}
+                  {(status === "На складе в РФ" ||
+                    status === "Доставляется" ||
+                    status === "Завершён") && (
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
+                    >
+                      {orderItem.stockman}
+                    </div>
+                  )}
                 </li>
               );
             })}
@@ -310,7 +416,40 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
               {isDeletePaidOrder ? "Закрыть" : "Удалить"}
             </button>
           )}
+        {status === "Закуплен" && (
+          <select
+            className={styles["orders-table__poizon-code-filter"]}
+            onChange={hanfleFilterPurchased}
+          >
+            <option value="" selected>
+              Все
+            </option>
+            <option value="no-code">Без номера Poizon</option>
+          </select>
+        )}
       </div>
+      {status === "Проверка оплаты" && (
+        <div className={styles["orders-table__payment-filter-container"]}>
+          <select
+            className={styles["orders-table__payment-filter"]}
+            onChange={hanfleFilterPayment}
+          >
+            <option value="" selected>
+              Все
+            </option>
+            {PaymentsData.paymentsList.map((paymentItem) => {
+              return (
+                <option
+                  key={paymentItem._id}
+                  value={`${paymentItem.title} ${paymentItem.number}`}
+                >
+                  {paymentItem.title} {paymentItem.number}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      )}
       {status === "Черновик" && (
         <SubmitPopup
           isSubmitPopup={isSubmitPopup}

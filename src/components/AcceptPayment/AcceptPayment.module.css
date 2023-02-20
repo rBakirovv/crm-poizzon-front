@@ -22,6 +22,20 @@
   cursor: pointer;
 }
 
+.accept-payment__resume {
+  color: #4e7fea;
+  cursor: pointer;
+  border: none;
+  border-bottom: 1px dashed #4e7fea;
+  background: transparent;
+  transition: all 0.4s ease-in-out;
+  padding: 0;
+}
+
+.accept-payment__resume:hover {
+  border-bottom: 1px dashed transparent;
+}
+
 .accept-payment__submit {
   font-weight: 600;
   font-size: 1.2rem;

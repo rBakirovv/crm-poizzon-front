@@ -82,17 +82,51 @@ const Search = () => {
       </div>
       <div className={styles["orders-table__container"]}>
         <div className={styles["orders-table__header"]}>
-          <div className={styles["orders-table__header-item"]}>Номер</div>
-          <div className={styles["orders-table__header-item"]}>Статус</div>
-          <div className={styles["orders-table__header-item"]}>Дата</div>
-          <div className={styles["orders-table__header-item"]}>Товар</div>
-          <div className={styles["orders-table__header-item"]}>Сумма</div>
-          <div className={styles["orders-table__header-item"]}>Заказчик</div>
+          <div
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_number"]}`}
+          >
+            Номер
+          </div>
+          <div
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_status"]}`}
+          >
+            Статус
+          </div>
+          <div
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_date"]}`}
+          >
+            Дата
+          </div>
+          <div
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_product"]}`}
+          >
+            Товар
+          </div>
+          <div
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_price"]}`}
+          >
+            Сумма
+          </div>
+          <div
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_person"]}`}
+          >
+            Заказчик
+          </div>
           <div className={styles["orders-table__header-item"]}>POIZON</div>
           <div className={styles["orders-table__header-item"]}>CDEK</div>
-          <div className={styles["orders-table__header-item"]}>Менеджер</div>
-          <div className={styles["orders-table__header-item"]}>Байер</div>
-          <div className={styles["orders-table__header-item"]}>
+          <div
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_person"]}`}
+          >
+            Менеджер
+          </div>
+          <div
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_person"]}`}
+          >
+            Байер
+          </div>
+          <div
+            className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_person"]}`}
+          >
             Принял на складе
           </div>
         </div>
@@ -125,22 +159,30 @@ const Search = () => {
                       } ${
                         orderItem.combinedOrder.length !== 0 &&
                         styles["orders-table__combined"]
-                      }`}
+                      } ${styles["orders-table__header-item_number"]}`}
                       href={`/order/change/${orderItem._id}`}
                     >
                       {orderItem.orderId}
                     </Link>
-                    <div className={styles["orders-table__info-item"]}>
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_status"]}`}
+                    >
                       {orderItem.status}
                     </div>
-                    <div className={styles["orders-table__info-item"]}>
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_date"]}`}
+                    >
                       {dayjs(orderItem.createdAt).format("DD-MM-YYYY")}
                     </div>
-                    <div className={styles["orders-table__info-item"]}>
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_product"]}`}
+                    >
                       {orderItem.model !== "" &&
                         `${orderItem.subcategory} ${orderItem.model}`}
                     </div>
-                    <div className={styles["orders-table__info-item"]}>
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_price"]}`}
+                    >
                       {orderItem.status === "Черновик" &&
                         (Math.ceil(
                           Math.round(
@@ -168,7 +210,9 @@ const Search = () => {
                             orderItem.promoCodePercent
                         )}
                     </div>
-                    <div className={styles["orders-table__info-item"]}>
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
+                    >
                       {orderItem.deliveryName !== "" && orderItem.deliveryName}
                     </div>
                     <div className={styles["orders-table__info-item"]}>
@@ -177,13 +221,19 @@ const Search = () => {
                     <div className={styles["orders-table__info-item"]}>
                       {orderItem.deliveryCode !== "" && orderItem.deliveryCode}
                     </div>
-                    <div className={styles["orders-table__info-item"]}>
-                      {orderItem.creater !== "" && orderItem.creater}
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
+                    >
+                      {orderItem.creater}
                     </div>
-                    <div className={styles["orders-table__info-item"]}>
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
+                    >
                       {orderItem.buyer}
                     </div>
-                    <div className={styles["orders-table__info-item"]}>
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
+                    >
                       {orderItem.stockman}
                     </div>
                   </li>

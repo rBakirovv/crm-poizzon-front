@@ -121,7 +121,7 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
                 Черновик
               </button>
             )}
-            {UserData.userData.position !== "Байер" && (
+            {UserData.userData.position !== "Байер" && UserData.userData.position !== "Менеджер" && (
               <button
                 className={styles["nav__list-item-order"]}
                 onClick={openPaymentVerification}

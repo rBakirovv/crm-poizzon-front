@@ -28,6 +28,42 @@
   padding: 0.25rem 0;
 }
 
+
+.orders-table__header-item_number {
+  min-width: 60px !important;
+  max-width: 60px !important;
+}
+
+.orders-table__header-item_date {
+  min-width: 100px !important;
+  max-width: 100px !important;
+  word-break: break-all;
+}
+
+.orders-table__header-item_status {
+  min-width: 100px !important;
+  max-width: 100px !important;
+  white-space: pre-wrap;
+}
+
+.orders-table__header-item_product {
+  min-width: 120px !important;
+  max-width: 120px !important;
+  white-space: pre-wrap;
+}
+
+.orders-table__header-item_price {
+  min-width: 70px !important;
+  max-width: 70px !important;
+}
+
+.orders-table__header-item_person {
+  min-width: 100px !important;
+  max-width: 100px !important;
+  white-space: pre-wrap;
+  text-align: center;
+}
+
 .orders-table__header-item:last-of-type {
   border-right: 1px solid #b4b3b3;
 }

@@ -333,6 +333,25 @@ export const orderСompleted = (id: string) => {
   }).then(checkResponse);
 };
 
+export const orderResume = (id: string) => {
+  return fetch(`${BASE_URL}/order/order-resume/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const updateDeliveryAddress = (id: string, deliveryAddress: string) => {
+  return fetch(`${BASE_URL}/order/order-delivery/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      deliveryAddress: deliveryAddress,
+    }),
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();
