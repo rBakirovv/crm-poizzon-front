@@ -24,10 +24,12 @@ const Page: NextPage<ICurrentOrderProps> = ({ currentOrder }) => {
           property="og:title"
           content={`${currentOrder.model} — купить в Poizonqq`}
         ></meta>
-        <meta
-          property="og:image"
-          content={`${BASE_URL}${currentOrder.orderImages[0].path}`}
-        ></meta>
+        {currentOrder.orderImages[0] && (
+          <meta
+            property="og:image"
+            content={`${BASE_URL}${currentOrder.orderImages[0].path}`}
+          ></meta>
+        )}
       </Head>
       <Header
         orderId={currentOrder.orderId}
