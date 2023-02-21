@@ -713,29 +713,28 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
                       key={image.name}
                       className={styles["order-change__image"]}
                     >
-                      {OrderData.order.status === "Черновик" && (
-                        <div
-                          className={styles["order-change__delete-image"]}
-                          onClick={() => deleteImageHandler(image.name)}
+                      <div
+                        className={styles["order-change__delete-image"]}
+                        onClick={() => deleteImageHandler(image.name)}
+                      >
+                        <svg
+                          width="18"
+                          height="20"
+                          viewBox="0 0 18 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          <svg
-                            width="18"
-                            height="20"
-                            viewBox="0 0 18 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M2.45763 18.1422C2.51857 18.8126 3.06711 19.3002 3.73754 19.3002H14.2612C14.9317 19.3002 15.4802 18.7923 15.5411 18.1422L16.7195 5.79004H1.2793L2.45763 18.1422Z"
-                              fill="black"
-                            />
-                            <path
-                              d="M16.7201 1.93002H11.5801V1.27991C11.5801 0.568849 11.0113 0 10.3002 0H7.72009C7.00903 0 6.44018 0.568849 6.44018 1.27991V1.93002H1.27991C0.568849 1.93002 0 2.49887 0 3.20993C0 3.92099 0.568849 4.48984 1.27991 4.48984H16.7201C17.4312 4.48984 18 3.92099 18 3.20993C18 2.49887 17.4312 1.93002 16.7201 1.93002Z"
-                              fill="black"
-                            />
-                          </svg>
-                        </div>
-                      )}
+                          <path
+                            d="M2.45763 18.1422C2.51857 18.8126 3.06711 19.3002 3.73754 19.3002H14.2612C14.9317 19.3002 15.4802 18.7923 15.5411 18.1422L16.7195 5.79004H1.2793L2.45763 18.1422Z"
+                            fill="black"
+                          />
+                          <path
+                            d="M16.7201 1.93002H11.5801V1.27991C11.5801 0.568849 11.0113 0 10.3002 0H7.72009C7.00903 0 6.44018 0.568849 6.44018 1.27991V1.93002H1.27991C0.568849 1.93002 0 2.49887 0 3.20993C0 3.92099 0.568849 4.48984 1.27991 4.48984H16.7201C17.4312 4.48984 18 3.92099 18 3.20993C18 2.49887 17.4312 1.93002 16.7201 1.93002Z"
+                            fill="black"
+                          />
+                        </svg>
+                      </div>
+
                       <img
                         className={styles["order-change__image-item"]}
                         src={`${BASE_URL}${image.path}`}
@@ -750,33 +749,33 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
                 })}
             </ul>
 
-              <Dropzone
-                onDrop={(e: any) =>
-                  uploadFileHandler(e, "/order-images", setUploading)
-                }
-                maxSize={MAX_SIZE}
-              >
-                {({ getRootProps, getInputProps }) => (
-                  <div className={styles["drag-n-drop-container"]}>
-                    <div {...getRootProps()}>
-                      <input {...getInputProps()} />
-                      <p className={styles["drag-n-drop-text"]}>
-                        Добавить фото{" "}
-                        <svg
-                          width="18px"
-                          height="18px"
-                          viewBox="0 0 48 48"
-                          focusable="false"
-                          fill="black"
-                        >
-                          <path fill="none" d="M0 0h48v48H0V0z"></path>
-                          <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                        </svg>
-                      </p>
-                    </div>
+            <Dropzone
+              onDrop={(e: any) =>
+                uploadFileHandler(e, "/order-images", setUploading)
+              }
+              maxSize={MAX_SIZE}
+            >
+              {({ getRootProps, getInputProps }) => (
+                <div className={styles["drag-n-drop-container"]}>
+                  <div {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    <p className={styles["drag-n-drop-text"]}>
+                      Добавить фото{" "}
+                      <svg
+                        width="18px"
+                        height="18px"
+                        viewBox="0 0 48 48"
+                        focusable="false"
+                        fill="black"
+                      >
+                        <path fill="none" d="M0 0h48v48H0V0z"></path>
+                        <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                      </svg>
+                    </p>
                   </div>
-                )}
-              </Dropzone>
+                </div>
+              )}
+            </Dropzone>
 
             <h2 className={styles["order-change__order-title"]}>Расчёт</h2>
             <div className={styles["order-change__input-container"]}>
