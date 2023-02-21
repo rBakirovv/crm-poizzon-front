@@ -82,15 +82,13 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
       <div className={styles["order__container"]}>
         <div className={styles["order__shoes-image-container"]}>
           <div className={styles["order__shoes-image-inner"]}>
-            {currentOrder.orderImages.length > 0 && (
-              <img
-                className={styles["order__shoes-image"]}
-                src={`${BASE_URL}${currentOrder.orderImages[0].path}`}
-                alt={currentOrder.model}
-                crossOrigin="anonymous"
-                onClick={() => openPopup(0)}
-              />
-            )}
+            <img
+              className={styles["order__shoes-image"]}
+              src={`${BASE_URL}${currentOrder.orderImages[0].path}`}
+              alt={currentOrder.model}
+              crossOrigin="anonymous"
+              onClick={() => openPopup(0)}
+            />
           </div>
         </div>
         <ul className={styles["order__shoes-image-collection"]}>
