@@ -749,7 +749,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
                   );
                 })}
             </ul>
-            {OrderData.order.status === "Черновик" && (
+
               <Dropzone
                 onDrop={(e: any) =>
                   uploadFileHandler(e, "/order-images", setUploading)
@@ -777,7 +777,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
                   </div>
                 )}
               </Dropzone>
-            )}
+
             <h2 className={styles["order-change__order-title"]}>Расчёт</h2>
             <div className={styles["order-change__input-container"]}>
               <label>
