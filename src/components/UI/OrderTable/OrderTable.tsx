@@ -48,23 +48,26 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
     OrderData.orders.filter((item) => {
       return (
         (status === "Ожидает данные"
-          ? (item.deliveryAddress === "" && Math.ceil(
-            new Date(item.inChinaStockAt).getTime() -
-              new Date(Date.now()).getTime()
-          ) /
-            1000 <
-            -43200 && item.inChinaStockAt !== null)
+          ? item.deliveryMethod === "" &&
+            item.deliveryAddress === "" &&
+            Math.ceil(
+              new Date(item.inChinaStockAt).getTime() -
+                new Date(Date.now()).getTime()
+            ) /
+              1000 <
+              -43200 &&
+            item.inChinaStockAt !== null
           : item.status === status || status === "Ожидает данные") &&
-          (status === "Закуплен"
+        (status === "Закуплен"
           ? filterPurchased !== ""
             ? item.poizonCode === ""
             : item.status === status
-            : item.status === status || status === "Ожидает данные") &&
+          : item.status === status || status === "Ожидает данные") &&
         (status === "Проверка оплаты"
           ? filterPayment === ""
             ? item.status === status
             : item.payment === filterPayment
-            :  item.status === status || status === "Ожидает данные")
+          : item.status === status || status === "Ожидает данные")
       );
     }).length / itemsPerPage
   );
@@ -173,7 +176,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
       .catch((err) => console.log(err));
   }
 
-  console.log(status)
+  console.log(status);
 
   return (
     <>
@@ -237,14 +240,17 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
             .filter((item) => {
               return (
                 (status === "Ожидает данные"
-                  ? (item.deliveryAddress === "" && Math.ceil(
-                    new Date(item.inChinaStockAt).getTime() -
-                      new Date(Date.now()).getTime()
-                  ) /
-                    1000 <
-                    -43200 && item.inChinaStockAt !== null)
+                  ? item.deliveryMethod === "" &&
+                    item.deliveryAddress === "" &&
+                    Math.ceil(
+                      new Date(item.inChinaStockAt).getTime() -
+                        new Date(Date.now()).getTime()
+                    ) /
+                      1000 <
+                      -43200 &&
+                    item.inChinaStockAt !== null
                   : item.status === status || status === "Ожидает данные") &&
-                  (status === "Закуплен"
+                (status === "Закуплен"
                   ? filterPurchased !== ""
                     ? item.poizonCode === ""
                     : item.status === status
@@ -253,7 +259,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                   ? filterPayment === ""
                     ? item.status === status
                     : item.payment === filterPayment
-                    :  item.status === status || status === "Ожидает данные")
+                  : item.status === status || status === "Ожидает данные")
               );
             })
             .slice()
