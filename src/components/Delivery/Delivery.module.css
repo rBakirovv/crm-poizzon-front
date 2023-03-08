@@ -55,7 +55,7 @@
   color: #ff7f00;
 }
 
-.delivery__subit-button {
+.delivery__submit-button {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -76,20 +76,83 @@
   margin-top: 1.5rem;
 }
 
-.delivery__subit-button:hover {
+.delivery__submit-button_status {
+  margin-top: 0.5rem;
+}
+
+.delivery__submit-button:hover {
   background: #ff7f00;
 }
 
-.delivery__subit-button:active {
+.delivery__submit-button:active {
+  background: #d96e3a;
+}
+
+.delivery-receipt {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  border: 2px solid #000;
+  background: #fff;
+  border-radius: 0.5rem;
+  height: 35px;
+  cursor: pointer;
+  max-width: 330px;
+  transition: all 0.4s ease-in-out;
+}
+
+.delivery-receipt svg {
+  transition: all 0.4s ease-in-out;
+}
+
+.delivery-receipt:hover {
+  border: 2px solid transparent;
+  color: #fff;
+  background: #ff7f00;
+}
+
+.delivery-receipt:hover svg {
+  fill: #fff;
+}
+
+.delivery-receipt:active {
+  border: 2px solid transparent;
   background: #d96e3a;
 }
 
 @media screen and (max-width: 500px) {
-  .delivery__subit-button:hover {
+  .delivery__submit-button:hover {
     background: #000;
   }
 
-  .delivery__subit-button:active {
+  .delivery__submit-button:active {
     background: #d96e3a;
+  }
+
+  .delivery-receipt {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .delivery-receipt:hover {
+    border: 2px solid #000;
+    color: #000;
+    background: #fff;
+  }
+  
+  .delivery-receipt:hover svg {
+    fill: #000;
+  }
+  
+  .delivery-receipt:active {
+    background: #d96e3a;
+    border: 2px solid #fff;
+    color: #fff;
+  }
+
+  .delivery-receipt:active svg {
+    fill: #fff;
   }
 }

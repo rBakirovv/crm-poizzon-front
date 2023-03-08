@@ -13,7 +13,7 @@ import SubmitPopup from "../SubmitPopup/SubmitPopup";
 
 const Delivery = () => {
   const [data, setData] = useState({
-    delivery_code: "",
+    delivery_code: OrderData.order.deliveryCode,
     delivery_address: OrderData.order.deliveryAddress,
   });
 
@@ -215,7 +215,30 @@ const Delivery = () => {
         <h4>ФИО получателя</h4>
         <p>{OrderData.order.deliveryNameRecipient}</p>
         <h4>Номер телефона получателя</h4>
-        <p className={styles["delivery-copy"]} onClick={copyTelegram}>{OrderData.order.deliveryPhone}</p>
+        <p className={styles["delivery-copy"]} onClick={copyTelegram}>
+          {OrderData.order.deliveryPhone}
+        </p>
+        {OrderData.order.deliveryAddress !== "" &&
+          OrderData.order.deliveryEntity !== "" && (
+            <a
+              href="https://lk.cdek.ru/order-history"
+              target="_blank"
+              rel="noreferrer"
+              className={styles["delivery-receipt"]}
+            >
+              Получить квитанцию
+              <svg
+                width="18px"
+                height="18px"
+                viewBox="0 0 48 48"
+                focusable="false"
+                fill="black"
+              >
+                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+              </svg>
+            </a>
+          )}
         {(UserData.userData.position === "Администратор" ||
           UserData.userData.position === "Создатель") && (
           <form
@@ -230,7 +253,7 @@ const Delivery = () => {
               required={false}
               handleChange={handleChange}
             />
-            <button className={styles["delivery__subit-button"]} type="submit">
+            <button className={styles["delivery__submit-button"]} type="submit">
               {OrderData.order.status === "На складе в РФ"
                 ? "Отправлено"
                 : "Сохранить CDEK"}
@@ -242,7 +265,7 @@ const Delivery = () => {
             UserData.userData.position === "Создатель") && (
             <button
               onClick={openSubmitPopup}
-              className={styles["delivery__subit-button"]}
+              className={`${styles["delivery__submit-button"]} ${styles["delivery__submit-button_status"]}`}
               type="button"
             >
               На складе в РФ

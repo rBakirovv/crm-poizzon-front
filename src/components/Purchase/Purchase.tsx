@@ -124,6 +124,8 @@ const Purchase = () => {
             deliveryPhoneRecipient: OrderData.order.deliveryPhoneRecipient,
             deliveryMethod: OrderData.order.deliveryMethod,
             deliveryAddress: OrderData.order.deliveryAddress,
+            deliveryEntity: OrderData.order.deliveryEntity,
+            deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
             __v: OrderData.order.__v,
           });
         })
@@ -180,6 +182,8 @@ const Purchase = () => {
           deliveryPhoneRecipient: OrderData.order.deliveryPhoneRecipient,
           deliveryMethod: OrderData.order.deliveryMethod,
           deliveryAddress: OrderData.order.deliveryAddress,
+          deliveryEntity: OrderData.order.deliveryEntity,
+          deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
           __v: OrderData.order.__v,
         });
       })
@@ -317,7 +321,7 @@ const Purchase = () => {
               На закупку
             </button>
           )}
-        {OrderData.order.status !== "Ожидает закупки" && (
+        {(
           <button
             className={`${styles["purchase__button-submit"]} ${
               UserData.userData.position === "Менеджер" &&
@@ -325,7 +329,7 @@ const Purchase = () => {
             }`}
             type="submit"
           >
-            Сохранить
+            {OrderData.order.status !== "На закупке" ? "Сохранить POIZON" : "Закуплен"}
           </button>
         )}
       </div>

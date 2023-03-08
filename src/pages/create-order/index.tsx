@@ -91,7 +91,11 @@ const Home = observer(() => {
       <Head>
         <title>poizonqq crm - создать заказ</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link type="Image/x-icon" href="../images/favicon.ico" rel="icon"></link>
+        <link
+          type="Image/x-icon"
+          href="../images/favicon.ico"
+          rel="icon"
+        ></link>
       </Head>
       {!Logged.loggedIn && <Preloader />}
       {Logged.loggedIn && (
@@ -103,7 +107,9 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            <CreateOrder payments={PaymentsData.paymentsList} />
+            {typeof window !== "undefined" && RateData.rate.rate !== "0" && (
+              <CreateOrder payments={PaymentsData.paymentsList} />
+            )}
           </Main>
         </>
       )}

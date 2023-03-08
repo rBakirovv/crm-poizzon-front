@@ -7,6 +7,7 @@ interface IInputProps {
   placeholder?: string;
   value: string;
   handleChange?: (e: React.SyntheticEvent) => void;
+  handleClick?: () => void;
   required: boolean;
   readonly?: boolean; 
 }
@@ -17,6 +18,7 @@ const TextInput: FC<IInputProps> = ({
   placeholder,
   value,
   handleChange,
+  handleClick,
   required,
   readonly,
 }) => {
@@ -35,6 +37,7 @@ const TextInput: FC<IInputProps> = ({
         value={value}
         required={required}
         readOnly={readonly}
+        onClick={handleClick}
       />
     </div>
   );

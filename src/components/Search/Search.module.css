@@ -58,8 +58,8 @@
 }
 
 .orders-table__header-item_person {
-  min-width: 100px !important;
-  max-width: 100px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
   white-space: pre-wrap;
   text-align: center;
 }

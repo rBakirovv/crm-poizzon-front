@@ -3,3 +3,11 @@
   background: #fff;
   padding: 0.5rem 1rem 1rem;
 }
+
+.client-copy {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #4e7fea;
+  cursor: pointer;
+}

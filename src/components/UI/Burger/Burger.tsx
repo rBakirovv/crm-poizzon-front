@@ -61,6 +61,11 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
     router.replace("/");
   }
 
+  function openWaitingDelivery() {
+    OrdersBar.setNewStatus("Ожидает данные");
+    router.replace("/");
+  }
+
   function openInRussia() {
     OrdersBar.setNewStatus("На складе в РФ");
     router.replace("/");
@@ -113,7 +118,7 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
             Заказы
           </Link>
           <div className={styles["nav__list-item-order-container"]}>
-            {UserData.userData.position !== "Байер" && (
+            {(
               <button
                 className={styles["nav__list-item-order"]}
                 onClick={openDraft}
@@ -121,14 +126,15 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
                 Черновик
               </button>
             )}
-            {UserData.userData.position !== "Байер" && UserData.userData.position !== "Менеджер" && (
-              <button
-                className={styles["nav__list-item-order"]}
-                onClick={openPaymentVerification}
-              >
-                Проверка оплаты
-              </button>
-            )}
+            {UserData.userData.position !== "Байер" &&
+              UserData.userData.position !== "Менеджер" && (
+                <button
+                  className={styles["nav__list-item-order"]}
+                  onClick={openPaymentVerification}
+                >
+                  Проверка оплаты
+                </button>
+              )}
             {UserData.userData.position !== "Менеджер" && (
               <button
                 className={styles["nav__list-item-order"]}
@@ -153,6 +159,15 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
                 Закуплен
               </button>
             )}
+            {UserData.userData.position !== "Менеджер" &&
+              UserData.userData.position !== "Байер" && (
+                <button
+                  className={`${styles["nav__list-item-order"]} ${styles["nav__list-item-order_line"]}`}
+                  onClick={openWaitingDelivery}
+                >
+                  Ожидает данные
+                </button>
+              )}
             {(UserData.userData.position === "Администратор" ||
               UserData.userData.position === "Создатель") && (
               <button

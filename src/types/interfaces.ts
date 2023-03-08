@@ -49,11 +49,13 @@ export interface IOrder {
   deliveryPhoneRecipient?: string;
   deliveryMethod: string;
   deliveryAddress: string;
+  deliveryEntity: string;
+  deliveryRelatedEntities: string;
   __v?: number;
 }
 
 interface ICombinedOrder {
-  combinedOrder: Array<string>
+  combinedOrder: Array<string>;
 }
 
 export interface IOrderImages {

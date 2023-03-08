@@ -10,9 +10,17 @@ interface IHeaderProps {
   currentRate?: string;
   orderId?: number;
   orderStatus?: string;
+  inChinaStockAt?: any; // Костыль!
+  deliveryMethod?: string;
 }
 
-const Header: FC<IHeaderProps> = ({ userPosition, orderId, orderStatus }) => {
+const Header: FC<IHeaderProps> = ({
+  userPosition,
+  orderId,
+  orderStatus,
+  inChinaStockAt,
+  deliveryMethod,
+}) => {
   const router = useRouter();
 
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
@@ -41,15 +49,26 @@ const Header: FC<IHeaderProps> = ({ userPosition, orderId, orderStatus }) => {
               orderStatus === "Черновик" && (
                 <button
                   className={styles["header__order-pay"]}
-                  onClick={() =>
-                    window.scrollTo({
-                      left: 0,
-                      top: document.body.scrollHeight,
-                      behavior: "smooth",
-                    })
-                  }
+                  onClick={() => router.push(`pay/${router.query.orderId}`)}
                 >
                   Оплатить
+                </button>
+              )}
+            {(!router.pathname.includes("/pay/") ||
+              !router.pathname.includes("/delivery/")) &&
+              Math.ceil(
+                new Date(inChinaStockAt).getTime() -
+                  new Date(Date.now()).getTime()
+              ) /
+                1000 <
+                -43200 &&
+              inChinaStockAt !== null &&
+              deliveryMethod === "" && (
+                <button
+                  className={`${styles["header__order-pay"]} ${styles["header__order-delivery"]}`}
+                  onClick={() => router.push(`delivery/${router.query.orderId}`)}
+                >
+                  Заполните данные для доставки
                 </button>
               )}
           </div>
@@ -65,7 +84,7 @@ const Header: FC<IHeaderProps> = ({ userPosition, orderId, orderStatus }) => {
             CRM
           </Link>
           <div className={styles["header__buttons-container"]}>
-            {userPosition !== "Байер" && (
+            {(
               <Link
                 className={`${styles["header__button"]} ${styles["header__button_black"]}`}
                 href="/create-order"

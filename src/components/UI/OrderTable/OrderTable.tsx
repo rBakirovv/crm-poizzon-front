@@ -47,17 +47,24 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
   const lastPageIndex = Math.ceil(
     OrderData.orders.filter((item) => {
       return (
-        item.status === status &&
-        (status === "Закуплен"
+        (status === "Ожидает данные"
+          ? (item.deliveryAddress === "" && Math.ceil(
+            new Date(item.inChinaStockAt).getTime() -
+              new Date(Date.now()).getTime()
+          ) /
+            1000 <
+            -43200 && item.inChinaStockAt !== null)
+          : item.status === status || status === "Ожидает данные") &&
+          (status === "Закуплен"
           ? filterPurchased !== ""
             ? item.poizonCode === ""
             : item.status === status
-          : item.status === status) &&
+            : item.status === status || status === "Ожидает данные") &&
         (status === "Проверка оплаты"
           ? filterPayment === ""
             ? item.status === status
             : item.payment === filterPayment
-          : item.status === status)
+            :  item.status === status || status === "Ожидает данные")
       );
     }).length / itemsPerPage
   );
@@ -166,6 +173,8 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
       .catch((err) => console.log(err));
   }
 
+  console.log(status)
+
   return (
     <>
       <div className={styles["orders-table__container"]}>
@@ -227,17 +236,24 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
           {OrderData.orders
             .filter((item) => {
               return (
-                item.status === status &&
-                (status === "Закуплен"
+                (status === "Ожидает данные"
+                  ? (item.deliveryAddress === "" && Math.ceil(
+                    new Date(item.inChinaStockAt).getTime() -
+                      new Date(Date.now()).getTime()
+                  ) /
+                    1000 <
+                    -43200 && item.inChinaStockAt !== null)
+                  : item.status === status || status === "Ожидает данные") &&
+                  (status === "Закуплен"
                   ? filterPurchased !== ""
                     ? item.poizonCode === ""
                     : item.status === status
-                  : item.status === status) &&
+                  : item.status === status || status === "Ожидает данные") &&
                 (status === "Проверка оплаты"
                   ? filterPayment === ""
                     ? item.status === status
                     : item.payment === filterPayment
-                  : item.status === status)
+                    :  item.status === status || status === "Ожидает данные")
               );
             })
             .slice()

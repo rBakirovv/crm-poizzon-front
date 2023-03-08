@@ -28,10 +28,13 @@ const Page: NextPage<ICurrentOrderProps> = ({ currentOrder }) => {
           property="og:image"
           content={`${BASE_URL}${currentOrder.orderImages[0].path}`}
         ></meta>
+        <meta name="next-head-count" content="5"></meta>
       </Head>
       <Header
         orderId={currentOrder.orderId}
         orderStatus={currentOrder.status}
+        inChinaStockAt={currentOrder.inChinaStockAt}
+        deliveryMethod={currentOrder.deliveryMethod}
       />
       <Order currentOrder={currentOrder} />
     </>

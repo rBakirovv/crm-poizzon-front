@@ -47,7 +47,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
   const [isImagePopupOpen, setIsImagePopupOpen] = useState<boolean>(false);
 
   const priceRub = Math.ceil(
-    parseFloat(data.priceCNY) * parseFloat(data.currentRate)
+    parseFloat(data.priceCNY) * parseFloat(RateData.rate.rate)
   );
   const totalPrice = Math.ceil(
     priceRub +
@@ -529,7 +529,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
           <TextInput
             name="currentRate"
             label="Курс RUB/CNY"
-            value={data.currentRate}
+            value={RateData.rate.rate}
             required={true}
             readonly={true}
           />

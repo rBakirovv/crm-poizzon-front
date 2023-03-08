@@ -184,6 +184,31 @@
   margin-top: 2px;
 }
 
+.delivery-map {
+ height: 600px;
+ pointer-events: none;
+ opacity: 0;
+ display: none;
+}
+
+.delivery-map-pvz {
+  font-weight: 700;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+.delivery-map-pvz-span {
+  display: inline;
+  font-weight: 500;
+  text-decoration: #ff7f00 underline dashed;
+}
+
+.delivery-map_active {
+  pointer-events: all;
+  opacity: 1;
+  display: block;
+}
+
 @media screen and (max-width: 500px) {
   .order-pay__select {
     width: 314px;

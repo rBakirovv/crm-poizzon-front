@@ -77,6 +77,10 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
       : router.push(`pay/${currentOrder._id}`);
   }
 
+  function handleDelivery() {
+    router.push(`delivery/${currentOrder._id}`);
+  }
+
   return (
     <section className={styles["order"]}>
       <div className={styles["order__container"]}>
@@ -153,7 +157,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
               </tr>
               <tr>
                 <td>Курс обмена</td>
-                <td>{parseInt(currentOrder.currentRate)} ₽</td>
+                <td>{currentOrder.currentRate} ₽</td>
               </tr>
               <tr>
                 <td>Цена в RUB</td>
@@ -420,6 +424,25 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
             <span>{totalPrice} ₽</span>
           </button>
         )}
+        {Math.ceil(
+          new Date(currentOrder.inChinaStockAt).getTime() -
+            new Date(Date.now()).getTime()
+        ) /
+          1000 <
+          -43200 &&
+          currentOrder.inChinaStockAt !== null &&
+          currentOrder.deliveryMethod === "" && (
+            <button
+              className={styles["order__pay-button"]}
+              onClick={handleDelivery}
+            >
+              <span></span>
+              <span className={styles["order__pay-button-span"]}>
+                Заполнить данные
+              </span>
+              <span></span>
+            </button>
+          )}
         {ordersPull && (
           <div
             className={`${styles["order-divider"]} ${styles["order-divider_horizontal"]}`}

@@ -87,7 +87,6 @@
   margin-top: 0.5rem;
 }
 
-
 .nav__list-item-order {
   font-weight: 500;
   font-size: 18px;
@@ -98,6 +97,10 @@
   color: #000;
   transition: all 0.4s ease-in-out;
   cursor: pointer;
+}
+
+.nav__list-item-order_line {
+  font-weight: 700;
 }
 
 .nav__list-item-order:hover {

@@ -39,6 +39,10 @@
   cursor: pointer;
 }
 
+.nav__list-item-order_line {
+  font-weight: 700;
+}
+
 .nav__list-item-order:hover {
   background: #ff7f00;
   color: #fff !important;

@@ -133,6 +133,8 @@ const OrderPay: FC<IOrderPayProps> = () => {
             deliveryPhoneRecipient: "",
             deliveryMethod: OrderData.order.deliveryMethod,
             deliveryAddress: OrderData.order.deliveryAddress,
+            deliveryEntity: OrderData.order.deliveryEntity,
+            deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
             __v: OrderData.order.__v,
           });
         })
@@ -189,6 +191,8 @@ const OrderPay: FC<IOrderPayProps> = () => {
           deliveryPhoneRecipient: "",
           deliveryMethod: OrderData.order.deliveryMethod,
           deliveryAddress: OrderData.order.deliveryAddress,
+          deliveryEntity: OrderData.order.deliveryEntity,
+          deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
           __v: OrderData.order.__v,
         });
       })
@@ -204,17 +208,34 @@ const OrderPay: FC<IOrderPayProps> = () => {
   function handleSubmitDeliveyData(e: React.SyntheticEvent) {
     e.preventDefault();
 
-    updateDeliveryData(
-      OrderData.order._id,
-      data.name,
-      data.name_recipient,
-      data.phone,
-      "",
-      data.delivery_method,
-      data.delivery_address
-    ).then(() => {
-      router.replace(`/order/${router.query.orderPayId}`);
-    });
+    if (data.phone.length !== 12 || !data.phone.includes("+")) {
+      alert("Пожалуйста, введите номер телефона в формате +7xxxxxxxxxx");
+    } else {
+      updateDeliveryData(
+        OrderData.order._id,
+        data.name,
+        data.name_recipient,
+        data.phone,
+        "",
+        data.delivery_method,
+        data.delivery_address
+      ).then(() => {
+        router.replace(`/order/${router.query.orderPayId}`);
+      });
+    }
+  }
+
+  function handlePhoneClick() {
+    if (data.phone === "") {
+      setData({
+        name: data.name,
+        phone: "+7",
+        name_recipient: data.name_recipient,
+        phone_recipient: data.phone_recipient,
+        delivery_method: data.delivery_method,
+        delivery_address: data.delivery_address,
+      });
+    }
   }
 
   const link =
@@ -416,59 +437,13 @@ const OrderPay: FC<IOrderPayProps> = () => {
               <TextInput
                 name="phone"
                 label="Ваш номер телефона"
+                placeholder="Формат +79029990101"
                 value={data.phone}
                 handleChange={handleChange}
+                handleClick={handlePhoneClick}
                 readonly={OrderData.order.status !== "Черновик"}
                 required={true}
               />
-              <TextInput
-                name="name_recipient"
-                label="ФИО получателя"
-                value={data.name_recipient}
-                handleChange={handleChange}
-                readonly={OrderData.order.status !== "Черновик"}
-                required={true}
-              />
-              <div className={styles["order-pay__select-container"]}>
-                <label>
-                  Тип доставки<span className={styles["red-star"]}>*</span>
-                </label>
-                <select
-                  className={styles["order-pay__select"]}
-                  name="delivery_method"
-                  onChange={handleChange}
-                  disabled={OrderData.order.status !== "Черновик"}
-                  required
-                >
-                  <option value="" selected disabled>
-                    -- Выберите --
-                  </option>
-                  <option value="Самовывоз из пункта выдачи CDEK">
-                    Самовывоз из пункта выдачи CDEK
-                  </option>
-                  <option value="Курьером CDEK">Курьером CDEK</option>
-                </select>
-              </div>
-              {data.delivery_method === "Курьером CDEK" && (
-                <TextInput
-                  name="delivery_address"
-                  label="Адрес доставки"
-                  value={data.delivery_address}
-                  handleChange={handleChange}
-                  readonly={OrderData.order.status !== "Черновик"}
-                  required={true}
-                />
-              )}
-              {data.delivery_method === "Самовывоз из пункта выдачи CDEK" && (
-                <TextInput
-                  name="delivery_address"
-                  label="Адрес ближайшего пункта выдачи СDEK"
-                  value={data.delivery_address}
-                  handleChange={handleChange}
-                  readonly={OrderData.order.status !== "Черновик"}
-                  required={true}
-                />
-              )}
               <span className={styles["order-pay__personal-data"]}>
                 Нажимая кнопку "Отправить" вы соглашаетесь на обработку
                 персональных данных
@@ -476,7 +451,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
               <button
                 className={styles["order-pay__pay-submit"]}
                 type="submit"
-                disabled={data.delivery_address === "" || data.delivery_method === ""}
+                disabled={data.name === "" || data.phone === ""}
                 onClick={handleSubmitDeliveyData}
               >
                 Отправить

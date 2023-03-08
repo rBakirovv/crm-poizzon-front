@@ -1,4 +1,4 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
   return (
@@ -7,11 +7,12 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
-        <div id='image-popup'></div>
-        <div id='burger'></div>
-        <div id='submit-popup'></div>
-        <div id='login-popup'></div>
+        <div id="image-popup"></div>
+        <div id="burger"></div>
+        <div id="submit-popup"></div>
+        <div id="login-popup"></div>
+        <script src="https://widget.cdek.ru/widget/widjet.js"></script>
       </body>
     </Html>
-  )
+  );
 }

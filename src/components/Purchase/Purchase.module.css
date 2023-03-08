@@ -12,6 +12,7 @@
   color: #000;
   transition: all 0.4s ease-in-out;
   cursor: pointer;
+  margin-top: 1rem;
 }
 
 .drag-n-drop-text {
@@ -25,6 +26,8 @@
 
 .purchase__buttons-container {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   width: 100%;
   gap: 0.5rem;

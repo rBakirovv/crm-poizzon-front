@@ -68,6 +68,10 @@
   cursor: pointer;
 }
 
+.header__order-delivery {
+  background-color: #ff7f00;
+}
+
 .header__buttons-container {
   display: flex;
   align-items: center;

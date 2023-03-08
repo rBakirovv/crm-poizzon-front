@@ -352,6 +352,77 @@ export const updateDeliveryAddress = (id: string, deliveryAddress: string) => {
   }).then(checkResponse);
 };
 
+export const deliveryAuthorization = () => {
+  return fetch(`${BASE_URL}/delivery/auth`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const deliveryCreate = (
+  auth: string,
+  number: string,
+  comment: string,
+  currentPVZId: string,
+  name: string,
+  amount: number,
+  deliveryPhone: string | undefined,
+  deliveryNameRecipient: string,
+  tarif: number
+) => {
+  return fetch(`${BASE_URL}/delivery/new`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+      number: number,
+      comment: comment,
+      currentPVZId: currentPVZId,
+      name: name,
+      amount: amount,
+      deliveryPhone,
+      deliveryNameRecipient,
+      tarif,
+    }),
+  }).then(checkResponse);
+};
+
+export const getDeliveryInfo = (auth: string, uuid: string) => {
+  return fetch(`${BASE_URL}/delivery/uuid`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+      uuid: uuid,
+    }),
+  }).then(checkResponse);
+};
+
+export const updateClientDeliveryAddress = (
+  id: string,
+  deliveryAddress: string,
+  deliveryNameRecipient: string,
+  deliveryMethod: string,
+  deliveryEntity: string,
+  deliveryRelatedEntities: string
+) => {
+  return fetch(`${BASE_URL}/order/delivery-address/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      deliveryAddress: deliveryAddress,
+      deliveryNameRecipient: deliveryNameRecipient,
+      deliveryMethod: deliveryMethod,
+      deliveryEntity: deliveryEntity,
+      deliveryRelatedEntities: deliveryRelatedEntities,
+    }),
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();

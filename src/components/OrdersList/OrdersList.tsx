@@ -27,6 +27,10 @@ const OrdersList = observer(() => {
     OrdersBar.setNewStatus("Закуплен");
   }
 
+  function openWaitingDelivery() {
+    OrdersBar.setNewStatus("Ожидает данные");
+  }
+
   function openInRussia() {
     OrdersBar.setNewStatus("На складе в РФ");
   }
@@ -39,18 +43,10 @@ const OrdersList = observer(() => {
     OrdersBar.setNewStatus("Завершён");
   }
 
-  useEffect(() => {
-    if (UserData.userData.position) {
-      if (UserData.userData.position === BUYER) {
-        OrdersBar.setNewStatus("Ожидает закупки");
-      }
-    }
-  }, [UserData.userData.position]);
-
   return (
     <section className={styles["orders-list"]}>
       <ul className={styles["orders-list__navigation"]}>
-        {UserData.userData.position !== BUYER && (
+        {
           <li
             onClick={openDraft}
             className={styles["orders-list__navigation-item"]}
@@ -64,7 +60,7 @@ const OrdersList = observer(() => {
               Черновик
             </p>
           </li>
-        )}
+        }
         {UserData.userData.position !== BUYER &&
           UserData.userData.position !== MANAGER && (
             <li
@@ -135,6 +131,22 @@ const OrdersList = observer(() => {
         {(UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
           <li
+            onClick={openWaitingDelivery}
+            className={styles["orders-list__navigation-item"]}
+          >
+            <p
+              className={`${styles["orders-list__navigation-text"]} ${
+                OrdersBar.orderStatus === "Ожидает данные" &&
+                styles["orders-list__navigation-text_active"]
+              }`}
+            >
+              Ожидает данные
+            </p>
+          </li>
+        )}
+        {(UserData.userData.position === ADMIN ||
+          UserData.userData.position === SUPERADMIN) && (
+          <li
             onClick={openInRussia}
             className={styles["orders-list__navigation-item"]}
           >
@@ -181,10 +193,9 @@ const OrdersList = observer(() => {
           </li>
         )}
       </ul>
-      {OrdersBar.orderStatus === "Черновик" &&
-        UserData.userData.position !== BUYER && (
-          <OrderTable status={"Черновик"} />
-        )}
+      {OrdersBar.orderStatus === "Черновик" && (
+        <OrderTable status={"Черновик"} />
+      )}
       {OrdersBar.orderStatus === "Проверка оплаты" &&
         UserData.userData.position !== BUYER && (
           <OrderTable status={"Проверка оплаты"} />
@@ -207,15 +218,11 @@ const OrdersList = observer(() => {
           UserData.userData.position === SUPERADMIN) && (
           <OrderTable status={"Закуплен"} />
         )}
-      {OrdersBar.orderStatus === "Доставляется в РФ" &&
-        (UserData.userData.position === ADMIN ||
+      {OrdersBar.orderStatus === "Ожидает данные" &&
+        (UserData.userData.position === BUYER ||
+          UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
-          <OrderTable status={"Доставляется в РФ"} />
-        )}
-      {OrdersBar.orderStatus === "Доставка в Москву" &&
-        (UserData.userData.position === ADMIN ||
-          UserData.userData.position === SUPERADMIN) && (
-          <OrderTable status={"Доставка в Москву"} />
+          <OrderTable status={"Ожидает данные"} />
         )}
       {OrdersBar.orderStatus === "На складе в РФ" &&
         (UserData.userData.position === ADMIN ||

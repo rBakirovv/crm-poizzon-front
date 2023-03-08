@@ -45,11 +45,13 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
   const [orderСhapter, setOrderСhapter] = useState<string>("Order");
 
   const [isSubmitPopup, setIsSubmitPopup] = useState<boolean>(false);
+  const [isImageSubmitPopup, setIsImageSubmitPopup] = useState<boolean>(false);
 
   const [uploading, setUploading] = useState<boolean>(false);
 
   const [isImagePopupOpen, setIsImagePopupOpen] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState<string>("");
+  const [currentDeletedImage, setCurrentDeletedImage] = useState<string>("");
 
   const [isCopy, setIsCopy] = useState(false);
 
@@ -119,6 +121,16 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
   function openSubmitPopup(e: React.SyntheticEvent) {
     e.preventDefault();
     setIsSubmitPopup(true);
+  }
+
+  function openImageSubmitPopup(image: string) {
+    setIsImageSubmitPopup(true);
+    setCurrentDeletedImage(image);
+  }
+
+  function closeImageSubmitPopup() {
+    setIsImageSubmitPopup(false);
+    setCurrentDeletedImage("");
   }
 
   function openOrder() {
@@ -306,6 +318,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           deliveryPhoneRecipient: OrderData.order.deliveryPhoneRecipient,
           deliveryMethod: OrderData.order.deliveryMethod,
           deliveryAddress: OrderData.order.deliveryAddress,
+          deliveryEntity: OrderData.order.deliveryEntity,
+          deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
           __v: OrderData.order.__v,
         });
       });
@@ -359,6 +373,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           deliveryPhoneRecipient: OrderData.order.deliveryPhoneRecipient,
           deliveryMethod: OrderData.order.deliveryMethod,
           deliveryAddress: OrderData.order.deliveryAddress,
+          deliveryEntity: OrderData.order.deliveryEntity,
+          deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
           __v: OrderData.order.__v,
         });
       })
@@ -393,6 +409,10 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       top: 0,
       behavior: "smooth",
     });
+  }
+
+  function handleSubmitDeleteImage() {
+    deleteImageHandler(currentDeletedImage);
   }
 
   useEffect(() => {
@@ -433,6 +453,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       deliveryPhoneRecipient: OrderData.order.deliveryPhoneRecipient,
       deliveryMethod: OrderData.order.deliveryMethod,
       deliveryAddress: OrderData.order.deliveryAddress,
+      deliveryEntity: OrderData.order.deliveryEntity,
+      deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
       __v: OrderData.order.__v,
     });
   }, [data]);
@@ -542,6 +564,17 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       <p className={styles["order-change__status"]}>
         Статус: {OrderData.order.status}
       </p>
+      {Math.ceil(
+        new Date(OrderData.order.inChinaStockAt).getTime() -
+          new Date(Date.now()).getTime()
+      ) /
+        1000 <
+        -43200 &&
+        OrderData.order.inChinaStockAt !== null && OrderData.order.deliveryAddress === "" && (
+          <p className={styles["order-change__status_orange"]}>
+            Необходимо заполнить данные для доставки
+          </p>
+        )}
       {OrderData.order.combinedOrder.length > 0 && (
         <p
           className={`${styles["order-change__status"]} ${styles["order-change__flex-status"]}`}
@@ -697,7 +730,6 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               label="Размер"
               value={OrderData.order.size}
               handleChange={handleChange}
-              readonly={OrderData.order.status !== "Черновик"}
               required={true}
             />
             <label>
@@ -715,7 +747,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
                     >
                       <div
                         className={styles["order-change__delete-image"]}
-                        onClick={() => deleteImageHandler(image.name)}
+                        onClick={() => openImageSubmitPopup(image.name)}
                       >
                         <svg
                           width="18"
@@ -944,6 +976,12 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
         isSubmitPopup={isSubmitPopup}
         closeSubmitPopup={closeSubmitPopup}
         onSubmit={handleSubmitUpdate}
+      />
+      <SubmitPopup
+        submitText="Удалить изображение"
+        isSubmitPopup={isImageSubmitPopup}
+        closeSubmitPopup={closeImageSubmitPopup}
+        onSubmit={handleSubmitDeleteImage}
       />
     </section>
   );

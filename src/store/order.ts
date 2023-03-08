@@ -39,6 +39,8 @@ class OrderData {
     deliveryPhoneRecipient: "",
     deliveryMethod: "",
     deliveryAddress: "",
+    deliveryEntity: "",
+    deliveryRelatedEntities: "",
     __v: 0,
   };
 

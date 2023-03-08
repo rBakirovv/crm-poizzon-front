@@ -48,6 +48,11 @@ const Navigation = observer(() => {
     router.replace("/");
   }
 
+  function openWaitingDelivery() {
+    OrdersBar.setNewStatus("Ожидает данные");
+    router.replace("/");
+  }
+
   function openInRussia() {
     OrdersBar.setNewStatus("На складе в РФ");
     router.replace("/");
@@ -78,7 +83,7 @@ const Navigation = observer(() => {
             Заказы
           </Link>
           <div className={styles["nav__list-item-order-container"]}>
-            {UserData.userData.position !== "Байер" && (
+            {(
               <button
                 className={styles["nav__list-item-order"]}
                 onClick={openDraft}
@@ -86,14 +91,15 @@ const Navigation = observer(() => {
                 Черновик
               </button>
             )}
-            {UserData.userData.position !== "Байер" && UserData.userData.position !== "Менеджер" && (
-              <button
-                className={styles["nav__list-item-order"]}
-                onClick={openPaymentVerification}
-              >
-                Проверка оплаты
-              </button>
-            )}
+            {UserData.userData.position !== "Байер" &&
+              UserData.userData.position !== "Менеджер" && (
+                <button
+                  className={styles["nav__list-item-order"]}
+                  onClick={openPaymentVerification}
+                >
+                  Проверка оплаты
+                </button>
+              )}
             {UserData.userData.position !== "Менеджер" && (
               <button
                 className={styles["nav__list-item-order"]}
@@ -118,6 +124,15 @@ const Navigation = observer(() => {
                 Закуплен
               </button>
             )}
+            {UserData.userData.position !== "Менеджер" &&
+              UserData.userData.position !== "Байер" && (
+                <button
+                  className={`${styles["nav__list-item-order"]} ${styles["nav__list-item-order_line"]}`}
+                  onClick={openWaitingDelivery}
+                >
+                  Ожидает данные
+                </button>
+              )}
             {(UserData.userData.position === "Администратор" ||
               UserData.userData.position === "Создатель") && (
               <button
