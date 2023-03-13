@@ -8,8 +8,12 @@ import {
   orderSent,
   orderСompleted,
   updateDeliveryAddress,
+  deliveryAuthorization,
+  createDeliveryDocument,
+  getDeliveryDocument,
 } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
+import Preloader from "../UI/Preloader/Preloader";
 
 const Delivery = () => {
   const [data, setData] = useState({
@@ -23,6 +27,8 @@ const Delivery = () => {
     useState(false);
 
   const [isChangeAddress, setIsChangeAddress] = useState(false);
+
+  const [isPreloader, setIsPreloader] = useState(false);
 
   function openSubmitPopup(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -111,8 +117,59 @@ const Delivery = () => {
       });
   }
 
+  function openPDFHandler() {
+    deliveryAuthorization()
+      .then((authData) => {
+        createDeliveryDocument(authData.token, OrderData.order.deliveryEntity)
+          .then((deliveryDocument) => {
+            setIsPreloader(true);
+            setTimeout(() => {
+              getDeliveryDocument(authData.token, deliveryDocument.entity.uuid)
+                .then((pdfData) => {
+                  setIsPreloader(false);
+                  openPDF(pdfData.pdf);
+                })
+                .catch((err) => {
+                  setIsPreloader(false);
+                  console.log(err);
+                });
+            }, 5000);
+          })
+          .catch((err) => {
+            setIsPreloader(false);
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        setIsPreloader(false);
+        console.log(err);
+      });
+  }
+
+  function openPDF(pdfInBase64: string) {
+    var URL = window.URL || window.webkitURL,
+      byteChars = atob(pdfInBase64),
+      bytes = [],
+      i = 0;
+
+    for (; i < byteChars.length; i++) bytes[i] = byteChars.charCodeAt(i);
+
+    var blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
+
+    var downloadUrl = URL.createObjectURL(blob);
+
+    var newWin = window.open(
+      downloadUrl,
+      "_blank",
+      "width=500,height=300,menubar=yes,scrollbars=yes,status=yes,resizable=yes"
+    );
+
+    URL.revokeObjectURL(downloadUrl);
+  }
+
   return (
     <section className={styles["delivery"]}>
+      {isPreloader && <Preloader />}
       <div className={styles["delivery__container"]}>
         <h2 className={styles["delivery-title"]}>Доставка</h2>
         {OrderData.order.comment !== "" && (
@@ -220,10 +277,9 @@ const Delivery = () => {
         </p>
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" && (
-            <a
-              href="https://lk.cdek.ru/order-history"
-              target="_blank"
-              rel="noreferrer"
+            <button
+              onClick={openPDFHandler}
+              disabled={isPreloader}
               className={styles["delivery-receipt"]}
             >
               Получить квитанцию
@@ -237,7 +293,7 @@ const Delivery = () => {
                 <path fill="none" d="M0 0h48v48H0V0z"></path>
                 <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
               </svg>
-            </a>
+            </button>
           )}
         {(UserData.userData.position === "Администратор" ||
           UserData.userData.position === "Создатель") && (
@@ -276,7 +332,7 @@ const Delivery = () => {
             UserData.userData.position === "Создатель") && (
             <button
               onClick={openSubmitPopup}
-              className={styles["delivery__subit-button"]}
+              className={styles["delivery__submit-button"]}
               type="button"
             >
               Завершён

@@ -20,6 +20,8 @@ import Client from "../Client/Client";
 import Purchase from "../Purchase/Purchase";
 import Delivery from "../Delivery/Delivery";
 
+const dayjs = require("dayjs");
+
 interface IOrderChangeProps {
   payments: Array<IPayments>;
 }
@@ -290,6 +292,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           overudeAfter: OrderData.order.overudeAfter,
           buyAt: OrderData.order.buyAt,
           inChinaStockAt: OrderData.order.inChinaStockAt,
+          deliveredAt: OrderData.order.deliveredAt,
           orderId: OrderData.order.orderId,
           combinedOrder: OrderData.order.combinedOrder,
           status: OrderData.order.status,
@@ -343,6 +346,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           overudeAfter: OrderData.order.overudeAfter,
           buyAt: OrderData.order.buyAt,
           inChinaStockAt: OrderData.order.inChinaStockAt,
+          deliveredAt: OrderData.order.deliveredAt,
           orderId: OrderData.order.orderId,
           combinedOrder: OrderData.order.combinedOrder,
           status: OrderData.order.status,
@@ -425,6 +429,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       overudeAfter: OrderData.order.overudeAfter,
       buyAt: OrderData.order.buyAt,
       inChinaStockAt: OrderData.order.inChinaStockAt,
+      deliveredAt: OrderData.order.deliveredAt,
       orderId: OrderData.order.orderId,
       combinedOrder: OrderData.order.combinedOrder,
       status: OrderData.order.status,
@@ -564,13 +569,19 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       <p className={styles["order-change__status"]}>
         Статус: {OrderData.order.status}
       </p>
+      {OrderData.order.deliveredAt && OrderData.order.deliveredAt !== "" && (
+        <p className={styles["order-change__status"]}>
+          Доставлен: {dayjs(OrderData.order.deliveredAt).format("DD.MM.YYYY")}
+        </p>
+      )}
       {Math.ceil(
         new Date(OrderData.order.inChinaStockAt).getTime() -
           new Date(Date.now()).getTime()
       ) /
         1000 <
         -43200 &&
-        OrderData.order.inChinaStockAt !== null && OrderData.order.deliveryAddress === "" && (
+        OrderData.order.inChinaStockAt !== null &&
+        OrderData.order.deliveryAddress === "" && (
           <p className={styles["order-change__status_orange"]}>
             Необходимо заполнить данные для доставки
           </p>

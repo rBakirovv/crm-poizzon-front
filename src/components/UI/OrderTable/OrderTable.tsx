@@ -176,8 +176,6 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
       .catch((err) => console.log(err));
   }
 
-  console.log(status);
-
   return (
     <>
       <div className={styles["orders-table__container"]}>

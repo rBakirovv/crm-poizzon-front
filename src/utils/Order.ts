@@ -401,6 +401,30 @@ export const getDeliveryInfo = (auth: string, uuid: string) => {
   }).then(checkResponse);
 };
 
+export const createDeliveryDocument = (auth: string, uuid: string) => {
+  return fetch(`${BASE_URL}/delivery/document/new`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+      uuid: uuid,
+    }),
+  }).then(checkResponse);
+};
+
+export const getDeliveryDocument = (auth: string, uuid: string) => {
+  return fetch(`${BASE_URL}/delivery/document/uuid`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+      uuid: uuid,
+    }),
+  }).then(checkResponse);
+};
+
 export const updateClientDeliveryAddress = (
   id: string,
   deliveryAddress: string,

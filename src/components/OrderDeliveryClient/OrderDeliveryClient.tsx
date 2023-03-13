@@ -31,7 +31,7 @@ const OrderDeliveryClient = () => {
 
   // фун-я с костылём!
   function choosePVZ(wat: any) {
-    setTarif(wat.tarif)
+    setTarif(wat.tarif);
     setCurrentPVZId(wat.id);
     setCurrentPVZ(wat.PVZ.Address);
     setAmount(parseInt(wat.price) + 100);
@@ -109,8 +109,23 @@ const OrderDeliveryClient = () => {
                     orderInfo.entity.uuid,
                     orderInfo.related_entities[0].uuid
                   )
-                    .then((order) => {
-                      OrderData.setOrder(order);
+                    .then(() => {
+                      if (OrderData.order.combinedOrder.length > 0) {
+                        OrderData.order.combinedOrder[0].combinedOrder.map(
+                          (orderItem) => {
+                            if (OrderData.order._id !== orderItem) {
+                              updateClientDeliveryAddress(
+                                orderItem,
+                                currentPVZ,
+                                data.name_recipient,
+                                data.delivery_method,
+                                orderInfo.entity.uuid,
+                                orderInfo.related_entities[0].uuid
+                              );
+                            }
+                          }
+                        );
+                      }
                     })
                     .then(() => {
                       router.replace(`/order/${router.query.deliveryId}`);

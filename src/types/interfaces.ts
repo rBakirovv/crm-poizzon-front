@@ -21,6 +21,7 @@ export interface IOrder {
   overudeAfter: Date;
   buyAt: Date | string;
   inChinaStockAt: Date | string;
+  deliveredAt: Date | string;
   orderId: number;
   combinedOrder: Array<ICombinedOrder>;
   status: string;
