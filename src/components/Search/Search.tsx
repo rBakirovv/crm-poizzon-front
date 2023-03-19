@@ -1,8 +1,9 @@
 import styles from "./Search.module.css";
 import TextInput from "../UI/TextInput/TextInput";
 import OrderData from "../../store/order";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
+import { IOrder } from "../../types/interfaces";
 
 const dayjs = require("dayjs");
 
@@ -16,12 +17,12 @@ const Search = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
 
-  const [isPending, startTransitiom] = useTransition();
+  const [searchedOrders, setSearchedOrders] = useState<Array<IOrder>>();
 
   const lastItemIndex = currentPage * itemsPerPage;
   const firstItemIndex = lastItemIndex - itemsPerPage;
 
-  const searchedOrders = useMemo(() => {
+  const searchOrders = () => {
     return OrderData.orders.filter((item) => {
       if (
         item._id.toLowerCase().includes(filteredValue.toLowerCase()) ||
@@ -41,9 +42,19 @@ const Search = () => {
         return true;
       }
     });
+  };
+
+  useEffect(() => {
+    const Debounce = setTimeout(() => {
+      const filteredData = searchOrders();
+      setSearchedOrders(filteredData);
+    }, 300);
+
+    return () => clearTimeout(Debounce);
   }, [filteredValue]);
 
-  const lastPageIndex = Math.ceil(searchedOrders.length / itemsPerPage);
+  const lastPageIndex =
+    searchedOrders && Math.ceil(searchedOrders!.length / itemsPerPage);
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
@@ -55,9 +66,7 @@ const Search = () => {
       [name]: value,
     });
 
-    startTransitiom(() => {
-      setFilteredValue(target.value);
-    });
+    setFilteredValue(target.value);
   }
 
   function nextPage() {
@@ -132,7 +141,9 @@ const Search = () => {
         </div>
         <ul className={styles["orders-table__table"]}>
           {filteredValue !== "" &&
-            searchedOrders
+            searchedOrders &&
+            searchedOrders.length > 0 &&
+            searchedOrders!
               .slice()
               .reverse()
               .slice(firstItemIndex, lastItemIndex)
