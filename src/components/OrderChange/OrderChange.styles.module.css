@@ -3,6 +3,7 @@
 }
 
 .order-change {
+  position: relative;
   width: auto;
   margin: 0 1rem;
 }

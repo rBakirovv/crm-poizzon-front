@@ -12,6 +12,7 @@ import { createOrder, deleteDraftImage, uploadImages } from "../../utils/Order";
 import ImagePopup from "../ImagePopup/ImagePopup";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { useRouter } from "next/router";
+import Preloader from "../UI/Preloader/Preloader";
 
 interface ICreateOrderProps {
   payments: Array<IPayments>;
@@ -193,6 +194,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
     try {
       await uploadImages(formData, folder).then((data) => {
         setImages(images.concat(data.data));
+        setUploading(false);
       });
     } catch (error) {
       console.error(error);
@@ -371,6 +373,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
 
   return (
     <section className={styles["create-order"]}>
+      {uploading && <Preloader />}
       <div className={styles["create-order__container"]}>
         <form
           onSubmit={openSubmitPopup}

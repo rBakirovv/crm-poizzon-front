@@ -19,6 +19,7 @@ import AcceptPayment from "../AcceptPayment/AcceptPayment";
 import Client from "../Client/Client";
 import Purchase from "../Purchase/Purchase";
 import Delivery from "../Delivery/Delivery";
+import Preloader from "../UI/Preloader/Preloader";
 
 const dayjs = require("dayjs");
 
@@ -325,6 +326,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
           __v: OrderData.order.__v,
         });
+        setUploading(false);
       });
     } catch (error) {
       console.error(error);
@@ -563,6 +565,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
 
   return (
     <section className={styles["order-change"]}>
+      {uploading && <Preloader />}
       <h2 className={styles["order-change__title"]}>
         Заказ #{OrderData.order.orderId}
       </h2>
