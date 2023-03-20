@@ -139,8 +139,9 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            {(OrderData.orders.length === 0 || !OrderData.orders.length) &&
-              typeof window === "undefined" && <Preloader />}
+            {(OrderData.orders.length === 0 || !OrderData.orders.length) && (
+              <Preloader />
+            )}
             {OrderData.orders.length > 0 && typeof window !== "undefined" && (
               <OrdersList />
             )}
