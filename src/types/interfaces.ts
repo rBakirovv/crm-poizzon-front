@@ -19,6 +19,7 @@ export interface IOrder {
   stockman: string;
   createdAt: Date;
   overudeAfter: Date;
+  paidAt: Date;
   buyAt: Date | string;
   inChinaStockAt: Date | string;
   deliveredAt: Date | string;

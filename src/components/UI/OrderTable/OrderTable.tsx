@@ -56,7 +56,8 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
             ) /
               1000 <
               -43200 &&
-            item.inChinaStockAt !== null
+            item.inChinaStockAt !== null &&
+            item.status !== "Завершён"
           : item.status === status || status === "Ожидает данные") &&
         (status === "Закуплен"
           ? filterPurchased !== ""
@@ -246,7 +247,8 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                     ) /
                       1000 <
                       -43200 &&
-                    item.inChinaStockAt !== null
+                    item.inChinaStockAt !== null &&
+                    item.status !== "Завершён"
                   : item.status === status || status === "Ожидает данные") &&
                 (status === "Закуплен"
                   ? filterPurchased !== ""

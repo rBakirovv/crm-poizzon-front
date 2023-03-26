@@ -64,9 +64,6 @@ const OrderDeliveryClient = () => {
         defaultCity: "Москва",
         cityFrom: "Москва",
         link: "forpvz",
-        path: "https://widget.cdek.ru/widget/scripts/",
-        //servicepath: "http://localhost:8888/service.php",
-        servicepath: "https://widget.poizonqq.ru/service.php",
         apikey: "c5b15538-f5b4-4065-8803-d2f4e3b1746f",
         goods: [
           {

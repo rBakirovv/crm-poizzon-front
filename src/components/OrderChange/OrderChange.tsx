@@ -170,7 +170,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Кроссовки",
-        priceDeliveryRussia: "1200",
+        priceDeliveryRussia: "1500",
       });
     }
 
@@ -291,6 +291,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           stockman: OrderData.order.stockman,
           createdAt: OrderData.order.createdAt,
           overudeAfter: OrderData.order.overudeAfter,
+          paidAt: OrderData.order.paidAt,
           buyAt: OrderData.order.buyAt,
           inChinaStockAt: OrderData.order.inChinaStockAt,
           deliveredAt: OrderData.order.deliveredAt,
@@ -346,6 +347,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           stockman: OrderData.order.stockman,
           createdAt: OrderData.order.createdAt,
           overudeAfter: OrderData.order.overudeAfter,
+          paidAt: OrderData.order.paidAt,
           buyAt: OrderData.order.buyAt,
           inChinaStockAt: OrderData.order.inChinaStockAt,
           deliveredAt: OrderData.order.deliveredAt,
@@ -429,6 +431,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       stockman: OrderData.order.stockman,
       createdAt: OrderData.order.createdAt,
       overudeAfter: OrderData.order.overudeAfter,
+      paidAt: OrderData.order.paidAt,
       buyAt: OrderData.order.buyAt,
       inChinaStockAt: OrderData.order.inChinaStockAt,
       deliveredAt: OrderData.order.deliveredAt,
@@ -584,7 +587,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
         1000 <
         -43200 &&
         OrderData.order.inChinaStockAt !== null &&
-        OrderData.order.deliveryAddress === "" && (
+        OrderData.order.deliveryAddress === "" &&
+        OrderData.order.status !== "Завершён" && (
           <p className={styles["order-change__status_orange"]}>
             Необходимо заполнить данные для доставки
           </p>
@@ -696,7 +700,6 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               label="Cсылка"
               value={OrderData.order.link}
               handleChange={handleChange}
-              readonly={OrderData.order.status !== "Черновик"}
               required={true}
             />
             <div className={styles["order-change__input-container"]}>
@@ -704,14 +707,10 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
                 Категория<span className={styles["red-star"]}>*</span>
               </label>
               <select
-                className={`${styles["order-change__select"]} ${
-                  OrderData.order.status !== "Черновик" &&
-                  styles["order-change__select_disabled"]
-                }`}
+                className={`${styles["order-change__select"]}`}
                 name="subcategory"
                 value={OrderData.order.subcategory}
                 onChange={handleChange}
-                disabled={OrderData.order.status !== "Черновик"}
                 required
               >
                 <option value="" selected disabled>
@@ -736,7 +735,6 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               label="Модель"
               value={OrderData.order.model}
               handleChange={handleChange}
-              readonly={OrderData.order.status !== "Черновик"}
               required={true}
             />
             <TextInput
@@ -866,7 +864,6 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               label="Цена CNY"
               value={OrderData.order.priceCNY}
               handleChange={handleChange}
-              readonly={OrderData.order.status !== "Черновик"}
               required={true}
             />
             <TextInput
@@ -881,7 +878,6 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               label="Стоимость доставки POIZON - Cклад в Китае"
               value={OrderData.order.priceDeliveryChina}
               handleChange={handleChange}
-              readonly={OrderData.order.status !== "Черновик"}
               required={true}
             />
             <TextInput
@@ -889,7 +885,6 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               label="Стоимость доставки Cклад в Китае - Cклад в РФ"
               value={OrderData.order.priceDeliveryRussia}
               handleChange={handleChange}
-              readonly={OrderData.order.status !== "Черновик"}
               required={true}
             />
             <TextInput
@@ -897,22 +892,13 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               label="Комиссия сервиса"
               value={OrderData.order.commission}
               handleChange={handleChange}
-              readonly={OrderData.order.status !== "Черновик"}
               required={true}
             />
             <div className={styles["order-change__input-container"]}>
               <label>Промо-код</label>
               <select
-                className={`${styles["order-change__select"]} ${
-                  (OrderData.order.status !== "Черновик" ||
-                    OrderData.order.promoCodePercent > 0) &&
-                  styles["order-change__select_disabled"]
-                }`}
+                className={`${styles["order-change__select"]}`}
                 name="promoCodePercent"
-                disabled={
-                  data.promoCodePercent > 0 ||
-                  OrderData.order.promoCodePercent > 0
-                }
                 value={
                   data.promoCodePercent > 0 ||
                   OrderData.order.promoCodePercent > 0

@@ -352,6 +352,31 @@ export const updateDeliveryAddress = (id: string, deliveryAddress: string) => {
   }).then(checkResponse);
 };
 
+export const updateDeliveryPhone = (id: string, deliveryPhone: string) => {
+  return fetch(`${BASE_URL}/order/order-phone/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      deliveryPhone: deliveryPhone,
+    }),
+  }).then(checkResponse);
+};
+
+export const updateDeliveryName = (
+  id: string,
+  deliveryNameRecipient: string
+) => {
+  return fetch(`${BASE_URL}/order/order-name/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      deliveryNameRecipient: deliveryNameRecipient,
+    }),
+  }).then(checkResponse);
+};
+
 export const deliveryAuthorization = () => {
   return fetch(`${BASE_URL}/delivery/auth`, {
     credentials: "include",
@@ -443,6 +468,85 @@ export const updateClientDeliveryAddress = (
       deliveryMethod: deliveryMethod,
       deliveryEntity: deliveryEntity,
       deliveryRelatedEntities: deliveryRelatedEntities,
+    }),
+  }).then(checkResponse);
+};
+
+export const createDeliveryBarcode = (auth: string, uuid: string) => {
+  return fetch(`${BASE_URL}/delivery/barcode/new`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+      uuid: uuid,
+    }),
+  }).then(checkResponse);
+};
+
+export const getDeliveryBarcode = (auth: string, uuid: string) => {
+  return fetch(`${BASE_URL}/delivery/barcode/uuid`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+      uuid: uuid,
+    }),
+  }).then(checkResponse);
+};
+
+export const changeOrderDeliveryPhone = (
+  auth: string,
+  uuid: string,
+  deliveryPhone: string | undefined
+) => {
+  return fetch(`${BASE_URL}/delivery/update-phone`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+      uuid: uuid,
+      deliveryPhone: deliveryPhone,
+    }),
+  }).then(checkResponse);
+};
+
+export const changeOrderDeliveryAddress = (
+  auth: string,
+  uuid: string,
+  amount: number,
+  currentPVZId: string,
+  tarif: number
+) => {
+  return fetch(`${BASE_URL}/delivery/update-address`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+      uuid: uuid,
+      amount: amount,
+      currentPVZId: currentPVZId,
+      tarif: tarif,
+    }),
+  }).then(checkResponse);
+};
+
+export const changeOrderDeliveryName = (
+  auth: string,
+  uuid: string,
+  deliveryName: string | undefined
+) => {
+  return fetch(`${BASE_URL}/delivery/update-name`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+      uuid: uuid,
+      deliveryName: deliveryName,
     }),
   }).then(checkResponse);
 };

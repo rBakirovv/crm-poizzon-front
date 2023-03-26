@@ -79,7 +79,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Кроссовки",
-        priceDeliveryRussia: "1200",
+        priceDeliveryRussia: "1500",
       });
     }
 

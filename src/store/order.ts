@@ -9,6 +9,7 @@ class OrderData {
     stockman: "",
     createdAt: new Date(Date.now()),
     overudeAfter: new Date(Date.now()),
+    paidAt: new Date(Date.now()),
     deliveredAt: new Date(Date.now()),
     buyAt: "",
     inChinaStockAt: "",

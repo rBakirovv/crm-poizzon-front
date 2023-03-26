@@ -103,6 +103,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
             stockman: OrderData.order.stockman,
             createdAt: OrderData.order.createdAt,
             overudeAfter: OrderData.order.overudeAfter,
+            paidAt: OrderData.order.paidAt,
             buyAt: OrderData.order.buyAt,
             inChinaStockAt: OrderData.order.inChinaStockAt,
             deliveredAt: OrderData.order.deliveredAt,
@@ -160,6 +161,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
           stockman: OrderData.order.stockman,
           createdAt: OrderData.order.createdAt,
           overudeAfter: OrderData.order.overudeAfter,
+          paidAt: OrderData.order.paidAt,
           buyAt: OrderData.order.buyAt,
           inChinaStockAt: OrderData.order.inChinaStockAt,
           deliveredAt: OrderData.order.deliveredAt,
@@ -210,34 +212,17 @@ const OrderPay: FC<IOrderPayProps> = () => {
   function handleSubmitDeliveyData(e: React.SyntheticEvent) {
     e.preventDefault();
 
-    if (data.phone.length !== 12 || !data.phone.includes("+")) {
-      alert("Пожалуйста, введите номер телефона в формате +7xxxxxxxxxx");
-    } else {
-      updateDeliveryData(
-        OrderData.order._id,
-        data.name,
-        data.name_recipient,
-        data.phone,
-        "",
-        data.delivery_method,
-        data.delivery_address
-      ).then(() => {
-        router.replace(`/order/${router.query.orderPayId}`);
-      });
-    }
-  }
-
-  function handlePhoneClick() {
-    if (data.phone === "") {
-      setData({
-        name: data.name,
-        phone: "+7",
-        name_recipient: data.name_recipient,
-        phone_recipient: data.phone_recipient,
-        delivery_method: data.delivery_method,
-        delivery_address: data.delivery_address,
-      });
-    }
+    updateDeliveryData(
+      OrderData.order._id,
+      data.name,
+      data.name_recipient,
+      data.phone,
+      "",
+      data.delivery_method,
+      data.delivery_address
+    ).then(() => {
+      router.replace(`/order/${router.query.orderPayId}`);
+    });
   }
 
   const link =
@@ -439,10 +424,9 @@ const OrderPay: FC<IOrderPayProps> = () => {
               <TextInput
                 name="phone"
                 label="Ваш номер телефона"
-                placeholder="Формат +79029990101"
+                placeholder="Формат +79029990101 для РФ"
                 value={data.phone}
                 handleChange={handleChange}
-                handleClick={handlePhoneClick}
                 readonly={OrderData.order.status !== "Черновик"}
                 required={true}
               />

@@ -431,7 +431,8 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
           1000 <
           -43200 &&
           currentOrder.inChinaStockAt !== null &&
-          currentOrder.deliveryMethod === "" && (
+          currentOrder.deliveryMethod === "" &&
+          currentOrder.status !== "Завершён" && (
             <button
               className={styles["order__pay-button"]}
               onClick={handleDelivery}

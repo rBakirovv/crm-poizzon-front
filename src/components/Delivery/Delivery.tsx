@@ -7,28 +7,41 @@ import {
   inStockInRussia,
   orderSent,
   orderСompleted,
-  updateDeliveryAddress,
   deliveryAuthorization,
   createDeliveryDocument,
   getDeliveryDocument,
+  createDeliveryBarcode,
+  getDeliveryBarcode,
+  getDeliveryInfo,
+  changeOrderDeliveryPhone,
+  updateDeliveryPhone,
+  changeOrderDeliveryName,
+  updateDeliveryName,
 } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import Preloader from "../UI/Preloader/Preloader";
+import ChangeAddress from "../UI/ChangeAddress/ChangeAddress";
 
 const Delivery = () => {
   const [data, setData] = useState({
     delivery_code: OrderData.order.deliveryCode,
     delivery_address: OrderData.order.deliveryAddress,
+    delivery_phone: OrderData.order.deliveryPhone,
+    delivery_name: OrderData.order.deliveryNameRecipient,
   });
 
   const [isSubmitPopup, setIsSubmitPopup] = useState(false);
   const [isSubmitChangePopup, setIsSubmitChangePopup] = useState(false);
-  const [isSubmitChangeAddressPopup, setIsSubmitChangeAddressPopup] =
+  const [isSubmitChangePhonePopup, setIsSubmitChangePhonePopup] =
     useState(false);
+  const [isSubmitChangeNamePopup, setIsSubmitChangeNamePopup] = useState(false);
 
-  const [isChangeAddress, setIsChangeAddress] = useState(false);
+  const [isChangePhone, setIsChangePhone] = useState(false);
+  const [isChangeName, setIsChangeName] = useState(false);
 
   const [isPreloader, setIsPreloader] = useState(false);
+
+  const [isWidjet, setIsWidjet] = useState(false);
 
   function openSubmitPopup(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -48,12 +61,28 @@ const Delivery = () => {
     setIsSubmitChangePopup(false);
   }
 
-  function openSubmitChangeAddressPopup() {
-    setIsSubmitChangeAddressPopup(true);
+  function openSubmitChangePhonePopup() {
+    setIsSubmitChangePhonePopup(true);
   }
 
-  function closeSubmitChangeAddressPopup() {
-    setIsSubmitChangeAddressPopup(false);
+  function closeSubmitChangePhonePopup() {
+    setIsSubmitChangePhonePopup(false);
+  }
+
+  function openSubmitChangeNamePopup() {
+    setIsSubmitChangeNamePopup(true);
+  }
+
+  function closeSubmitChangeNamePopup() {
+    setIsSubmitChangeNamePopup(false);
+  }
+
+  function openWidjet() {
+    setIsWidjet(true);
+  }
+
+  function closeWidjet() {
+    setIsWidjet(false);
   }
 
   function handleChange(e: React.SyntheticEvent) {
@@ -99,21 +128,130 @@ const Delivery = () => {
     navigator.clipboard.writeText(OrderData.order.deliveryCode);
   }
 
-  function handleChangeAddress() {
-    setIsChangeAddress(true);
+  function handleChangePhone() {
+    setIsChangePhone(true);
+  }
+
+  function handleChangeName() {
+    setIsChangeName(true);
   }
 
   function copyTelegram() {
     navigator.clipboard.writeText(OrderData.order.deliveryPhone!);
   }
 
-  function handleUpdateDeliveryAddress() {
-    updateDeliveryAddress(OrderData.order._id, data.delivery_address)
-      .then((order) => {
-        OrderData.setOrder(order);
+  function handleUpdateDeliveryPhone() {
+    setIsPreloader(true);
+    deliveryAuthorization()
+      .then((authData) => {
+        getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
+          .then((orderInfo) => {
+            changeOrderDeliveryPhone(
+              authData.token,
+              orderInfo.entity.uuid,
+              data.delivery_phone
+            )
+              .then(() => {
+                updateDeliveryPhone(OrderData.order._id, data.delivery_phone!)
+                  .then((order) => {
+                    OrderData.setOrder(order);
+                  })
+                  .then(() => {
+                    if (OrderData.order.combinedOrder.length > 0) {
+                      OrderData.order.combinedOrder[0].combinedOrder.map(
+                        (orderItem) => {
+                          if (OrderData.order._id !== orderItem) {
+                            updateDeliveryPhone(
+                              orderItem,
+                              data.delivery_phone!
+                            );
+                          }
+                        }
+                      );
+                    }
+                  })
+                  .then(() => {
+                    setIsPreloader(false);
+                    setIsChangePhone(false);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    setIsPreloader(false);
+                    alert("Произошла ошибка!");
+                  });
+              })
+              .catch((err) => {
+                console.log(err);
+                setIsPreloader(false);
+                alert("Произошла ошибка!");
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+            setIsPreloader(false);
+            alert("Произошла ошибка!");
+          });
       })
-      .then(() => {
-        setIsChangeAddress(false);
+      .catch((err) => {
+        console.log(err);
+        setIsPreloader(false);
+        alert("Произошла ошибка!");
+      });
+  }
+
+  function handleUpdateDeliveryName() {
+    setIsPreloader(true);
+    deliveryAuthorization()
+      .then((authData) => {
+        getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
+          .then((orderInfo) => {
+            changeOrderDeliveryName(
+              authData.token,
+              orderInfo.entity.uuid,
+              data.delivery_name
+            )
+              .then(() => {
+                updateDeliveryName(OrderData.order._id, data.delivery_name!)
+                  .then((order) => {
+                    OrderData.setOrder(order);
+                  })
+                  .then(() => {
+                    if (OrderData.order.combinedOrder.length > 0) {
+                      OrderData.order.combinedOrder[0].combinedOrder.map(
+                        (orderItem) => {
+                          if (OrderData.order._id !== orderItem) {
+                            updateDeliveryName(orderItem, data.delivery_name!);
+                          }
+                        }
+                      );
+                    }
+                  })
+                  .then(() => {
+                    setIsPreloader(false);
+                    setIsChangeName(false);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    setIsPreloader(false);
+                    alert("Произошла ошибка!");
+                  });
+              })
+              .catch((err) => {
+                console.log(err);
+                setIsPreloader(false);
+                alert("Произошла ошибка!");
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+            setIsPreloader(false);
+            alert("Произошла ошибка!");
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsPreloader(false);
+        alert("Произошла ошибка!");
       });
   }
 
@@ -125,6 +263,35 @@ const Delivery = () => {
             setIsPreloader(true);
             setTimeout(() => {
               getDeliveryDocument(authData.token, deliveryDocument.entity.uuid)
+                .then((pdfData) => {
+                  setIsPreloader(false);
+                  openPDF(pdfData.pdf);
+                })
+                .catch((err) => {
+                  setIsPreloader(false);
+                  console.log(err);
+                });
+            }, 5000);
+          })
+          .catch((err) => {
+            setIsPreloader(false);
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        setIsPreloader(false);
+        console.log(err);
+      });
+  }
+
+  function openPDFBarcodeHandler() {
+    deliveryAuthorization()
+      .then((authData) => {
+        createDeliveryBarcode(authData.token, OrderData.order.deliveryEntity)
+          .then((deliveryDocument) => {
+            setIsPreloader(true);
+            setTimeout(() => {
+              getDeliveryBarcode(authData.token, deliveryDocument.entity.uuid)
                 .then((pdfData) => {
                   setIsPreloader(false);
                   openPDF(pdfData.pdf);
@@ -239,42 +406,99 @@ const Delivery = () => {
         <p>{OrderData.order.deliveryMethod}</p>
         <h4>Адрес доставки</h4>
         {OrderData.order.deliveryAddress !== "" && (
-          <div className={styles["delivery__adress-input-container"]}>
-            {!isChangeAddress && <p>{OrderData.order.deliveryAddress}</p>}
-            {isChangeAddress && (
-              <input
-                className={styles["delivery__adress-input"]}
-                type="text"
-                name="delivery_address"
-                value={data.delivery_address}
-                onChange={handleChange}
-                readOnly={!isChangeAddress}
-              />
-            )}
-            {!isChangeAddress && (
+          <div className={styles["delivery__input-container"]}>
+            <p>{OrderData.order.deliveryAddress}</p>
+            {OrderData.order.deliveryEntity !== null && (
               <button
-                className={styles["delivery__adress-change"]}
-                onClick={handleChangeAddress}
+                className={styles["delivery__change"]}
+                onClick={openWidjet}
               >
                 {"Изм."}
               </button>
             )}
-            {isChangeAddress && (
+          </div>
+        )}
+        <h4>ФИО получателя</h4>
+        {OrderData.order.deliveryNameRecipient !== "" && (
+          <div className={styles["delivery__input-container"]}>
+            {!isChangeName && <p>{OrderData.order.deliveryNameRecipient}</p>}
+            {isChangeName && (
+              <input
+                className={styles["delivery__input"]}
+                type="text"
+                name="delivery_name"
+                value={data.delivery_name}
+                onChange={handleChange}
+                readOnly={!isChangeName}
+              />
+            )}
+            {!isChangeName &&
+              OrderData.order.deliveryEntity !== null &&
+              OrderData.order.deliveryAddress !== "" && (
+                <button
+                  className={styles["delivery__change"]}
+                  onClick={handleChangeName}
+                >
+                  {"Изм."}
+                </button>
+              )}
+            {isChangeName && (
               <button
-                className={styles["delivery__adress-change"]}
-                onClick={openSubmitChangeAddressPopup}
+                className={styles["delivery__change"]}
+                onClick={openSubmitChangeNamePopup}
               >
                 {"Сохр."}
               </button>
             )}
           </div>
         )}
-        <h4>ФИО получателя</h4>
-        <p>{OrderData.order.deliveryNameRecipient}</p>
         <h4>Номер телефона получателя</h4>
-        <p className={styles["delivery-copy"]} onClick={copyTelegram}>
-          {OrderData.order.deliveryPhone}
-        </p>
+        <div className={styles["delivery__input-container"]}>
+          {!isChangePhone && OrderData.order.deliveryPhone !== "" && (
+            <p className={styles["delivery-copy"]} onClick={copyTelegram}>
+              {OrderData.order.deliveryPhone}
+              <svg
+                x="0px"
+                y="0px"
+                width="24px"
+                height="24px"
+                viewBox="0 0 24 24"
+                focusable="false"
+                fill="currentColor"
+              >
+                <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+              </svg>
+            </p>
+          )}
+          {isChangePhone && (
+            <input
+              className={styles["delivery__input"]}
+              type="text"
+              name="delivery_phone"
+              value={data.delivery_phone}
+              onChange={handleChange}
+              readOnly={!isChangePhone}
+            />
+          )}
+          {!isChangePhone &&
+            OrderData.order.deliveryEntity !== null &&
+            OrderData.order.deliveryAddress !== "" && (
+              <button
+                className={styles["delivery__change"]}
+                onClick={handleChangePhone}
+              >
+                {"Изм."}
+              </button>
+            )}
+          {isChangePhone && (
+            <button
+              className={styles["delivery__change"]}
+              onClick={openSubmitChangePhonePopup}
+            >
+              {"Сохр."}
+            </button>
+          )}
+        </div>
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" && (
             <button
@@ -283,6 +507,26 @@ const Delivery = () => {
               className={styles["delivery-receipt"]}
             >
               Получить квитанцию
+              <svg
+                width="18px"
+                height="18px"
+                viewBox="0 0 48 48"
+                focusable="false"
+                fill="black"
+              >
+                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+              </svg>
+            </button>
+          )}
+        {OrderData.order.deliveryAddress !== "" &&
+          OrderData.order.deliveryEntity !== "" && (
+            <button
+              onClick={openPDFBarcodeHandler}
+              disabled={isPreloader}
+              className={styles["delivery-receipt"]}
+            >
+              Получить штрихкод
               <svg
                 width="18px"
                 height="18px"
@@ -354,10 +598,16 @@ const Delivery = () => {
         closeSubmitPopup={closeSubmitChangePopup}
       />
       <SubmitPopup
-        isSubmitPopup={isSubmitChangeAddressPopup}
-        submitText="Изменить адрес доставки"
-        onSubmit={handleUpdateDeliveryAddress}
-        closeSubmitPopup={closeSubmitChangeAddressPopup}
+        isSubmitPopup={isSubmitChangePhonePopup}
+        submitText="Изменить номер телефона получателя"
+        onSubmit={handleUpdateDeliveryPhone}
+        closeSubmitPopup={closeSubmitChangePhonePopup}
+      />
+      <SubmitPopup
+        isSubmitPopup={isSubmitChangeNamePopup}
+        submitText="Изменить ФИО получателя"
+        onSubmit={handleUpdateDeliveryName}
+        closeSubmitPopup={closeSubmitChangeNamePopup}
       />
       {OrderData.order.status === "Доставляется" && (
         <SubmitPopup
@@ -367,6 +617,7 @@ const Delivery = () => {
           closeSubmitPopup={closeSubmitPopup}
         />
       )}
+      <ChangeAddress isWidjet={isWidjet} closeWidjet={closeWidjet} />
     </section>
   );
 };

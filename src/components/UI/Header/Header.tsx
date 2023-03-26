@@ -63,10 +63,13 @@ const Header: FC<IHeaderProps> = ({
                 1000 <
                 -43200 &&
               inChinaStockAt !== null &&
-              deliveryMethod === "" && (
+              deliveryMethod === "" &&
+              orderStatus !== "Завершён" && (
                 <button
                   className={`${styles["header__order-pay"]} ${styles["header__order-delivery"]}`}
-                  onClick={() => router.push(`delivery/${router.query.orderId}`)}
+                  onClick={() =>
+                    router.push(`delivery/${router.query.orderId}`)
+                  }
                 >
                   Заполните данные для доставки
                 </button>
@@ -84,14 +87,14 @@ const Header: FC<IHeaderProps> = ({
             CRM
           </Link>
           <div className={styles["header__buttons-container"]}>
-            {(
+            {
               <Link
                 className={`${styles["header__button"]} ${styles["header__button_black"]}`}
                 href="/create-order"
               >
                 Новый заказ
               </Link>
-            )}
+            }
             <Link
               className={`${styles["header__button"]} ${styles["header__button_white"]}`}
               href="/search-order"

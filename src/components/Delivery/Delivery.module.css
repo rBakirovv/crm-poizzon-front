@@ -26,13 +26,13 @@
   cursor: pointer;
 }
 
-.delivery__adress-input-container {
+.delivery__input-container {
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
 }
 
-.delivery__adress-change {
+.delivery__change {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,7 +40,7 @@
   cursor: pointer;
 }
 
-.delivery__adress-input {
+.delivery__input {
   width: 300px;
   height: 30px;
   border-radius: 0.5rem;
@@ -103,6 +103,10 @@
   transition: all 0.4s ease-in-out;
 }
 
+.delivery-receipt:not(:first-child) {
+  margin-top: 1rem;
+}
+
 .delivery-receipt svg {
   transition: all 0.4s ease-in-out;
 }
@@ -120,6 +124,10 @@
 .delivery-receipt:active {
   border: 2px solid transparent;
   background: #d96e3a;
+}
+
+.delivery-receipt:active svg {
+  fill: #fff;
 }
 
 @media screen and (max-width: 500px) {
