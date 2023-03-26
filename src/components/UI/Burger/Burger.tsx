@@ -162,7 +162,7 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
             {UserData.userData.position !== "Менеджер" &&
               UserData.userData.position !== "Байер" && (
                 <button
-                  className={`${styles["nav__list-item-order"]} ${styles["nav__list-item-order_line"]}`}
+                  className={`${styles["nav__list-item-order"]}`}
                   onClick={openWaitingDelivery}
                 >
                   Ожидает данные
