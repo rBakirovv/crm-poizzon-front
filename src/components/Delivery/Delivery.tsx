@@ -408,7 +408,7 @@ const Delivery = () => {
         {OrderData.order.deliveryAddress !== "" && (
           <div className={styles["delivery__input-container"]}>
             <p>{OrderData.order.deliveryAddress}</p>
-            {OrderData.order.deliveryEntity !== null && (
+            {OrderData.order.deliveryEntity !== "" && (
               <button
                 className={styles["delivery__change"]}
                 onClick={openWidjet}
@@ -433,7 +433,7 @@ const Delivery = () => {
               />
             )}
             {!isChangeName &&
-              OrderData.order.deliveryEntity !== null &&
+              OrderData.order.deliveryEntity !== "" &&
               OrderData.order.deliveryAddress !== "" && (
                 <button
                   className={styles["delivery__change"]}
@@ -481,7 +481,7 @@ const Delivery = () => {
             />
           )}
           {!isChangePhone &&
-            OrderData.order.deliveryEntity !== null &&
+            OrderData.order.deliveryEntity !== "" &&
             OrderData.order.deliveryAddress !== "" && (
               <button
                 className={styles["delivery__change"]}
