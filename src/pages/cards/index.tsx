@@ -95,6 +95,9 @@ const Home = observer(() => {
             {OrderData.orders.length > 0 && (
               <Cards payments={PaymentsData.paymentsList} />
             )}
+            {(OrderData.orders.length === 0 || !OrderData.orders.length) && (
+              <Preloader />
+            )}
           </Main>
         </>
       )}
