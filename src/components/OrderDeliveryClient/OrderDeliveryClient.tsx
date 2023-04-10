@@ -7,6 +7,7 @@ import {
   deliveryCreate,
   getDeliveryInfo,
   updateClientDeliveryAddress,
+  updateDeliveryCDEKCode,
 } from "../../utils/Order";
 import { useRouter } from "next/router";
 
@@ -67,9 +68,9 @@ const OrderDeliveryClient = () => {
         apikey: "c5b15538-f5b4-4065-8803-d2f4e3b1746f",
         goods: [
           {
-            length: 25,
-            width: 15,
-            height: 15,
+            length: 30,
+            width: 20,
+            height: 20,
             weight: 1 / 10,
           },
         ],
@@ -103,8 +104,7 @@ const OrderDeliveryClient = () => {
                     currentPVZ,
                     data.name_recipient,
                     data.delivery_method,
-                    orderInfo.entity.uuid,
-                    orderInfo.related_entities[0].uuid
+                    orderInfo.entity.uuid
                   )
                     .then(() => {
                       if (OrderData.order.combinedOrder.length > 0) {
@@ -116,8 +116,7 @@ const OrderDeliveryClient = () => {
                                 currentPVZ,
                                 data.name_recipient,
                                 data.delivery_method,
-                                orderInfo.entity.uuid,
-                                orderInfo.related_entities[0].uuid
+                                orderInfo.entity.uuid
                               );
                             }
                           }

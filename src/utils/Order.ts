@@ -377,6 +377,33 @@ export const updateDeliveryName = (
   }).then(checkResponse);
 };
 
+export const updateDeliveryDuplicate = (
+  id: string,
+  deliveryRelatedEntities: string
+) => {
+  return fetch(`${BASE_URL}/order/order-duplicate/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      deliveryRelatedEntities: deliveryRelatedEntities,
+    }),
+  }).then(checkResponse);
+};
+
+export const updateDeliveryCDEKCode = (id: string, deliveryCode: string) => {
+  return fetch(`${BASE_URL}/order/delivery-track-code/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      deliveryCode: deliveryCode,
+    }),
+  }).then(checkResponse);
+};
+
+// Работа со CDEK API
+
 export const deliveryAuthorization = () => {
   return fetch(`${BASE_URL}/delivery/auth`, {
     credentials: "include",
@@ -406,6 +433,35 @@ export const deliveryCreate = (
       comment: comment,
       currentPVZId: currentPVZId,
       name: name,
+      amount: amount,
+      deliveryPhone,
+      deliveryNameRecipient,
+      tarif,
+    }),
+  }).then(checkResponse);
+};
+
+export const createOrderDeliveryDuplicate = (
+  auth: string,
+  number: string,
+  comment: string,
+  currentPVZId: string,
+  packages: any,
+  amount: number,
+  deliveryPhone: string | undefined,
+  deliveryNameRecipient: string,
+  tarif: number
+) => {
+  return fetch(`${BASE_URL}/delivery/new-duplicate`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+      number: number,
+      comment: comment,
+      currentPVZId: currentPVZId,
+      packages: packages,
       amount: amount,
       deliveryPhone,
       deliveryNameRecipient,
@@ -455,8 +511,7 @@ export const updateClientDeliveryAddress = (
   deliveryAddress: string,
   deliveryNameRecipient: string,
   deliveryMethod: string,
-  deliveryEntity: string,
-  deliveryRelatedEntities: string
+  deliveryEntity: string
 ) => {
   return fetch(`${BASE_URL}/order/delivery-address/${id}`, {
     credentials: "include",
@@ -467,7 +522,6 @@ export const updateClientDeliveryAddress = (
       deliveryNameRecipient: deliveryNameRecipient,
       deliveryMethod: deliveryMethod,
       deliveryEntity: deliveryEntity,
-      deliveryRelatedEntities: deliveryRelatedEntities,
     }),
   }).then(checkResponse);
 };
@@ -548,6 +602,58 @@ export const changeOrderDeliveryName = (
       uuid: uuid,
       deliveryName: deliveryName,
     }),
+  }).then(checkResponse);
+};
+
+export const changeOrderDeliveryPackages = (
+  auth: string,
+  uuid: string,
+  value: number,
+  deliveryPackages: any
+) => {
+  return fetch(`${BASE_URL}/delivery/update-packages`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+      uuid: uuid,
+      value: value,
+      packages: deliveryPackages,
+    }),
+  }).then(checkResponse);
+};
+
+export const changeTotalSum = (
+  auth: string,
+  tariff_code: number,
+  from_location: number,
+  to_location: number,
+  packages: any,
+  parameter: number
+) => {
+  return fetch(`${BASE_URL}/delivery/sum`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+      tariff_code: tariff_code,
+      from_location: from_location,
+      to_location: to_location,
+      packages: packages,
+      parameter: parameter,
+    }),
+  }).then(checkResponse);
+};
+
+// Работа со CDEK API КОНЕЦ
+
+export const reorderStatus = (id: string) => {
+  return fetch(`${BASE_URL}/order/reorder/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
   }).then(checkResponse);
 };
 

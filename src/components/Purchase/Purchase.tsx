@@ -128,6 +128,7 @@ const Purchase = () => {
             deliveryAddress: OrderData.order.deliveryAddress,
             deliveryEntity: OrderData.order.deliveryEntity,
             deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
+            reorder: OrderData.order.reorder,
             __v: OrderData.order.__v,
           });
         })
@@ -188,6 +189,7 @@ const Purchase = () => {
           deliveryAddress: OrderData.order.deliveryAddress,
           deliveryEntity: OrderData.order.deliveryEntity,
           deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
+          reorder: OrderData.order.reorder,
           __v: OrderData.order.__v,
         });
       })

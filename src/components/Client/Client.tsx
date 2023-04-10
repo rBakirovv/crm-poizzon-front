@@ -3,7 +3,11 @@ import OrderData from "../../store/order";
 
 const Client = () => {
   function copyTg() {
-    navigator.clipboard.writeText(OrderData.order.deliveryName!);
+    if (OrderData.order.deliveryName![0] === "@") {
+      navigator.clipboard.writeText(OrderData.order.deliveryName!.slice(1));
+    } else {
+      navigator.clipboard.writeText(OrderData.order.deliveryName!);
+    }
   }
 
   function copyPhone() {

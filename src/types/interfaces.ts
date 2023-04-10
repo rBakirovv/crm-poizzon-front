@@ -53,6 +53,7 @@ export interface IOrder {
   deliveryAddress: string;
   deliveryEntity: string;
   deliveryRelatedEntities: string;
+  reorder: boolean,
   __v?: number;
 }
 

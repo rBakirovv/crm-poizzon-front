@@ -20,6 +20,7 @@ import Client from "../Client/Client";
 import Purchase from "../Purchase/Purchase";
 import Delivery from "../Delivery/Delivery";
 import Preloader from "../UI/Preloader/Preloader";
+import DeliveryDuplicate from "../DeliveryDuplicate/DeliveryDuplicate";
 
 const dayjs = require("dayjs");
 
@@ -156,6 +157,10 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
     setOrderСhapter("Delivery");
   }
 
+  function openDeliveryDuplicate() {
+    setOrderСhapter("DeliveryDuplicate");
+  }
+
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
 
@@ -170,7 +175,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Кроссовки",
-        priceDeliveryRussia: "1500",
+        priceDeliveryRussia: "1512",
+        priceDeliveryChina: "987",
       });
     }
 
@@ -178,7 +184,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Зимняя обувь",
-        priceDeliveryRussia: "1500",
+        priceDeliveryRussia: "2009",
+        priceDeliveryChina: "987",
       });
     }
 
@@ -186,7 +193,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Куртка",
-        priceDeliveryRussia: "1300",
+        priceDeliveryRussia: "1347",
+        priceDeliveryChina: "987",
       });
     }
 
@@ -194,7 +202,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Толстовка",
-        priceDeliveryRussia: "900",
+        priceDeliveryRussia: "1347",
+        priceDeliveryChina: "987",
       });
     }
 
@@ -202,7 +211,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Футболка",
-        priceDeliveryRussia: "700",
+        priceDeliveryRussia: "645",
+        priceDeliveryChina: "561",
       });
     }
 
@@ -210,7 +220,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Носки",
-        priceDeliveryRussia: "300",
+        priceDeliveryRussia: "324",
+        priceDeliveryChina: "298",
       });
     }
 
@@ -218,7 +229,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Сумка",
-        priceDeliveryRussia: "900",
+        priceDeliveryRussia: "956",
+        priceDeliveryChina: "987",
       });
     }
 
@@ -226,7 +238,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Духи",
-        priceDeliveryRussia: "650",
+        priceDeliveryRussia: "956",
+        priceDeliveryChina: "561",
       });
     }
 
@@ -234,7 +247,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Штаны",
-        priceDeliveryRussia: "1000",
+        priceDeliveryRussia: "1347",
+        priceDeliveryChina: "987",
       });
     }
 
@@ -242,7 +256,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Головной убор",
-        priceDeliveryRussia: "650",
+        priceDeliveryRussia: "645",
+        priceDeliveryChina: "561",
       });
     }
 
@@ -325,6 +340,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           deliveryAddress: OrderData.order.deliveryAddress,
           deliveryEntity: OrderData.order.deliveryEntity,
           deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
+          reorder: OrderData.order.reorder,
           __v: OrderData.order.__v,
         });
         setUploading(false);
@@ -383,6 +399,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           deliveryAddress: OrderData.order.deliveryAddress,
           deliveryEntity: OrderData.order.deliveryEntity,
           deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
+          reorder: OrderData.order.reorder,
           __v: OrderData.order.__v,
         });
       })
@@ -465,6 +482,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       deliveryAddress: OrderData.order.deliveryAddress,
       deliveryEntity: OrderData.order.deliveryEntity,
       deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
+      reorder: OrderData.order.reorder,
       __v: OrderData.order.__v,
     });
   }, [data]);
@@ -656,6 +674,15 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           onClick={openDelivery}
         >
           Доставка
+        </p>
+        <p
+          className={`${styles["order-change__nav-item"]} ${
+            orderСhapter === "DeliveryDuplicate" &&
+            styles["order-change__nav-item_active"]
+          }`}
+          onClick={openDeliveryDuplicate}
+        >
+          Дубликат
         </p>
       </div>
       {orderСhapter === "Order" && (
@@ -966,6 +993,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       {orderСhapter === "Client" && <Client />}
       {orderСhapter === "Purchase" && <Purchase />}
       {orderСhapter === "Delivery" && <Delivery />}
+      {orderСhapter === "DeliveryDuplicate" && <DeliveryDuplicate />}
       <ImagePopup
         isImagePopupOpen={isImagePopupOpen}
         currentImage={currentImage}

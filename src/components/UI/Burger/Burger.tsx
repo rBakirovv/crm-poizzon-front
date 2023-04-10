@@ -118,14 +118,14 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
             Заказы
           </Link>
           <div className={styles["nav__list-item-order-container"]}>
-            {(
+            {
               <button
                 className={styles["nav__list-item-order"]}
                 onClick={openDraft}
               >
                 Черновик
               </button>
-            )}
+            }
             {UserData.userData.position !== "Байер" &&
               UserData.userData.position !== "Менеджер" && (
                 <button
@@ -266,6 +266,17 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
             </Link>
           </li>
         )}
+        <li className={styles["nav__list-item"]}>
+          <Link
+            className={`${styles["nav__list-item-link"]} ${
+              router.pathname === "/cards" &&
+              styles["nav__list-item-link_active"]
+            }`}
+            href="/cards"
+          >
+            Статистика карт
+          </Link>
+        </li>
         <li
           onClick={() => {
             closeBurger();

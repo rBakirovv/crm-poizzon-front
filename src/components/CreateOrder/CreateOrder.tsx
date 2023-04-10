@@ -79,7 +79,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Кроссовки",
-        priceDeliveryRussia: "1500",
+        priceDeliveryRussia: "1512",
+        priceDeliveryChina: "987",
       });
     }
 
@@ -87,7 +88,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Зимняя обувь",
-        priceDeliveryRussia: "1500",
+        priceDeliveryRussia: "2009",
+        priceDeliveryChina: "987",
       });
     }
 
@@ -95,7 +97,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Куртка",
-        priceDeliveryRussia: "1300",
+        priceDeliveryRussia: "1347",
+        priceDeliveryChina: "987",
       });
     }
 
@@ -103,7 +106,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Толстовка",
-        priceDeliveryRussia: "900",
+        priceDeliveryRussia: "1347",
+        priceDeliveryChina: "987",
       });
     }
 
@@ -111,7 +115,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Футболка",
-        priceDeliveryRussia: "700",
+        priceDeliveryRussia: "645",
+        priceDeliveryChina: "561",
       });
     }
 
@@ -119,7 +124,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Носки",
-        priceDeliveryRussia: "300",
+        priceDeliveryRussia: "324",
+        priceDeliveryChina: "298",
       });
     }
 
@@ -127,7 +133,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Сумка",
-        priceDeliveryRussia: "900",
+        priceDeliveryRussia: "956",
+        priceDeliveryChina: "987",
       });
     }
 
@@ -135,7 +142,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Духи",
-        priceDeliveryRussia: "650",
+        priceDeliveryRussia: "956",
+        priceDeliveryChina: "561",
       });
     }
 
@@ -143,7 +151,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Штаны",
-        priceDeliveryRussia: "1000",
+        priceDeliveryRussia: "1347",
+        priceDeliveryChina: "987",
       });
     }
 
@@ -151,7 +160,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Головной убор",
-        priceDeliveryRussia: "650",
+        priceDeliveryRussia: "645",
+        priceDeliveryChina: "561",
       });
     }
 

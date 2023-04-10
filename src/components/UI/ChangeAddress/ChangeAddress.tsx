@@ -41,9 +41,9 @@ const ChangeAddress: FC<IChangeAddressProps> = observer(
           apikey: "c5b15538-f5b4-4065-8803-d2f4e3b1746f",
           goods: [
             {
-              length: 25,
-              width: 15,
-              height: 15,
+              length: 30,
+              width: 20,
+              height: 20,
               weight: 1 / 10,
             },
           ],

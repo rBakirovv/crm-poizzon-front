@@ -100,6 +100,7 @@
   height: 35px;
   cursor: pointer;
   max-width: 330px;
+  width: 100%;
   transition: all 0.4s ease-in-out;
 }
 
@@ -130,6 +131,34 @@
   fill: #fff;
 }
 
+.delivery-packages-err {
+  color: red;
+}
+
+.delivery-packages {
+  margin-top: 1.5rem;
+}
+
+.delivery-packages-number-input {
+  width: 5rem;
+  margin-right: 0.5rem;
+}
+
+.delivery-packages-size {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border: 1px solid rgb(193, 193, 193);
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  width: max-content;
+  padding-top: 0;
+}
+
+.delivery-packages-size-button {
+  margin-top: 1.5rem;
+}
+
 @media screen and (max-width: 500px) {
   .delivery__submit-button:hover {
     background: #000;
@@ -149,11 +178,11 @@
     color: #000;
     background: #fff;
   }
-  
+
   .delivery-receipt:hover svg {
     fill: #000;
   }
-  
+
   .delivery-receipt:active {
     background: #d96e3a;
     border: 2px solid #fff;

@@ -137,6 +137,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
             deliveryAddress: OrderData.order.deliveryAddress,
             deliveryEntity: OrderData.order.deliveryEntity,
             deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
+            reorder: OrderData.order.reorder,
             __v: OrderData.order.__v,
           });
         })
@@ -197,6 +198,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
           deliveryAddress: OrderData.order.deliveryAddress,
           deliveryEntity: OrderData.order.deliveryEntity,
           deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
+          reorder: OrderData.order.reorder,
           __v: OrderData.order.__v,
         });
       })

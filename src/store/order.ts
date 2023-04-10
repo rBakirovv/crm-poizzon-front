@@ -43,6 +43,7 @@ class OrderData {
     deliveryAddress: "",
     deliveryEntity: "",
     deliveryRelatedEntities: "",
+    reorder: false,
     __v: 0,
   };
 

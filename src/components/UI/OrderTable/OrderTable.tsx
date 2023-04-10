@@ -10,6 +10,7 @@ import {
   inPurchase,
   getOrders,
   deletePayProofImage,
+  reorderStatus,
 } from "../../../utils/Order";
 import { IOrderImages } from "../../../types/interfaces";
 import { useRouter } from "next/router";
@@ -163,8 +164,24 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
       .catch((err) => console.log(err));
   }
 
+  /*
   function onSubmitPurchase() {
     inPurchase(orderId, UserData.userData.name)
+      .then(() => {
+        getOrders().then((orders) => OrderData.setOrders(orders));
+      })
+      .then(() => {
+        OrderData.orders.filter((item) => item.status === status);
+      })
+      .then(() => {
+        router.push(`/order/change/${orderId}`);
+      })
+      .catch((err) => console.log(err));
+  }
+  */
+
+  function onSubmitPurchase() {
+    reorderStatus(orderId)
       .then(() => {
         getOrders().then((orders) => OrderData.setOrders(orders));
       })
@@ -318,7 +335,10 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                     } ${
                       orderItem.combinedOrder.length !== 0 &&
                       styles["orders-table__combined"]
-                    } ${styles["orders-table__header-item_number"]}`}
+                    } ${styles["orders-table__header-item_number"]} ${
+                      orderItem.reorder === true &&
+                      styles["orders-table__reorder"]
+                    }`}
                     href={`/order/change/${orderItem._id}`}
                   >
                     {orderItem.orderId}
@@ -438,7 +458,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
             className={styles["purchase-button"]}
             onClick={handlePurchaseClick}
           >
-            {isPurchase ? "Закрыть" : "В закупку"}
+            {isPurchase ? "Закрыть" : "Перезаказ"}
           </button>
         )}
         {status === "Проверка оплаты" &&
@@ -508,7 +528,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
           isSubmitPopup={isSubmitPopup}
           onSubmit={onSubmitPurchase}
           closeSubmitPopup={closeSubmitPopup}
-          submitText={`Взять в закупку заказ № ${orderNumber}`}
+          submitText={`Отправить на перезакупку заказ № ${orderNumber}`}
         />
       )}
     </>
