@@ -48,7 +48,9 @@ const Cards: FC<ICardsProps> = ({ payments }) => {
                 <p className={styles["cards__list-card"]}>
                   {item.title} {item.number}
                 </p>
-                <p className={styles["cards__list-card-sum"]}>{total} ₽</p>
+                <p className={styles["cards__list-card-sum"]}>
+                  {Math.round(total)} ₽
+                </p>
               </li>
             );
           })}
