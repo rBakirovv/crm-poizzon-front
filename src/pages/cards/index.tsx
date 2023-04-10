@@ -92,7 +92,9 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            <Cards payments={PaymentsData.paymentsList} />
+            {OrderData.orders.length > 0 && (
+              <Cards payments={PaymentsData.paymentsList} />
+            )}
           </Main>
         </>
       )}
