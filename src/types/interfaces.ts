@@ -53,7 +53,7 @@ export interface IOrder {
   deliveryAddress: string;
   deliveryEntity: string;
   deliveryRelatedEntities: string;
-  reorder: boolean,
+  reorder: boolean;
   __v?: number;
 }
 
@@ -76,5 +76,10 @@ export interface IRate {
 export interface IPromoCode {
   code: string;
   percent: number;
+  _id?: string;
+}
+
+export interface ICards {
+  updatedAt: Date | null;
   _id?: string;
 }

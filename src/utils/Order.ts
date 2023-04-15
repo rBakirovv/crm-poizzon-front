@@ -657,6 +657,22 @@ export const reorderStatus = (id: string) => {
   }).then(checkResponse);
 };
 
+export const getCardsUpdatedAt = () => {
+  return fetch(`${BASE_URL}/cards/statistics`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const updateCardsStatistics = (id: string) => {
+  return fetch(`${BASE_URL}/cards/update/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();

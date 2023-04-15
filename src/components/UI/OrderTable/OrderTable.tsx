@@ -7,7 +7,6 @@ import {
   deleteOrder,
   getCurrentOrder,
   deleteOrderImage,
-  inPurchase,
   getOrders,
   deletePayProofImage,
   reorderStatus,
@@ -41,6 +40,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
 
   const [filterPurchased, setFilterPurchased] = useState("");
   const [filterPayment, setFilterPayment] = useState("");
+  const [filterReorder, setFilterReorder] = useState("");
 
   const lastItemIndex = currentPage * itemsPerPage;
   const firstItemIndex = lastItemIndex - itemsPerPage;
@@ -69,6 +69,11 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
           ? filterPayment === ""
             ? item.status === status
             : item.payment === filterPayment
+          : item.status === status || status === "Ожидает данные") &&
+        (status === "Ожидает закупки"
+          ? filterReorder !== ""
+            ? item.reorder === true
+            : item.status === status
           : item.status === status || status === "Ожидает данные")
       );
     }).length / itemsPerPage
@@ -84,6 +89,12 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
     const target = e.target as HTMLInputElement;
 
     setFilterPayment(target.value);
+  }
+
+  function hanfleFilterReorder(e: React.SyntheticEvent) {
+    const target = e.target as HTMLInputElement;
+
+    setFilterReorder(target.value);
   }
 
   function handleDeleteDraftClick() {
@@ -164,29 +175,10 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
       .catch((err) => console.log(err));
   }
 
-  /*
-  function onSubmitPurchase() {
-    inPurchase(orderId, UserData.userData.name)
-      .then(() => {
-        getOrders().then((orders) => OrderData.setOrders(orders));
-      })
-      .then(() => {
-        OrderData.orders.filter((item) => item.status === status);
-      })
-      .then(() => {
-        router.push(`/order/change/${orderId}`);
-      })
-      .catch((err) => console.log(err));
-  }
-  */
-
   function onSubmitPurchase() {
     reorderStatus(orderId)
       .then(() => {
         getOrders().then((orders) => OrderData.setOrders(orders));
-      })
-      .then(() => {
-        OrderData.orders.filter((item) => item.status === status);
       })
       .then(() => {
         router.push(`/order/change/${orderId}`);
@@ -276,6 +268,11 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                   ? filterPayment === ""
                     ? item.status === status
                     : item.payment === filterPayment
+                  : item.status === status || status === "Ожидает данные") &&
+                (status === "Ожидает закупки"
+                  ? filterReorder !== ""
+                    ? item.reorder === true
+                    : item.status === status
                   : item.status === status || status === "Ожидает данные")
               );
             })
@@ -502,6 +499,19 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                 </option>
               );
             })}
+          </select>
+        </div>
+      )}
+      {status === "Ожидает закупки" && (
+        <div className={styles["orders-table__payment-filter-container"]}>
+          <select
+            className={styles["orders-table__poizon-code-filter"]}
+            onChange={hanfleFilterReorder}
+          >
+            <option value="" selected>
+              Все
+            </option>
+            <option value="reorder">Перезаказ</option>
           </select>
         </div>
       )}

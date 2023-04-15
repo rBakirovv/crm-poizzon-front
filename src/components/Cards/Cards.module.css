@@ -46,3 +46,7 @@
 .cards__list-card-sum {
   margin: 0;
 }
+
+.cards__button-update {
+  margin-top: 1rem;
+}

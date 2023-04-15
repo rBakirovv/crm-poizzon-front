@@ -598,6 +598,9 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           Доставлен: {dayjs(OrderData.order.deliveredAt).format("DD.MM.YYYY")}
         </p>
       )}
+      {OrderData.order.reorder === true && (
+        <p className={styles["order-change__status_red"]}>Перезаказ</p>
+      )}
       {Math.ceil(
         new Date(OrderData.order.inChinaStockAt).getTime() -
           new Date(Date.now()).getTime()

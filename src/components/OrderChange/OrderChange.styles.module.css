@@ -18,6 +18,11 @@
   font-weight: 500;
 }
 
+.order-change__status_red {
+  color: red;
+  font-weight: 500;
+}
+
 .order-change__flex-status {
   display: flex;
   flex-direction: column;

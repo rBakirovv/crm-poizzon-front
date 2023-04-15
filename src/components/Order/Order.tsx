@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
 import { IOrder } from "../../types/interfaces";
 import { BASE_URL, BASE_URL_FRONT } from "../../utils/constants";
-import { getCurrentClientOrder } from "../../utils/Order";
 import Carousel from "../UI/Carousel/Carousel";
 import Timer from "../UI/Timer/Timer";
 import styles from "./Order.module.css";

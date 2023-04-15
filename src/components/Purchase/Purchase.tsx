@@ -11,9 +11,11 @@ import {
   updatePurchaseData,
   updatePurchaseImages,
   uploadImages,
+  cancelPurchase,
 } from "../../utils/Order";
 import ImagePopup from "../ImagePopup/ImagePopup";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
+import { IOrderImages } from "../../types/interfaces";
 
 const Purchase = () => {
   const [data, setData] = useState({
@@ -26,8 +28,7 @@ const Purchase = () => {
   const [currentImage, setCurrentImage] = useState<string>("");
 
   const [isSubmitPopupOpen, setIsSubmitPopupOpen] = useState<boolean>(false);
-  const [isPurchasePopupOpen, setIsPurchasePopupOpen] =
-    useState<boolean>(false);
+  const [isCancelPopupOpen, setIsCancelPopupOpen] = useState<boolean>(false);
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
@@ -49,11 +50,15 @@ const Purchase = () => {
     setIsSubmitPopupOpen(false);
   }
 
-  /*
-  function closePurchasePopup() {
-    setIsPurchasePopupOpen(false);
+  function openCancelPopup(e: React.SyntheticEvent) {
+    e.preventDefault();
+    setIsCancelPopupOpen(true);
   }
-  */
+
+  function closeCancelPopup() {
+    setIsCancelPopupOpen(false);
+    setIsSubmitPopupOpen(false);
+  }
 
   function openImagePopup(imageSrc: string) {
     setCurrentImage(imageSrc);
@@ -222,6 +227,24 @@ const Purchase = () => {
       .then(() => closeSubmitPopup());
   }
 
+  function handleReorder() {
+    cancelPurchase(OrderData.order._id)
+      .then((order) => {
+        if (order.buyProofImages.length !== 0) {
+          order.buyProofImages.forEach((item: IOrderImages) => {
+            deleteImageHandler(item.name);
+          });
+        }
+
+        return order;
+      })
+      .then((updatedOrder) => {
+        OrderData.setOrder(updatedOrder);
+      })
+      .then(() => setIsCancelPopupOpen(false))
+      .then(() => closeCancelPopup());
+  }
+
   return (
     <form onSubmit={openSubmitPopup} className={styles["purchase"]}>
       <TextInput
@@ -327,7 +350,7 @@ const Purchase = () => {
               На закупку
             </button>
           )}
-        {(
+        {
           <button
             className={`${styles["purchase__button-submit"]} ${
               UserData.userData.position === "Менеджер" &&
@@ -335,7 +358,23 @@ const Purchase = () => {
             }`}
             type="submit"
           >
-            {OrderData.order.status !== "На закупке" ? "Сохранить POIZON" : "Закуплен"}
+            {OrderData.order.status !== "На закупке"
+              ? "Сохранить POIZON"
+              : "Закуплен"}
+          </button>
+        }
+        {(OrderData.order.status === "На закупке" ||
+          OrderData.order.status === "Закуплен") && (
+          <button
+            className={`${styles["purchase__button-submit"]} ${
+              styles["purchase__button-reorder"]
+            } ${
+              UserData.userData.position === "Менеджер" &&
+              styles["purchase__button-submit_disable"]
+            }`}
+            onClick={openCancelPopup}
+          >
+            Отменить закупку
           </button>
         )}
       </div>
@@ -360,6 +399,12 @@ const Purchase = () => {
           submitText="Изменить статус товара На закупке"
         />
       )}
+      <SubmitPopup
+        onSubmit={handleReorder}
+        isSubmitPopup={isCancelPopupOpen}
+        closeSubmitPopup={closeCancelPopup}
+        submitText="Изменить статус товара Ожидает закупки"
+      />
     </form>
   );
 };

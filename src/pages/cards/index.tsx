@@ -15,7 +15,8 @@ import { getPayments } from "../../utils/Payment";
 import PaymentsData from "../../store/payments";
 import Cards from "../../components/Cards/Cards";
 import OrderData from "../../store/order";
-import { getOrders } from "../../utils/Order";
+import CardsData from "../../store/cards";
+import { getCardsUpdatedAt, getOrders } from "../../utils/Order";
 
 const Home = observer(() => {
   const router = useRouter();
@@ -68,6 +69,12 @@ const Home = observer(() => {
   useEffect(() => {
     getPayments().then((payments) => {
       PaymentsData.setPaymentsList(payments);
+    });
+  }, []);
+
+  useEffect(() => {
+    getCardsUpdatedAt().then((data) => {
+      CardsData.setUpdatedDate(data[0]);
     });
   }, []);
 
