@@ -423,12 +423,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
             <span>{totalPrice} ₽</span>
           </button>
         )}
-        {Math.ceil(
-          new Date(currentOrder.inChinaStockAt).getTime() -
-            new Date(Date.now()).getTime()
-        ) /
-          1000 <
-          -43200 &&
+        {currentOrder.poizonCode !== "" &&
           currentOrder.inChinaStockAt !== null &&
           currentOrder.deliveryMethod === "" &&
           currentOrder.status !== "Завершён" && (

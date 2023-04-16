@@ -51,12 +51,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
         (status === "Ожидает данные"
           ? item.deliveryMethod === "" &&
             item.deliveryAddress === "" &&
-            Math.ceil(
-              new Date(item.inChinaStockAt).getTime() -
-                new Date(Date.now()).getTime()
-            ) /
-              1000 <
-              -43200 &&
+            item.poizonCode !== "" &&
             item.inChinaStockAt !== null &&
             item.status !== "Завершён"
           : item.status === status || status === "Ожидает данные") &&
@@ -250,12 +245,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                 (status === "Ожидает данные"
                   ? item.deliveryMethod === "" &&
                     item.deliveryAddress === "" &&
-                    Math.ceil(
-                      new Date(item.inChinaStockAt).getTime() -
-                        new Date(Date.now()).getTime()
-                    ) /
-                      1000 <
-                      -43200 &&
+                    item.poizonCode !== "" &&
                     item.inChinaStockAt !== null &&
                     item.status !== "Завершён"
                   : item.status === status || status === "Ожидает данные") &&

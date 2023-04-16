@@ -35,6 +35,7 @@ const Page: NextPage<ICurrentOrderProps> = ({ currentOrder }) => {
         orderStatus={currentOrder.status}
         inChinaStockAt={currentOrder.inChinaStockAt}
         deliveryMethod={currentOrder.deliveryMethod}
+        poizonCode={currentOrder.poizonCode}
       />
       <Order currentOrder={currentOrder} />
     </>

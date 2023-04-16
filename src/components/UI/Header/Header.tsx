@@ -12,6 +12,7 @@ interface IHeaderProps {
   orderStatus?: string;
   inChinaStockAt?: any; // Костыль!
   deliveryMethod?: string;
+  poizonCode?: string,
 }
 
 const Header: FC<IHeaderProps> = ({
@@ -20,6 +21,7 @@ const Header: FC<IHeaderProps> = ({
   orderStatus,
   inChinaStockAt,
   deliveryMethod,
+  poizonCode,
 }) => {
   const router = useRouter();
 
@@ -56,12 +58,7 @@ const Header: FC<IHeaderProps> = ({
               )}
             {(!router.pathname.includes("/pay/") ||
               !router.pathname.includes("/delivery/")) &&
-              Math.ceil(
-                new Date(inChinaStockAt).getTime() -
-                  new Date(Date.now()).getTime()
-              ) /
-                1000 <
-                -43200 &&
+              poizonCode !== "" &&
               inChinaStockAt !== null &&
               deliveryMethod === "" &&
               orderStatus !== "Завершён" && (

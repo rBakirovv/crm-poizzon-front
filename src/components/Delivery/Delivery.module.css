@@ -73,6 +73,10 @@
   justify-content: center;
   transition: all 0.4s ease-in-out;
   cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.delivery-form .delivery__submit-button {
   margin-top: 1.5rem;
 }
 

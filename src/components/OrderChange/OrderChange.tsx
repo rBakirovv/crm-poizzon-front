@@ -601,12 +601,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       {OrderData.order.reorder === true && (
         <p className={styles["order-change__status_red"]}>Перезаказ</p>
       )}
-      {Math.ceil(
-        new Date(OrderData.order.inChinaStockAt).getTime() -
-          new Date(Date.now()).getTime()
-      ) /
-        1000 <
-        -43200 &&
+      {OrderData.order.poizonCode !== "" &&
         OrderData.order.inChinaStockAt !== null &&
         OrderData.order.deliveryAddress === "" &&
         OrderData.order.status !== "Завершён" && (
