@@ -7,11 +7,12 @@ import {
   deliveryCreate,
   getDeliveryInfo,
   updateClientDeliveryAddress,
-  updateDeliveryCDEKCode,
 } from "../../utils/Order";
 import { useRouter } from "next/router";
 
 declare var ISDEKWidjet: any; // Костыль всех костылей!
+
+// {isPostamat && <span className={styles["delivery-error"]}>Пункт выдачи не может быть постоматом</span>}
 
 const OrderDeliveryClient = () => {
   const router = useRouter();
@@ -29,13 +30,16 @@ const OrderDeliveryClient = () => {
   const [currentPVZ, setCurrentPVZ] = useState("");
   const [amount, setAmount] = useState(0);
   const [tarif, setTarif] = useState(0);
+  const [isPostamat, setIsPostamat] = useState(false);
 
   // фун-я с костылём!
   function choosePVZ(wat: any) {
+    //console.log(wat);
     setTarif(wat.tarif);
     setCurrentPVZId(wat.id);
-    setCurrentPVZ(wat.PVZ.Address);
+    setCurrentPVZ(`г. ${wat.cityName}, ${wat.PVZ.Address}`);
     setAmount(parseInt(wat.price) + 100);
+    setIsPostamat(wat.PVZ.Postamat);
 
     data.name_recipient !== "" &&
       window.scrollTo({

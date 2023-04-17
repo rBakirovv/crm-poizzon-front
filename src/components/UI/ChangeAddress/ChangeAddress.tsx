@@ -55,7 +55,7 @@ const ChangeAddress: FC<IChangeAddressProps> = observer(
     function choosePVZ(wat: any) {
       setTarif(wat.tarif);
       setCurrentPVZId(wat.id);
-      setCurrentPVZ(wat.PVZ.Address);
+      setCurrentPVZ(`г. ${wat.cityName}, ${wat.PVZ.Address}`);
       setAmount(parseInt(wat.price) + 100);
     }
 
