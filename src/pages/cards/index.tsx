@@ -99,10 +99,10 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            {OrderData.orders.length > 0 && (
+            {OrderData.orders.length > 0 && CardsData.cards.updatedAt && (
               <Cards payments={PaymentsData.paymentsList} />
             )}
-            {(OrderData.orders.length === 0 || !OrderData.orders.length) && (
+            {(OrderData.orders.length === 0 || !OrderData.orders.length) && !CardsData.cards.updatedAt && (
               <Preloader />
             )}
           </Main>
