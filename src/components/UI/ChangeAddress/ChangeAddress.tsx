@@ -25,6 +25,7 @@ const ChangeAddress: FC<IChangeAddressProps> = observer(
     const [currentPVZ, setCurrentPVZ] = useState("");
     const [amount, setAmount] = useState(0);
     const [tarif, setTarif] = useState(0);
+    const [isPostamat, setIsPostamat] = useState(false);
 
     useEffect(() => {
       setIsBrowser(true);
@@ -57,6 +58,7 @@ const ChangeAddress: FC<IChangeAddressProps> = observer(
       setCurrentPVZId(wat.id);
       setCurrentPVZ(`г. ${wat.cityName}, ${wat.PVZ.Address}`);
       setAmount(parseInt(wat.price) + 100);
+      setIsPostamat(wat.PVZ.Postamat);
     }
 
     function changeAddress() {
@@ -128,9 +130,15 @@ const ChangeAddress: FC<IChangeAddressProps> = observer(
             id="forpvz-modal"
             className={styles["change-address__widjet"]}
           ></div>
+          {isPostamat && (
+            <span className={styles["delivery-error"]}>
+              Пункт выдачи не может быть постоматом
+            </span>
+          )}
           <button
             onClick={changeAddress}
             className={styles["change-address__submit"]}
+            disabled={currentPVZ === "" || isPostamat}
           >
             Cохранить
           </button>

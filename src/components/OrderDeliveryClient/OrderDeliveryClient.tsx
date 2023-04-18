@@ -12,8 +12,6 @@ import { useRouter } from "next/router";
 
 declare var ISDEKWidjet: any; // Костыль всех костылей!
 
-// {isPostamat && <span className={styles["delivery-error"]}>Пункт выдачи не может быть постоматом</span>}
-
 const OrderDeliveryClient = () => {
   const router = useRouter();
 
@@ -222,13 +220,19 @@ const OrderDeliveryClient = () => {
               }`}
               id="forpvz"
             ></div>
+            {isPostamat && (
+              <span className={styles["delivery-error"]}>
+                Пункт выдачи не может быть постоматом
+              </span>
+            )}
             <button
               className={styles["order-pay__pay-submit"]}
               type="submit"
               disabled={
                 currentPVZ === "" ||
                 data.delivery_method === "" ||
-                OrderData.order.deliveryMethod !== ""
+                OrderData.order.deliveryMethod !== "" ||
+                isPostamat
               }
             >
               Отправить

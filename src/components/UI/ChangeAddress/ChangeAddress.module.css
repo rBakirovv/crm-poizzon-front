@@ -99,6 +99,16 @@
   background: #d96e3a;
 }
 
+.delivery-error {
+  display: block;
+  color: red;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  margin-bottom: -0.5rem;
+}
+
 @media screen and (max-width: 500px) {
   .change-address__submit:hover {
     background: #000;
