@@ -142,6 +142,123 @@ const Delivery = () => {
       ...data,
       [name]: value,
     });
+
+    if (target.value === "medium") {
+      setData({
+        ...data,
+        delivery_length: 37,
+        delivery_width: 27,
+        delivery_height: 16,
+      });
+    }
+
+    if (target.value === "large") {
+      setData({
+        ...data,
+        delivery_length: 41,
+        delivery_width: 31,
+        delivery_height: 18,
+      });
+    }
+
+    if (target.value === "extra_large") {
+      setData({
+        ...data,
+        delivery_length: 45,
+        delivery_width: 36,
+        delivery_height: 21,
+      });
+    }
+
+    if (target.value === "y_01") {
+      setData({
+        ...data,
+        delivery_length: 49,
+        delivery_width: 40,
+        delivery_height: 32,
+      });
+    }
+
+    if (target.value === "y_03") {
+      setData({
+        ...data,
+        delivery_length: 60,
+        delivery_width: 44,
+        delivery_height: 31,
+      });
+    }
+
+    if (target.value === "y_06") {
+      setData({
+        ...data,
+        delivery_length: 66,
+        delivery_width: 57,
+        delivery_height: 29,
+      });
+    }
+
+    if (target.value === "y_08") {
+      setData({
+        ...data,
+        delivery_length: 39,
+        delivery_width: 30,
+        delivery_height: 31,
+      });
+    }
+
+    if (target.value === "y_08") {
+      setData({
+        ...data,
+        delivery_length: 39,
+        delivery_width: 30,
+        delivery_height: 31,
+      });
+    }
+
+    if (target.value === "y_10") {
+      setData({
+        ...data,
+        delivery_length: 48,
+        delivery_width: 40,
+        delivery_height: 32,
+      });
+    }
+
+    if (target.value === "y_13") {
+      setData({
+        ...data,
+        delivery_length: 56,
+        delivery_width: 49,
+        delivery_height: 22,
+      });
+    }
+
+    if (target.value === "y_37") {
+      setData({
+        ...data,
+        delivery_length: 27,
+        delivery_width: 29,
+        delivery_height: 32,
+      });
+    }
+
+    if (target.value === "small") {
+      setData({
+        ...data,
+        delivery_length: 34,
+        delivery_width: 21,
+        delivery_height: 16,
+      });
+    }
+
+    if (target.value === "mini") {
+      setData({
+        ...data,
+        delivery_length: 24,
+        delivery_width: 18,
+        delivery_height: 15,
+      });
+    }
   }
 
   function handleInStockInRussia() {
@@ -1028,6 +1145,26 @@ const Delivery = () => {
               <div
                 className={`${styles["delivery-packages"]} ${styles["delivery-packages-size"]}`}
               >
+                <select
+                  onChange={handleChange}
+                  className={styles["delivery-packages-select"]}
+                >
+                  <option value="" selected disabled>
+                    Выберите
+                  </option>
+                  <option value="medium">Medium 37 * 27 * 16</option>
+                  <option value="large">Large 41 * 31 * 18</option>
+                  <option value="extra_large">Extra Large 45 * 36 * 21</option>
+                  <option value="y_01">Y-01 49 * 40 * 32</option>
+                  <option value="y_03">Y-03 60 * 44 * 31</option>
+                  <option value="y_06">Y-06 66 * 57 * 29</option>
+                  <option value="y_08">Y-08 39 * 30 * 31</option>
+                  <option value="y_10">Y-10 48 * 40 * 32</option>
+                  <option value="y_13">Y-13 56 * 49 * 22</option>
+                  <option value="y_37">Y-37 27 * 29 * 32</option>
+                  <option value="small">Small 34 * 21 * 16</option>
+                  <option value="mini">Mini 24 * 18 * 15</option>
+                </select>
                 <h4>length</h4>
                 <input
                   className={styles["delivery-packages-number-input"]}

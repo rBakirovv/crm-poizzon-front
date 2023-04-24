@@ -163,6 +163,10 @@
   margin-top: 1.5rem;
 }
 
+.delivery-packages-select {
+  margin-top: 1rem;
+}
+
 @media screen and (max-width: 500px) {
   .delivery__submit-button:hover {
     background: #000;
