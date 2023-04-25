@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import styles from "./Header.module.css";
 import Link from "next/link";
@@ -12,7 +12,8 @@ interface IHeaderProps {
   orderStatus?: string;
   inChinaStockAt?: any; // Костыль!
   deliveryMethod?: string;
-  poizonCode?: string,
+  poizonCode?: string;
+  overudeAfter?: Date;
 }
 
 const Header: FC<IHeaderProps> = ({
@@ -22,10 +23,29 @@ const Header: FC<IHeaderProps> = ({
   inChinaStockAt,
   deliveryMethod,
   poizonCode,
+  overudeAfter,
 }) => {
   const router = useRouter();
 
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
+
+  const [timeLeft, setTimeLeft] = useState<number>(
+    Math.ceil(
+      Math.round(
+        new Date(overudeAfter!).getTime() - new Date(Date.now()).getTime()
+      ) / 1000
+    )
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeLeft((timeLeft: number) => (timeLeft >= 1 ? timeLeft - 1 : 0));
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [timeLeft]);
 
   function handleBurgerClick() {
     setIsBurgerOpen(!isBurgerOpen);
@@ -48,7 +68,8 @@ const Header: FC<IHeaderProps> = ({
           <div className={styles["header__order-container"]}>
             <h2 className={styles["header__order-title"]}>Заказ №{orderId}</h2>
             {!router.pathname.includes("/pay/") &&
-              orderStatus === "Черновик" && (
+              orderStatus === "Черновик" &&
+              timeLeft > 0 && (
                 <button
                   className={styles["header__order-pay"]}
                   onClick={() => router.push(`pay/${router.query.orderId}`)}
