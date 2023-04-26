@@ -72,6 +72,63 @@
   fill: #fff;
 }
 
+.accordion {
+  margin-top: 1rem;
+  overflow: hidden;
+}
+
+.accordion-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.accordion-head {
+  display: flex;
+  cursor: pointer;
+}
+
+.accordion-head-arrow {
+  transform: rotate(180deg);
+  transition: all 0.3s ease-in-out;
+}
+
+.accordion_active .accordion-body {
+  max-height: 10000px;
+}
+
+.accordion_active .accordion-head-arrow {
+  transform: rotate(0);
+}
+
+.delivery-packages {
+  margin-top: 1.5rem;
+}
+
+.delivery-packages-number-input {
+  width: 5rem;
+  margin-right: 0.5rem;
+}
+
+.delivery-packages-size {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border: 1px solid rgb(193, 193, 193);
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  width: max-content;
+  padding-top: 0;
+}
+
+.delivery-packages-size-button {
+  margin-top: 1.5rem;
+}
+
+.delivery-packages-select {
+  margin-top: 1rem;
+}
+
 @media screen and (max-width: 500px) {
   .delivery-duplicate__create {
     max-width: 100%;
