@@ -33,7 +33,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
     priceCNY: "0",
     priceDeliveryChina: "0",
     priceDeliveryRussia: "0",
-    commission: "0",
+    commission: "999",
     promoCodePercent: 0,
     comment: "",
   });

@@ -33,7 +33,15 @@ const Delivery = () => {
     delivery_name: OrderData.order.deliveryNameRecipient,
     delivery_packages: 1,
     delivery_number: 0,
-    delivery_insurance: 0,
+    delivery_insurance:
+      OrderData.order.combinedOrder.length > 0
+        ? 0
+        : Math.ceil(parseFloat(OrderData.order.priceCNY) *
+            parseFloat(OrderData.order.currentRate) +
+          parseFloat(OrderData.order.priceDeliveryChina) +
+          parseFloat(OrderData.order.priceDeliveryRussia) +
+          parseFloat(OrderData.order.commission) -
+          OrderData.order.promoCodePercent),
     delivery_length: 0,
     delivery_width: 0,
     delivery_height: 0,
@@ -1096,9 +1104,6 @@ const Delivery = () => {
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" && (
             <div className={styles["delivery-packages"]}>
-              <span className={styles["delivery-packages-err"]}>
-                Перед изменением кол-ва мест или номера проверьте квитанцию*
-              </span>
               <h4>Кол-во мест</h4>
               <input
                 className={styles["delivery-packages-number-input"]}

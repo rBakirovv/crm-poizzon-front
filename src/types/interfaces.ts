@@ -83,3 +83,11 @@ export interface ICards {
   updatedAt: Date | null;
   _id?: string;
 }
+
+export interface ISupply {
+  createdAt: string,
+  supply: Array<String>;
+  stock: Array<String>;
+  _id?: string;
+  __v?: number;
+}

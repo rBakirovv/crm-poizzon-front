@@ -242,6 +242,20 @@ const Navigation = observer(() => {
             Статистика карт
           </Link>
         </li>
+        {(UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Администратор") && (
+          <li className={styles["nav__list-item"]}>
+            <Link
+              className={`${styles["nav__list-item-link"]} ${
+                router.pathname === "/supply" &&
+                styles["nav__list-item-link_active"]
+              }`}
+              href="/supply"
+            >
+              Поставка
+            </Link>
+          </li>
+        )}
         <li
           onClick={handleLogOut}
           className={`${styles["nav__list-item"]} ${styles["nav__list-item_exit"]}`}
