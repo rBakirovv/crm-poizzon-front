@@ -189,7 +189,7 @@ const Supply = observer(() => {
                     );
 
                     return isStockFilter
-                      ? currentOrder?.status !== "На складе в РФ"
+                      ? currentOrder?.status !== "На складе в РФ" && currentOrder?.status !== "Доставляется" && currentOrder?.status !== "Завершён"
                       : SupplyData.supply.supply.includes(filterItem);
                   })
                   .map((item, index) => {
@@ -201,7 +201,7 @@ const Supply = observer(() => {
                       <li
                         key={index}
                         className={`${styles["supply__code"]} ${
-                          currentOrder?.status !== "На складе в РФ" &&
+                          currentOrder?.status !== "На складе в РФ" && currentOrder?.status !== "Доставляется" && currentOrder?.status !== "Завершён" &&
                           styles["supply__code_yellow"]
                         }`}
                       >
