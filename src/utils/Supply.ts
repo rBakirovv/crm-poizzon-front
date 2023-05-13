@@ -46,6 +46,14 @@ export const updateStock = (id: string, stock: Array<String>) => {
   }).then(checkResponse);
 };
 
+export const deleteSupplyDate = (id: string) => {
+  return fetch(`${BASE_URL}/supply/delete-supply/${id}`, {
+    credentials: "include",
+    method: "DELETE",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();

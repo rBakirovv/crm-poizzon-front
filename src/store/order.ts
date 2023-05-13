@@ -17,6 +17,7 @@ class OrderData {
     combinedOrder: [],
     status: "",
     link: "",
+    payLink: "",
     category: "",
     subcategory: "",
     brand: "",

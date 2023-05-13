@@ -23,6 +23,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
 
   const [data, setData] = useState({
     link: "",
+    payLink: "",
     category: "",
     subcategory: "",
     brand: "",
@@ -240,6 +241,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
     createOrder(
       UserData.userData.name,
       data.link,
+      data.payLink,
       data.category,
       data.subcategory,
       data.brand,
@@ -261,6 +263,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       .then(() => {
         setData({
           link: "",
+          payLink: "",
           category: "",
           subcategory: "",
           brand: "",
@@ -289,6 +292,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       if (data.priceCNY[0] === "0" && data.priceCNY[1] !== ".") {
         setData({
           link: data.link,
+          payLink: data.payLink,
           category: "",
           subcategory: data.subcategory,
           brand: "",
@@ -313,6 +317,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       ) {
         setData({
           link: data.link,
+          payLink: data.payLink,
           category: "",
           subcategory: data.subcategory,
           brand: "",
@@ -337,6 +342,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       ) {
         setData({
           link: data.link,
+          payLink: data.payLink,
           category: "",
           subcategory: data.subcategory,
           brand: "",
@@ -358,6 +364,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       if (data.commission[0] === "0" && data.commission[1] !== ".") {
         setData({
           link: data.link,
+          payLink: data.payLink,
           category: "",
           subcategory: data.subcategory,
           brand: "",
@@ -396,6 +403,13 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
             value={data.link}
             handleChange={handleChange}
             required={true}
+          />
+          <TextInput
+            name="payLink"
+            label="Cсылка на оплату"
+            value={data.payLink}
+            handleChange={handleChange}
+            required={false}
           />
           <div className={styles["order-change__input-container"]}>
             <label>

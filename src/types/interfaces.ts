@@ -27,6 +27,7 @@ export interface IOrder {
   combinedOrder: Array<ICombinedOrder>;
   status: string;
   link: string;
+  payLink: string,
   category: string;
   subcategory: string;
   brand: string;

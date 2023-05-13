@@ -111,6 +111,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
             combinedOrder: OrderData.order.combinedOrder,
             status: OrderData.order.status,
             link: OrderData.order.link,
+            payLink: OrderData.order.payLink,
             category: OrderData.order.category,
             subcategory: OrderData.order.subcategory,
             brand: OrderData.order.brand,
@@ -170,6 +171,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
           combinedOrder: OrderData.order.combinedOrder,
           status: OrderData.order.status,
           link: OrderData.order.link,
+          payLink: OrderData.order.payLink,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -261,7 +263,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
             </div>
             <div className={styles["order-pay__payment-container"]}>
               <h4 className={styles["order-pay__title"]}>Cпособ оплаты</h4>
-              {OrderData.order.payment !== undefined && !result && (
+              {OrderData.order.payment !== "Перейти по ссылке -" && OrderData.order.payment !== undefined && !result && (
                 <>
                   <p className={styles["order-pay__text"]}>
                     {OrderData.order.payment}
@@ -285,7 +287,8 @@ const OrderPay: FC<IOrderPayProps> = () => {
                   </p>
                 </>
               )}
-              {OrderData.order.payment !== undefined &&
+              {OrderData.order.payment !== "Перейти по ссылке -" &&
+                OrderData.order.payment !== undefined &&
                 result !== null &&
                 result?.length > 0 && (
                   <div className={styles["qr-code__container"]}>
@@ -308,6 +311,19 @@ const OrderPay: FC<IOrderPayProps> = () => {
                     />
                   </div>
                 )}
+              {OrderData.order.payment === "Перейти по ссылке -" && (
+                <p className={styles["order-pay__text"]}>
+                  Вы можете оплатить{" "}
+                  <a
+                    className={`${styles["order-pay__text"]} ${styles["order-pay__link"]}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    href={OrderData.order.payLink}
+                  >
+                    по ссылке
+                  </a>{" "}
+                </p>
+              )}
             </div>
             <form>
               <h4 className={styles["order-pay__title"]}>

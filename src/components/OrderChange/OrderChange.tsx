@@ -32,6 +32,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
   const [data, setData] = useState({
     _id: OrderData.order._id,
     link: OrderData.order.link,
+    payLink: OrderData.order.payLink,
     category: OrderData.order.category,
     subcategory: OrderData.order.subcategory,
     brand: OrderData.order.brand,
@@ -83,6 +84,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
     setData({
       _id: OrderData.order._id,
       link: OrderData.order.link,
+      payLink: OrderData.order.payLink,
       category: OrderData.order.category,
       subcategory: OrderData.order.subcategory,
       brand: OrderData.order.brand,
@@ -314,6 +316,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           combinedOrder: OrderData.order.combinedOrder,
           status: OrderData.order.status,
           link: OrderData.order.link,
+          payLink: data.payLink,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -371,6 +374,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           combinedOrder: OrderData.order.combinedOrder,
           status: OrderData.order.status,
           link: OrderData.order.link,
+          payLink: data.payLink,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -413,6 +417,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
     updateOrderDraft(
       OrderData.order._id,
       OrderData.order.link,
+      OrderData.order.payLink,
       OrderData.order.category,
       OrderData.order.subcategory,
       OrderData.order.brand,
@@ -456,6 +461,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       combinedOrder: OrderData.order.combinedOrder,
       status: OrderData.order.status,
       link: data.link,
+      payLink: data.payLink,
       category: data.category,
       subcategory: data.subcategory,
       brand: data.brand,
@@ -493,6 +499,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
         setData({
           _id: OrderData.order._id,
           link: OrderData.order.link,
+          payLink: OrderData.order.payLink,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -517,6 +524,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
         setData({
           _id: OrderData.order._id,
           link: OrderData.order.link,
+          payLink: OrderData.order.payLink,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -541,6 +549,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
         setData({
           _id: OrderData.order._id,
           link: OrderData.order.link,
+          payLink: OrderData.order.payLink,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -562,6 +571,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
         setData({
           _id: OrderData.order._id,
           link: OrderData.order.link,
+          payLink: OrderData.order.payLink,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -726,6 +736,13 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               value={OrderData.order.link}
               handleChange={handleChange}
               required={true}
+            />
+            <TextInput
+              name="payLink"
+              label="Cсылка на оплату"
+              value={OrderData.order.payLink}
+              handleChange={handleChange}
+              required={false}
             />
             {OrderData.order.link !== "" && (
               <a

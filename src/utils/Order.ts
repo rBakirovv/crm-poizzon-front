@@ -51,6 +51,7 @@ export const mergeOrders = (id: string, combinedOrder: Array<string>) => {
 export const createOrder = (
   creater: string,
   link: string,
+  payLink: string,
   category: string,
   subcategory: string,
   brand: string,
@@ -73,6 +74,7 @@ export const createOrder = (
     body: JSON.stringify({
       creater: creater,
       link: link,
+      payLink: payLink,
       category: category,
       subcategory: subcategory,
       brand: brand,
@@ -102,6 +104,7 @@ export const deleteOrder = (id: string) => {
 export const updateOrderDraft = (
   id: string,
   link: string,
+  payLink: string,
   category: string,
   subcategory: string,
   brand: string,
@@ -121,6 +124,7 @@ export const updateOrderDraft = (
     headers: HEADERS,
     body: JSON.stringify({
       link: link,
+      payLink: payLink,
       category: category,
       subcategory: subcategory,
       brand: brand,
@@ -327,6 +331,14 @@ export const orderSent = (id: string, deliveryCode: string) => {
 
 export const orderСompleted = (id: string) => {
   return fetch(`${BASE_URL}/order/order-completed/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const notLegit = (id: string) => {
+  return fetch(`${BASE_URL}/order/not-legit/${id}`, {
     credentials: "include",
     method: "PATCH",
     headers: HEADERS,

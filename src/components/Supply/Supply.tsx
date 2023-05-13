@@ -1,16 +1,23 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import styles from "./Supply.module.css";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import SupplyData from "../../store/supplies";
 import OrderData from "../../store/order";
-import { createSupply, updateSupply } from "../../utils/Supply";
+import {
+  createSupply,
+  deleteSupplyDate,
+  updateSupply,
+} from "../../utils/Supply";
 import { observer } from "mobx-react-lite";
 import Preloader from "../UI/Preloader/Preloader";
+
+var debounce = require("lodash.debounce");
 
 const dayjs = require("dayjs");
 
 const Supply = observer(() => {
   const [isSupplyCreate, setIsSupplyCreate] = useState(false);
+  const [isSupplyDeleteDate, setIsSupplyDeleteDate] = useState(false);
 
   const [data, setData] = useState({
     supply: "",
@@ -25,10 +32,31 @@ const Supply = observer(() => {
 
   const [isPreloader, setIsPreloader] = useState(false);
 
-  function handleChange(e: React.ClipboardEvent) {
+  function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
 
     const { name, value } = target;
+
+    setData({
+      ...data,
+      [name]: value,
+    });
+
+    debouncePaste(value);
+  }
+
+  const debouncePaste = useCallback(
+    debounce((value: string) => {
+      handleSupplyPaste(value, supplyDate);
+    }, 500),
+    []
+  );
+
+  /*
+  function handlePaste(e: React.ClipboardEvent) {
+    const target = e.target as HTMLInputElement;
+
+    const { name } = target;
 
     setData({
       ...data,
@@ -39,6 +67,7 @@ const Supply = observer(() => {
       handleSupplyPaste(e.clipboardData.getData("Text"));
     }
   }
+  */
 
   const filteredSupplyItems = OrderData.orders.filter((filterItem) => {
     if (SupplyData.supply.supply.includes(filterItem.poizonCode)) {
@@ -58,18 +87,16 @@ const Supply = observer(() => {
       return sum + parseFloat(current.priceDeliveryRussia);
     }, 0);
 
-  function handleSelectDateChange(e: React.SyntheticEvent) {
+  const handleSelectDateChange = (e: React.SyntheticEvent) => {
     const target = e.target as HTMLInputElement;
 
     const currentArray = SupplyData.supplies.find(
       (supplyItem) => supplyItem._id === target.value
     );
 
-    setTimeout(() => {
-      setSupplyDate(target.value);
-      SupplyData.setSupply(currentArray!);
-    }, 100);
-  }
+    setSupplyDate(target.value);
+    SupplyData.setSupply(currentArray!);
+  };
 
   function openSupplyCreate() {
     setIsSupplyCreate(true);
@@ -77,6 +104,14 @@ const Supply = observer(() => {
 
   function closeSupplyCreate() {
     setIsSupplyCreate(false);
+  }
+
+  function openSupplyDeleteDate() {
+    setIsSupplyDeleteDate(true);
+  }
+
+  function closeSupplyDeleteDate() {
+    setIsSupplyDeleteDate(false);
   }
 
   function onSupplyCreate() {
@@ -87,11 +122,21 @@ const Supply = observer(() => {
       .catch((err) => console.log(err));
   }
 
+  function onSupplyDeleteDate() {
+    deleteSupplyDate(supplyDate)
+      .then(() => {
+        SupplyData.deleteSupplyDate(supplyDate);
+      })
+      .then(() => {
+        setSupplyDate("");
+      });
+  }
+
   function handleSupplyDeleteClick() {
     setIsSupplyDelete(!isSupplyDelete);
   }
 
-  async function handleSupplyPaste(code: string) {
+  async function handleSupplyPaste(code: string, supplyDate: string) {
     await updateSupply(supplyDate, SupplyData.supply.supply.concat(code))
       .then((data) => {
         SupplyData.addSupply(data.supply);
@@ -189,7 +234,9 @@ const Supply = observer(() => {
                     );
 
                     return isStockFilter
-                      ? currentOrder?.status !== "На складе в РФ" && currentOrder?.status !== "Доставляется" && currentOrder?.status !== "Завершён"
+                      ? currentOrder?.status !== "На складе в РФ" &&
+                          currentOrder?.status !== "Доставляется" &&
+                          currentOrder?.status !== "Завершён"
                       : SupplyData.supply.supply.includes(filterItem);
                   })
                   .map((item, index) => {
@@ -201,7 +248,9 @@ const Supply = observer(() => {
                       <li
                         key={index}
                         className={`${styles["supply__code"]} ${
-                          currentOrder?.status !== "На складе в РФ" && currentOrder?.status !== "Доставляется" && currentOrder?.status !== "Завершён" &&
+                          currentOrder?.status !== "На складе в РФ" &&
+                          currentOrder?.status !== "Доставляется" &&
+                          currentOrder?.status !== "Завершён" &&
                           styles["supply__code_yellow"]
                         }`}
                       >
@@ -225,7 +274,8 @@ const Supply = observer(() => {
                 placeholder="Вставьте код"
                 name="supply"
                 value={data.supply}
-                onPaste={handleChange}
+                onInput={handleChange}
+                /*onPaste={handlePaste}*/
               />
             )}
             {supplyDate !== "" && (
@@ -247,6 +297,12 @@ const Supply = observer(() => {
             <p>Стоимость поставки Россия: {totalSupplyRussia} ₽</p>
           </>
         )}
+        <button
+          onClick={openSupplyDeleteDate}
+          className={styles["supply__delete-supply"]}
+        >
+          Удалить поставку
+        </button>
       </div>
       {isPreloader && <Preloader />}
       <SubmitPopup
@@ -256,6 +312,12 @@ const Supply = observer(() => {
         ).format("DD-MM-YYYY")}`}
         onSubmit={onSupplyCreate}
         closeSubmitPopup={closeSupplyCreate}
+      />
+      <SubmitPopup
+        isSubmitPopup={isSupplyDeleteDate}
+        submitText={`Удалить поставку`}
+        onSubmit={onSupplyDeleteDate}
+        closeSubmitPopup={closeSupplyDeleteDate}
       />
     </section>
   );

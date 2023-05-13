@@ -30,6 +30,12 @@ class SupplyData {
     );
   }
 
+  deleteSupplyDate(supplyId: string) {
+    this.supplies = this.supplies.filter(
+      (supplyItem) => supplyItem._id !== supplyId
+    );
+  }
+
   deleteStock(code: string) {
     this.supply.stock = this.supply.stock.filter(
       (codeItem) => codeItem !== code

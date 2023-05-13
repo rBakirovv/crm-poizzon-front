@@ -12,6 +12,7 @@ import {
   updatePurchaseImages,
   uploadImages,
   cancelPurchase,
+  notLegit,
 } from "../../utils/Order";
 import ImagePopup from "../ImagePopup/ImagePopup";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
@@ -29,6 +30,7 @@ const Purchase = () => {
 
   const [isSubmitPopupOpen, setIsSubmitPopupOpen] = useState<boolean>(false);
   const [isCancelPopupOpen, setIsCancelPopupOpen] = useState<boolean>(false);
+  const [isLegitPopupOpen, setIsLegitPopupOpen] = useState<boolean>(false);
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
@@ -57,6 +59,16 @@ const Purchase = () => {
 
   function closeCancelPopup() {
     setIsCancelPopupOpen(false);
+    setIsSubmitPopupOpen(false);
+  }
+
+  function openLegitPopup(e: React.SyntheticEvent) {
+    e.preventDefault();
+    setIsLegitPopupOpen(true);
+  }
+
+  function closeLegitPopup() {
+    setIsLegitPopupOpen(false);
     setIsSubmitPopupOpen(false);
   }
 
@@ -107,6 +119,7 @@ const Purchase = () => {
             combinedOrder: OrderData.order.combinedOrder,
             status: OrderData.order.status,
             link: OrderData.order.link,
+            payLink: OrderData.order.payLink,
             category: OrderData.order.category,
             subcategory: OrderData.order.subcategory,
             brand: OrderData.order.brand,
@@ -166,6 +179,7 @@ const Purchase = () => {
           combinedOrder: OrderData.order.combinedOrder,
           status: OrderData.order.status,
           link: OrderData.order.link,
+          payLink: OrderData.order.payLink,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -242,6 +256,18 @@ const Purchase = () => {
         OrderData.setOrder(updatedOrder);
       })
       .then(() => setIsCancelPopupOpen(false))
+      .then(() => closeCancelPopup());
+  }
+
+  function handleNotLegit() {
+    notLegit(OrderData.order._id)
+      .then((updatedOrder) => {
+        OrderData.setOrder(updatedOrder);
+      })
+      .then(() => {
+        setIsCancelPopupOpen(false);
+        setIsSubmitPopupOpen(false);
+      })
       .then(() => closeCancelPopup());
   }
 
@@ -377,6 +403,20 @@ const Purchase = () => {
             Отменить закупку
           </button>
         )}
+        {OrderData.order.status !== "Черновик" &&
+          OrderData.order.status !== "Проверка оплаты" && OrderData.order.status !== "Завершён" && (
+            <button
+              className={`${styles["purchase__button-submit"]} ${
+                styles["purchase__button-reorder"]
+              } ${
+                UserData.userData.position === "Менеджер" &&
+                styles["purchase__button-submit_disable"]
+              }`}
+              onClick={openLegitPopup}
+            >
+              Не легит
+            </button>
+          )}
       </div>
       <ImagePopup
         isImagePopupOpen={isImagePopupOpen}
@@ -404,6 +444,12 @@ const Purchase = () => {
         isSubmitPopup={isCancelPopupOpen}
         closeSubmitPopup={closeCancelPopup}
         submitText="Изменить статус товара Ожидает закупки"
+      />
+      <SubmitPopup
+        onSubmit={handleNotLegit}
+        isSubmitPopup={isLegitPopupOpen}
+        closeSubmitPopup={closeLegitPopup}
+        submitText="Товар не легит"
       />
     </form>
   );
