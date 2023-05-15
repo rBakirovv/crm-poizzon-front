@@ -119,6 +119,7 @@
 }
 
 .orders-table__info-item_link {
+  position: relative;
   font-weight: 700;
   color: #ff7f00;
   background: #f3f3f3;
@@ -152,4 +153,17 @@
 
 .pagination__button {
   cursor: pointer;
+}
+
+.orders-table__item-merge {
+  right: 0;
+  height: 100%;
+  position: absolute;
+}
+
+.orders-table__merge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  max-width: 300px;
 }

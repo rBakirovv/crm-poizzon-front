@@ -4,6 +4,8 @@ import OrderData from "../../store/order";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { IOrder } from "../../types/interfaces";
+import SubmitPopup from "../SubmitPopup/SubmitPopup";
+import { getOrders, mergeOrders } from "../../utils/Order";
 
 const dayjs = require("dayjs");
 
@@ -19,8 +21,24 @@ const Search = () => {
 
   const [searchedOrders, setSearchedOrders] = useState<Array<IOrder>>();
 
+  const [isMerge, setIsMerge] = useState<boolean>(false);
+  const [ordersArray, setOrdersArray] = useState<Array<string>>([]);
+  const [numbersArray, setNumbersArray] = useState<Array<number>>([]);
+
   const lastItemIndex = currentPage * itemsPerPage;
   const firstItemIndex = lastItemIndex - itemsPerPage;
+
+  const [isSubmitMergePopup, setIsSubmitMergePopup] = useState(false);
+
+  function openSubmitMergePopup(e: React.SyntheticEvent) {
+    e.preventDefault();
+
+    setIsSubmitMergePopup(true);
+  }
+
+  function closeSubmitMergePopup() {
+    setIsSubmitMergePopup(false);
+  }
 
   const searchOrders = () => {
     return OrderData.orders.filter((item) => {
@@ -75,6 +93,40 @@ const Search = () => {
 
   function prevPage() {
     setCurrentPage(currentPage - 1);
+  }
+
+  function mergeHandler(e: React.SyntheticEvent) {
+    !isMerge && setIsMerge(!isMerge);
+
+    if (isMerge) {
+      openSubmitMergePopup(e);
+    }
+  }
+
+  //let ordersArray = [] as Array<string>;
+
+  function mergeItemClickHandler(
+    e: React.SyntheticEvent,
+    id: string,
+    number: number
+  ) {
+    e.preventDefault();
+
+    if (!ordersArray.includes(id)) {
+      setOrdersArray(ordersArray.concat(id));
+      setNumbersArray(numbersArray.concat(number));
+    }
+  }
+
+  async function submitMergePopupFunction() {
+    await ordersArray.map((item, index) => {
+      mergeOrders(ordersArray[index], ordersArray);
+    });
+
+    await setOrdersArray([]);
+    await setNumbersArray([]);
+    await setIsMerge(false);
+    await alert("Пожалуйста, обновите страницу");
   }
 
   return (
@@ -173,6 +225,21 @@ const Search = () => {
                       } ${styles["orders-table__header-item_number"]}`}
                       href={`/order/change/${orderItem._id}`}
                     >
+                      {isMerge && (
+                        <button
+                          onClick={(e) =>
+                            mergeItemClickHandler(
+                              e,
+                              orderItem._id,
+                              orderItem.orderId
+                            )
+                          }
+                          className={styles["orders-table__item-merge"]}
+                        >
+                          {" "}
+                          ✓
+                        </button>
+                      )}
                       {orderItem.orderId}
                     </Link>
                     <div
@@ -274,6 +341,22 @@ const Search = () => {
             </button>
           </div>
         )}
+        <div className={styles["orders-table__merge-container"]}>
+          <button onClick={mergeHandler}>
+            {isMerge ? "Применить" : "Объединить"}
+          </button>
+          {isMerge && (
+            <p className="">
+              Объединённые: <strong>{numbersArray.join(", ")}</strong>{" "}
+            </p>
+          )}
+        </div>
+        <SubmitPopup
+          submitText={`Объединить ${numbersArray.join(", ")}`}
+          isSubmitPopup={isSubmitMergePopup}
+          closeSubmitPopup={closeSubmitMergePopup}
+          onSubmit={submitMergePopupFunction}
+        />
       </div>
     </section>
   );

@@ -177,8 +177,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Кроссовки",
-        priceDeliveryRussia: "1512",
-        priceDeliveryChina: "987",
+        priceDeliveryRussia: "1362",
+        priceDeliveryChina: "837",
       });
     }
 
@@ -186,8 +186,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Зимняя обувь",
-        priceDeliveryRussia: "2009",
-        priceDeliveryChina: "987",
+        priceDeliveryRussia: "1859",
+        priceDeliveryChina: "837",
       });
     }
 
@@ -195,8 +195,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Куртка",
-        priceDeliveryRussia: "1347",
-        priceDeliveryChina: "987",
+        priceDeliveryRussia: "1197",
+        priceDeliveryChina: "837",
       });
     }
 
@@ -204,8 +204,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Толстовка",
-        priceDeliveryRussia: "1347",
-        priceDeliveryChina: "987",
+        priceDeliveryRussia: "1197",
+        priceDeliveryChina: "837",
       });
     }
 
@@ -213,8 +213,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Футболка",
-        priceDeliveryRussia: "645",
-        priceDeliveryChina: "561",
+        priceDeliveryRussia: "495",
+        priceDeliveryChina: "411",
       });
     }
 
@@ -222,8 +222,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Носки",
-        priceDeliveryRussia: "324",
-        priceDeliveryChina: "298",
+        priceDeliveryRussia: "274",
+        priceDeliveryChina: "248",
       });
     }
 
@@ -231,8 +231,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Сумка",
-        priceDeliveryRussia: "956",
-        priceDeliveryChina: "987",
+        priceDeliveryRussia: "806",
+        priceDeliveryChina: "837",
       });
     }
 
@@ -240,8 +240,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Духи",
-        priceDeliveryRussia: "956",
-        priceDeliveryChina: "561",
+        priceDeliveryRussia: "806",
+        priceDeliveryChina: "411",
       });
     }
 
@@ -249,8 +249,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Штаны",
-        priceDeliveryRussia: "1347",
-        priceDeliveryChina: "987",
+        priceDeliveryRussia: "1197",
+        priceDeliveryChina: "837",
       });
     }
 
@@ -258,8 +258,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Головной убор",
-        priceDeliveryRussia: "645",
-        priceDeliveryChina: "561",
+        priceDeliveryRussia: "395",
+        priceDeliveryChina: "411",
       });
     }
 
