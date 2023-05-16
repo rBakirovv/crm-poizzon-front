@@ -47,7 +47,7 @@ const Supply = observer(() => {
 
   const debouncePaste = useCallback(
     debounce((value: string) => {
-      handleSupplyPaste(value, supplyDate);
+      handleSupplyPaste(value, SupplyData.supply._id!);
     }, 500),
     []
   );

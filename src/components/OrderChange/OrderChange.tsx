@@ -58,6 +58,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
   const [currentImage, setCurrentImage] = useState<string>("");
   const [currentDeletedImage, setCurrentDeletedImage] = useState<string>("");
 
+  const [isDrag, setIsDrag] = useState(false);
+
   const [isCopy, setIsCopy] = useState(false);
 
   const priceRub = Math.ceil(
@@ -98,6 +100,14 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       promoCodePercent: OrderData.order.promoCodePercent,
       comment: OrderData.order.comment,
     });
+
+  function dragHandler() {
+    setIsDrag(true);
+  }
+
+  function dragLeaveHandler() {
+    setIsDrag(false);
+  }
 
   function copyLink() {
     navigator.clipboard.writeText(
@@ -347,10 +357,12 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           __v: OrderData.order.__v,
         });
         setUploading(false);
+        dragLeaveHandler();
       });
     } catch (error) {
       console.error(error);
       setUploading(false);
+      dragLeaveHandler();
     }
 
     await updateOrderImages(OrderData.order._id, OrderData.order.orderImages);
@@ -849,14 +861,20 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               onDrop={(e: any) =>
                 uploadFileHandler(e, "/order-images", setUploading)
               }
+              onDragEnter={dragHandler}
+              onDragLeave={dragLeaveHandler}
               maxSize={MAX_SIZE}
             >
               {({ getRootProps, getInputProps }) => (
-                <div className={styles["drag-n-drop-container"]}>
+                <div
+                  className={`${styles["drag-n-drop-container"]} ${
+                    isDrag && styles["drag-n-drop-container_active"]
+                  }`}
+                >
                   <div {...getRootProps()}>
                     <input {...getInputProps()} />
                     <p className={styles["drag-n-drop-text"]}>
-                      Добавить фото{" "}
+                      {isDrag ? "Перетащите фото" : "Добавить фото"}
                       <svg
                         width="18px"
                         height="18px"

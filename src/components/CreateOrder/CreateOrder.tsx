@@ -48,6 +48,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
   const [currentImage, setCurrentImage] = useState<string>("");
   const [isImagePopupOpen, setIsImagePopupOpen] = useState<boolean>(false);
 
+  const [isDrag, setIsDrag] = useState(false);
+
   const priceRub = Math.ceil(
     parseFloat(data.priceCNY) * parseFloat(RateData.rate.rate)
   );
@@ -65,6 +67,14 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       parseFloat(data.commission) -
       data.promoCodePercent
   );
+
+  function dragHandler() {
+    setIsDrag(true);
+  }
+
+  function dragLeaveHandler() {
+    setIsDrag(false);
+  }
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
@@ -206,10 +216,12 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       await uploadImages(formData, folder).then((data) => {
         setImages(images.concat(data.data));
         setUploading(false);
+        dragLeaveHandler();
       });
     } catch (error) {
       console.error(error);
       setUploading(false);
+      dragLeaveHandler();
     }
   };
 
@@ -503,14 +515,20 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
             onDrop={(e: any) =>
               uploadFileHandler(e, "/order-images", setUploading)
             }
+            onDragEnter={dragHandler}
+            onDragLeave={dragLeaveHandler}
             maxSize={MAX_SIZE}
           >
             {({ getRootProps, getInputProps }) => (
-              <div className={styles["drag-n-drop-container"]}>
+              <div
+                className={`${styles["drag-n-drop-container"]} ${
+                  isDrag && styles["drag-n-drop-container_active"]
+                }`}
+              >
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
                   <p className={styles["drag-n-drop-text"]}>
-                    Добавить фото{" "}
+                    {isDrag ? "Перетащите фото" : "Добавить фото"}
                     <svg
                       width="18px"
                       height="18px"

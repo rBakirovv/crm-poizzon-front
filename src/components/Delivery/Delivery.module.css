@@ -24,12 +24,17 @@
   gap: 0.25rem;
   color: #4e7fea;
   cursor: pointer;
+  margin: 0;
 }
 
 .delivery__input-container {
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
+}
+
+.delivery__input-container p {
+  margin: 0;
 }
 
 .delivery__change {

@@ -385,12 +385,17 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>Доставляется</div>
               {currentOrder.deliveryCode !== "" && (
-                <div className={styles["order-typography"]}>
+                <a
+                  href={`https://www.cdek.ru/ru/tracking?order_id=${currentOrder.deliveryCode}`}
+                  className={`${styles["order-typography"]} ${styles["order-typography-link"]}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   Трек-номер CDEK:
-                  <span className={styles["order-span"]}>
+                  <span className={`${styles["order-span"]} ${styles["order-span-link"]}`}>
                     {currentOrder.deliveryCode}
                   </span>
-                </div>
+                </a>
               )}
             </div>
           </li>

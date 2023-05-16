@@ -8,6 +8,7 @@
 }
 
 .order-span {
+  display: inline;
   font-weight: 600;
 }
 
@@ -209,7 +210,7 @@
 }
 
 .order-typography-screen-link {
-  display: block;
+  display: inline;
   margin-bottom: 1em;
   color: #4e7fea;
   overflow-wrap: break-word;
@@ -282,6 +283,17 @@
 
 .combined-order__link:hover {
   border-bottom: 1px dashed transparent;
+}
+
+.order-typography-link {
+  display: inline;
+  color: #4e7fea;
+  overflow-wrap: break-word;
+  text-decoration: none;
+}
+
+.order-span-link {
+  margin-left: 0.25rem;
 }
 
 @keyframes movingFlare {

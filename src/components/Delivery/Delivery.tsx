@@ -36,12 +36,14 @@ const Delivery = () => {
     delivery_insurance:
       OrderData.order.combinedOrder.length > 0
         ? 0
-        : Math.ceil(parseFloat(OrderData.order.priceCNY) *
-            parseFloat(OrderData.order.currentRate) +
-          parseFloat(OrderData.order.priceDeliveryChina) +
-          parseFloat(OrderData.order.priceDeliveryRussia) +
-          parseFloat(OrderData.order.commission) -
-          OrderData.order.promoCodePercent),
+        : Math.ceil(
+            parseFloat(OrderData.order.priceCNY) *
+              parseFloat(OrderData.order.currentRate) +
+              parseFloat(OrderData.order.priceDeliveryChina) +
+              parseFloat(OrderData.order.priceDeliveryRussia) +
+              parseFloat(OrderData.order.commission) -
+              OrderData.order.promoCodePercent
+          ),
     delivery_length: 0,
     delivery_width: 0,
     delivery_height: 0,
@@ -289,16 +291,20 @@ const Delivery = () => {
     });
   }
 
-  function copyNumberId() {
-    navigator.clipboard.writeText(OrderData.order._id);
-  }
-
-  function copyNumberPoizon() {
-    navigator.clipboard.writeText(OrderData.order.poizonCode);
-  }
-
   function copyNumberCDEK() {
     navigator.clipboard.writeText(OrderData.order.deliveryCode);
+  }
+
+  function copyTg() {
+    if (OrderData.order.deliveryName![0] === "@") {
+      navigator.clipboard.writeText(OrderData.order.deliveryName!.slice(1));
+    } else {
+      navigator.clipboard.writeText(OrderData.order.deliveryName!);
+    }
+  }
+
+  function copyName() {
+    navigator.clipboard.writeText(OrderData.order.deliveryNameRecipient!);
   }
 
   function handleChangePhone() {
@@ -309,8 +315,12 @@ const Delivery = () => {
     setIsChangeName(true);
   }
 
-  function copyTelegram() {
+  function copyPhone() {
     navigator.clipboard.writeText(OrderData.order.deliveryPhone!);
+  }
+
+  function copyAddress() {
+    navigator.clipboard.writeText(OrderData.order.deliveryAddress!);
   }
 
   function handleUpdateDeliveryPhone() {
@@ -941,207 +951,45 @@ const Delivery = () => {
       {isPreloader && <Preloader />}
       <div className={styles["delivery__container"]}>
         <h2 className={styles["delivery-title"]}>Доставка</h2>
-        {OrderData.order.comment !== "" && (
-          <>
-            <h4>Комментарий</h4>
-            <p className={styles["delivery-span"]}>{OrderData.order.comment}</p>
-          </>
-        )}
-        {OrderData.order._id !== "" && (
-          <>
-            <h4>Внутренний номер заказа</h4>
-            <p className={styles["delivery-copy"]} onClick={copyNumberId}>
-              {OrderData.order._id}{" "}
-              <svg
-                x="0px"
-                y="0px"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                focusable="false"
-                fill="currentColor"
-              >
-                <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
-              </svg>
-            </p>
-          </>
-        )}
-        {OrderData.order.poizonCode !== "" && (
-          <>
-            <h4>Номер Poizon</h4>
-            <p className={styles["delivery-copy"]} onClick={copyNumberPoizon}>
-              {OrderData.order.poizonCode}{" "}
-              <svg
-                x="0px"
-                y="0px"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                focusable="false"
-                fill="currentColor"
-              >
-                <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
-              </svg>
-            </p>
-          </>
-        )}
-        {OrderData.order.deliveryCode !== "" && (
-          <>
-            <h4>Номер CDEK</h4>
-            <p className={styles["delivery-copy"]} onClick={copyNumberCDEK}>
-              {OrderData.order.deliveryCode}{" "}
-              <svg
-                x="0px"
-                y="0px"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                focusable="false"
-                fill="currentColor"
-              >
-                <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
-              </svg>
-            </p>
-          </>
-        )}
-        <h4>Cпособ доставки</h4>
-        <p>{OrderData.order.deliveryMethod}</p>
-        <h4>Адрес доставки</h4>
-        {OrderData.order.deliveryAddress !== "" && (
-          <div className={styles["delivery__input-container"]}>
-            <p>{OrderData.order.deliveryAddress}</p>
-            {OrderData.order.deliveryEntity !== "" && (
-              <button
-                className={styles["delivery__change"]}
-                onClick={openWidjet}
-              >
-                {"Изм."}
-              </button>
-            )}
-          </div>
-        )}
-        <h4>ФИО получателя</h4>
-        {OrderData.order.deliveryNameRecipient !== "" && (
-          <div className={styles["delivery__input-container"]}>
-            {!isChangeName && <p>{OrderData.order.deliveryNameRecipient}</p>}
-            {isChangeName && (
-              <input
-                className={styles["delivery__input"]}
-                type="text"
-                name="delivery_name"
-                value={data.delivery_name}
-                onChange={handleChange}
-                readOnly={!isChangeName}
-              />
-            )}
-            {!isChangeName &&
-              OrderData.order.deliveryEntity !== "" &&
-              OrderData.order.deliveryAddress !== "" && (
-                <button
-                  className={styles["delivery__change"]}
-                  onClick={handleChangeName}
-                >
-                  {"Изм."}
-                </button>
-              )}
-            {isChangeName && (
-              <button
-                className={styles["delivery__change"]}
-                onClick={openSubmitChangeNamePopup}
-              >
-                {"Сохр."}
-              </button>
-            )}
-          </div>
-        )}
-        <h4>Номер телефона получателя</h4>
-        <div className={styles["delivery__input-container"]}>
-          {!isChangePhone && OrderData.order.deliveryPhone !== "" && (
-            <p className={styles["delivery-copy"]} onClick={copyTelegram}>
-              {OrderData.order.deliveryPhone}
-              <svg
-                x="0px"
-                y="0px"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                focusable="false"
-                fill="currentColor"
-              >
-                <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
-              </svg>
-            </p>
-          )}
-          {isChangePhone && (
-            <input
-              className={styles["delivery__input"]}
-              type="text"
-              name="delivery_phone"
-              value={data.delivery_phone}
-              onChange={handleChange}
-              readOnly={!isChangePhone}
-            />
-          )}
-          {!isChangePhone &&
-            OrderData.order.deliveryEntity !== "" &&
-            OrderData.order.deliveryAddress !== "" && (
-              <button
-                className={styles["delivery__change"]}
-                onClick={handleChangePhone}
-              >
-                {"Изм."}
-              </button>
-            )}
-          {isChangePhone && (
+        {OrderData.order.deliveryAddress !== "" &&
+          OrderData.order.deliveryEntity !== "" && (
             <button
-              className={styles["delivery__change"]}
-              onClick={openSubmitChangePhonePopup}
+              onClick={openPDFHandler}
+              disabled={isPreloader}
+              className={styles["delivery-receipt"]}
             >
-              {"Сохр."}
+              Получить квитанцию
+              <svg
+                width="18px"
+                height="18px"
+                viewBox="0 0 48 48"
+                focusable="false"
+                fill="black"
+              >
+                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+              </svg>
             </button>
           )}
-        </div>
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" && (
-            <div className={styles["delivery-packages"]}>
-              <h4>Кол-во мест</h4>
-              <input
-                className={styles["delivery-packages-number-input"]}
-                type="number"
-                name="delivery_packages"
-                value={data.delivery_packages}
-                onChange={handleChange}
-              />
-              <button onClick={openSubmitChangePackagesPopup}>Cохр.</button>
-            </div>
-          )}
-        {OrderData.order.deliveryAddress !== "" &&
-          OrderData.order.deliveryEntity !== "" && (
-            <div className={styles["delivery-packages"]}>
-              <h4>Номер на коробке</h4>
-              <input
-                className={styles["delivery-packages-number-input"]}
-                type="number"
-                name="delivery_number"
-                value={data.delivery_number}
-                onChange={handleChange}
-              />
-              <button onClick={openSubmitChangeNumberPopup}>Cохр.</button>
-            </div>
-          )}
-        {OrderData.order.deliveryAddress !== "" &&
-          OrderData.order.deliveryEntity !== "" && (
-            <div className={styles["delivery-packages"]}>
-              <h4>Cумма страховки</h4>
-              <input
-                className={styles["delivery-packages-number-input"]}
-                type="number"
-                name="delivery_insurance"
-                value={data.delivery_insurance}
-                onChange={handleChange}
-              />
-              <button onClick={openSubmitChangeInsurancePopup}>Cохр.</button>
-            </div>
+            <button
+              onClick={openPDFBarcodeHandler}
+              disabled={isPreloader}
+              className={styles["delivery-receipt"]}
+            >
+              Получить штрихкод
+              <svg
+                width="18px"
+                height="18px"
+                viewBox="0 0 48 48"
+                focusable="false"
+                fill="black"
+              >
+                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+              </svg>
+            </button>
           )}
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" && (
@@ -1205,44 +1053,213 @@ const Delivery = () => {
           )}
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" && (
-            <button
-              onClick={openPDFHandler}
-              disabled={isPreloader}
-              className={styles["delivery-receipt"]}
-            >
-              Получить квитанцию
-              <svg
-                width="18px"
-                height="18px"
-                viewBox="0 0 48 48"
-                focusable="false"
-                fill="black"
-              >
-                <path fill="none" d="M0 0h48v48H0V0z"></path>
-                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-              </svg>
-            </button>
+            <div className={styles["delivery-packages"]}>
+              <h4>Номер на коробке</h4>
+              <input
+                className={styles["delivery-packages-number-input"]}
+                type="number"
+                name="delivery_number"
+                value={data.delivery_number}
+                onChange={handleChange}
+              />
+              <button onClick={openSubmitChangeNumberPopup}>Cохр.</button>
+            </div>
           )}
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" && (
-            <button
-              onClick={openPDFBarcodeHandler}
-              disabled={isPreloader}
-              className={styles["delivery-receipt"]}
-            >
-              Получить штрихкод
+            <div className={styles["delivery-packages"]}>
+              <h4>Cумма страховки</h4>
+              <input
+                className={styles["delivery-packages-number-input"]}
+                type="number"
+                name="delivery_insurance"
+                value={data.delivery_insurance}
+                onChange={handleChange}
+              />
+              <button onClick={openSubmitChangeInsurancePopup}>Cохр.</button>
+            </div>
+          )}
+        {OrderData.order.deliveryAddress !== "" &&
+          OrderData.order.deliveryEntity !== "" && (
+            <div className={styles["delivery-packages"]}>
+              <h4>Кол-во мест</h4>
+              <input
+                className={styles["delivery-packages-number-input"]}
+                type="number"
+                name="delivery_packages"
+                value={data.delivery_packages}
+                onChange={handleChange}
+              />
+              <button onClick={openSubmitChangePackagesPopup}>Cохр.</button>
+            </div>
+          )}
+        {OrderData.order.comment !== "" && (
+          <>
+            <h4>Комментарий</h4>
+            <p className={styles["delivery-span"]}>{OrderData.order.comment}</p>
+          </>
+        )}
+        {OrderData.order.deliveryCode !== "" && (
+          <>
+            <h4>Номер CDEK</h4>
+            <p className={styles["delivery-copy"]} onClick={copyNumberCDEK}>
+              {OrderData.order.deliveryCode}{" "}
               <svg
-                width="18px"
-                height="18px"
-                viewBox="0 0 48 48"
+                x="0px"
+                y="0px"
+                width="24px"
+                height="24px"
+                viewBox="0 0 24 24"
                 focusable="false"
-                fill="black"
+                fill="currentColor"
               >
-                <path fill="none" d="M0 0h48v48H0V0z"></path>
-                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
               </svg>
+            </p>
+          </>
+        )}
+        <h4>Адрес доставки</h4>
+        {OrderData.order.deliveryAddress !== "" && (
+          <div className={styles["delivery__input-container"]}>
+            <p className={styles["delivery-copy"]} onClick={copyAddress}>
+              {OrderData.order.deliveryAddress}{" "}
+              <svg
+                x="0px"
+                y="0px"
+                width="24px"
+                height="24px"
+                viewBox="0 0 24 24"
+                focusable="false"
+                fill="currentColor"
+              >
+                <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+              </svg>
+            </p>
+            {OrderData.order.deliveryEntity !== "" && (
+              <button
+                className={styles["delivery__change"]}
+                onClick={openWidjet}
+              >
+                {"Изм."}
+              </button>
+            )}
+          </div>
+        )}
+        {OrderData.order.deliveryName !== "" && (
+          <>
+            <h4>Telegram</h4>
+            <p className={styles["delivery-copy"]} onClick={copyTg}>
+              {OrderData.order.deliveryName}{" "}
+              <svg
+                x="0px"
+                y="0px"
+                width="24px"
+                height="24px"
+                viewBox="0 0 24 24"
+                focusable="false"
+                fill="currentColor"
+              >
+                <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+              </svg>
+            </p>
+          </>
+        )}
+        <h4>ФИО получателя</h4>
+        {OrderData.order.deliveryNameRecipient !== "" && (
+          <div className={styles["delivery__input-container"]}>
+            {!isChangeName && (
+              <p className={styles["delivery-copy"]} onClick={copyName}>
+                {OrderData.order.deliveryNameRecipient}
+                <svg
+                  x="0px"
+                  y="0px"
+                  width="24px"
+                  height="24px"
+                  viewBox="0 0 24 24"
+                  focusable="false"
+                  fill="currentColor"
+                >
+                  <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+                </svg>
+              </p>
+            )}
+            {isChangeName && (
+              <input
+                className={styles["delivery__input"]}
+                type="text"
+                name="delivery_name"
+                value={data.delivery_name}
+                onChange={handleChange}
+                readOnly={!isChangeName}
+              />
+            )}
+            {!isChangeName &&
+              OrderData.order.deliveryEntity !== "" &&
+              OrderData.order.deliveryAddress !== "" && (
+                <button
+                  className={styles["delivery__change"]}
+                  onClick={handleChangeName}
+                >
+                  {"Изм."}
+                </button>
+              )}
+            {isChangeName && (
+              <button
+                className={styles["delivery__change"]}
+                onClick={openSubmitChangeNamePopup}
+              >
+                {"Сохр."}
+              </button>
+            )}
+          </div>
+        )}
+        <h4>Номер телефона получателя</h4>
+        <div className={styles["delivery__input-container"]}>
+          {!isChangePhone && OrderData.order.deliveryPhone !== "" && (
+            <p className={styles["delivery-copy"]} onClick={copyPhone}>
+              {OrderData.order.deliveryPhone}
+              <svg
+                x="0px"
+                y="0px"
+                width="24px"
+                height="24px"
+                viewBox="0 0 24 24"
+                focusable="false"
+                fill="currentColor"
+              >
+                <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+              </svg>
+            </p>
+          )}
+          {isChangePhone && (
+            <input
+              className={styles["delivery__input"]}
+              type="text"
+              name="delivery_phone"
+              value={data.delivery_phone}
+              onChange={handleChange}
+              readOnly={!isChangePhone}
+            />
+          )}
+          {!isChangePhone &&
+            OrderData.order.deliveryEntity !== "" &&
+            OrderData.order.deliveryAddress !== "" && (
+              <button
+                className={styles["delivery__change"]}
+                onClick={handleChangePhone}
+              >
+                {"Изм."}
+              </button>
+            )}
+          {isChangePhone && (
+            <button
+              className={styles["delivery__change"]}
+              onClick={openSubmitChangePhonePopup}
+            >
+              {"Сохр."}
             </button>
           )}
+        </div>
         {(UserData.userData.position === "Администратор" ||
           UserData.userData.position === "Создатель") && (
           <form

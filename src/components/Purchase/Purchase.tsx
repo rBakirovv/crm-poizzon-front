@@ -32,6 +32,8 @@ const Purchase = () => {
   const [isCancelPopupOpen, setIsCancelPopupOpen] = useState<boolean>(false);
   const [isLegitPopupOpen, setIsLegitPopupOpen] = useState<boolean>(false);
 
+  const [isDrag, setIsDrag] = useState(false);
+
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
 
@@ -41,6 +43,14 @@ const Purchase = () => {
       ...data,
       [name]: value,
     });
+  }
+
+  function dragHandler() {
+    setIsDrag(true);
+  }
+
+  function dragLeaveHandler() {
+    setIsDrag(false);
   }
 
   function openSubmitPopup(e: React.SyntheticEvent) {
@@ -150,8 +160,12 @@ const Purchase = () => {
             __v: OrderData.order.__v,
           });
         })
-        .then(() => setUploading(false));
+        .then(() => {
+          setUploading(false)
+          dragLeaveHandler();
+        });
     } catch (error) {
+      dragLeaveHandler();
       console.error(error);
     }
 
@@ -333,15 +347,21 @@ const Purchase = () => {
             onDrop={(e: any) =>
               uploadFileHandler(e, "/order-purchase", setUploading)
             }
+            onDragEnter={dragHandler}
+            onDragLeave={dragLeaveHandler}
             maxSize={MAX_SIZE}
             multiple={true}
           >
             {({ getRootProps, getInputProps }) => (
-              <div className={styles["drag-n-drop-container"]}>
+              <div
+                className={`${styles["drag-n-drop-container"]} ${
+                  isDrag && styles["drag-n-drop-container_active"]
+                }`}
+              >
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
                   <p className={styles["drag-n-drop-text"]}>
-                    Добавить фото
+                    {isDrag ? "Перетащите фото" : "Добавить фото"}
                     <svg
                       width="18px"
                       height="18px"
@@ -404,7 +424,8 @@ const Purchase = () => {
           </button>
         )}
         {OrderData.order.status !== "Черновик" &&
-          OrderData.order.status !== "Проверка оплаты" && OrderData.order.status !== "Завершён" && (
+          OrderData.order.status !== "Проверка оплаты" &&
+          OrderData.order.status !== "Завершён" && (
             <button
               className={`${styles["purchase__button-submit"]} ${
                 styles["purchase__button-reorder"]
