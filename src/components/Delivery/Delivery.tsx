@@ -1132,11 +1132,11 @@ const Delivery = () => {
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" && (
             <button
-              onClick={openPDFHandler}
+              onClick={openPDFBarcodeHandler}
               disabled={isPreloader}
               className={styles["delivery-receipt"]}
             >
-              Получить квитанцию
+              Получить штрихкод
               <svg
                 width="18px"
                 height="18px"
@@ -1152,11 +1152,11 @@ const Delivery = () => {
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" && (
             <button
-              onClick={openPDFBarcodeHandler}
+              onClick={openPDFHandler}
               disabled={isPreloader}
               className={styles["delivery-receipt"]}
             >
-              Получить штрихкод
+              Получить квитанцию
               <svg
                 width="18px"
                 height="18px"
