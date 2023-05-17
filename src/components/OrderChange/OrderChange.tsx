@@ -749,13 +749,6 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               handleChange={handleChange}
               required={true}
             />
-            <TextInput
-              name="payLink"
-              label="Cсылка на оплату"
-              value={OrderData.order.payLink}
-              handleChange={handleChange}
-              required={false}
-            />
             {OrderData.order.link !== "" && (
               <a
                 className={styles["order-change__public-link"]}
@@ -766,6 +759,13 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
                 Перейти
               </a>
             )}
+            <TextInput
+              name="payLink"
+              label="Cсылка на оплату"
+              value={OrderData.order.payLink}
+              handleChange={handleChange}
+              required={false}
+            />
             <div className={styles["order-change__input-container"]}>
               <label>
                 Категория<span className={styles["red-star"]}>*</span>

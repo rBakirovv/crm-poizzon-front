@@ -32,7 +32,8 @@ const Delivery = () => {
     delivery_phone: OrderData.order.deliveryPhone,
     delivery_name: OrderData.order.deliveryNameRecipient,
     delivery_packages: 1,
-    delivery_number: 0,
+    delivery_number:
+      OrderData.order.combinedOrder.length > 0 ? 0 : OrderData.order.orderId,
     delivery_insurance:
       OrderData.order.combinedOrder.length > 0
         ? 0
@@ -800,60 +801,151 @@ const Delivery = () => {
   function openPDFHandler() {
     deliveryAuthorization()
       .then((authData) => {
-        createDeliveryDocument(authData.token, OrderData.order.deliveryEntity)
-          .then((deliveryDocument) => {
-            if (OrderData.order.deliveryCode === "") {
+        setIsPreloader(true);
+
+        if (OrderData.order.combinedOrder.length === 0) {
+          getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
+            .then((orderInfo) => {
+              return orderInfo.entity.packages;
+            })
+            .then((packages) => {
+              let packagesArray: any = [];
+
+              for (let i = 0; i < packages.length; i++) {
+                if (i === 0) {
+                  packagesArray.push({
+                    number: `${data.delivery_number}-${i + 1}`,
+                    weight: "100",
+                    length: packages[i].length,
+                    width: packages[i].width,
+                    height: packages[i].height,
+                    items: [
+                      {
+                        ware_key: `${data.delivery_number}`,
+                        payment: {
+                          value: 0,
+                        },
+                        name: packages[i].items[0].name,
+                        cost: data.delivery_insurance,
+                        amount: 1,
+                        weight: 100,
+                      },
+                    ],
+                  });
+                } else {
+                  packagesArray.push({
+                    number: `${data.delivery_number}-${i + 1}`,
+                    weight: "100",
+                    length: packages[i].length,
+                    width: packages[i].width,
+                    height: packages[i].height,
+                    items: [
+                      {
+                        ware_key: `${data.delivery_number}`,
+                        payment: {
+                          value: 0,
+                        },
+                        name: packages[i].items[0].name,
+                        cost: data.delivery_insurance,
+                        amount: 1,
+                        weight: 100,
+                      },
+                    ],
+                  });
+                }
+              }
+
+              return packagesArray;
+            })
+            .then((packagesArray) => {
               getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
-                .then((orderData) => {
-                  updateDeliveryCDEKCode(
-                    OrderData.order._id,
-                    orderData.entity.cdek_number
-                  )
-                    .then((orderData) => {
-                      OrderData.setOrder(orderData);
-                      if (OrderData.order.combinedOrder.length > 0) {
-                        OrderData.order.combinedOrder[0].combinedOrder.map(
-                          (orderItem) => {
-                            if (OrderData.order._id !== orderItem) {
-                              updateDeliveryCDEKCode(
-                                orderItem,
-                                orderData.entity.cdek_number
-                              ).catch((err) => {
-                                setIsPreloader(false);
-                                console.log(err);
-                              });
-                            }
-                          }
-                        );
-                      }
-                    })
-                    .catch((err) => {
-                      setIsPreloader(false);
+                .then((orderInfoForSum) => {
+                  changeTotalSum(
+                    authData.token,
+                    orderInfoForSum.entity.tariff_code,
+                    orderInfoForSum.entity.from_location.code,
+                    orderInfoForSum.entity.to_location.code,
+                    packagesArray,
+                    orderInfoForSum.entity.packages[0].items[0].cost
+                  ).then((sumInfo) => {
+                    changeOrderDeliveryPackages(
+                      authData.token,
+                      OrderData.order.deliveryEntity,
+                      sumInfo.total_sum + 100,
+                      packagesArray
+                    ).catch((err) => {
                       console.log(err);
                     });
+                  });
                 })
                 .catch((err) => {
-                  setIsPreloader(false);
                   console.log(err);
                 });
-            }
-            setIsPreloader(true);
-            setTimeout(() => {
-              getDeliveryDocument(authData.token, deliveryDocument.entity.uuid)
-                .then((pdfData) => {
-                  setIsPreloader(false);
-                  openPDF(pdfData.pdf);
-                })
-                .catch((err) => {
-                  setIsPreloader(false);
-                  console.log(err);
-                });
-            }, 5000);
-          })
-          .catch((err) => {
-            setIsPreloader(false);
-            console.log(err);
-          });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+
+        setTimeout(() => {
+          createDeliveryDocument(authData.token, OrderData.order.deliveryEntity)
+            .then((deliveryDocument) => {
+              if (OrderData.order.deliveryCode === "") {
+                getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
+                  .then((orderData) => {
+                    updateDeliveryCDEKCode(
+                      OrderData.order._id,
+                      orderData.entity.cdek_number
+                    )
+                      .then((orderData) => {
+                        OrderData.setOrder(orderData);
+                        if (OrderData.order.combinedOrder.length > 0) {
+                          OrderData.order.combinedOrder[0].combinedOrder.map(
+                            (orderItem) => {
+                              if (OrderData.order._id !== orderItem) {
+                                updateDeliveryCDEKCode(
+                                  orderItem,
+                                  orderData.entity.cdek_number
+                                ).catch((err) => {
+                                  setIsPreloader(false);
+                                  console.log(err);
+                                });
+                              }
+                            }
+                          );
+                        }
+                      })
+                      .catch((err) => {
+                        setIsPreloader(false);
+                        console.log(err);
+                      });
+                  })
+                  .catch((err) => {
+                    setIsPreloader(false);
+                    console.log(err);
+                  });
+              }
+              setIsPreloader(true);
+              setTimeout(() => {
+                getDeliveryDocument(
+                  authData.token,
+                  deliveryDocument.entity.uuid
+                )
+                  .then((pdfData) => {
+                    setIsPreloader(false);
+                    openPDF(pdfData.pdf);
+                  })
+                  .catch((err) => {
+                    setIsPreloader(false);
+                    console.log(err);
+                  });
+              }, 2500);
+            })
+            .catch((err) => {
+              setIsPreloader(false);
+              console.log(err);
+            });
+        }, 5000);
       })
       .catch((err) => {
         setIsPreloader(false);
@@ -864,6 +956,92 @@ const Delivery = () => {
   function openPDFBarcodeHandler() {
     deliveryAuthorization()
       .then((authData) => {
+        setIsPreloader(true);
+
+        if (OrderData.order.combinedOrder.length === 0) {
+          getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
+            .then((orderInfo) => {
+              return orderInfo.entity.packages;
+            })
+            .then((packages) => {
+              let packagesArray: any = [];
+
+              for (let i = 0; i < packages.length; i++) {
+                if (i === 0) {
+                  packagesArray.push({
+                    number: `${data.delivery_number}-${i + 1}`,
+                    weight: "100",
+                    length: packages[i].length,
+                    width: packages[i].width,
+                    height: packages[i].height,
+                    items: [
+                      {
+                        ware_key: `${data.delivery_number}`,
+                        payment: {
+                          value: 0,
+                        },
+                        name: packages[i].items[0].name,
+                        cost: data.delivery_insurance,
+                        amount: 1,
+                        weight: 100,
+                      },
+                    ],
+                  });
+                } else {
+                  packagesArray.push({
+                    number: `${data.delivery_number}-${i + 1}`,
+                    weight: "100",
+                    length: packages[i].length,
+                    width: packages[i].width,
+                    height: packages[i].height,
+                    items: [
+                      {
+                        ware_key: `${data.delivery_number}`,
+                        payment: {
+                          value: 0,
+                        },
+                        name: packages[i].items[0].name,
+                        cost: data.delivery_insurance,
+                        amount: 1,
+                        weight: 100,
+                      },
+                    ],
+                  });
+                }
+              }
+
+              return packagesArray;
+            })
+            .then((packagesArray) => {
+              getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
+                .then((orderInfoForSum) => {
+                  changeTotalSum(
+                    authData.token,
+                    orderInfoForSum.entity.tariff_code,
+                    orderInfoForSum.entity.from_location.code,
+                    orderInfoForSum.entity.to_location.code,
+                    packagesArray,
+                    orderInfoForSum.entity.packages[0].items[0].cost
+                  ).then((sumInfo) => {
+                    changeOrderDeliveryPackages(
+                      authData.token,
+                      OrderData.order.deliveryEntity,
+                      sumInfo.total_sum + 100,
+                      packagesArray
+                    ).catch((err) => {
+                      console.log(err);
+                    });
+                  });
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+
         createDeliveryBarcode(authData.token, OrderData.order.deliveryEntity)
           .then((deliveryDocument) => {
             if (OrderData.order.deliveryCode === "") {
