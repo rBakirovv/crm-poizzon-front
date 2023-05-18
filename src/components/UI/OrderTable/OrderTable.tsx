@@ -18,6 +18,14 @@ import PaymentsData from "../../../store/payments";
 
 const dayjs = require("dayjs");
 
+var utc = require("dayjs/plugin/utc");
+var timezone = require("dayjs/plugin/timezone"); // dependent on utc plugin
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+dayjs.tz.setDefault("Europe/Moscow");
+
 interface IOrderTable {
   status: string;
 }
@@ -333,7 +341,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                   <div
                     className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_date"]}`}
                   >
-                    {dayjs(orderItem.createdAt).format("DD-MM-YYYY")}
+                    {dayjs.tz(orderItem.createdAt, "Europe/Moscow").format("DD-MM-YYYY")}
                   </div>
                   <div
                     className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_product"]}`}

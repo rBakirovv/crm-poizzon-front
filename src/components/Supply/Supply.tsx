@@ -15,6 +15,14 @@ var debounce = require("lodash.debounce");
 
 const dayjs = require("dayjs");
 
+var utc = require("dayjs/plugin/utc");
+var timezone = require("dayjs/plugin/timezone"); // dependent on utc plugin
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+dayjs.tz.setDefault("Europe/Moscow");
+
 const Supply = observer(() => {
   const [isSupplyCreate, setIsSupplyCreate] = useState(false);
   const [isSupplyDeleteDate, setIsSupplyDeleteDate] = useState(false);
@@ -307,9 +315,9 @@ const Supply = observer(() => {
       {isPreloader && <Preloader />}
       <SubmitPopup
         isSubmitPopup={isSupplyCreate}
-        submitText={`Создать поставку ${dayjs(
-          new Date(Date.now()).getTime()
-        ).format("DD-MM-YYYY")}`}
+        submitText={`Создать поставку ${dayjs
+          .tz(new Date(Date.now()).getTime(), "Europe/Moscow")
+          .format("DD-MM-YYYY")}`}
         onSubmit={onSupplyCreate}
         closeSubmitPopup={closeSupplyCreate}
       />

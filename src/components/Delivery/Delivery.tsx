@@ -1042,60 +1042,62 @@ const Delivery = () => {
             });
         }
 
-        createDeliveryBarcode(authData.token, OrderData.order.deliveryEntity)
-          .then((deliveryDocument) => {
-            if (OrderData.order.deliveryCode === "") {
-              getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
-                .then((orderData) => {
-                  updateDeliveryCDEKCode(
-                    OrderData.order._id,
-                    orderData.entity.cdek_number
-                  )
-                    .then((orderData) => {
-                      OrderData.setOrder(orderData);
-                      if (OrderData.order.combinedOrder.length > 0) {
-                        OrderData.order.combinedOrder[0].combinedOrder.map(
-                          (orderItem) => {
-                            if (OrderData.order._id !== orderItem) {
-                              updateDeliveryCDEKCode(
-                                orderItem,
-                                orderData.entity.cdek_number
-                              ).catch((err) => {
-                                setIsPreloader(false);
-                                console.log(err);
-                              });
+        setTimeout(() => {
+          createDeliveryBarcode(authData.token, OrderData.order.deliveryEntity)
+            .then((deliveryDocument) => {
+              if (OrderData.order.deliveryCode === "") {
+                getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
+                  .then((orderData) => {
+                    updateDeliveryCDEKCode(
+                      OrderData.order._id,
+                      orderData.entity.cdek_number
+                    )
+                      .then((orderData) => {
+                        OrderData.setOrder(orderData);
+                        if (OrderData.order.combinedOrder.length > 0) {
+                          OrderData.order.combinedOrder[0].combinedOrder.map(
+                            (orderItem) => {
+                              if (OrderData.order._id !== orderItem) {
+                                updateDeliveryCDEKCode(
+                                  orderItem,
+                                  orderData.entity.cdek_number
+                                ).catch((err) => {
+                                  setIsPreloader(false);
+                                  console.log(err);
+                                });
+                              }
                             }
-                          }
-                        );
-                      }
-                    })
-                    .catch((err) => {
-                      setIsPreloader(false);
-                      console.log(err);
-                    });
-                })
-                .catch((err) => {
-                  setIsPreloader(false);
-                  console.log(err);
-                });
-            }
-            setIsPreloader(true);
-            setTimeout(() => {
-              getDeliveryBarcode(authData.token, deliveryDocument.entity.uuid)
-                .then((pdfData) => {
-                  setIsPreloader(false);
-                  openPDF(pdfData.pdf);
-                })
-                .catch((err) => {
-                  setIsPreloader(false);
-                  console.log(err);
-                });
-            }, 5000);
-          })
-          .catch((err) => {
-            setIsPreloader(false);
-            console.log(err);
-          });
+                          );
+                        }
+                      })
+                      .catch((err) => {
+                        setIsPreloader(false);
+                        console.log(err);
+                      });
+                  })
+                  .catch((err) => {
+                    setIsPreloader(false);
+                    console.log(err);
+                  });
+              }
+              setIsPreloader(true);
+              setTimeout(() => {
+                getDeliveryBarcode(authData.token, deliveryDocument.entity.uuid)
+                  .then((pdfData) => {
+                    setIsPreloader(false);
+                    openPDF(pdfData.pdf);
+                  })
+                  .catch((err) => {
+                    setIsPreloader(false);
+                    console.log(err);
+                  });
+              }, 2500);
+            })
+            .catch((err) => {
+              setIsPreloader(false);
+              console.log(err);
+            });
+        }, 5000);
       })
       .catch((err) => {
         setIsPreloader(false);

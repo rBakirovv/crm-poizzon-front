@@ -24,6 +24,14 @@ import DeliveryDuplicate from "../DeliveryDuplicate/DeliveryDuplicate";
 
 const dayjs = require("dayjs");
 
+var utc = require("dayjs/plugin/utc");
+var timezone = require("dayjs/plugin/timezone"); // dependent on utc plugin
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+dayjs.tz.setDefault("Europe/Moscow");
+
 interface IOrderChangeProps {
   payments: Array<IPayments>;
 }
@@ -617,7 +625,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       </p>
       {OrderData.order.deliveredAt && OrderData.order.deliveredAt !== "" && (
         <p className={styles["order-change__status"]}>
-          Доставлен: {dayjs(OrderData.order.deliveredAt).format("DD.MM.YYYY")}
+          Доставлен: {dayjs.tz(OrderData.order.deliveredAt, "Europe/Moscow").format("DD.MM.YYYY")}
         </p>
       )}
       {OrderData.order.reorder === true && (

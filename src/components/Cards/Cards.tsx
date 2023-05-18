@@ -12,6 +12,14 @@ interface ICardsProps {
 
 const dayjs = require("dayjs");
 
+var utc = require("dayjs/plugin/utc");
+var timezone = require("dayjs/plugin/timezone"); // dependent on utc plugin
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+dayjs.tz.setDefault("Europe/Moscow");
+
 const Cards: FC<ICardsProps> = ({ payments }) => {
   const [isDateUpdatePopup, setIsDateUpdatePopup] = useState(false);
 
@@ -36,7 +44,7 @@ const Cards: FC<ICardsProps> = ({ payments }) => {
       <div className={styles["cards__container"]}>
         <h2 className={styles["cards__tile"]}>
           Статистика после{" "}
-          {dayjs(CardsData.cards.updatedAt).format("DD-MM-YYYY h:mm A")}
+          {dayjs.tz(CardsData.cards.updatedAt, "Europe/Moscow").format("DD-MM-YYYY h:mm A")}
         </h2>
         <ul className={styles["cards__list"]}>
           {payments.map((item) => {
