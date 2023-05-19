@@ -45,9 +45,9 @@ const Delivery = () => {
               parseFloat(OrderData.order.commission) -
               OrderData.order.promoCodePercent
           ),
-    delivery_length: 0,
-    delivery_width: 0,
-    delivery_height: 0,
+    delivery_length: OrderData.order.combinedOrder.length > 0 ? 0 : 37,
+    delivery_width: OrderData.order.combinedOrder.length > 0 ? 0 : 27,
+    delivery_height: OrderData.order.combinedOrder.length > 0 ? 0 : 17,
   });
 
   const [isSubmitPopup, setIsSubmitPopup] = useState(false);
@@ -816,9 +816,9 @@ const Delivery = () => {
                   packagesArray.push({
                     number: `${data.delivery_number}-${i + 1}`,
                     weight: "100",
-                    length: packages[i].length,
-                    width: packages[i].width,
-                    height: packages[i].height,
+                    length: data.delivery_length,
+                    width: data.delivery_width,
+                    height: data.delivery_height,
                     items: [
                       {
                         ware_key: `${data.delivery_number}`,
@@ -836,9 +836,9 @@ const Delivery = () => {
                   packagesArray.push({
                     number: `${data.delivery_number}-${i + 1}`,
                     weight: "100",
-                    length: packages[i].length,
-                    width: packages[i].width,
-                    height: packages[i].height,
+                    length: data.delivery_length,
+                    width: data.delivery_width,
+                    height: data.delivery_height,
                     items: [
                       {
                         ware_key: `${data.delivery_number}`,
@@ -971,9 +971,9 @@ const Delivery = () => {
                   packagesArray.push({
                     number: `${data.delivery_number}-${i + 1}`,
                     weight: "100",
-                    length: packages[i].length,
-                    width: packages[i].width,
-                    height: packages[i].height,
+                    length: data.delivery_length,
+                    width: data.delivery_width,
+                    height: data.delivery_height,
                     items: [
                       {
                         ware_key: `${data.delivery_number}`,
@@ -991,9 +991,9 @@ const Delivery = () => {
                   packagesArray.push({
                     number: `${data.delivery_number}-${i + 1}`,
                     weight: "100",
-                    length: packages[i].length,
-                    width: packages[i].width,
-                    height: packages[i].height,
+                    length: data.delivery_length,
+                    width: data.delivery_width,
+                    height: data.delivery_height,
                     items: [
                       {
                         ware_key: `${data.delivery_number}`,
@@ -1242,7 +1242,9 @@ const Delivery = () => {
                 value={data.delivery_number}
                 onChange={handleChange}
               />
-              <button onClick={openSubmitChangeNumberPopup}>Cохр.</button>
+              {OrderData.order.combinedOrder.length > 0 && (
+                <button onClick={openSubmitChangeNumberPopup}>Cохр.</button>
+              )}
             </div>
           )}
         {OrderData.order.deliveryAddress !== "" &&
@@ -1256,7 +1258,9 @@ const Delivery = () => {
                 value={data.delivery_insurance}
                 onChange={handleChange}
               />
-              <button onClick={openSubmitChangeInsurancePopup}>Cохр.</button>
+              {OrderData.order.combinedOrder.length > 0 && (
+                <button onClick={openSubmitChangeInsurancePopup}>Cохр.</button>
+              )}
             </div>
           )}
         {OrderData.order.deliveryAddress !== "" &&
@@ -1270,7 +1274,9 @@ const Delivery = () => {
                 value={data.delivery_packages}
                 onChange={handleChange}
               />
-              <button onClick={openSubmitChangePackagesPopup}>Cохр.</button>
+              {OrderData.order.combinedOrder.length > 0 && (
+                <button onClick={openSubmitChangePackagesPopup}>Cохр.</button>
+              )}
             </div>
           )}
         {OrderData.order.comment !== "" && (
