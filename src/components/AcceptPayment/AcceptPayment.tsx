@@ -42,6 +42,13 @@ const AcceptPayment = () => {
     });
   }
 
+  // УБРАТЬ!
+  function handleAccept() {
+    acceptPayment(OrderData.order._id).then((order) => {
+      OrderData.setOrder(order);
+    });
+  }
+
   return (
     <div className={styles["accept-payment"]}>
       <h4>Cпособ оплаты</h4>
@@ -85,6 +92,16 @@ const AcceptPayment = () => {
             onClick={openSubmitPopup}
           >
             Принять оплату
+          </button>
+        )}
+      {OrderData.order.status === "Черновик" &&
+        OrderData.order.payment === "Перейти по ссылке -" &&
+        UserData.userData.position === "Создатель" && (
+          <button
+            className={styles["accept-payment__submit"]}
+            onClick={handleAccept}
+          >
+            Принять оплату досрочно
           </button>
         )}
       {OrderData.order.payProofImages.length !== 0 && (
