@@ -23,6 +23,7 @@
 }
 
 .accept-payment__resume {
+  display: flex;
   color: #4e7fea;
   cursor: pointer;
   border: none;
@@ -34,6 +35,10 @@
 
 .accept-payment__resume:hover {
   border-bottom: 1px dashed transparent;
+}
+
+.accept-payment__resume:not(:first-of-type) {
+  margin-top: 1rem;
 }
 
 .accept-payment__submit {

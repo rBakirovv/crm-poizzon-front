@@ -165,6 +165,22 @@ export const updateDeliveryData = (
   }).then(checkResponse);
 };
 
+export const setDeliveryData = (
+  id: string,
+  deliveryName: string,
+  deliveryPhone: string
+) => {
+  return fetch(`${BASE_URL}/order/set-delivery-data/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      deliveryName: deliveryName,
+      deliveryPhone: deliveryPhone,
+    }),
+  }).then(checkResponse);
+};
+
 export const updateOrderImages = (
   id: string,
   orderImages: Array<IOrderImages>

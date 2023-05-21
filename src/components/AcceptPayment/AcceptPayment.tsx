@@ -1,11 +1,16 @@
 import styles from "./AcceptPayment.module.css";
 import OrderData from "../../store/order";
 import UserData from "../../store/user";
-import { BASE_URL } from "../../utils/constants";
+import { BASE_URL, BASE_URL_FRONT } from "../../utils/constants";
 import ImagePopup from "../ImagePopup/ImagePopup";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { useState } from "react";
-import { acceptPayment, orderResume } from "../../utils/Order";
+import {
+  acceptPayment,
+  orderResume,
+  updateOrderDraft,
+} from "../../utils/Order";
+import { createPayLink } from "../../utils/PaySystem";
 
 const AcceptPayment = () => {
   const [isImagePaymentPopupOpen, setIsImagePaymentPopupOpen] =
@@ -13,6 +18,22 @@ const AcceptPayment = () => {
 
   const [isSubmitPaymentPopupOpen, setIsSubmitPaymentPopupOpen] =
     useState<boolean>(false);
+
+  const [isSubmitPayLinkPopup, setIsSubmitPayLinkPopup] =
+    useState<boolean>(false);
+
+  const priceRub = Math.ceil(
+    parseFloat(OrderData.order.priceCNY) *
+      parseFloat(OrderData.order.currentRate)
+  );
+
+  const totalPrice = Math.ceil(
+    priceRub +
+      parseFloat(OrderData.order.priceDeliveryChina) +
+      parseFloat(OrderData.order.priceDeliveryRussia) +
+      parseFloat(OrderData.order.commission) -
+      OrderData.order.promoCodePercent
+  );
 
   function openImagePopup() {
     setIsImagePaymentPopupOpen(true);
@@ -28,6 +49,14 @@ const AcceptPayment = () => {
 
   function closeSubmitPopup() {
     setIsSubmitPaymentPopupOpen(false);
+  }
+
+  function openSubmitPayLinkPopup() {
+    setIsSubmitPayLinkPopup(true);
+  }
+
+  function closeSubmitPayLinkPopup() {
+    setIsSubmitPayLinkPopup(false);
   }
 
   function handlePaymentSubmit() {
@@ -46,6 +75,38 @@ const AcceptPayment = () => {
   function handleAccept() {
     acceptPayment(OrderData.order._id).then((order) => {
       OrderData.setOrder(order);
+    });
+  }
+
+  function handleSubmitPayLinkSubmit() {
+    createPayLink(
+      OrderData.order.orderId.toString(),
+      totalPrice,
+      `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+      `${BASE_URL}/pay/link/${OrderData.order._id}`
+    ).then((payment) => {
+      if (payment.data.id) {
+        updateOrderDraft(
+          OrderData.order._id,
+          OrderData.order.link,
+          payment.data.attributes.url,
+          payment.data.attributes.uuid,
+          OrderData.order.category,
+          OrderData.order.subcategory,
+          OrderData.order.brand,
+          OrderData.order.model,
+          OrderData.order.size,
+          OrderData.order.payment,
+          OrderData.order.priceCNY,
+          OrderData.order.priceDeliveryChina,
+          OrderData.order.priceDeliveryRussia,
+          OrderData.order.commission,
+          OrderData.order.promoCodePercent,
+          OrderData.order.comment
+        ).then((order) => {
+          OrderData.setOrder(order);
+        });
+      }
     });
   }
 
@@ -82,6 +143,17 @@ const AcceptPayment = () => {
               onClick={openSubmitPopup}
             >
               Возобновить
+            </button>
+          </>
+        )}
+      {OrderData.order.status === "Черновик" &&
+        OrderData.order.payment === "Перейти по ссылке -" && (
+          <>
+            <button
+              className={styles["accept-payment__resume"]}
+              onClick={openSubmitPayLinkPopup}
+            >
+              Обновить ссылку на оплату
             </button>
           </>
         )}
@@ -127,6 +199,12 @@ const AcceptPayment = () => {
           submitText="Возобновить оплату заказа"
         />
       )}
+      <SubmitPopup
+        onSubmit={handleSubmitPayLinkSubmit}
+        isSubmitPopup={isSubmitPayLinkPopup}
+        closeSubmitPopup={closeSubmitPayLinkPopup}
+        submitText="Сгенерировать новую ссылку на оплату"
+      />
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { BASE_URL, BASE_URL_FRONT } from "../../utils/constants";
 import Carousel from "../UI/Carousel/Carousel";
 import Timer from "../UI/Timer/Timer";
 import styles from "./Order.module.css";
+import UserDataModal from "../UI/UserDataModal/UserDataModal";
 
 interface IOrderProps {
   currentOrder: IOrder;
@@ -498,6 +499,9 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
         nextImage={nextImage}
         prevImage={prevImage}
       />
+      {currentOrder.deliveryPhone === "" &&
+        currentOrder.status === "Ожидает закупки" &&
+        currentOrder.payment === "Перейти по ссылке -" && <UserDataModal _id={currentOrder._id} />}
     </section>
   );
 };
