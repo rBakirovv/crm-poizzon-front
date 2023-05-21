@@ -37,6 +37,8 @@ const Page: NextPage<ICurrentOrderProps> = ({ currentOrder }) => {
         deliveryMethod={currentOrder.deliveryMethod}
         poizonCode={currentOrder.poizonCode}
         overudeAfter={currentOrder.overudeAfter}
+        payLink={currentOrder.payLink}
+        payment={currentOrder.payment}
       />
       <Order currentOrder={currentOrder} />
     </>

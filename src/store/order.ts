@@ -18,6 +18,7 @@ class OrderData {
     status: "",
     link: "",
     payLink: "",
+    paymentUUID: "",
     category: "",
     subcategory: "",
     brand: "",

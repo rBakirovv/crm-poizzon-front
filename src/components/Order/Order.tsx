@@ -392,7 +392,9 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
                   rel="noreferrer"
                 >
                   Трек-номер CDEK:
-                  <span className={`${styles["order-span"]} ${styles["order-span-link"]}`}>
+                  <span
+                    className={`${styles["order-span"]} ${styles["order-span-link"]}`}
+                  >
                     {currentOrder.deliveryCode}
                   </span>
                 </a>
@@ -411,23 +413,42 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
             </div>
           </li>
         </ul>
-        {currentOrder.status === "Черновик" && (
-          <button
-            className={styles["order__pay-button"]}
-            onClick={handleTimeLeft}
-          >
-            {isBrowser && (
-              <Timer
-                createdAt={currentOrder.createdAt}
-                dedline={currentOrder.overudeAfter}
-                timeLeft={timeLeft}
-                setTimeLeft={setTimeLeft}
-              />
-            )}
-            <span className={styles["order__pay-button-span"]}>Оплатить</span>
-            <span>{totalPrice} ₽</span>
-          </button>
-        )}
+        {currentOrder.status === "Черновик" &&
+          currentOrder.payment !== "Перейти по ссылке -" && (
+            <button
+              className={styles["order__pay-button"]}
+              onClick={handleTimeLeft}
+            >
+              {isBrowser && (
+                <Timer
+                  createdAt={currentOrder.createdAt}
+                  dedline={currentOrder.overudeAfter}
+                  timeLeft={timeLeft}
+                  setTimeLeft={setTimeLeft}
+                />
+              )}
+              <span className={styles["order__pay-button-span"]}>Оплатить</span>
+              <span>{totalPrice} ₽</span>
+            </button>
+          )}
+        {currentOrder.status === "Черновик" &&
+          currentOrder.payment === "Перейти по ссылке -" && (
+            <a
+              className={styles["order__pay-button"]}
+              href={`${currentOrder.payLink}`}
+            >
+              {isBrowser && (
+                <Timer
+                  createdAt={currentOrder.createdAt}
+                  dedline={currentOrder.overudeAfter}
+                  timeLeft={timeLeft}
+                  setTimeLeft={setTimeLeft}
+                />
+              )}
+              <span className={styles["order__pay-button-span"]}>Оплатить</span>
+              <span>{totalPrice} ₽</span>
+            </a>
+          )}
         {currentOrder.poizonCode !== "" &&
           currentOrder.inChinaStockAt !== null &&
           currentOrder.deliveryMethod === "" &&

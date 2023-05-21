@@ -51,7 +51,6 @@ export const mergeOrders = (id: string, combinedOrder: Array<string>) => {
 export const createOrder = (
   creater: string,
   link: string,
-  payLink: string,
   category: string,
   subcategory: string,
   brand: string,
@@ -74,7 +73,6 @@ export const createOrder = (
     body: JSON.stringify({
       creater: creater,
       link: link,
-      payLink: payLink,
       category: category,
       subcategory: subcategory,
       brand: brand,
@@ -105,6 +103,7 @@ export const updateOrderDraft = (
   id: string,
   link: string,
   payLink: string,
+  paymentUUID: string,
   category: string,
   subcategory: string,
   brand: string,
@@ -125,6 +124,7 @@ export const updateOrderDraft = (
     body: JSON.stringify({
       link: link,
       payLink: payLink,
+      paymentUUID: paymentUUID,
       category: category,
       subcategory: subcategory,
       brand: brand,

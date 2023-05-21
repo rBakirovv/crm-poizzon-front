@@ -86,6 +86,7 @@
 .order-change__public-link {
   color: #4e7fea;
   word-wrap: break-word;
+  width: max-content;
 }
 
 .order-change__nav-bar {

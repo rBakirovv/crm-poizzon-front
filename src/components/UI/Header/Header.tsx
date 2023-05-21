@@ -14,6 +14,8 @@ interface IHeaderProps {
   deliveryMethod?: string;
   poizonCode?: string;
   overudeAfter?: Date;
+  payLink?: string;
+  payment?: string;
 }
 
 const Header: FC<IHeaderProps> = ({
@@ -24,6 +26,8 @@ const Header: FC<IHeaderProps> = ({
   deliveryMethod,
   poizonCode,
   overudeAfter,
+  payLink,
+  payment,
 }) => {
   const router = useRouter();
 
@@ -69,6 +73,7 @@ const Header: FC<IHeaderProps> = ({
             <h2 className={styles["header__order-title"]}>Заказ №{orderId}</h2>
             {!router.pathname.includes("/pay/") &&
               orderStatus === "Черновик" &&
+              payment !== "Перейти по ссылке -" &&
               timeLeft > 0 && (
                 <button
                   className={styles["header__order-pay"]}
@@ -76,6 +81,14 @@ const Header: FC<IHeaderProps> = ({
                 >
                   Оплатить
                 </button>
+              )}
+            {!router.pathname.includes("/pay/") &&
+              orderStatus === "Черновик" &&
+              payment === "Перейти по ссылке -" &&
+              timeLeft > 0 && (
+                <a className={styles["header__order-pay"]} href={`${payLink}`}>
+                  Оплатить
+                </a>
               )}
             {(!router.pathname.includes("/pay/") ||
               !router.pathname.includes("/delivery/")) &&

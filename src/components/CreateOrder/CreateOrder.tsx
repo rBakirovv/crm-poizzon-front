@@ -7,12 +7,18 @@ import UserData from "../../store/user";
 import OrderData from "../../store/order";
 import { IOrderImages, IPayments } from "../../types/interfaces";
 import Dropzone from "react-dropzone";
-import { BASE_URL, MAX_SIZE } from "../../utils/constants";
-import { createOrder, deleteDraftImage, uploadImages } from "../../utils/Order";
+import { BASE_URL, BASE_URL_FRONT, MAX_SIZE } from "../../utils/constants";
+import {
+  createOrder,
+  deleteDraftImage,
+  updateOrderDraft,
+  uploadImages,
+} from "../../utils/Order";
 import ImagePopup from "../ImagePopup/ImagePopup";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { useRouter } from "next/router";
 import Preloader from "../UI/Preloader/Preloader";
+import { createPayLink } from "../../utils/PaySystem";
 
 interface ICreateOrderProps {
   payments: Array<IPayments>;
@@ -23,7 +29,6 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
 
   const [data, setData] = useState({
     link: "",
-    payLink: "",
     category: "",
     subcategory: "",
     brand: "",
@@ -57,7 +62,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
     priceRub +
       parseFloat(data.priceDeliveryChina) +
       parseFloat(data.priceDeliveryRussia) +
-      parseFloat(data.commission)
+      parseFloat(data.commission) - data.promoCodePercent
   );
 
   const totalPriceWithPromo = Math.ceil(
@@ -253,7 +258,6 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
     createOrder(
       UserData.userData.name,
       data.link,
-      data.payLink,
       data.category,
       data.subcategory,
       data.brand,
@@ -271,11 +275,46 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
     )
       .then((order) => {
         OrderData.setOrder(order);
+
+        return order;
+      })
+      .then((order) => {
+        if (data.payment === "Перейти по ссылке -") {
+          createPayLink(
+            order.orderId.toString(),
+            totalPrice,
+            `${BASE_URL_FRONT}/order/${order._id}`,
+            `${BASE_URL}/pay/link/${order._id}`
+          ).then((payment) => {
+            if (payment.data.id) {
+              updateOrderDraft(
+                order._id,
+                order.link,
+                payment.data.attributes.url,
+                payment.data.attributes.uuid,
+                order.category,
+                order.subcategory,
+                order.brand,
+                order.model,
+                order.size,
+                order.payment,
+                order.priceCNY,
+                order.priceDeliveryChina,
+                order.priceDeliveryRussia,
+                order.commission,
+                order.promoCodePercent,
+                order.comment
+              ).then((order) => {
+                OrderData.setOrder(order);
+              });
+            }
+          });
+        }
       })
       .then(() => {
         setData({
           link: "",
-          payLink: "",
+          
           category: "",
           subcategory: "",
           brand: "",
@@ -304,7 +343,6 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       if (data.priceCNY[0] === "0" && data.priceCNY[1] !== ".") {
         setData({
           link: data.link,
-          payLink: data.payLink,
           category: "",
           subcategory: data.subcategory,
           brand: "",
@@ -329,7 +367,6 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       ) {
         setData({
           link: data.link,
-          payLink: data.payLink,
           category: "",
           subcategory: data.subcategory,
           brand: "",
@@ -354,7 +391,6 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       ) {
         setData({
           link: data.link,
-          payLink: data.payLink,
           category: "",
           subcategory: data.subcategory,
           brand: "",
@@ -376,7 +412,6 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       if (data.commission[0] === "0" && data.commission[1] !== ".") {
         setData({
           link: data.link,
-          payLink: data.payLink,
           category: "",
           subcategory: data.subcategory,
           brand: "",
@@ -415,13 +450,6 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
             value={data.link}
             handleChange={handleChange}
             required={true}
-          />
-          <TextInput
-            name="payLink"
-            label="Cсылка на оплату"
-            value={data.payLink}
-            handleChange={handleChange}
-            required={false}
           />
           <div className={styles["order-change__input-container"]}>
             <label>

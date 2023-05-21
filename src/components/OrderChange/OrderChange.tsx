@@ -41,6 +41,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
     _id: OrderData.order._id,
     link: OrderData.order.link,
     payLink: OrderData.order.payLink,
+    paymentUUID: OrderData.order.paymentUUID,
     category: OrderData.order.category,
     subcategory: OrderData.order.subcategory,
     brand: OrderData.order.brand,
@@ -95,6 +96,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       _id: OrderData.order._id,
       link: OrderData.order.link,
       payLink: OrderData.order.payLink,
+      paymentUUID: OrderData.order.paymentUUID,
       category: OrderData.order.category,
       subcategory: OrderData.order.subcategory,
       brand: OrderData.order.brand,
@@ -334,6 +336,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           combinedOrder: OrderData.order.combinedOrder,
           status: OrderData.order.status,
           link: OrderData.order.link,
+          paymentUUID: OrderData.order.paymentUUID,
           payLink: data.payLink,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
@@ -395,6 +398,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           status: OrderData.order.status,
           link: OrderData.order.link,
           payLink: data.payLink,
+          paymentUUID: OrderData.order.paymentUUID,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -438,6 +442,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       OrderData.order._id,
       OrderData.order.link,
       OrderData.order.payLink,
+      OrderData.order.paymentUUID,
       OrderData.order.category,
       OrderData.order.subcategory,
       OrderData.order.brand,
@@ -482,6 +487,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       status: OrderData.order.status,
       link: data.link,
       payLink: data.payLink,
+      paymentUUID: data.paymentUUID,
       category: data.category,
       subcategory: data.subcategory,
       brand: data.brand,
@@ -520,6 +526,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           _id: OrderData.order._id,
           link: OrderData.order.link,
           payLink: OrderData.order.payLink,
+          paymentUUID: OrderData.order.paymentUUID,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -545,6 +552,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           _id: OrderData.order._id,
           link: OrderData.order.link,
           payLink: OrderData.order.payLink,
+          paymentUUID: OrderData.order.paymentUUID,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -570,6 +578,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           _id: OrderData.order._id,
           link: OrderData.order.link,
           payLink: OrderData.order.payLink,
+          paymentUUID: OrderData.order.paymentUUID,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -592,6 +601,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           _id: OrderData.order._id,
           link: OrderData.order.link,
           payLink: OrderData.order.payLink,
+          paymentUUID: OrderData.order.paymentUUID,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -625,7 +635,10 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       </p>
       {OrderData.order.deliveredAt && OrderData.order.deliveredAt !== "" && (
         <p className={styles["order-change__status"]}>
-          Доставлен: {dayjs.tz(OrderData.order.deliveredAt, "Europe/Moscow").format("DD.MM.YYYY")}
+          Доставлен:{" "}
+          {dayjs
+            .tz(OrderData.order.deliveredAt, "Europe/Moscow")
+            .format("DD.MM.YYYY")}
         </p>
       )}
       {OrderData.order.reorder === true && (
@@ -771,6 +784,13 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
               name="payLink"
               label="Cсылка на оплату"
               value={OrderData.order.payLink}
+              handleChange={handleChange}
+              required={false}
+            />
+            <TextInput
+              name="paymentUUID"
+              label="UUID оплаты"
+              value={OrderData.order.paymentUUID}
               handleChange={handleChange}
               required={false}
             />

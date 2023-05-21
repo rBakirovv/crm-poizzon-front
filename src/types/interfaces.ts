@@ -28,6 +28,7 @@ export interface IOrder {
   status: string;
   link: string;
   payLink: string,
+  paymentUUID: string,
   category: string;
   subcategory: string;
   brand: string;
