@@ -150,7 +150,7 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
         Payment.paymentsList.map((item) => {
           createPayment(item.title, item.number);
         });
-      }, 1000);
+      }, 1500);
 
       await setTimeout(() => {
         setIsPreload(false);
