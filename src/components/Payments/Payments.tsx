@@ -154,11 +154,11 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
 
       await setTimeout(() => {
         setIsPreload(false);
-      }, 1000);
+      }, 1500);
 
       await setTimeout(() => {
         alert("Успешно! Обновите страницу");
-      }, 1000);
+      }, 1500);
 
       await setIsChangeOrder(false);
     }
