@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dropzone from "react-dropzone";
 import TextInput from "../UI/TextInput/TextInput";
 import OrderData from "../../store/order";
@@ -17,6 +17,7 @@ import {
 import ImagePopup from "../ImagePopup/ImagePopup";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { IOrderImages } from "../../types/interfaces";
+import Preloader from "../UI/Preloader/Preloader";
 
 const Purchase = () => {
   const [data, setData] = useState({
@@ -109,6 +110,8 @@ const Purchase = () => {
       formData.append("imagesUp", file[0]);
     }
 
+    console.log(e);
+
     setUploading(true);
 
     try {
@@ -162,7 +165,7 @@ const Purchase = () => {
           });
         })
         .then(() => {
-          setUploading(false)
+          setUploading(false);
           dragLeaveHandler();
         });
     } catch (error) {
@@ -287,6 +290,99 @@ const Purchase = () => {
       .then(() => closeCancelPopup());
   }
 
+  async function pasteHandler(e: any) {
+    // Костыль!
+    if (e.clipboardData) {
+      var items = e.clipboardData.items;
+      if (items) {
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf("image") !== -1) {
+            setUploading(true);
+
+            const formData = new FormData();
+
+            formData.append("imagesUp", items[0].getAsFile());
+
+            try {
+              await uploadImages(formData, "/order-purchase")
+                .then((data) => {
+                  OrderData.setOrder({
+                    _id: OrderData.order._id,
+                    creater: OrderData.order.creater,
+                    buyer: OrderData.order.buyer,
+                    stockman: OrderData.order.stockman,
+                    createdAt: OrderData.order.createdAt,
+                    overudeAfter: OrderData.order.overudeAfter,
+                    paidAt: OrderData.order.paidAt,
+                    buyAt: OrderData.order.buyAt,
+                    inChinaStockAt: OrderData.order.inChinaStockAt,
+                    deliveredAt: OrderData.order.deliveredAt,
+                    orderId: OrderData.order.orderId,
+                    combinedOrder: OrderData.order.combinedOrder,
+                    status: OrderData.order.status,
+                    link: OrderData.order.link,
+                    payLink: OrderData.order.payLink,
+                    paymentUUID: OrderData.order.paymentUUID,
+                    category: OrderData.order.category,
+                    subcategory: OrderData.order.subcategory,
+                    brand: OrderData.order.brand,
+                    model: OrderData.order.model,
+                    size: OrderData.order.size,
+                    orderImages: OrderData.order.orderImages,
+                    payProofImages: OrderData.order.payProofImages,
+                    buyProofImages: OrderData.order.buyProofImages.concat(
+                      data.data
+                    ),
+                    payment: OrderData.order.payment,
+                    currentRate: OrderData.order.currentRate,
+                    priceCNY: OrderData.order.priceCNY,
+                    priceDeliveryChina: OrderData.order.priceDeliveryChina,
+                    priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
+                    commission: OrderData.order.commission,
+                    promoCodePercent: OrderData.order.promoCodePercent,
+                    comment: OrderData.order.comment,
+                    poizonCode: OrderData.order.poizonCode,
+                    deliveryCode: OrderData.order.deliveryCode,
+                    deliveryName: OrderData.order.deliveryName,
+                    deliveryNameRecipient:
+                      OrderData.order.deliveryNameRecipient,
+                    deliveryPhone: OrderData.order.deliveryPhone,
+                    deliveryPhoneRecipient:
+                      OrderData.order.deliveryPhoneRecipient,
+                    deliveryMethod: OrderData.order.deliveryMethod,
+                    deliveryAddress: OrderData.order.deliveryAddress,
+                    deliveryEntity: OrderData.order.deliveryEntity,
+                    deliveryRelatedEntities:
+                      OrderData.order.deliveryRelatedEntities,
+                    reorder: OrderData.order.reorder,
+                    __v: OrderData.order.__v,
+                  });
+                })
+                .then(() => {
+                  setUploading(false);
+                  dragLeaveHandler();
+                });
+            } catch (error) {
+              setUploading(false);
+              dragLeaveHandler();
+              console.error(error);
+            }
+
+            await updatePurchaseImages(
+              OrderData.order._id,
+              OrderData.order.buyProofImages
+            ).then((order) => OrderData.setOrder(order));
+          }
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("paste", pasteHandler);
+    return () => document.removeEventListener("paste", pasteHandler);
+  }, []);
+
   return (
     <form onSubmit={openSubmitPopup} className={styles["purchase"]}>
       <TextInput
@@ -363,7 +459,7 @@ const Purchase = () => {
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
                   <p className={styles["drag-n-drop-text"]}>
-                    {isDrag ? "Перетащите фото" : "Добавить фото"}
+                    {isDrag ? "Перетащите фото" : "Добавить фото или ctrl + v"}
                     <svg
                       width="18px"
                       height="18px"
@@ -474,6 +570,7 @@ const Purchase = () => {
         closeSubmitPopup={closeLegitPopup}
         submitText="Товар не легит"
       />
+      {uploading && <Preloader />}
     </form>
   );
 };

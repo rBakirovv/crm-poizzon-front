@@ -379,6 +379,93 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
     await updateOrderImages(OrderData.order._id, OrderData.order.orderImages);
   };
 
+  async function pasteHandler(e: any) {
+    // Костыль!
+    if (e.clipboardData) {
+      var items = e.clipboardData.items;
+      if (items) {
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf("image") !== -1) {
+            setUploading(true);
+
+            const formData = new FormData();
+
+            formData.append("imagesUp", items[0].getAsFile());
+
+            try {
+              await uploadImages(formData, "/order-images").then((data) => {
+                OrderData.setOrder({
+                  _id: OrderData.order._id,
+                  creater: OrderData.order.creater,
+                  buyer: OrderData.order.buyer,
+                  stockman: OrderData.order.stockman,
+                  createdAt: OrderData.order.createdAt,
+                  overudeAfter: OrderData.order.overudeAfter,
+                  paidAt: OrderData.order.paidAt,
+                  buyAt: OrderData.order.buyAt,
+                  inChinaStockAt: OrderData.order.inChinaStockAt,
+                  deliveredAt: OrderData.order.deliveredAt,
+                  orderId: OrderData.order.orderId,
+                  combinedOrder: OrderData.order.combinedOrder,
+                  status: OrderData.order.status,
+                  link: OrderData.order.link,
+                  paymentUUID: OrderData.order.paymentUUID,
+                  payLink: data.payLink,
+                  category: OrderData.order.category,
+                  subcategory: OrderData.order.subcategory,
+                  brand: OrderData.order.brand,
+                  model: OrderData.order.model,
+                  size: OrderData.order.size,
+                  orderImages: OrderData.order.orderImages.concat(data.data),
+                  payProofImages: OrderData.order.payProofImages,
+                  buyProofImages: OrderData.order.buyProofImages,
+                  payment: OrderData.order.payment,
+                  currentRate: OrderData.order.currentRate,
+                  priceCNY: OrderData.order.priceCNY,
+                  priceDeliveryChina: OrderData.order.priceDeliveryChina,
+                  priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
+                  commission: OrderData.order.commission,
+                  promoCodePercent: OrderData.order.promoCodePercent,
+                  comment: OrderData.order.comment,
+                  poizonCode: OrderData.order.poizonCode,
+                  deliveryCode: OrderData.order.deliveryCode,
+                  deliveryName: OrderData.order.deliveryName,
+                  deliveryNameRecipient: OrderData.order.deliveryNameRecipient,
+                  deliveryPhone: OrderData.order.deliveryPhone,
+                  deliveryPhoneRecipient:
+                    OrderData.order.deliveryPhoneRecipient,
+                  deliveryMethod: OrderData.order.deliveryMethod,
+                  deliveryAddress: OrderData.order.deliveryAddress,
+                  deliveryEntity: OrderData.order.deliveryEntity,
+                  deliveryRelatedEntities:
+                    OrderData.order.deliveryRelatedEntities,
+                  reorder: OrderData.order.reorder,
+                  __v: OrderData.order.__v,
+                });
+                setUploading(false);
+                dragLeaveHandler();
+              });
+            } catch (error) {
+              console.error(error);
+              setUploading(false);
+              dragLeaveHandler();
+            }
+
+            await updateOrderImages(
+              OrderData.order._id,
+              OrderData.order.orderImages
+            );
+          }
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("paste", pasteHandler);
+    return () => document.removeEventListener("paste", pasteHandler);
+  }, []);
+
   function deleteImageHandler(imageName: string) {
     deleteOrderImage(imageName, OrderData.order._id)
       .then(() => {
@@ -902,7 +989,9 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
                   <div {...getRootProps()}>
                     <input {...getInputProps()} />
                     <p className={styles["drag-n-drop-text"]}>
-                      {isDrag ? "Перетащите фото" : "Добавить фото"}
+                      {isDrag
+                        ? "Перетащите фото"
+                        : "Добавить фото или ctrl + v"}
                       <svg
                         width="18px"
                         height="18px"

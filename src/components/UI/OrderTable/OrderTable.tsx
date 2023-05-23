@@ -201,7 +201,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
           <div
             className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_date"]}`}
           >
-            Дата
+            Дата оплаты
           </div>
           <div
             className={`${styles["orders-table__header-item"]} ${styles["orders-table__header-item_product"]}`}
@@ -341,7 +341,11 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                   <div
                     className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_date"]}`}
                   >
-                    {dayjs.tz(orderItem.createdAt, "Europe/Moscow").format("DD-MM-YYYY")}
+                    {orderItem.paidAt
+                      ? dayjs
+                          .tz(orderItem.paidAt, "Europe/Moscow")
+                          .format("DD-MM-YYYY")
+                      : "-"}
                   </div>
                   <div
                     className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_product"]}`}

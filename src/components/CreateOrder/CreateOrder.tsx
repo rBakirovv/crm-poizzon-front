@@ -62,7 +62,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
     priceRub +
       parseFloat(data.priceDeliveryChina) +
       parseFloat(data.priceDeliveryRussia) +
-      parseFloat(data.commission) - data.promoCodePercent
+      parseFloat(data.commission) -
+      data.promoCodePercent
   );
 
   const totalPriceWithPromo = Math.ceil(
@@ -314,7 +315,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       .then(() => {
         setData({
           link: "",
-          
+
           category: "",
           subcategory: "",
           brand: "",
@@ -434,6 +435,41 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
     data.priceDeliveryRussia,
     data.commission,
   ]);
+
+  async function pasteHandler(e: any) {
+    // Костыль!
+    if (e.clipboardData) {
+      var items = e.clipboardData.items;
+      if (items) {
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf("image") !== -1) {
+            setUploading(true);
+
+            const formData = new FormData();
+
+            formData.append("imagesUp", items[0].getAsFile());
+
+            try {
+              await uploadImages(formData, "/order-images").then((data) => {
+                setImages(images.concat(data.data));
+                setUploading(false);
+                dragLeaveHandler();
+              });
+            } catch (error) {
+              console.error(error);
+              setUploading(false);
+              dragLeaveHandler();
+            }
+          }
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("paste", pasteHandler);
+    return () => document.removeEventListener("paste", pasteHandler);
+  }, []);
 
   return (
     <section className={styles["create-order"]}>
@@ -556,7 +592,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
                   <p className={styles["drag-n-drop-text"]}>
-                    {isDrag ? "Перетащите фото" : "Добавить фото"}
+                    {isDrag ? "Перетащите фото" : "Добавить фото или ctrl + v"}
                     <svg
                       width="18px"
                       height="18px"

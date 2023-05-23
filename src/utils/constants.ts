@@ -5,8 +5,7 @@
 export const BASE_URL = "https://api.poizonqq.ru";
 export const BASE_URL_FRONT = "https://poizonqq.ru";
 export const BASE_PAYMENT_URL = "https://onepayments.tech";
-export const API_PAYMENT_KEY =
-  "43527fb3dd744f5290c90da1427c981d02f6eee69cb7fd00";
+export const API_PAYMENT_KEY = "43527fb3dd744f5290c90da1427c981d02f6eee69cb7fd00";
 export const SUPERADMIN = "Создатель";
 export const ADMIN = "Администратор";
 export const BUYER = "Байер";

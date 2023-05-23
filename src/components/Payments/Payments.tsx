@@ -14,12 +14,20 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
   const [isSubmitPopup, setIsSubmitPopup] = useState<boolean>(false);
   const [paymentTitle, setPaymentTitle] = useState<string>("");
   const [paymentNumber, setPaymentNumber] = useState<string>("");
-  const [paymentId, setPaymentId] = useState<string>("");
+  const [paymentId, setPaymentId] = useState<any>("");
 
   const [paymentData, setPaymentData] = useState({
     title: "",
     number: "",
   });
+
+  // Костыль!
+
+  const [payments, setPayments] = useState<any>(Payment.paymentsList);
+
+  const [currentPayment, setCurrentPayment] = useState<IPayments>();
+
+  const [isDrag, setIsDrag] = useState(false);
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
@@ -68,6 +76,61 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
       });
   }
 
+  function dragOverHandler(e: React.SyntheticEvent) {
+    e.preventDefault();
+
+    const target = e.target as HTMLInputElement;
+    setIsDrag(true);
+
+    if (isDrag) {
+      target.style.boxShadow = "0 4px 3px gray";
+    }
+  }
+
+  function dragLeaveHandler(e: React.SyntheticEvent) {
+    const target = e.target as HTMLInputElement;
+
+    setIsDrag(false);
+    target.style.boxShadow = "none";
+  }
+
+  function dragStartHandler(e: React.SyntheticEvent, item: IPayments) {
+    setIsDrag(true);
+    setCurrentPayment(item);
+  }
+
+  function dragEndHandler(e: React.SyntheticEvent) {
+    const target = e.target as HTMLInputElement;
+
+    setIsDrag(false);
+    target.style.boxShadow = "none";
+  }
+
+  function dropHandler(e: React.SyntheticEvent, item: IPayments) {
+    e.preventDefault();
+
+    const target = e.target as HTMLInputElement;
+
+    target.style.boxShadow = "none";
+
+    //const currentIndex = payments.indexOf(currentPayment!);
+    //const dropIndex = payments.indexOf(item);
+
+    Payment.setPaymentsList(
+      payments.map((pItem: any) => {
+        if (pItem._id === currentPayment?._id) {
+          return item;
+        }
+
+        if (pItem._id === item._id) {
+          return currentPayment;
+        }
+
+        return pItem;
+      })
+    );
+  }
+
   return (
     <section>
       <form
@@ -101,6 +164,12 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
               <li
                 key={paymentItem._id}
                 className={styles["payments__table-item"]}
+                onDragOver={(e) => dragOverHandler(e)}
+                onDragLeave={(e) => dragLeaveHandler(e)}
+                onDragStart={(e) => dragStartHandler(e, paymentItem)}
+                onDragEnd={(e) => dragEndHandler(e)}
+                onDrop={(e) => dropHandler(e, paymentItem)}
+                draggable={true}
               >
                 <button
                   onClick={() =>
