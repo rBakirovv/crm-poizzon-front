@@ -5,6 +5,7 @@ import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { deletePayment, createPayment } from "../../utils/Payment";
 import Payment from "../../store/payments";
 import TextInput from "../UI/TextInput/TextInput";
+import Preloader from "../UI/Preloader/Preloader";
 
 interface IPaymentsProps {
   paymentsList: Array<IPayments>;
@@ -28,6 +29,10 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
   const [currentPayment, setCurrentPayment] = useState<IPayments>();
 
   const [isDrag, setIsDrag] = useState(false);
+
+  const [isChangeOrder, setIsChangeOrder] = useState(false);
+
+  const [isPreload, setIsPreload] = useState(false);
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
@@ -131,8 +136,37 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
     );
   }
 
+  async function changeOrderHandler() {
+    if (!isChangeOrder) {
+      setIsChangeOrder(true);
+    } else {
+      await setIsPreload(true);
+
+      await Payment.paymentsList.map((item) => {
+        deletePayment(item._id);
+      });
+
+      await setTimeout(() => {
+        Payment.paymentsList.map((item) => {
+          createPayment(item.title, item.number);
+        });
+      }, 1000);
+
+      await setTimeout(() => {
+        setIsPreload(false);
+      }, 1000);
+
+      await setTimeout(() => {
+        alert("Успешно! Обновите страницу");
+      }, 1000);
+
+      await setIsChangeOrder(false);
+    }
+  }
+
   return (
     <section>
+      {isPreload && <Preloader />}
       <form
         onSubmit={handleCreatePayment}
         className={styles["payments__create-form"]}
@@ -157,7 +191,12 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
         <button className={styles["payments__create-submit"]}>Создать</button>
       </form>
       <div className={styles["payments__table-container"]}>
-        <h2 className={styles["payments__title"]}>Cпособы оплаты</h2>
+        <div className={styles["payments__title-container"]}>
+          <h2 className={styles["payments__title"]}>Cпособы оплаты</h2>
+          <button onClick={changeOrderHandler}>
+            {isChangeOrder ? "сохр" : "изм."}
+          </button>
+        </div>
         <ul className={styles["payments__table-list"]}>
           {paymentsList.map((paymentItem) => {
             return (
@@ -169,7 +208,7 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
                 onDragStart={(e) => dragStartHandler(e, paymentItem)}
                 onDragEnd={(e) => dragEndHandler(e)}
                 onDrop={(e) => dropHandler(e, paymentItem)}
-                draggable={true}
+                draggable={isChangeOrder}
               >
                 <button
                   onClick={() =>
@@ -181,7 +220,12 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
                   }
                   className={styles["payments__delete-button"]}
                 ></button>
-                <div className={styles["payments__table-info-container"]}>
+                <div
+                  className={`${styles["payments__table-info-container"]} ${
+                    isChangeOrder &&
+                    styles["payments__table-info-container_disabled"]
+                  }`}
+                >
                   <h4 className={styles["payments__table-info-title"]}>
                     {paymentItem.title}
                   </h4>
