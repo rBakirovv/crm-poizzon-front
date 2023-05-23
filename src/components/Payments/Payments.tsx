@@ -88,7 +88,7 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
     setIsDrag(true);
 
     if (isDrag) {
-      target.style.boxShadow = "0 4px 3px gray";
+      target.style.background = "yellow";
     }
   }
 
@@ -96,7 +96,7 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
     const target = e.target as HTMLInputElement;
 
     setIsDrag(false);
-    target.style.boxShadow = "none";
+    target.style.background = "#FFF";
   }
 
   function dragStartHandler(e: React.SyntheticEvent, item: IPayments) {
@@ -108,7 +108,7 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
     const target = e.target as HTMLInputElement;
 
     setIsDrag(false);
-    target.style.boxShadow = "none";
+    target.style.background = "#FFF";
   }
 
   function dropHandler(e: React.SyntheticEvent, item: IPayments) {
@@ -116,7 +116,7 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
 
     const target = e.target as HTMLInputElement;
 
-    target.style.boxShadow = "none";
+    target.style.background = "#FFF";
 
     //const currentIndex = payments.indexOf(currentPayment!);
     //const dropIndex = payments.indexOf(item);
