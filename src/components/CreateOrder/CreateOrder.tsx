@@ -466,6 +466,14 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
     }
   }
 
+  const sortCards = (a: IPayments, b: IPayments) => {
+    if (a.paymentOrder > b.paymentOrder) {
+      return 1;
+    } else {
+      return -1;
+    }
+  };
+
   useEffect(() => {
     document.addEventListener("paste", pasteHandler);
     return () => document.removeEventListener("paste", pasteHandler);
@@ -623,7 +631,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
               <option value="" selected disabled>
                 -- Выберите --
               </option>
-              {payments.map((paymentItem) => {
+              {payments.sort(sortCards).map((paymentItem) => {
                 return (
                   <option
                     key={paymentItem._id}

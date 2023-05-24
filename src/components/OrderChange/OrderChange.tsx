@@ -421,7 +421,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
                   orderImages: OrderData.order.orderImages.concat(data.data),
                   payProofImages: OrderData.order.payProofImages,
                   buyProofImages: OrderData.order.buyProofImages,
-                  uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
+                  uploadedBuyProofImages:
+                    OrderData.order.uploadedBuyProofImages,
                   payment: OrderData.order.payment,
                   currentRate: OrderData.order.currentRate,
                   priceCNY: OrderData.order.priceCNY,
@@ -562,6 +563,14 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
   function handleSubmitDeleteImage() {
     deleteImageHandler(currentDeletedImage);
   }
+
+  const sortCards = (a: IPayments, b: IPayments) => {
+    if (a.paymentOrder > b.paymentOrder) {
+      return 1;
+    } else {
+      return -1;
+    }
+  };
 
   useEffect(() => {
     OrderData.setOrder({
@@ -1035,7 +1044,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
                 <option value="" selected disabled>
                   -- Выберите --
                 </option>
-                {payments.map((paymentItem) => {
+                {payments.sort(sortCards).map((paymentItem) => {
                   return (
                     <option
                       key={paymentItem._id}
