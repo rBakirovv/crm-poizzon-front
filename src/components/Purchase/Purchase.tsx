@@ -110,8 +110,6 @@ const Purchase = () => {
       formData.append("imagesUp", file[0]);
     }
 
-    console.log(e);
-
     setUploading(true);
 
     try {
@@ -142,6 +140,7 @@ const Purchase = () => {
             orderImages: OrderData.order.orderImages,
             payProofImages: OrderData.order.payProofImages,
             buyProofImages: OrderData.order.buyProofImages.concat(data.data),
+            uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
             payment: OrderData.order.payment,
             currentRate: OrderData.order.currentRate,
             priceCNY: OrderData.order.priceCNY,
@@ -151,6 +150,7 @@ const Purchase = () => {
             promoCodePercent: OrderData.order.promoCodePercent,
             comment: OrderData.order.comment,
             poizonCode: OrderData.order.poizonCode,
+            filledPoizonCode: OrderData.order.filledPoizonCode,
             deliveryCode: OrderData.order.deliveryCode,
             deliveryName: OrderData.order.deliveryName,
             deliveryNameRecipient: OrderData.order.deliveryNameRecipient,
@@ -175,7 +175,8 @@ const Purchase = () => {
 
     await updatePurchaseImages(
       OrderData.order._id,
-      OrderData.order.buyProofImages
+      OrderData.order.buyProofImages,
+      UserData.userData.name
     ).then((order) => OrderData.setOrder(order));
   };
 
@@ -209,6 +210,7 @@ const Purchase = () => {
           buyProofImages: OrderData.order.buyProofImages.filter(
             (imageItem) => imageItem.name !== imageName
           ),
+          uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
           priceCNY: OrderData.order.priceCNY,
@@ -218,6 +220,7 @@ const Purchase = () => {
           promoCodePercent: OrderData.order.promoCodePercent,
           comment: OrderData.order.comment,
           poizonCode: OrderData.order.poizonCode,
+          filledPoizonCode: OrderData.order.filledPoizonCode,
           deliveryCode: OrderData.order.deliveryCode,
           deliveryName: OrderData.order.deliveryName,
           deliveryNameRecipient: OrderData.order.deliveryNameRecipient,
@@ -234,7 +237,8 @@ const Purchase = () => {
       .then(() => {
         updatePurchaseImages(
           OrderData.order._id,
-          OrderData.order.buyProofImages
+          OrderData.order.buyProofImages,
+          UserData.userData.name
         );
       })
       .catch(console.error);
@@ -242,7 +246,11 @@ const Purchase = () => {
 
   function handlePurchaseSubmit() {
     if (OrderData.order.buyProofImages.length !== 0) {
-      updatePurchaseData(OrderData.order._id, data.poizon_code)
+      updatePurchaseData(
+        OrderData.order._id,
+        data.poizon_code,
+        UserData.userData.name
+      )
         .then((order) => {
           OrderData.setOrder(order);
         })
@@ -333,6 +341,8 @@ const Purchase = () => {
                     buyProofImages: OrderData.order.buyProofImages.concat(
                       data.data
                     ),
+                    uploadedBuyProofImages:
+                      OrderData.order.uploadedBuyProofImages,
                     payment: OrderData.order.payment,
                     currentRate: OrderData.order.currentRate,
                     priceCNY: OrderData.order.priceCNY,
@@ -342,6 +352,7 @@ const Purchase = () => {
                     promoCodePercent: OrderData.order.promoCodePercent,
                     comment: OrderData.order.comment,
                     poizonCode: OrderData.order.poizonCode,
+                    filledPoizonCode: OrderData.order.filledPoizonCode,
                     deliveryCode: OrderData.order.deliveryCode,
                     deliveryName: OrderData.order.deliveryName,
                     deliveryNameRecipient:
@@ -370,7 +381,8 @@ const Purchase = () => {
 
             await updatePurchaseImages(
               OrderData.order._id,
-              OrderData.order.buyProofImages
+              OrderData.order.buyProofImages,
+              UserData.userData.name
             ).then((order) => OrderData.setOrder(order));
           }
         }
@@ -392,11 +404,23 @@ const Purchase = () => {
         handleChange={handleChange}
         required={false}
       />
+      {(OrderData.order.filledPoizonCode !== "" &&
+        OrderData.order.filledPoizonCode !== null) && (
+          <p>
+            Обновил: <strong>{OrderData.order.filledPoizonCode}</strong>
+          </p>
+        )}
       {!(
         OrderData.order.status === "Черновик" ||
         OrderData.order.status === "Проверка оплаты" ||
         OrderData.order.status === "Ожидает закупки"
       ) && <p>Скриншоты чеков закупки</p>}
+      {OrderData.order.uploadedBuyProofImages !== "" &&
+        OrderData.order.uploadedBuyProofImages !== null && (
+          <p>
+            Загрузил: <strong>{OrderData.order.uploadedBuyProofImages}</strong>
+          </p>
+        )}
       <ul className={styles["purchase__images-list"]}>
         {OrderData.order.buyProofImages.length > 0 &&
           OrderData.order.buyProofImages

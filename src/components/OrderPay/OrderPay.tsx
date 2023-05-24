@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import Dropzone from "react-dropzone";
 import styles from "./OrderPay.module.css";
-import { BASE_URL, BASE_URL_FRONT, MAX_SIZE } from "../../utils/constants";
+import { BASE_URL, MAX_SIZE } from "../../utils/constants";
 import {
   deletePayProofImage,
   updateDeliveryData,
@@ -132,6 +132,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
             orderImages: OrderData.order.orderImages,
             payProofImages: OrderData.order.payProofImages.concat(data.data),
             buyProofImages: OrderData.order.buyProofImages,
+            uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
             payment: OrderData.order.payment,
             currentRate: OrderData.order.currentRate,
             priceCNY: OrderData.order.priceCNY,
@@ -141,6 +142,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
             promoCodePercent: OrderData.order.promoCodePercent,
             comment: OrderData.order.comment,
             poizonCode: OrderData.order.poizonCode,
+            filledPoizonCode: OrderData.order.filledPoizonCode,
             deliveryCode: OrderData.order.deliveryCode,
             deliveryName: OrderData.order.deliveryName,
             deliveryNameRecipient: OrderData.order.deliveryNameRecipient,
@@ -213,6 +215,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
                       data.data
                     ),
                     buyProofImages: OrderData.order.buyProofImages,
+                    uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
                     payment: OrderData.order.payment,
                     currentRate: OrderData.order.currentRate,
                     priceCNY: OrderData.order.priceCNY,
@@ -222,6 +225,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
                     promoCodePercent: OrderData.order.promoCodePercent,
                     comment: OrderData.order.comment,
                     poizonCode: OrderData.order.poizonCode,
+                    filledPoizonCode: OrderData.order.filledPoizonCode,
                     deliveryCode: OrderData.order.deliveryCode,
                     deliveryName: OrderData.order.deliveryName,
                     deliveryNameRecipient:
@@ -292,6 +296,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
             (imageItem) => imageItem.name !== imageName
           ),
           buyProofImages: OrderData.order.buyProofImages,
+          uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
           priceCNY: OrderData.order.priceCNY,
@@ -301,6 +306,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
           promoCodePercent: OrderData.order.promoCodePercent,
           comment: OrderData.order.comment,
           poizonCode: OrderData.order.poizonCode,
+          filledPoizonCode: OrderData.order.filledPoizonCode,
           deliveryCode: OrderData.order.deliveryCode,
           deliveryName: OrderData.order.deliveryName,
           deliveryNameRecipient: OrderData.order.deliveryNameRecipient,

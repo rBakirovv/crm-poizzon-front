@@ -2,7 +2,11 @@ import styles from "./Payments.module.css";
 import { IPayments } from "../../types/interfaces";
 import { FC, useState } from "react";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
-import { deletePayment, createPayment } from "../../utils/Payment";
+import {
+  deletePayment,
+  createPayment,
+  updatePaymentOrder,
+} from "../../utils/Payment";
 import Payment from "../../store/payments";
 import TextInput from "../UI/TextInput/TextInput";
 import Preloader from "../UI/Preloader/Preloader";
@@ -96,7 +100,7 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
     const target = e.target as HTMLInputElement;
 
     setIsDrag(false);
-    target.style.background = "#FFF";
+    target.style.background = "transparent";
   }
 
   function dragStartHandler(e: React.SyntheticEvent, item: IPayments) {
@@ -108,7 +112,7 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
     const target = e.target as HTMLInputElement;
 
     setIsDrag(false);
-    target.style.background = "#FFF";
+    target.style.background = "transparent";
   }
 
   function dropHandler(e: React.SyntheticEvent, item: IPayments) {
@@ -116,25 +120,30 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
 
     const target = e.target as HTMLInputElement;
 
-    target.style.background = "#FFF";
-
-    //const currentIndex = payments.indexOf(currentPayment!);
-    //const dropIndex = payments.indexOf(item);
+    target.style.background = "transparent";
 
     Payment.setPaymentsList(
-      payments.map((pItem: any) => {
+      Payment.paymentsList.map((pItem: IPayments) => {
         if (pItem._id === currentPayment?._id) {
-          return item;
+          return { ...pItem, paymentOrder: item.paymentOrder };
         }
 
         if (pItem._id === item._id) {
-          return currentPayment;
+          return { ...pItem, paymentOrder: currentPayment!.paymentOrder };
         }
 
         return pItem;
       })
     );
   }
+
+  const sortCards = (a: IPayments, b: IPayments) => {
+    if (a.paymentOrder > b.paymentOrder) {
+      return 1;
+    } else {
+      return -1;
+    }
+  };
 
   async function changeOrderHandler() {
     if (!isChangeOrder) {
@@ -143,24 +152,11 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
       await setIsPreload(true);
 
       await Payment.paymentsList.map((item) => {
-        deletePayment(item._id);
+        updatePaymentOrder(item._id, item.paymentOrder);
       });
 
-      await setTimeout(() => {
-        Payment.paymentsList.map((item) => {
-          createPayment(item.title, item.number);
-        });
-      }, 1500);
-
-      await setTimeout(() => {
-        setIsPreload(false);
-      }, 1500);
-
-      await setTimeout(() => {
-        alert("Успешно! Обновите страницу");
-      }, 1500);
-
       await setIsChangeOrder(false);
+      await setIsPreload(false);
     }
   }
 
@@ -198,7 +194,7 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
           </button>
         </div>
         <ul className={styles["payments__table-list"]}>
-          {paymentsList.map((paymentItem) => {
+          {Payment.paymentsList.sort(sortCards).map((paymentItem) => {
             return (
               <li
                 key={paymentItem._id}

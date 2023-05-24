@@ -32,6 +32,17 @@ export const deletePayment = (id: string) => {
   }).then(checkResponse);
 };
 
+export const updatePaymentOrder = (id: string, order: number) => {
+  return fetch(`${BASE_URL}/payments/update-order/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      paymentOrder: order,
+    }),
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();

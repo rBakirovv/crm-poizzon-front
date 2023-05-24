@@ -279,20 +279,22 @@ export const cancelPurchase = (id: string) => {
   }).then(checkResponse);
 };
 
-export const updatePurchaseData = (id: string, poizonCode: string) => {
+export const updatePurchaseData = (id: string, poizonCode: string, filledPoizonCode: string) => {
   return fetch(`${BASE_URL}/order/purchase/${id}`, {
     credentials: "include",
     method: "PATCH",
     headers: HEADERS,
     body: JSON.stringify({
       poizonCode: poizonCode,
+      filledPoizonCode: filledPoizonCode,
     }),
   }).then(checkResponse);
 };
 
 export const updatePurchaseImages = (
   id: string,
-  buyProofImages: Array<IOrderImages>
+  buyProofImages: Array<IOrderImages>,
+  uploadedBuyProofImages: string,
 ) => {
   return fetch(`${BASE_URL}/order/purchase-images/${id}`, {
     credentials: "include",
@@ -300,6 +302,7 @@ export const updatePurchaseImages = (
     headers: HEADERS,
     body: JSON.stringify({
       buyProofImages: buyProofImages,
+      uploadedBuyProofImages: uploadedBuyProofImages,
     }),
   }).then(checkResponse);
 };

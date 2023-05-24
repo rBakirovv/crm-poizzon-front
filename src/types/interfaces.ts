@@ -10,6 +10,7 @@ export interface IPayments {
   title: string;
   number: string;
   _id: string;
+  paymentOrder: number;
 }
 
 export interface IOrder {
@@ -37,6 +38,7 @@ export interface IOrder {
   orderImages: Array<IOrderImages>;
   payProofImages: Array<IOrderImages>;
   buyProofImages: Array<IOrderImages>;
+  uploadedBuyProofImages: string,
   payment: string;
   currentRate: string;
   priceCNY: string;
@@ -46,6 +48,7 @@ export interface IOrder {
   promoCodePercent: number;
   comment: string;
   poizonCode: string;
+  filledPoizonCode: string,
   deliveryCode: string;
   deliveryName?: string;
   deliveryNameRecipient?: string;
