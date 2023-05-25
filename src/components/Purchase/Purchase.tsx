@@ -405,7 +405,7 @@ const Purchase = () => {
         required={false}
       />
       {(OrderData.order.filledPoizonCode !== "" &&
-        OrderData.order.filledPoizonCode !== null) && (
+        OrderData.order.filledPoizonCode !== null) && OrderData.order.poizonCode !== "" && (
           <p>
             Обновил: <strong>{OrderData.order.filledPoizonCode}</strong>
           </p>
@@ -416,7 +416,7 @@ const Purchase = () => {
         OrderData.order.status === "Ожидает закупки"
       ) && <p>Скриншоты чеков закупки</p>}
       {OrderData.order.uploadedBuyProofImages !== "" &&
-        OrderData.order.uploadedBuyProofImages !== null && (
+        OrderData.order.uploadedBuyProofImages !== null && OrderData.order.buyProofImages.length > 0 && (
           <p>
             Загрузил: <strong>{OrderData.order.uploadedBuyProofImages}</strong>
           </p>
