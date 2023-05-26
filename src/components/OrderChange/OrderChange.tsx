@@ -747,7 +747,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       )}
       {OrderData.order.comment !== "" && (
         <p>
-          Комментарий: <span className={styles["order-change__status_orange"]}>{OrderData.order.comment}</span>
+          Комментарий: <span className={styles["order-change__status_red"]}>{OrderData.order.comment}</span>
         </p>
       )}
       {OrderData.order.reorder === true && (
