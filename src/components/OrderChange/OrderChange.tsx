@@ -745,6 +745,11 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
             .format("DD.MM.YYYY")}
         </p>
       )}
+      {OrderData.order.comment !== "" && (
+        <p>
+          Комментарий: <span className={styles["order-change__status_orange"]}>{OrderData.order.comment}</span>
+        </p>
+      )}
       {OrderData.order.reorder === true && (
         <p className={styles["order-change__status_red"]}>Перезаказ</p>
       )}

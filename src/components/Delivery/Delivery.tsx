@@ -1279,12 +1279,6 @@ const Delivery = () => {
               )}
             </div>
           )}
-        {OrderData.order.comment !== "" && (
-          <>
-            <h4>Комментарий</h4>
-            <p className={styles["delivery-span"]}>{OrderData.order.comment}</p>
-          </>
-        )}
         {OrderData.order.deliveryCode !== "" && (
           <>
             <h4>Номер CDEK</h4>
