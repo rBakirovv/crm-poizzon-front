@@ -374,7 +374,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
     <section className={styles["order-pay"]}>
       {uploading && <Preloader />}
       <div className={styles["order-pay__container"]}>
-        {!isDelivery && (
+        {!isDelivery && OrderData.order.payment !== "Перейти по ссылке -" && (
           <>
             <div className={styles["order-pay__payment-container"]}>
               <h4 className={styles["order-pay__title"]}>
