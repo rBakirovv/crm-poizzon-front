@@ -72,9 +72,18 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
   function handleTimeLeft() {
     timeLeft <= 0
       ? alert(
-          "Время для оплаты заказа истекло. Стоимость товара могла измениться. \n\nЕсли вы готовы оплатить товар, сообщите менеджеру в @telegram"
+          "Время для оплаты заказа истекло. Стоимость товара могла измениться. \n\nЕсли вы готовы оплатить товар, сообщите менеджеру в Telegram"
         )
       : router.push(`pay/${currentOrder._id}`);
+  }
+
+  function handleTimeLeftLink(e: React.SyntheticEvent) {
+    if (timeLeft <= 0) {
+      e.preventDefault();
+      alert(
+        "Время для оплаты заказа истекло. Стоимость товара могла измениться. \n\nЕсли вы готовы оплатить товар, сообщите менеджеру в Telegram"
+      );
+    }
   }
 
   function handleDelivery() {
@@ -437,6 +446,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
             <a
               className={styles["order__pay-button"]}
               href={`${currentOrder.payLink}`}
+              onClick={handleTimeLeftLink}
             >
               {isBrowser && (
                 <Timer
@@ -501,7 +511,9 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
       />
       {currentOrder.deliveryPhone === "" &&
         currentOrder.status === "Ожидает закупки" &&
-        currentOrder.payment === "Перейти по ссылке -" && <UserDataModal _id={currentOrder._id} />}
+        currentOrder.payment === "Перейти по ссылке -" && (
+          <UserDataModal _id={currentOrder._id} />
+        )}
     </section>
   );
 };
