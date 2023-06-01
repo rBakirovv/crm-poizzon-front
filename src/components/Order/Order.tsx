@@ -510,7 +510,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
         prevImage={prevImage}
       />
       {currentOrder.deliveryPhone === "" &&
-        currentOrder.status === "Ожидает закупки" &&
+        currentOrder.status !== "Черновик" && currentOrder.status !== "Проверка оплаты" &&
         currentOrder.payment === "Перейти по ссылке -" && (
           <UserDataModal _id={currentOrder._id} />
         )}
