@@ -5,6 +5,7 @@ import styles from "./OrderChange.styles.module.css";
 import { IPayments } from "../../types/interfaces";
 import OrderData from "../../store/order";
 import PromoCodeData from "../../store/promo-code";
+import CommissionData from "../../store/commission";
 import {
   updateOrderDraft,
   updateOrderImages,
@@ -192,13 +193,13 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       ...data,
       [name]: value,
     });
-
+    
     if (target.value === "Кроссовки") {
       setData({
         ...data,
         subcategory: "Кроссовки",
-        priceDeliveryRussia: "1362",
-        priceDeliveryChina: "837",
+        priceDeliveryRussia: CommissionData.commission.sneakersRussia,
+        priceDeliveryChina: CommissionData.commission.sneakersChina,
       });
     }
 
@@ -206,8 +207,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Зимняя обувь",
-        priceDeliveryRussia: "1859",
-        priceDeliveryChina: "837",
+        priceDeliveryRussia: CommissionData.commission.winterShoesRussia,
+        priceDeliveryChina: CommissionData.commission.winterShoesChina,
       });
     }
 
@@ -215,8 +216,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Куртка",
-        priceDeliveryRussia: "1197",
-        priceDeliveryChina: "837",
+        priceDeliveryRussia: CommissionData.commission.jacketRussia,
+        priceDeliveryChina: CommissionData.commission.jacketChina,
       });
     }
 
@@ -224,8 +225,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Толстовка",
-        priceDeliveryRussia: "1197",
-        priceDeliveryChina: "837",
+        priceDeliveryRussia: CommissionData.commission.sweatshirtRussia,
+        priceDeliveryChina: CommissionData.commission.sweatshirtChina,
       });
     }
 
@@ -233,8 +234,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Футболка",
-        priceDeliveryRussia: "495",
-        priceDeliveryChina: "411",
+        priceDeliveryRussia: CommissionData.commission.tShirtRussia,
+        priceDeliveryChina: CommissionData.commission.tShirtChina,
       });
     }
 
@@ -242,8 +243,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Носки",
-        priceDeliveryRussia: "274",
-        priceDeliveryChina: "248",
+        priceDeliveryRussia: CommissionData.commission.socksRussia,
+        priceDeliveryChina: CommissionData.commission.socksChina,
       });
     }
 
@@ -251,8 +252,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Сумка",
-        priceDeliveryRussia: "806",
-        priceDeliveryChina: "837",
+        priceDeliveryRussia: CommissionData.commission.bagRussia,
+        priceDeliveryChina: CommissionData.commission.bagChina,
       });
     }
 
@@ -260,8 +261,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Духи",
-        priceDeliveryRussia: "806",
-        priceDeliveryChina: "411",
+        priceDeliveryRussia: CommissionData.commission.perfumeRussia,
+        priceDeliveryChina: CommissionData.commission.perfumeChina,
       });
     }
 
@@ -269,8 +270,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Штаны",
-        priceDeliveryRussia: "1197",
-        priceDeliveryChina: "837",
+        priceDeliveryRussia: CommissionData.commission.pantsRussia,
+        priceDeliveryChina: CommissionData.commission.pantsChina,
       });
     }
 
@@ -278,8 +279,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Головной убор",
-        priceDeliveryRussia: "395",
-        priceDeliveryChina: "411",
+        priceDeliveryRussia: CommissionData.commission.headdressRussia,
+        priceDeliveryChina: CommissionData.commission.headdressChina,
       });
     }
 
@@ -287,7 +288,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Техника",
-        priceDeliveryRussia: "0",
+        priceDeliveryRussia: CommissionData.commission.techniqueRussia,
+        priceDeliveryChina: CommissionData.commission.techniqueChina,
       });
     }
 
@@ -295,7 +297,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Прочее",
-        priceDeliveryRussia: "0",
+        priceDeliveryRussia: CommissionData.commission.otherRussia,
+        priceDeliveryChina: CommissionData.commission.otherChina,
       });
     }
   }
@@ -747,7 +750,10 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       )}
       {OrderData.order.comment !== "" && (
         <p>
-          Комментарий: <span className={styles["order-change__status_red"]}>{OrderData.order.comment}</span>
+          Комментарий:{" "}
+          <span className={styles["order-change__status_red"]}>
+            {OrderData.order.comment}
+          </span>
         </p>
       )}
       {OrderData.order.reorder === true && (

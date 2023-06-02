@@ -5,6 +5,7 @@ import PromoCodeData from "../../store/promo-code";
 import RateData from "../../store/rate";
 import UserData from "../../store/user";
 import OrderData from "../../store/order";
+import CommissionData from "../../store/commission";
 import { IOrderImages, IPayments } from "../../types/interfaces";
 import Dropzone from "react-dropzone";
 import { BASE_URL, BASE_URL_FRONT, MAX_SIZE } from "../../utils/constants";
@@ -39,7 +40,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
     priceCNY: "0",
     priceDeliveryChina: "0",
     priceDeliveryRussia: "0",
-    commission: "499",
+    commission: CommissionData.commission.commission,
     promoCodePercent: 0,
     comment: "",
   });
@@ -96,8 +97,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Кроссовки",
-        priceDeliveryRussia: "1362",
-        priceDeliveryChina: "837",
+        priceDeliveryRussia: CommissionData.commission.sneakersRussia,
+        priceDeliveryChina: CommissionData.commission.sneakersChina,
       });
     }
 
@@ -105,8 +106,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Зимняя обувь",
-        priceDeliveryRussia: "1859",
-        priceDeliveryChina: "837",
+        priceDeliveryRussia: CommissionData.commission.winterShoesRussia,
+        priceDeliveryChina: CommissionData.commission.winterShoesChina,
       });
     }
 
@@ -114,8 +115,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Куртка",
-        priceDeliveryRussia: "1197",
-        priceDeliveryChina: "837",
+        priceDeliveryRussia: CommissionData.commission.jacketRussia,
+        priceDeliveryChina: CommissionData.commission.jacketChina,
       });
     }
 
@@ -123,8 +124,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Толстовка",
-        priceDeliveryRussia: "1197",
-        priceDeliveryChina: "837",
+        priceDeliveryRussia: CommissionData.commission.sweatshirtRussia,
+        priceDeliveryChina: CommissionData.commission.sweatshirtChina,
       });
     }
 
@@ -132,8 +133,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Футболка",
-        priceDeliveryRussia: "495",
-        priceDeliveryChina: "411",
+        priceDeliveryRussia: CommissionData.commission.tShirtRussia,
+        priceDeliveryChina: CommissionData.commission.tShirtChina,
       });
     }
 
@@ -141,8 +142,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Носки",
-        priceDeliveryRussia: "274",
-        priceDeliveryChina: "248",
+        priceDeliveryRussia: CommissionData.commission.socksRussia,
+        priceDeliveryChina: CommissionData.commission.socksChina,
       });
     }
 
@@ -150,8 +151,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Сумка",
-        priceDeliveryRussia: "806",
-        priceDeliveryChina: "837",
+        priceDeliveryRussia: CommissionData.commission.bagRussia,
+        priceDeliveryChina: CommissionData.commission.bagChina,
       });
     }
 
@@ -159,8 +160,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Духи",
-        priceDeliveryRussia: "806",
-        priceDeliveryChina: "411",
+        priceDeliveryRussia: CommissionData.commission.perfumeRussia,
+        priceDeliveryChina: CommissionData.commission.perfumeChina,
       });
     }
 
@@ -168,8 +169,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Штаны",
-        priceDeliveryRussia: "1197",
-        priceDeliveryChina: "837",
+        priceDeliveryRussia: CommissionData.commission.pantsRussia,
+        priceDeliveryChina: CommissionData.commission.pantsChina,
       });
     }
 
@@ -177,8 +178,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Головной убор",
-        priceDeliveryRussia: "395",
-        priceDeliveryChina: "411",
+        priceDeliveryRussia: CommissionData.commission.headdressRussia,
+        priceDeliveryChina: CommissionData.commission.headdressChina,
       });
     }
 
@@ -186,7 +187,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Техника",
-        priceDeliveryRussia: "0",
+        priceDeliveryRussia: CommissionData.commission.techniqueRussia,
+        priceDeliveryChina: CommissionData.commission.techniqueChina,
       });
     }
 
@@ -194,7 +196,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       setData({
         ...data,
         subcategory: "Прочее",
-        priceDeliveryRussia: "0",
+        priceDeliveryRussia: CommissionData.commission.otherRussia,
+        priceDeliveryChina: CommissionData.commission.otherChina,
       });
     }
   }

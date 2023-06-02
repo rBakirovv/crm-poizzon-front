@@ -8,10 +8,11 @@ import Preloader from "../../components/UI/Preloader/Preloader";
 import UserData from "../../store/user";
 import Logged from "../../store/logged";
 import { getUserInfo } from "../../utils/User";
-import { getRate } from "../../utils/Rate";
+import { getCommissionData, getRate } from "../../utils/Rate";
 import RateData from "../../store/rate";
+import CommissionData from "../../store/commission";
 import Navigation from "../../components/UI/Navigation/Navigation";
-import { SUPERADMIN } from "../../utils/constants";
+import { ADMIN, SUPERADMIN } from "../../utils/constants";
 import RateComponent from "../../components/RateComponent/RateComponent";
 
 const Home = observer(() => {
@@ -56,11 +57,21 @@ const Home = observer(() => {
     });
   }, []);
 
+  useEffect(() => {
+    getCommissionData().then((commission) => {
+      CommissionData.setUpdatedCommission(commission);
+    });
+  }, []);
+
   return (
     <>
       <Head>
         <title>Poizonqq CRM - Курс СNY</title>
-        <link type="Image/x-icon" href="../images/favicon.ico" rel="icon"></link>
+        <link
+          type="Image/x-icon"
+          href="../images/favicon.ico"
+          rel="icon"
+        ></link>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {!Logged.loggedIn && <Preloader />}
@@ -73,7 +84,7 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            {UserData.userData.position === SUPERADMIN ? (
+            {(UserData.userData.position === SUPERADMIN || UserData.userData.position === ADMIN) ? (
               <RateComponent
                 currentRate={RateData.rate}
                 isFirstRate={isFirstRate}

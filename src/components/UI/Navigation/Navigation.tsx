@@ -185,7 +185,7 @@ const Navigation = observer(() => {
               }`}
               href="/rate"
             >
-              Курс
+              Курс/Комиссия
             </Link>
           </li>
         )}

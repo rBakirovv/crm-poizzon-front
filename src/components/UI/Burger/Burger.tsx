@@ -220,7 +220,7 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
               }`}
               href="/rate"
             >
-              Курс
+              Курс/Комиссия
             </Link>
           </li>
         )}

@@ -12,7 +12,8 @@ import Navigation from "../../components/UI/Navigation/Navigation";
 import { getCurrentOrder } from "../../utils/Order";
 import OrderData from "../../store/order";
 import RateData from "../../store/rate";
-import { getRate } from "../../utils/Rate";
+import CommissionData from "../../store/commission";
+import { getCommissionData, getRate } from "../../utils/Rate";
 import { getPayments } from "../../utils/Payment";
 import { getPoromoCodes } from "../../utils/PoromoCode";
 import PaymentsData from "../../store/payments";
@@ -83,6 +84,12 @@ const Home = observer(() => {
   useEffect(() => {
     getPoromoCodes().then((promoCodes) => {
       PromoCodeData.setPromoCodeList(promoCodes);
+    });
+  }, []);
+
+  useEffect(() => {
+    getCommissionData().then((commission) => {
+      CommissionData.setUpdatedCommission(commission);
     });
   }, []);
 

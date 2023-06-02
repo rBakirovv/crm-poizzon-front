@@ -60,23 +60,6 @@ const Supply = observer(() => {
     []
   );
 
-  /*
-  function handlePaste(e: React.ClipboardEvent) {
-    const target = e.target as HTMLInputElement;
-
-    const { name } = target;
-
-    setData({
-      ...data,
-      [name]: e.clipboardData.getData("Text"),
-    });
-
-    if (target.name === "supply") {
-      handleSupplyPaste(e.clipboardData.getData("Text"));
-    }
-  }
-  */
-
   const filteredSupplyItems = OrderData.orders.filter((filterItem) => {
     if (SupplyData.supply.supply.includes(filterItem.poizonCode)) {
       return filterItem;

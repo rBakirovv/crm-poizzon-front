@@ -96,3 +96,41 @@ export interface ISupply {
   _id?: string;
   __v?: number;
 }
+
+export interface ISupply {
+  createdAt: string,
+  supply: Array<String>;
+  stock: Array<String>;
+  _id?: string;
+  __v?: number;
+}
+
+export interface ICommission {
+  sneakersChina: string,
+  sneakersRussia: string,
+  winterShoesChina: string,
+  winterShoesRussia: string,
+  jacketChina: string,
+  jacketRussia: string,
+  sweatshirtChina: string,
+  sweatshirtRussia: string,
+  tShirtChina: string,
+  tShirtRussia: string,
+  socksChina: string,
+  socksRussia: string,
+  bagChina: string,
+  bagRussia: string,
+  perfumeChina: string,
+  perfumeRussia: string,
+  pantsChina: string,
+  pantsRussia: string,
+  headdressChina: string,
+  headdressRussia: string,
+  techniqueChina: string,
+  techniqueRussia: string,
+  otherChina: string,
+  otherRussia: string,
+  commission: string,
+  _id?: string;
+  __v?: number;
+}
