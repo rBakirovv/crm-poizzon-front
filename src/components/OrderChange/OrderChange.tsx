@@ -26,7 +26,7 @@ import DeliveryDuplicate from "../DeliveryDuplicate/DeliveryDuplicate";
 const dayjs = require("dayjs");
 
 var utc = require("dayjs/plugin/utc");
-var timezone = require("dayjs/plugin/timezone"); // dependent on utc plugin
+var timezone = require("dayjs/plugin/timezone");
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -193,7 +193,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       ...data,
       [name]: value,
     });
-    
+
     if (target.value === "Кроссовки") {
       setData({
         ...data,
@@ -744,8 +744,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
         <p className={styles["order-change__status"]}>
           Доставлен:{" "}
           {dayjs
-            .tz(OrderData.order.deliveredAt, "Europe/Moscow")
-            .format("DD.MM.YYYY")}
+            .tz(new Date(OrderData.order.deliveredAt!))
+            .format("DD-MM-YYYY в k:mm")}
         </p>
       )}
       {OrderData.order.comment !== "" && (
@@ -775,13 +775,16 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
             Объединён с:
           </span>
           {OrderData.order.combinedOrder[0].combinedOrder.map((id) => {
+            const combinedItem = OrderData.orders.find(
+              (fItem) => fItem._id === id
+            );
             return (
               id !== OrderData.order._id && (
                 <a
                   className={styles["order-change__order-link"]}
                   href={`${BASE_URL_FRONT}/order/change/${id}`}
                 >
-                  {id}
+                  Заказ {combinedItem?.orderId}
                 </a>
               )
             );

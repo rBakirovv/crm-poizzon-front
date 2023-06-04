@@ -32,7 +32,6 @@ const OrderDeliveryClient = () => {
 
   // фун-я с костылём!
   function choosePVZ(wat: any) {
-    //console.log(wat);
     setTarif(wat.tarif);
     setCurrentPVZId(wat.id);
     setCurrentPVZ(`г. ${wat.cityName}, ${wat.PVZ.Address}`);
@@ -151,68 +150,70 @@ const OrderDeliveryClient = () => {
             <h4 className={styles["order-pay__title"]}>
               {OrderData.order.brand} {OrderData.order.model}
             </h4>
-            <TextInput
-              name="name_recipient"
-              label="ФИО получателя"
-              value={data.name_recipient}
-              handleChange={handleChange}
-              readonly={OrderData.order.deliveryMethod !== ""}
-              required={true}
-            />
-            <div className={styles["order-pay__select-container"]}>
-              <label>
-                Тип доставки<span className={styles["red-star"]}>*</span>
-              </label>
-              <select
-                className={styles["order-pay__select"]}
-                name="delivery_method"
-                onChange={handleChange}
-                required
-              >
-                <option value="" selected disabled>
-                  -- Выберите --
-                </option>
-                <option value="Самовывоз из пункта выдачи CDEK">
-                  Самовывоз из пункта выдачи CDEK
-                </option>
-              </select>
-            </div>
-            {data.delivery_method === "Курьером CDEK" && (
+            <div className={styles["order-pay__data-inputs"]}>
               <TextInput
-                name="delivery_address"
-                label="Адрес доставки"
-                value={data.delivery_address}
+                name="name_recipient"
+                label="ФИО получателя"
+                value={data.name_recipient}
                 handleChange={handleChange}
                 readonly={OrderData.order.deliveryMethod !== ""}
                 required={true}
               />
-            )}
-            {data.delivery_method === "Самовывоз из пункта выдачи CDEK" &&
-              currentPVZId === "" && (
-                <div>
-                  <span>
-                    Пожалуйста, выберите{" "}
-                    <span className={styles["delivery-map-pvz-span"]}>
-                      {" "}
-                      пункт выдачи
-                    </span>{" "}
-                    на карте
-                  </span>
-                </div>
+              <div className={styles["order-pay__select-container"]}>
+                <label>
+                  Тип доставки<span className={styles["red-star"]}>*</span>
+                </label>
+                <select
+                  className={styles["order-pay__select"]}
+                  name="delivery_method"
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="" selected disabled>
+                    -- Выберите --
+                  </option>
+                  <option value="Самовывоз из пункта выдачи CDEK">
+                    Самовывоз из пункта выдачи CDEK
+                  </option>
+                </select>
+              </div>
+              {data.delivery_method === "Курьером CDEK" && (
+                <TextInput
+                  name="delivery_address"
+                  label="Адрес доставки"
+                  value={data.delivery_address}
+                  handleChange={handleChange}
+                  readonly={OrderData.order.deliveryMethod !== ""}
+                  required={true}
+                />
               )}
-            {data.delivery_method === "Самовывоз из пункта выдачи CDEK" &&
-              currentPVZId !== "" && (
-                <div>
-                  <span>
-                    Адрес выбранного{" "}
-                    <span className={styles["delivery-map-pvz-span"]}>
-                      Вами
-                    </span>{" "}
-                    пункта выдачи
-                  </span>
-                  <p className={styles["delivery-map-pvz"]}>{currentPVZ}</p>
-                </div>
-              )}
+              {data.delivery_method === "Самовывоз из пункта выдачи CDEK" &&
+                currentPVZId === "" && (
+                  <div>
+                    <span>
+                      Пожалуйста, выберите{" "}
+                      <span className={styles["delivery-map-pvz-span"]}>
+                        {" "}
+                        пункт выдачи
+                      </span>{" "}
+                      на карте
+                    </span>
+                  </div>
+                )}
+              {data.delivery_method === "Самовывоз из пункта выдачи CDEK" &&
+                currentPVZId !== "" && (
+                  <div>
+                    <span>
+                      Адрес выбранного{" "}
+                      <span className={styles["delivery-map-pvz-span"]}>
+                        Вами
+                      </span>{" "}
+                      пункта выдачи
+                    </span>
+                    <p className={styles["delivery-map-pvz"]}>{currentPVZ}</p>
+                  </div>
+                )}
+            </div>
             <div
               className={`${styles["delivery-map"]} ${
                 data.delivery_method === "Самовывоз из пункта выдачи CDEK" &&

@@ -210,15 +210,20 @@
 }
 
 .order-typography-screen-link {
-  display: inline;
-  margin-bottom: 1em;
+  display: block;
   color: #4e7fea;
   overflow-wrap: break-word;
   text-decoration: none;
+  cursor: pointer;
+}
+
+.order-typography-screen-link:not(:last-of-type) {
+  margin-bottom: 1em;
 }
 
 .order__pay-button {
   width: 100%;
+  box-sizing: border-box;
   height: 60px;
   position: relative;
   padding: 0 1rem 0 1rem;
@@ -246,7 +251,11 @@
   white-space: nowrap;
 }
 
-.order__pay-button:after {
+.order__pay-button-shimmering {
+  position: relative;
+}
+
+.order__pay-button-shimmering:after {
   content: "";
   display: block;
   width: 40px;

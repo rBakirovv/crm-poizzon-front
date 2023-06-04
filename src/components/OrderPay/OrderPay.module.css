@@ -242,7 +242,26 @@
 }
 
 @media screen and (max-width: 500px) {
+  .order-pay {
+    padding: 70px 0 20px;
+  }
+
   .order-pay__select {
     width: 314px;
+  }
+
+  .order-pay__title {
+    margin: 1rem 20px 0;
+  }
+
+  .order-pay__pay-submit {
+    width: 95%;
+  }
+
+  .order-pay__data-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0 20px;
   }
 }

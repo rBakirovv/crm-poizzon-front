@@ -84,7 +84,7 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            {(UserData.userData.position === SUPERADMIN || UserData.userData.position === ADMIN) ? (
+            {(UserData.userData.position === SUPERADMIN || UserData.userData.position === ADMIN) && CommissionData.commission._id !== "" ? (
               <RateComponent
                 currentRate={RateData.rate}
                 isFirstRate={isFirstRate}

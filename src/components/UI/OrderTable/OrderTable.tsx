@@ -19,10 +19,12 @@ import PaymentsData from "../../../store/payments";
 const dayjs = require("dayjs");
 
 var utc = require("dayjs/plugin/utc");
-var timezone = require("dayjs/plugin/timezone"); // dependent on utc plugin
+var timezone = require("dayjs/plugin/timezone");
+var advancedFormat = require("dayjs/plugin/advancedFormat");
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(advancedFormat);
 
 dayjs.tz.setDefault("Europe/Moscow");
 
@@ -343,7 +345,7 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
                   >
                     {orderItem.paidAt
                       ? dayjs
-                          .tz(orderItem.paidAt, "Europe/Moscow")
+                          .tz(new Date(orderItem.paidAt!))
                           .format("DD-MM-YYYY")
                       : "-"}
                   </div>

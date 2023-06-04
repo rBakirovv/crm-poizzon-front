@@ -5,15 +5,17 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { IOrder } from "../../types/interfaces";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
-import { getOrders, mergeOrders } from "../../utils/Order";
+import { mergeOrders } from "../../utils/Order";
 
 const dayjs = require("dayjs");
 
 var utc = require("dayjs/plugin/utc");
-var timezone = require("dayjs/plugin/timezone"); // dependent on utc plugin
+var timezone = require("dayjs/plugin/timezone");
+var advancedFormat = require("dayjs/plugin/advancedFormat");
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(advancedFormat);
 
 dayjs.tz.setDefault("Europe/Moscow");
 
@@ -230,7 +232,11 @@ const Search = () => {
                       } ${
                         orderItem.combinedOrder.length !== 0 &&
                         styles["orders-table__combined"]
-                      } ${styles["orders-table__header-item_number"]}`}
+                      } ${
+                        orderItem.status === "Завершён" &&
+                        styles["orders-table__finished"]
+                      } 
+                       ${styles["orders-table__header-item_number"]}`}
                       href={`/order/change/${orderItem._id}`}
                     >
                       {isMerge && (
@@ -260,7 +266,7 @@ const Search = () => {
                     >
                       {orderItem.paidAt
                         ? dayjs
-                            .tz(orderItem.paidAt, "Europe/Moscow")
+                            .tz(new Date(orderItem.paidAt!))
                             .format("DD-MM-YYYY")
                         : "-"}
                     </div>

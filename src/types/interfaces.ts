@@ -23,6 +23,7 @@ export interface IOrder {
   paidAt: Date;
   buyAt: Date | string;
   inChinaStockAt: Date | string;
+  inRussiaStockAt?: Date | string;
   deliveredAt: Date | string;
   orderId: number;
   combinedOrder: Array<ICombinedOrder>;

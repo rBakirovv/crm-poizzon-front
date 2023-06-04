@@ -13,10 +13,12 @@ interface ICardsProps {
 const dayjs = require("dayjs");
 
 var utc = require("dayjs/plugin/utc");
-var timezone = require("dayjs/plugin/timezone"); // dependent on utc plugin
+var timezone = require("dayjs/plugin/timezone");
+var advancedFormat = require("dayjs/plugin/advancedFormat");
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(advancedFormat);
 
 dayjs.tz.setDefault("Europe/Moscow");
 
@@ -44,7 +46,9 @@ const Cards: FC<ICardsProps> = ({ payments }) => {
       <div className={styles["cards__container"]}>
         <h2 className={styles["cards__tile"]}>
           Статистика после{" "}
-          {dayjs.tz(CardsData.cards.updatedAt, "Europe/Moscow").format("DD-MM-YYYY h:mm A")}
+          {dayjs
+            .tz(new Date(CardsData.cards.updatedAt!))
+            .format("DD-MM-YYYY в k:mm")}
         </h2>
         <ul className={styles["cards__list"]}>
           {payments.map((item) => {

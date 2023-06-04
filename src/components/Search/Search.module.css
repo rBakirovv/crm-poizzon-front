@@ -167,3 +167,11 @@
   align-items: flex-end;
   max-width: 300px;
 }
+
+.orders-table__finished {
+  color: #61616130;
+  /*
+  background-color: red;
+  color: #FFF;
+  */
+}

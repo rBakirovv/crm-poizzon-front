@@ -6,6 +6,7 @@
   align-items: center;
   overflow-y: scroll;
   background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
   transition: all 0.25s ease-in-out;
   visibility: hidden;
   top: 0;
@@ -27,6 +28,12 @@
 .carousel__image {
   max-width: 75vw;
   max-height: 75vh;
+  transition: all 0.25s ease-in-out;
+  transform: scale(0);
+}
+
+.carousel_active .carousel__image {
+  transform: scale(1);
 }
 
 .carousel__nav {

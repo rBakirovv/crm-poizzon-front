@@ -6,10 +6,23 @@ import Carousel from "../UI/Carousel/Carousel";
 import Timer from "../UI/Timer/Timer";
 import styles from "./Order.module.css";
 import UserDataModal from "../UI/UserDataModal/UserDataModal";
+import CarAnimate from "../UI/CarAnimate/CarAnimate";
 
 interface IOrderProps {
   currentOrder: IOrder;
 }
+
+const dayjs = require("dayjs");
+
+var utc = require("dayjs/plugin/utc");
+var timezone = require("dayjs/plugin/timezone");
+var advancedFormat = require("dayjs/plugin/advancedFormat");
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(advancedFormat);
+
+dayjs.tz.setDefault("Europe/Moscow");
 
 const Order: FC<IOrderProps> = ({ currentOrder }) => {
   const router = useRouter();
@@ -18,6 +31,10 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
 
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState<boolean>(false);
+  const [isPayProofPopupOpen, setIsPayProofPopupOpen] =
+    useState<boolean>(false);
+  const [isBuyProofPopupOpen, setIsBuyProofPopupOpen] =
+    useState<boolean>(false);
 
   const ordersPull = currentOrder.combinedOrder[0];
 
@@ -29,6 +46,8 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
       ) / 1000
     )
   );
+
+  const [isLinkAnimation, setIsLinkAnimation] = useState<boolean>(false);
 
   const priceRub = Math.ceil(
     parseFloat(currentOrder.priceCNY) * parseFloat(currentOrder.currentRate)
@@ -57,6 +76,24 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
     setIsImagePopupOpen(false);
   }
 
+  function openPayProofPopup(index: number) {
+    setIsPayProofPopupOpen(true);
+    setCurrentImageIndex(index);
+  }
+
+  function closePayProofPopup() {
+    setIsPayProofPopupOpen(false);
+  }
+
+  function openBuyProofPopup(index: number) {
+    setIsBuyProofPopupOpen(true);
+    setCurrentImageIndex(index);
+  }
+
+  function closeBuyProofPopup() {
+    setIsBuyProofPopupOpen(false);
+  }
+
   function nextImage() {
     currentImageIndex === currentOrder.orderImages.length - 1
       ? setCurrentImageIndex(0)
@@ -70,25 +107,55 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
   }
 
   function handleTimeLeft() {
-    timeLeft <= 0
-      ? alert(
-          "Время для оплаты заказа истекло. Стоимость товара могла измениться. \n\nЕсли вы готовы оплатить товар, сообщите менеджеру в Telegram"
-        )
-      : router.push(`pay/${currentOrder._id}`);
+    if (timeLeft <= 0) {
+      alert(
+        "Время для оплаты заказа истекло. Стоимость товара могла измениться. \n\nЕсли вы готовы оплатить товар, сообщите менеджеру в Telegram"
+      );
+    } else {
+      if (!isLinkAnimation) {
+        setIsLinkAnimation(true);
+        setTimeout(() => {
+          router.push(`pay/${currentOrder._id}`);
+        }, 2000);
+        setTimeout(() => {
+          setIsLinkAnimation(false);
+        }, 3000);
+      }
+    }
   }
 
   function handleTimeLeftLink(e: React.SyntheticEvent) {
+    const target = e.target as HTMLLinkElement;
+
     if (timeLeft <= 0) {
       e.preventDefault();
       alert(
         "Время для оплаты заказа истекло. Стоимость товара могла измениться. \n\nЕсли вы готовы оплатить товар, сообщите менеджеру в Telegram"
       );
+    } else {
+      e.preventDefault();
+
+      if (!isLinkAnimation) {
+        setIsLinkAnimation(true);
+        setTimeout(() => {
+          window.location.replace(currentOrder.payLink);
+        }, 1260);
+        setTimeout(() => {
+          setIsLinkAnimation(false);
+        }, 3000);
+      }
     }
   }
 
   function handleDelivery() {
     router.push(`delivery/${currentOrder._id}`);
   }
+
+  console.log(
+    dayjs
+      .tz(new Date(currentOrder.inRussiaStockAt!))
+      .format("DD-MM-YYYY в k:mm")
+  );
 
   return (
     <section className={styles["order"]}>
@@ -235,13 +302,12 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>Проверка оплаты</div>
               {currentOrder.payProofImages.length > 0 && (
-                <a
+                <div
                   className={styles["order-typography-screen-link"]}
-                  href={`${BASE_URL}${currentOrder.payProofImages[0].path}`}
-                  target="_blank"
+                  onClick={() => openPayProofPopup(0)}
                 >
                   Скриншот оплаты
-                </a>
+                </div>
               )}
             </div>
           </li>
@@ -297,18 +363,24 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
               }`}
             ></div>
             <div className={styles["order-timeline-item-content"]}>
-              <div className={styles["order-typography"]}>Закуплен</div>
+              <div className={styles["order-typography"]}>
+                Закуплен{" "}
+                {currentOrder.buyAt !== "" &&
+                  currentOrder.buyAt !== null &&
+                  dayjs
+                    .tz(new Date(currentOrder.buyAt!))
+                    .format("DD-MM-YYYY в k:mm")}
+              </div>
               {currentOrder.buyProofImages.length > 0 &&
                 currentOrder.buyProofImages.map((image, index) => {
                   return (
-                    <a
+                    <div
                       key={image.name}
+                      onClick={() => openBuyProofPopup(index)}
                       className={styles["order-typography-screen-link"]}
-                      href={`${BASE_URL}${image.path}`}
-                      target="_blank"
                     >
                       Чек закупки №{index + 1}
-                    </a>
+                    </div>
                   );
                 })}
             </div>
@@ -335,14 +407,6 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
             <div className={styles["order-timeline-item-content"]}>
               <div className={styles["order-typography"]}>
                 На складе в Китае
-                {currentOrder.poizonCode !== "" && (
-                  <p className={styles["order-typography-screen-text"]}>
-                    Трек номер Poizon:{" "}
-                    <span className={styles["order-span"]}>
-                      {currentOrder.poizonCode}
-                    </span>
-                  </p>
-                )}
               </div>
             </div>
           </li>
@@ -380,7 +444,14 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
               }`}
             ></div>
             <div className={styles["order-timeline-item-content"]}>
-              <div className={styles["order-typography"]}>На складе в РФ</div>
+              <div className={styles["order-typography"]}>
+                На складе в РФ{" "}
+                {currentOrder.inRussiaStockAt !== "" &&
+                  currentOrder.inRussiaStockAt !== null &&
+                  dayjs
+                    .tz(new Date(currentOrder.inRussiaStockAt!))
+                    .format("DD-MM-YYYY в k:mm")}
+              </div>
             </div>
           </li>
           <li className={styles["order-timeline-item"]}>
@@ -429,7 +500,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
               className={styles["order__pay-button"]}
               onClick={handleTimeLeft}
             >
-              {isBrowser && (
+              {isBrowser && !isLinkAnimation && (
                 <Timer
                   createdAt={currentOrder.createdAt}
                   dedline={currentOrder.overudeAfter}
@@ -437,18 +508,25 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
                   setTimeLeft={setTimeLeft}
                 />
               )}
-              <span className={styles["order__pay-button-span"]}>Оплатить</span>
-              <span>{totalPrice} ₽</span>
+              {!isLinkAnimation && (
+                <span className={styles["order__pay-button-span"]}>
+                  Оплатить
+                </span>
+              )}
+              {!isLinkAnimation && <span>{totalPrice} ₽</span>}
+              {isLinkAnimation && <CarAnimate />}
             </button>
           )}
         {currentOrder.status === "Черновик" &&
           currentOrder.payment === "Перейти по ссылке -" && (
             <a
-              className={styles["order__pay-button"]}
+              className={`${styles["order__pay-button"]} ${
+                !isLinkAnimation && styles["order__pay-button-shimmering"]
+              }`}
               href={`${currentOrder.payLink}`}
               onClick={handleTimeLeftLink}
             >
-              {isBrowser && (
+              {isBrowser && !isLinkAnimation && (
                 <Timer
                   createdAt={currentOrder.createdAt}
                   dedline={currentOrder.overudeAfter}
@@ -456,8 +534,13 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
                   setTimeLeft={setTimeLeft}
                 />
               )}
-              <span className={styles["order__pay-button-span"]}>Оплатить</span>
-              <span>{totalPrice} ₽</span>
+              {!isLinkAnimation && (
+                <span className={styles["order__pay-button-span"]}>
+                  Оплатить
+                </span>
+              )}
+              {!isLinkAnimation && <span>{totalPrice} ₽</span>}
+              {isLinkAnimation && <CarAnimate />}
             </a>
           )}
         {currentOrder.poizonCode !== "" &&
@@ -465,7 +548,9 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
           currentOrder.deliveryMethod === "" &&
           currentOrder.status !== "Завершён" && (
             <button
-              className={styles["order__pay-button"]}
+              className={`${styles["order__pay-button"]} ${
+                !isLinkAnimation && styles["order__pay-button-shimmering"]
+              }`}
               onClick={handleDelivery}
             >
               <span></span>
@@ -509,8 +594,25 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
         nextImage={nextImage}
         prevImage={prevImage}
       />
+      <Carousel
+        isImagePopupOpen={isPayProofPopupOpen}
+        images={currentOrder.payProofImages}
+        currentImageIndex={currentImageIndex}
+        closePopup={closePayProofPopup}
+        nextImage={nextImage}
+        prevImage={prevImage}
+      />
+      <Carousel
+        isImagePopupOpen={isBuyProofPopupOpen}
+        images={currentOrder.buyProofImages}
+        currentImageIndex={currentImageIndex}
+        closePopup={closeBuyProofPopup}
+        nextImage={nextImage}
+        prevImage={prevImage}
+      />
       {currentOrder.deliveryPhone === "" &&
-        currentOrder.status !== "Черновик" && currentOrder.status !== "Проверка оплаты" &&
+        currentOrder.status !== "Черновик" &&
+        currentOrder.status !== "Проверка оплаты" &&
         currentOrder.payment === "Перейти по ссылке -" && (
           <UserDataModal _id={currentOrder._id} />
         )}
