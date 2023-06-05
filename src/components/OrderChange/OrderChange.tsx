@@ -22,14 +22,17 @@ import Purchase from "../Purchase/Purchase";
 import Delivery from "../Delivery/Delivery";
 import Preloader from "../UI/Preloader/Preloader";
 import DeliveryDuplicate from "../DeliveryDuplicate/DeliveryDuplicate";
+import Link from "next/link";
 
 const dayjs = require("dayjs");
 
 var utc = require("dayjs/plugin/utc");
 var timezone = require("dayjs/plugin/timezone");
+var advancedFormat = require("dayjs/plugin/advancedFormat");
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(advancedFormat);
 
 dayjs.tz.setDefault("Europe/Moscow");
 
@@ -778,14 +781,16 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
             const combinedItem = OrderData.orders.find(
               (fItem) => fItem._id === id
             );
+
             return (
               id !== OrderData.order._id && (
-                <a
+                <Link
                   className={styles["order-change__order-link"]}
                   href={`${BASE_URL_FRONT}/order/change/${id}`}
+                  key={id}
                 >
                   Заказ {combinedItem?.orderId}
-                </a>
+                </Link>
               )
             );
           })}
