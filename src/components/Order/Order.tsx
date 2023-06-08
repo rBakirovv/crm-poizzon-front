@@ -16,11 +16,9 @@ const dayjs = require("dayjs");
 
 var utc = require("dayjs/plugin/utc");
 var timezone = require("dayjs/plugin/timezone");
-var advancedFormat = require("dayjs/plugin/advancedFormat");
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
-dayjs.extend(advancedFormat);
 
 dayjs.tz.setDefault("Europe/Moscow");
 
@@ -154,7 +152,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
   console.log(
     dayjs
       .tz(new Date(currentOrder.inRussiaStockAt!))
-      .format("DD-MM-YYYY в k:mm")
+      .format("DD-MM-YYYY в HH:mm")
   );
 
   return (
@@ -369,7 +367,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
                   currentOrder.buyAt !== null &&
                   dayjs
                     .tz(new Date(currentOrder.buyAt!))
-                    .format("DD-MM-YYYY в k:mm")}
+                    .format("DD-MM-YYYY в HH:mm")}
               </div>
               {currentOrder.buyProofImages.length > 0 &&
                 currentOrder.buyProofImages.map((image, index) => {
@@ -450,7 +448,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
                   currentOrder.inRussiaStockAt !== null &&
                   dayjs
                     .tz(new Date(currentOrder.inRussiaStockAt!))
-                    .format("DD-MM-YYYY в k:mm")}
+                    .format("DD-MM-YYYY в HH:mm")}
               </div>
             </div>
           </li>

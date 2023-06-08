@@ -28,11 +28,9 @@ const dayjs = require("dayjs");
 
 var utc = require("dayjs/plugin/utc");
 var timezone = require("dayjs/plugin/timezone");
-var advancedFormat = require("dayjs/plugin/advancedFormat");
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
-dayjs.extend(advancedFormat);
 
 dayjs.tz.setDefault("Europe/Moscow");
 
@@ -748,7 +746,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           Доставлен:{" "}
           {dayjs
             .tz(new Date(OrderData.order.deliveredAt!))
-            .format("DD-MM-YYYY в k:mm")}
+            .format("DD-MM-YYYY в HH:mm")}
         </p>
       )}
       {OrderData.order.comment !== "" && (

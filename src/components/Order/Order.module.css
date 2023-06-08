@@ -215,6 +215,7 @@
   overflow-wrap: break-word;
   text-decoration: none;
   cursor: pointer;
+  width: max-content;
 }
 
 .order-typography-screen-link:not(:last-of-type) {
