@@ -215,7 +215,8 @@ const OrderPay: FC<IOrderPayProps> = () => {
                       data.data
                     ),
                     buyProofImages: OrderData.order.buyProofImages,
-                    uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
+                    uploadedBuyProofImages:
+                      OrderData.order.uploadedBuyProofImages,
                     payment: OrderData.order.payment,
                     currentRate: OrderData.order.currentRate,
                     priceCNY: OrderData.order.priceCNY,
@@ -575,23 +576,25 @@ const OrderPay: FC<IOrderPayProps> = () => {
               <h4 className={styles["order-pay__title"]}>
                 {OrderData.order.brand} {OrderData.order.model}
               </h4>
-              <TextInput
-                name="name"
-                label="Ваш Телеграм в формате @Telegram"
-                value={data.name}
-                handleChange={handleChange}
-                readonly={OrderData.order.status !== "Черновик"}
-                required={true}
-              />
-              <TextInput
-                name="phone"
-                label="Ваш номер телефона"
-                placeholder="Формат +79029990101 для РФ"
-                value={data.phone}
-                handleChange={handleChange}
-                readonly={OrderData.order.status !== "Черновик"}
-                required={true}
-              />
+              <div className={styles["order-pay__data-inputs"]}>
+                <TextInput
+                  name="name"
+                  label="Ваш Телеграм в формате @Telegram"
+                  value={data.name}
+                  handleChange={handleChange}
+                  readonly={OrderData.order.status !== "Черновик"}
+                  required={true}
+                />
+                <TextInput
+                  name="phone"
+                  label="Ваш номер телефона"
+                  placeholder="Формат +79029990101 для РФ"
+                  value={data.phone}
+                  handleChange={handleChange}
+                  readonly={OrderData.order.status !== "Черновик"}
+                  required={true}
+                />
+              </div>
               <span className={styles["order-pay__personal-data"]}>
                 Нажимая кнопку "Отправить" вы соглашаетесь на обработку
                 персональных данных

@@ -149,12 +149,6 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
     router.push(`delivery/${currentOrder._id}`);
   }
 
-  console.log(
-    dayjs
-      .tz(new Date(currentOrder.inRussiaStockAt!))
-      .format("DD-MM-YYYY в HH:mm")
-  );
-
   return (
     <section className={styles["order"]}>
       <div className={styles["order__container"]}>
