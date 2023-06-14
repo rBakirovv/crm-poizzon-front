@@ -604,8 +604,7 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
       />
       {currentOrder.deliveryPhone === "" &&
         currentOrder.status !== "Черновик" &&
-        currentOrder.status !== "Проверка оплаты" &&
-        currentOrder.payment === "Перейти по ссылке -" && (
+        currentOrder.status !== "Проверка оплаты" && (
           <UserDataModal _id={currentOrder._id} />
         )}
     </section>

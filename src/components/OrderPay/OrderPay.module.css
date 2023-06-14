@@ -232,13 +232,16 @@
 }
 
 .delivery-error {
+  font-size: 0.85rem;
   display: block;
   color: red;
   position: relative;
   left: 50%;
   transform: translateX(-50%);
   width: max-content;
-  margin-bottom: -0.5rem;
+  margin-top: 0.5rem;
+  max-width: 360px;
+  text-align: center;
 }
 
 @media screen and (max-width: 500px) {
