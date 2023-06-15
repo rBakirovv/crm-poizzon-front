@@ -20,14 +20,12 @@ const Home = observer(() => {
 
   const [isPreloader, setIsPreloader] = useState(false);
 
-  /*
   useEffect(() => {
     setIsPreloader(true);
     getOrders()
       .then((orders) => OrderData.setOrders(orders))
       .then(() => setIsPreloader(false));
   }, []);
-  */
 
   useEffect(() => {
     !Logged.loggedIn &&
@@ -81,7 +79,9 @@ const Home = observer(() => {
         ></link>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      {isPreloader && <Preloader />}
+      {
+        isPreloader && <Preloader />
+      }
       {!Logged.loggedIn && <Preloader />}
       {Logged.loggedIn && (
         <>
