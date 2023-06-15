@@ -23,8 +23,6 @@ const Search = () => {
     search: "",
   });
 
-  const [isPreloader, setIsPreloader] = useState(false);
-
   const [filteredValue, setFilteredValue] = useState("");
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -75,7 +73,6 @@ const Search = () => {
 
   useEffect(() => {
     const Debounce = setTimeout(() => {
-      setIsPreloader(true);
       const filteredData = searchOrders();
       setSearchedOrders(filteredData);
       setCurrentPage(1);
@@ -83,7 +80,6 @@ const Search = () => {
 
     return () => {
       clearTimeout(Debounce);
-      setIsPreloader(false);
     };
   }, [filteredValue]);
 
@@ -145,7 +141,6 @@ const Search = () => {
 
   return (
     <section className={styles["search"]}>
-      {isPreloader && <Preloader />}
       <div className={styles["search-container"]}>
         <TextInput
           label="Поиск заказа"
