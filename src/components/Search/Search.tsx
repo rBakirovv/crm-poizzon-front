@@ -6,6 +6,7 @@ import Link from "next/link";
 import { IOrder } from "../../types/interfaces";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { mergeOrders } from "../../utils/Order";
+import Preloader from "../UI/Preloader/Preloader";
 
 const dayjs = require("dayjs");
 
@@ -21,6 +22,8 @@ const Search = () => {
   const [data, setData] = useState({
     search: "",
   });
+
+  const [isPreloader, setIsPreloader] = useState(false);
 
   const [filteredValue, setFilteredValue] = useState("");
 
@@ -72,11 +75,16 @@ const Search = () => {
 
   useEffect(() => {
     const Debounce = setTimeout(() => {
+      setIsPreloader(true);
       const filteredData = searchOrders();
       setSearchedOrders(filteredData);
+      setCurrentPage(1);
     }, 300);
 
-    return () => clearTimeout(Debounce);
+    return () => {
+      clearTimeout(Debounce);
+      setIsPreloader(false);
+    };
   }, [filteredValue]);
 
   const lastPageIndex =
@@ -111,8 +119,6 @@ const Search = () => {
     }
   }
 
-  //let ordersArray = [] as Array<string>;
-
   function mergeItemClickHandler(
     e: React.SyntheticEvent,
     id: string,
@@ -139,6 +145,7 @@ const Search = () => {
 
   return (
     <section className={styles["search"]}>
+      {isPreloader && <Preloader />}
       <div className={styles["search-container"]}>
         <TextInput
           label="Поиск заказа"

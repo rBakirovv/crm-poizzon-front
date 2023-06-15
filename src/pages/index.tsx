@@ -8,8 +8,9 @@ import Preloader from "../components/UI/Preloader/Preloader";
 import UserData from "../store/user";
 import Logged from "../store/logged";
 import { getUserInfo } from "../utils/User";
-import { getOrders } from "../utils/Order";
+import { getOrders, getOrdersTable } from "../utils/Order";
 import OrderData from "../store/order";
+import OrdersBar from "../store/ordersBar";
 import Navigation from "../components/UI/Navigation/Navigation";
 import { getRate } from "../utils/Rate";
 import RateData from "../store/rate";
@@ -23,8 +24,14 @@ const Home = observer(() => {
   const router = useRouter();
 
   useEffect(() => {
+    getOrdersTable(0, OrdersBar.orderStatus, "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+  }, []);
+
+  useEffect(() => {
     getOrders()
-      .then((orders) => OrderData.setOrders(orders))
       .then(() => {
         return OrderData.orders.filter((item) => {
           if (
@@ -138,14 +145,7 @@ const Home = observer(() => {
             currentRate={RateData.rate.rate}
           />
           <Navigation />
-          <Main>
-            {(OrderData.orders.length === 0 || !OrderData.orders.length) && (
-              <Preloader />
-            )}
-            {OrderData.orders.length > 0 && typeof window !== "undefined" && (
-              <OrdersList />
-            )}
-          </Main>
+          <Main>{typeof window !== "undefined" && <OrdersList />}</Main>
         </>
       )}
     </>

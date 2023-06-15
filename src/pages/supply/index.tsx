@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { observer } from "mobx-react-lite";
 import Head from "next/head";
@@ -20,8 +20,13 @@ import { getSupplies } from "../../utils/Supply";
 const Home = observer(() => {
   const router = useRouter();
 
+  const [isPreloader, setIsPreloader] = useState(false);
+
   useEffect(() => {
-    getOrders().then((orders) => OrderData.setOrders(orders));
+    setIsPreloader(true);
+    getOrders()
+      .then((orders) => OrderData.setOrders(orders))
+      .then(() => setIsPreloader(false));
   }, []);
 
   useEffect(() => {
@@ -82,6 +87,7 @@ const Home = observer(() => {
           rel="icon"
         ></link>
       </Head>
+      {isPreloader && <Preloader />}
       {!Logged.loggedIn && <Preloader />}
       {Logged.loggedIn && (
         <>

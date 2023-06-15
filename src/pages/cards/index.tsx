@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { observer } from "mobx-react-lite";
 import Head from "next/head";
@@ -21,8 +21,12 @@ import { getCardsUpdatedAt, getOrders } from "../../utils/Order";
 const Home = observer(() => {
   const router = useRouter();
 
+  const [isPreloader, setIsPreloader] = useState(false);
+
   useEffect(() => {
-    getOrders().then((orders) => OrderData.setOrders(orders));
+    getOrders()
+      .then((orders) => OrderData.setOrders(orders))
+      .then(() => setIsPreloader(false));
   }, []);
 
   useEffect(() => {
@@ -89,6 +93,7 @@ const Home = observer(() => {
           rel="icon"
         ></link>
       </Head>
+      {isPreloader && <Preloader />}
       {!Logged.loggedIn && <Preloader />}
       {Logged.loggedIn && (
         <>
@@ -102,9 +107,8 @@ const Home = observer(() => {
             {OrderData.orders.length > 0 && CardsData.cards.updatedAt && (
               <Cards payments={PaymentsData.paymentsList} />
             )}
-            {(OrderData.orders.length === 0 || !OrderData.orders.length) && !CardsData.cards.updatedAt && (
-              <Preloader />
-            )}
+            {(OrderData.orders.length === 0 || !OrderData.orders.length) &&
+              !CardsData.cards.updatedAt && <Preloader />}
           </Main>
         </>
       )}

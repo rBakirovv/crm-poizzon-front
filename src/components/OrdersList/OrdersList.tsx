@@ -1,46 +1,83 @@
-import { useEffect } from "react";
 import OrderTable from "../UI/OrderTable/OrderTable";
 import styles from "./OrdersList.module.css";
 import UserData from "../../store/user";
+import OrderData from "../../store/order";
 import OrdersBar from "../../store/ordersBar";
 import { observer } from "mobx-react-lite";
 import { ADMIN, BUYER, SUPERADMIN, MANAGER } from "../../utils/constants";
+import { getOrdersTable } from "../../utils/Order";
 
 const OrdersList = observer(() => {
-  function openDraft() {
-    OrdersBar.setNewStatus("Черновик");
+  async function openDraft() {
+    await getOrdersTable(0, "Черновик", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Черновик");
   }
 
-  function openPaymentVerification() {
-    OrdersBar.setNewStatus("Проверка оплаты");
+  async function openPaymentVerification() {
+    await getOrdersTable(0, "Проверка оплаты", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Проверка оплаты");
   }
 
-  function openAwaitingPurchase() {
-    OrdersBar.setNewStatus("Ожидает закупки");
+  async function openAwaitingPurchase() {
+    await getOrdersTable(0, "Ожидает закупки", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Ожидает закупки");
   }
 
-  function openOnPurchase() {
-    OrdersBar.setNewStatus("На закупке");
+  async function openOnPurchase() {
+    await getOrdersTable(0, "На закупке", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("На закупке");
   }
 
-  function openPurchased() {
-    OrdersBar.setNewStatus("Закуплен");
+  async function openPurchased() {
+    await getOrdersTable(0, "Закуплен", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Закуплен");
   }
 
-  function openWaitingDelivery() {
-    OrdersBar.setNewStatus("Ожидает данные");
+  async function openWaitingDelivery() {
+    await getOrdersTable(0, "Ожидает данные", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Ожидает данные");
   }
 
-  function openInRussia() {
-    OrdersBar.setNewStatus("На складе в РФ");
+  async function openInRussia() {
+    await getOrdersTable(0, "На складе в РФ", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("На складе в РФ");
   }
 
-  function openSent() {
-    OrdersBar.setNewStatus("Доставляется");
+  async function openSent() {
+    await getOrdersTable(0, "Доставляется", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Доставляется");
   }
 
-  function openСompleted() {
-    OrdersBar.setNewStatus("Завершён");
+  async function openСompleted() {
+    await getOrdersTable(0, "Завершён", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Завершён");
   }
 
   return (

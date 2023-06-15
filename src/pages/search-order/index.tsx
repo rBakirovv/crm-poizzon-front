@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { observer } from "mobx-react-lite";
 import Head from "next/head";
@@ -12,12 +12,22 @@ import { getOrders } from "../../utils/Order";
 import OrderData from "../../store/order";
 import Navigation from "../../components/UI/Navigation/Navigation";
 import RateData from "../../store/rate";
-//import OrdersList from "../../components/OrdersList/OrdersList";
 import Search from "../../components/Search/Search";
 import { getRate } from "../../utils/Rate";
 
 const Home = observer(() => {
   const router = useRouter();
+
+  const [isPreloader, setIsPreloader] = useState(false);
+
+  /*
+  useEffect(() => {
+    setIsPreloader(true);
+    getOrders()
+      .then((orders) => OrderData.setOrders(orders))
+      .then(() => setIsPreloader(false));
+  }, []);
+  */
 
   useEffect(() => {
     !Logged.loggedIn &&
@@ -60,17 +70,18 @@ const Home = observer(() => {
       });
   }, []);
 
-  useEffect(() => {
-    getOrders().then((orders) => OrderData.setOrders(orders));
-  }, []);
-
   return (
     <>
       <Head>
         <title>Poizonqq CRM</title>
-        <link type="Image/x-icon" href="../images/favicon.ico" rel="icon"></link>
+        <link
+          type="Image/x-icon"
+          href="../images/favicon.ico"
+          rel="icon"
+        ></link>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
+      {isPreloader && <Preloader />}
       {!Logged.loggedIn && <Preloader />}
       {Logged.loggedIn && (
         <>

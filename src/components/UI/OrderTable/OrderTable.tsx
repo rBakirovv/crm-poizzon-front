@@ -1,5 +1,6 @@
 import Link from "next/link";
 import OrderData from "../../../store/order";
+import OrdersBar from "../../../store/ordersBar";
 import styles from "./OrderTable.module.css";
 import { FC, useState } from "react";
 import SubmitPopup from "../../SubmitPopup/SubmitPopup";
@@ -10,11 +11,13 @@ import {
   getOrders,
   deletePayProofImage,
   reorderStatus,
+  getOrdersTable,
 } from "../../../utils/Order";
 import { IOrderImages } from "../../../types/interfaces";
 import { useRouter } from "next/router";
 import UserData from "../../../store/user";
 import PaymentsData from "../../../store/payments";
+import { observer } from "mobx-react-lite";
 
 const dayjs = require("dayjs");
 
@@ -30,7 +33,7 @@ interface IOrderTable {
   status: string;
 }
 
-const OrderTable: FC<IOrderTable> = ({ status }) => {
+const OrderTable: FC<IOrderTable> = observer(({ status }) => {
   const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -50,40 +53,28 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
   const [filterPayment, setFilterPayment] = useState("");
   const [filterReorder, setFilterReorder] = useState("");
 
-  const lastItemIndex = currentPage * itemsPerPage;
-  const firstItemIndex = lastItemIndex - itemsPerPage;
-
-  const lastPageIndex = Math.ceil(
-    OrderData.orders.filter((item) => {
-      return (
-        (status === "Ожидает данные"
-          ? item.deliveryMethod === "" &&
-            item.deliveryAddress === "" &&
-            item.poizonCode !== "" &&
-            item.inChinaStockAt !== null &&
-            item.status !== "Завершён"
-          : item.status === status || status === "Ожидает данные") &&
-        (status === "Закуплен"
-          ? filterPurchased !== ""
-            ? item.poizonCode === ""
-            : item.status === status
-          : item.status === status || status === "Ожидает данные") &&
-        (status === "Проверка оплаты"
-          ? filterPayment === ""
-            ? item.status === status
-            : item.payment === filterPayment
-          : item.status === status || status === "Ожидает данные") &&
-        (status === "Ожидает закупки"
-          ? filterReorder !== ""
-            ? item.reorder === true
-            : item.status === status
-          : item.status === status || status === "Ожидает данные")
-      );
-    }).length / itemsPerPage
-  );
+  const lastPageIndex = Math.ceil(OrderData.ordersTableLength / itemsPerPage);
 
   function hanfleFilterPurchased(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
+
+    if (target.value === "") {
+      getOrdersTable(0, OrdersBar.orderStatus, "", "", "").then((orders) => {
+        OrderData.setOrders(orders.orders);
+        OrderData.setOrdersTableLength(orders.total);
+        setCurrentPage(1);
+      });
+    }
+
+    if (target.value === "no-code") {
+      getOrdersTable(0, OrdersBar.orderStatus, "no-code", "", "").then(
+        (orders) => {
+          OrderData.setOrders(orders.orders);
+          OrderData.setOrdersTableLength(orders.total);
+          setCurrentPage(1);
+        }
+      );
+    }
 
     setFilterPurchased(target.value);
   }
@@ -91,11 +82,37 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
   function hanfleFilterPayment(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
 
+      getOrdersTable(0, OrdersBar.orderStatus, "", target.value, "").then(
+        (orders) => {
+          OrderData.setOrders(orders.orders);
+          OrderData.setOrdersTableLength(orders.total);
+          setCurrentPage(1);
+        }
+      );
+
     setFilterPayment(target.value);
   }
 
   function hanfleFilterReorder(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
+
+    if (target.value === "") {
+      getOrdersTable(0, OrdersBar.orderStatus, "", "", "").then((orders) => {
+        OrderData.setOrders(orders.orders);
+        OrderData.setOrdersTableLength(orders.total);
+        setCurrentPage(1);
+      });
+    }
+
+    if (target.value === "reorder") {
+      getOrdersTable(0, OrdersBar.orderStatus, "", "", "reorder").then(
+        (orders) => {
+          OrderData.setOrders(orders.orders);
+          OrderData.setOrdersTableLength(orders.total);
+          setCurrentPage(1);
+        }
+      );
+    }
 
     setFilterReorder(target.value);
   }
@@ -113,10 +130,30 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
   }
 
   function nextPage() {
+    getOrdersTable(
+      currentPage - 1 + 1,
+      OrdersBar.orderStatus,
+      filterPurchased,
+      filterPayment,
+      filterReorder
+    ).then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
     setCurrentPage(currentPage + 1);
   }
 
   function prevPage() {
+    getOrdersTable(
+      currentPage - 1 - 1,
+      OrdersBar.orderStatus,
+      filterPurchased,
+      filterPayment,
+      filterReorder
+    ).then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
     setCurrentPage(currentPage - 1);
   }
 
@@ -247,181 +284,146 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
           )}
         </div>
         <ul className={styles["orders-table__table"]}>
-          {OrderData.orders
-            .filter((item) => {
-              return (
-                (status === "Ожидает данные"
-                  ? item.deliveryMethod === "" &&
-                    item.deliveryAddress === "" &&
-                    item.poizonCode !== "" &&
-                    item.inChinaStockAt !== null &&
-                    item.status !== "Завершён"
-                  : item.status === status || status === "Ожидает данные") &&
-                (status === "Закуплен"
-                  ? filterPurchased !== ""
-                    ? item.poizonCode === ""
-                    : item.status === status
-                  : item.status === status || status === "Ожидает данные") &&
-                (status === "Проверка оплаты"
-                  ? filterPayment === ""
-                    ? item.status === status
-                    : item.payment === filterPayment
-                  : item.status === status || status === "Ожидает данные") &&
-                (status === "Ожидает закупки"
-                  ? filterReorder !== ""
-                    ? item.reorder === true
-                    : item.status === status
-                  : item.status === status || status === "Ожидает данные")
-              );
-            })
-            .slice()
-            .reverse()
-            .slice(firstItemIndex, lastItemIndex)
-            .map((orderItem) => {
-              return (
-                <li
-                  key={orderItem._id}
-                  className={styles["orders-table__item"]}
+          {OrderData.orders.map((orderItem) => {
+            return (
+              <li key={orderItem._id} className={styles["orders-table__item"]}>
+                {status === "Черновик" && isDeleteDraft && (
+                  <button
+                    onClick={() =>
+                      openSubmitPopup(orderItem.orderId, orderItem._id)
+                    }
+                    className={styles["orders-table__delete-item"]}
+                  >
+                    X
+                  </button>
+                )}
+                {status === "Проверка оплаты" && isDeletePaidOrder && (
+                  <button
+                    onClick={() =>
+                      openSubmitPopup(orderItem.orderId, orderItem._id)
+                    }
+                    className={styles["orders-table__delete-item"]}
+                  >
+                    X
+                  </button>
+                )}
+                {status === "Ожидает закупки" && isPurchase && (
+                  <button
+                    className={styles["orders-table__delete-item"]}
+                    onClick={() =>
+                      openSubmitPopup(orderItem.orderId, orderItem._id)
+                    }
+                  >
+                    ✓
+                  </button>
+                )}
+                <Link
+                  className={`${styles["orders-table__info-item"]} ${
+                    styles["orders-table__info-item_link"]
+                  } ${
+                    (orderItem.status === "На закупке" ||
+                      orderItem.status === "Закуплен" ||
+                      orderItem.status === "На складе в РФ") &&
+                    orderItem.poizonCode === "" &&
+                    styles["orders-table__info-item_poizon-code"]
+                  } ${
+                    (orderItem.status === "На складе в РФ" ||
+                      orderItem.status === "Доставляется") &&
+                    orderItem.deliveryCode === "" &&
+                    styles["orders-table__info-item_delivery-code"]
+                  } ${
+                    orderItem.combinedOrder.length !== 0 &&
+                    styles["orders-table__combined"]
+                  } ${styles["orders-table__header-item_number"]} ${
+                    orderItem.reorder === true &&
+                    styles["orders-table__reorder"]
+                  }`}
+                  href={`/order/change/${orderItem._id}`}
                 >
-                  {status === "Черновик" && isDeleteDraft && (
-                    <button
-                      onClick={() =>
-                        openSubmitPopup(orderItem.orderId, orderItem._id)
-                      }
-                      className={styles["orders-table__delete-item"]}
-                    >
-                      X
-                    </button>
-                  )}
-                  {status === "Проверка оплаты" && isDeletePaidOrder && (
-                    <button
-                      onClick={() =>
-                        openSubmitPopup(orderItem.orderId, orderItem._id)
-                      }
-                      className={styles["orders-table__delete-item"]}
-                    >
-                      X
-                    </button>
-                  )}
-                  {status === "Ожидает закупки" && isPurchase && (
-                    <button
-                      className={styles["orders-table__delete-item"]}
-                      onClick={() =>
-                        openSubmitPopup(orderItem.orderId, orderItem._id)
-                      }
-                    >
-                      ✓
-                    </button>
-                  )}
-                  <Link
-                    className={`${styles["orders-table__info-item"]} ${
-                      styles["orders-table__info-item_link"]
-                    } ${
-                      (orderItem.status === "На закупке" ||
-                        orderItem.status === "Закуплен" ||
-                        orderItem.status === "На складе в РФ") &&
-                      orderItem.poizonCode === "" &&
-                      styles["orders-table__info-item_poizon-code"]
-                    } ${
-                      (orderItem.status === "На складе в РФ" ||
-                        orderItem.status === "Доставляется") &&
-                      orderItem.deliveryCode === "" &&
-                      styles["orders-table__info-item_delivery-code"]
-                    } ${
-                      orderItem.combinedOrder.length !== 0 &&
-                      styles["orders-table__combined"]
-                    } ${styles["orders-table__header-item_number"]} ${
-                      orderItem.reorder === true &&
-                      styles["orders-table__reorder"]
-                    }`}
-                    href={`/order/change/${orderItem._id}`}
-                  >
-                    {orderItem.orderId}
-                  </Link>
+                  {orderItem.orderId}
+                </Link>
+                <div
+                  className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_date"]}`}
+                >
+                  {orderItem.paidAt
+                    ? dayjs.tz(new Date(orderItem.paidAt!)).format("DD-MM-YYYY")
+                    : "-"}
+                </div>
+                <div
+                  className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_product"]}`}
+                >
+                  {orderItem.model !== "" &&
+                    `${orderItem.subcategory} ${orderItem.model}`}
+                </div>
+                <div
+                  className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_price"]}`}
+                >
+                  {orderItem.status === "Черновик" &&
+                    (Math.ceil(
+                      Math.round(
+                        new Date(orderItem.overudeAfter).getTime() -
+                          new Date(Date.now()).getTime()
+                      ) / 1000
+                    ) <= 0
+                      ? "Оплата просрочена"
+                      : Math.ceil(
+                          parseFloat(orderItem.priceCNY) *
+                            parseFloat(orderItem.currentRate) +
+                            parseFloat(orderItem.priceDeliveryChina) +
+                            parseFloat(orderItem.priceDeliveryRussia) +
+                            parseFloat(orderItem.commission) -
+                            orderItem.promoCodePercent
+                        ))}
+                  {orderItem.status === "Черновик" && <br />}
+                  {orderItem.status !== "Черновик" &&
+                    Math.ceil(
+                      parseFloat(orderItem.priceCNY) *
+                        parseFloat(orderItem.currentRate) +
+                        parseFloat(orderItem.priceDeliveryChina) +
+                        parseFloat(orderItem.priceDeliveryRussia) +
+                        parseFloat(orderItem.commission) -
+                        orderItem.promoCodePercent
+                    )}
+                </div>
+                {orderItem.status === "Проверка оплаты" && (
                   <div
-                    className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_date"]}`}
+                    className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_payment"]}`}
                   >
-                    {orderItem.paidAt
-                      ? dayjs
-                          .tz(new Date(orderItem.paidAt!))
-                          .format("DD-MM-YYYY")
-                      : "-"}
+                    {orderItem.payment
+                      .toLowerCase()
+                      .includes("QR".toLowerCase())
+                      ? "Перевод по QR-коду"
+                      : orderItem.payment}
                   </div>
-                  <div
-                    className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_product"]}`}
-                  >
-                    {orderItem.model !== "" &&
-                      `${orderItem.subcategory} ${orderItem.model}`}
-                  </div>
-                  <div
-                    className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_price"]}`}
-                  >
-                    {orderItem.status === "Черновик" &&
-                      (Math.ceil(
-                        Math.round(
-                          new Date(orderItem.overudeAfter).getTime() -
-                            new Date(Date.now()).getTime()
-                        ) / 1000
-                      ) <= 0
-                        ? "Оплата просрочена"
-                        : Math.ceil(
-                            parseFloat(orderItem.priceCNY) *
-                              parseFloat(orderItem.currentRate) +
-                              parseFloat(orderItem.priceDeliveryChina) +
-                              parseFloat(orderItem.priceDeliveryRussia) +
-                              parseFloat(orderItem.commission) -
-                              orderItem.promoCodePercent
-                          ))}
-                    {orderItem.status === "Черновик" && <br />}
-                    {orderItem.status !== "Черновик" &&
-                      Math.ceil(
-                        parseFloat(orderItem.priceCNY) *
-                          parseFloat(orderItem.currentRate) +
-                          parseFloat(orderItem.priceDeliveryChina) +
-                          parseFloat(orderItem.priceDeliveryRussia) +
-                          parseFloat(orderItem.commission) -
-                          orderItem.promoCodePercent
-                      )}
-                  </div>
-                  {orderItem.status === "Проверка оплаты" && (
-                    <div
-                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_payment"]}`}
-                    >
-                      {orderItem.payment
-                        .toLowerCase()
-                        .includes("QR".toLowerCase())
-                        ? "Перевод по QR-коду"
-                        : orderItem.payment}
-                    </div>
-                  )}
+                )}
+                <div
+                  className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
+                >
+                  {orderItem.creater}
+                </div>
+                {!(
+                  orderItem.status === "Черновик" ||
+                  orderItem.status === "Проверка оплаты" ||
+                  orderItem.status === "Ожидает закупки"
+                ) && (
                   <div
                     className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
                   >
-                    {orderItem.creater}
+                    {orderItem.buyer}
                   </div>
-                  {!(
-                    orderItem.status === "Черновик" ||
-                    orderItem.status === "Проверка оплаты" ||
-                    orderItem.status === "Ожидает закупки"
-                  ) && (
-                    <div
-                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
-                    >
-                      {orderItem.buyer}
-                    </div>
-                  )}
-                  {(status === "На складе в РФ" ||
-                    status === "Доставляется" ||
-                    status === "Завершён") && (
-                    <div
-                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
-                    >
-                      {orderItem.stockman}
-                    </div>
-                  )}
-                </li>
-              );
-            })}
+                )}
+                {(status === "На складе в РФ" ||
+                  status === "Доставляется" ||
+                  status === "Завершён") && (
+                  <div
+                    className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
+                  >
+                    {orderItem.stockman}
+                  </div>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
       <div className={styles["order-table__tools"]}>
@@ -545,6 +547,6 @@ const OrderTable: FC<IOrderTable> = ({ status }) => {
       )}
     </>
   );
-};
+});
 
 export default OrderTable;

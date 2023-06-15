@@ -13,6 +13,23 @@ export const getOrders = () => {
   }).then(checkResponse);
 };
 
+export const getOrdersTable = (
+  index: number,
+  status: string,
+  filterPurchased: string,
+  filterPayment: string,
+  filterReorder: string
+) => {
+  return fetch(
+    `${BASE_URL}/orders-table?page=${index}&status=${status}&filterPurchased=${filterPurchased}&filterPayment=${filterPayment}&filterReorder=${filterReorder}`,
+    {
+      credentials: "include",
+      method: "GET",
+      headers: HEADERS,
+    }
+  ).then(checkResponse);
+};
+
 export const getCurrentClientOrder = (orderId: string | string[]) => {
   return fetch(`${BASE_URL}/order/current/${orderId}`, {
     credentials: "include",
@@ -279,7 +296,11 @@ export const cancelPurchase = (id: string) => {
   }).then(checkResponse);
 };
 
-export const updatePurchaseData = (id: string, poizonCode: string, filledPoizonCode: string) => {
+export const updatePurchaseData = (
+  id: string,
+  poizonCode: string,
+  filledPoizonCode: string
+) => {
   return fetch(`${BASE_URL}/order/purchase/${id}`, {
     credentials: "include",
     method: "PATCH",
@@ -294,7 +315,7 @@ export const updatePurchaseData = (id: string, poizonCode: string, filledPoizonC
 export const updatePurchaseImages = (
   id: string,
   buyProofImages: Array<IOrderImages>,
-  uploadedBuyProofImages: string,
+  uploadedBuyProofImages: string
 ) => {
   return fetch(`${BASE_URL}/order/purchase-images/${id}`, {
     credentials: "include",
@@ -404,6 +425,17 @@ export const updateDeliveryName = (
     headers: HEADERS,
     body: JSON.stringify({
       deliveryNameRecipient: deliveryNameRecipient,
+    }),
+  }).then(checkResponse);
+};
+
+export const updateDeliveryTg = (id: string, deliveryName: string) => {
+  return fetch(`${BASE_URL}/order/order-tg/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      deliveryName: deliveryName,
     }),
   }).then(checkResponse);
 };

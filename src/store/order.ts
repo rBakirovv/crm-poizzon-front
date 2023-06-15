@@ -53,6 +53,8 @@ class OrderData {
 
   orders: Array<IOrder> = [];
 
+  ordersTableLength: number = 0;
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -79,6 +81,10 @@ class OrderData {
 
   setLink(newLink: string) {
     this.order.link = newLink;
+  }
+
+  setOrdersTableLength(number: number) {
+    this.ordersTableLength = number;
   }
 }
 
