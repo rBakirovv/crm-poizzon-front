@@ -11,6 +11,7 @@ import {
   updateOrderImages,
   uploadImages,
   deleteOrderImage,
+  getCombinedOrders,
 } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { BASE_URL } from "../../utils/constants";
@@ -23,6 +24,7 @@ import Delivery from "../Delivery/Delivery";
 import Preloader from "../UI/Preloader/Preloader";
 import DeliveryDuplicate from "../DeliveryDuplicate/DeliveryDuplicate";
 import Link from "next/link";
+import order from "../../store/order";
 
 const dayjs = require("dayjs");
 
@@ -72,6 +74,8 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
   const [isDrag, setIsDrag] = useState(false);
 
   const [isCopy, setIsCopy] = useState(false);
+
+  const [combinedOrders, setCombinedOrders] = useState([]);
 
   const priceRub = Math.ceil(
     parseFloat(OrderData.order.priceCNY) *
@@ -732,6 +736,13 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
     data.commission,
   ]);
 
+  useEffect(() => {
+    OrderData.order.combinedOrder.length > 0 &&
+      getCombinedOrders(OrderData.order._id).then((data) =>
+        setCombinedOrders(data)
+      );
+  }, []);
+
   return (
     <section className={styles["order-change"]}>
       {uploading && <Preloader />}
@@ -775,19 +786,15 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           <span className={styles["order-change__status_orange"]}>
             Объединён с:
           </span>
-          {OrderData.order.combinedOrder[0].combinedOrder.map((id) => {
-            const combinedItem = OrderData.orders.find(
-              (fItem) => fItem._id === id
-            );
-
+          {combinedOrders!.map((item: any) => {
             return (
-              id !== OrderData.order._id && (
+              item.orderId !== OrderData.order.orderId && (
                 <Link
                   className={styles["order-change__order-link"]}
-                  href={`${BASE_URL_FRONT}/order/change/${id}`}
-                  key={id}
+                  href={`${BASE_URL_FRONT}/order/change/${item._id}`}
+                  key={item.orderId}
                 >
-                  Заказ {combinedItem?.orderId}
+                  Заказ {item.orderId}
                 </Link>
               )
             );

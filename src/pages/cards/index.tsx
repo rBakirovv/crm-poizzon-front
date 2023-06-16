@@ -24,6 +24,7 @@ const Home = observer(() => {
   const [isPreloader, setIsPreloader] = useState(false);
 
   useEffect(() => {
+    setIsPreloader(true);
     getOrders()
       .then((orders) => OrderData.setOrders(orders))
       .then(() => setIsPreloader(false));

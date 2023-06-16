@@ -268,7 +268,6 @@ const Supply = observer(() => {
                 name="supply"
                 value={data.supply}
                 onInput={handleChange}
-                /*onPaste={handlePaste}*/
               />
             )}
             {supplyDate !== "" && (

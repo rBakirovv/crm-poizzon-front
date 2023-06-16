@@ -30,6 +30,18 @@ export const getOrdersTable = (
   ).then(checkResponse);
 };
 
+export const searchOrder = (page: number, search: string | number) => {
+  return fetch(`${BASE_URL}/orders-search`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      page: page,
+      search: search,
+    }),
+  }).then(checkResponse);
+};
+
 export const getCurrentClientOrder = (orderId: string | string[]) => {
   return fetch(`${BASE_URL}/order/current/${orderId}`, {
     credentials: "include",
@@ -62,6 +74,14 @@ export const mergeOrders = (id: string, combinedOrder: Array<string>) => {
     body: JSON.stringify({
       combinedOrder: combinedOrder,
     }),
+  }).then(checkResponse);
+};
+
+export const getCombinedOrders = (id: string) => {
+  return fetch(`${BASE_URL}/order/merge-info/${id}`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
   }).then(checkResponse);
 };
 

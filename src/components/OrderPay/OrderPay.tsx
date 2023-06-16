@@ -13,6 +13,7 @@ import ImagePopup from "../ImagePopup/ImagePopup";
 import { useRouter } from "next/router";
 import Preloader from "../UI/Preloader/Preloader";
 import { spawn } from "child_process";
+import TextInput from "../UI/TextInput/TextInput";
 
 interface IOrderPayProps {}
 
@@ -61,6 +62,21 @@ const OrderPay: FC<IOrderPayProps> = () => {
   }
 
   function openDelivery() {
+    setIsDelivery(true);
+  }
+
+  function openImagePopup(imageSrc: string) {
+    setCurrentImage(imageSrc);
+    setIsImagePopupOpen(true);
+  }
+
+  function closeImagePopup() {
+    setIsImagePopupOpen(false);
+  }
+
+  function handleSubmitDeliveyData(e: React.SyntheticEvent) {
+    e.preventDefault();
+
     updateDeliveryData(
       OrderData.order._id,
       data.name,
@@ -72,15 +88,6 @@ const OrderPay: FC<IOrderPayProps> = () => {
     ).then(() => {
       router.replace(`/order/${router.query.orderPayId}`);
     });
-  }
-
-  function openImagePopup(imageSrc: string) {
-    setCurrentImage(imageSrc);
-    setIsImagePopupOpen(true);
-  }
-
-  function closeImagePopup() {
-    setIsImagePopupOpen(false);
   }
 
   function handleChange(e: React.SyntheticEvent) {
@@ -388,30 +395,30 @@ const OrderPay: FC<IOrderPayProps> = () => {
                   <>
                     <p className={styles["order-pay__text"]}>
                       {OrderData.order.payment}
-                      {OrderData.order.payment !==
-                        "Уточняйте у менеджера -" && OrderData.order.payment !== "Перейти по ссылке -" && (
-                        <div
-                          onClick={copyLink}
-                          className={
-                            styles["order-change__public-link-text-copy"]
-                          }
-                        >
-                          {!isCopy
-                            ? "Скопировать"
-                            : "Cкопировано в буфер обмена"}{" "}
-                          <svg
-                            x="0px"
-                            y="0px"
-                            width="24px"
-                            height="24px"
-                            viewBox="0 0 24 24"
-                            focusable="false"
-                            fill="currentColor"
+                      {OrderData.order.payment !== "Уточняйте у менеджера -" &&
+                        OrderData.order.payment !== "Перейти по ссылке -" && (
+                          <div
+                            onClick={copyLink}
+                            className={
+                              styles["order-change__public-link-text-copy"]
+                            }
                           >
-                            <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
-                          </svg>
-                        </div>
-                      )}
+                            {!isCopy
+                              ? "Скопировать"
+                              : "Cкопировано в буфер обмена"}{" "}
+                            <svg
+                              x="0px"
+                              y="0px"
+                              width="24px"
+                              height="24px"
+                              viewBox="0 0 24 24"
+                              focusable="false"
+                              fill="currentColor"
+                            >
+                              <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+                            </svg>
+                          </div>
+                        )}
                     </p>
                   </>
                 )}
@@ -565,14 +572,67 @@ const OrderPay: FC<IOrderPayProps> = () => {
                     >
                       Готово
                     </button>
-                    <span className={styles["delivery-error"]}>
-                      После загрузки скриншота дождитесь проверки оплаты, затем
-                      заполните данные для доставки
-                    </span>
                   </>
                 )}
               </form>
             )}
+          </>
+        )}
+        {isDelivery && OrderData.order.status === "Черновик" && (
+          <>
+            <form className={styles["order-pay__form"]}>
+              <h4 className={styles["order-pay__title"]}>
+                {OrderData.order.brand} {OrderData.order.model}
+              </h4>
+              <div className={styles["order-pay__data-inputs"]}>
+                <TextInput
+                  name="name"
+                  label="Ваш Телеграм в формате @Telegram"
+                  value={data.name}
+                  handleChange={handleChange}
+                  readonly={OrderData.order.status !== "Черновик"}
+                  required={true}
+                />
+                <TextInput
+                  name="phone"
+                  label="Ваш номер телефона"
+                  placeholder="Формат +79029990101 для РФ"
+                  value={data.phone}
+                  handleChange={handleChange}
+                  readonly={OrderData.order.status !== "Черновик"}
+                  required={true}
+                />
+              </div>
+              <span className={styles["order-pay__personal-data"]}>
+                Нажимая кнопку "Отправить" вы соглашаетесь на обработку
+                персональных данных
+              </span>
+              <button
+                className={`${styles["order-pay__pay-submit"]} ${
+                  (data.name === "" ||
+                    data.phone === "" ||
+                    (data.phone[0] === "+" &&
+                      data.phone[1] === "7" &&
+                      data.phone.length > 12) ||
+                    (data.phone[0] === "7" && data.phone.length > 11) ||
+                    (data.phone[0] === "8" && data.phone.length > 11)) &&
+                  styles["order-pay__pay-submit_disabled"]
+                }`}
+                type="submit"
+                disabled={
+                  data.name === "" ||
+                  data.phone === "" ||
+                  (data.phone[0] === "+" &&
+                    data.phone[1] === "7" &&
+                    data.phone.length > 12) ||
+                  (data.phone[0] === "7" && data.phone.length > 11) ||
+                  (data.phone[0] === "8" && data.phone.length > 11)
+                }
+                onClick={handleSubmitDeliveyData}
+              >
+                Отправить
+              </button>
+            </form>
           </>
         )}
       </div>
