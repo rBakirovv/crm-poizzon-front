@@ -6,6 +6,7 @@ import OrderData from "../../store/order";
 import {
   createSupply,
   deleteSupplyDate,
+  getOrdersBySupplies,
   updateSupply,
 } from "../../utils/Supply";
 import { observer } from "mobx-react-lite";
@@ -69,19 +70,21 @@ const Supply = observer(() => {
   });
 
   const totalSupplyChina =
-    filteredSupplyItems &&
-    filteredSupplyItems.reduce(function (sum, current) {
+    SupplyData.suppliesOrders.length &&
+    SupplyData.suppliesOrders.reduce(function (sum, current) {
       return sum + parseFloat(current.priceDeliveryChina);
     }, 0);
 
   const totalSupplyRussia =
-    filteredSupplyItems &&
-    filteredSupplyItems.reduce(function (sum, current) {
+    SupplyData.suppliesOrders &&
+    SupplyData.suppliesOrders.reduce(function (sum, current) {
       return sum + parseFloat(current.priceDeliveryRussia);
     }, 0);
 
   const handleSelectDateChange = (e: React.SyntheticEvent) => {
     const target = e.target as HTMLInputElement;
+
+    setIsPreloader(true);
 
     const currentArray = SupplyData.supplies.find(
       (supplyItem) => supplyItem._id === target.value
@@ -89,6 +92,16 @@ const Supply = observer(() => {
 
     setSupplyDate(target.value);
     SupplyData.setSupply(currentArray!);
+
+    getOrdersBySupplies(SupplyData.supply._id!)
+      .then((orders) => {
+        SupplyData.setSuppliesOrders(orders);
+      })
+      .then(() => setIsPreloader(false))
+      .catch((err) => {
+        console.log(err);
+        setIsPreloader(false);
+      });
   };
 
   function openSupplyCreate() {
@@ -116,12 +129,24 @@ const Supply = observer(() => {
   }
 
   function onSupplyDeleteDate() {
+    setIsPreloader(true);
     deleteSupplyDate(supplyDate)
       .then(() => {
         SupplyData.deleteSupplyDate(supplyDate);
       })
       .then(() => {
         setSupplyDate("");
+      })
+      .then(() => {
+        getOrdersBySupplies(SupplyData.supply._id!)
+          .then((orders) => {
+            SupplyData.setSuppliesOrders(orders);
+          })
+          .then(() => setIsPreloader(false))
+          .catch((err) => {
+            console.log(err);
+            setIsPreloader(false);
+          });
       });
   }
 
@@ -130,10 +155,20 @@ const Supply = observer(() => {
   }
 
   async function handleSupplyPaste(code: string, supplyDate: string) {
+    setIsPreloader(true);
     await updateSupply(supplyDate, SupplyData.supply.supply.concat(code))
       .then((data) => {
         SupplyData.addSupply(data.supply);
-        setIsPreloader(true);
+      })
+      .then(() => {
+        getOrdersBySupplies(SupplyData.supply._id!)
+          .then((orders) => {
+            SupplyData.setSuppliesOrders(orders);
+          })
+          .catch((err) => {
+            console.log(err);
+            setIsPreloader(false);
+          });
       })
       .then(() => {
         setData({
@@ -222,7 +257,7 @@ const Supply = observer(() => {
                   .slice()
                   .reverse()
                   .filter((filterItem) => {
-                    const currentOrder = OrderData.orders.find(
+                    const currentOrder = SupplyData.suppliesOrders.find(
                       (findItem) => findItem.poizonCode === filterItem
                     );
 
@@ -233,7 +268,7 @@ const Supply = observer(() => {
                       : SupplyData.supply.supply.includes(filterItem);
                   })
                   .map((item, index) => {
-                    const currentOrder = OrderData.orders.find(
+                    const currentOrder = SupplyData.suppliesOrders.find(
                       (findItem) => findItem.poizonCode === item
                     );
 

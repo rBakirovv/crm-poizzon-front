@@ -16,7 +16,11 @@ import PaymentsData from "../../store/payments";
 import Cards from "../../components/Cards/Cards";
 import OrderData from "../../store/order";
 import CardsData from "../../store/cards";
-import { getCardsUpdatedAt, getOrders } from "../../utils/Order";
+import {
+  getCardsUpdatedAt,
+  getOrders,
+  getOrdersAfterUpdatedAt,
+} from "../../utils/Order";
 
 const Home = observer(() => {
   const router = useRouter();
@@ -25,9 +29,15 @@ const Home = observer(() => {
 
   useEffect(() => {
     setIsPreloader(true);
-    getOrders()
-      .then((orders) => OrderData.setOrders(orders))
-      .then(() => setIsPreloader(false));
+    getOrdersAfterUpdatedAt()
+      .then((orders) => {
+        CardsData.setOrdersAfterUpdatedAt(orders);
+      })
+      .then(() => setIsPreloader(false))
+      .catch((err) => {
+        setIsPreloader(false);
+        console.log(err);
+      });
   }, []);
 
   useEffect(() => {
@@ -105,11 +115,12 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            {OrderData.orders.length > 0 && CardsData.cards.updatedAt && (
+            {CardsData.cards.updatedAt && (
               <Cards payments={PaymentsData.paymentsList} />
             )}
-            {(OrderData.orders.length === 0 || !OrderData.orders.length) &&
-              !CardsData.cards.updatedAt && <Preloader />}
+            {!OrderData.orders.length && !CardsData.cards.updatedAt && (
+              <Preloader />
+            )}
           </Main>
         </>
       )}

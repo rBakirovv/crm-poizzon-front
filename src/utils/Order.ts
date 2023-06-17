@@ -756,6 +756,14 @@ export const updateCardsStatistics = (id: string) => {
   }).then(checkResponse);
 };
 
+export const getOrdersAfterUpdatedAt = () => {
+  return fetch(`${BASE_URL}/cards/orders`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();

@@ -12,6 +12,8 @@ class SupplyData {
 
   supplies: Array<ISupply> = [];
 
+  suppliesOrders: Array<IOrder> = [];
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -52,6 +54,10 @@ class SupplyData {
 
   pushSupply(supply: ISupply) {
     this.supplies.push(supply);
+  }
+
+  setSuppliesOrders(orders: Array<IOrder>) {
+    this.suppliesOrders = orders;
   }
 }
 

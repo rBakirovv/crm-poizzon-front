@@ -1,4 +1,3 @@
-import { ISupply } from "../types/interfaces";
 import { BASE_URL } from "./constants";
 
 const HEADERS = {
@@ -7,6 +6,14 @@ const HEADERS = {
 
 export const getSupplies = () => {
   return fetch(`${BASE_URL}/supply`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const getOrdersBySupplies = (id: string) => {
+  return fetch(`${BASE_URL}/supply/orders/${id}`, {
     credentials: "include",
     method: "GET",
     headers: HEADERS,

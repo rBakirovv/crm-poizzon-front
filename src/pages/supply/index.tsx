@@ -13,21 +13,11 @@ import RateData from "../../store/rate";
 import { getRate } from "../../utils/Rate";
 import OrderData from "../../store/order";
 import SupplyData from "../../store/supplies";
-import { getOrders } from "../../utils/Order";
 import Supply from "../../components/Supply/Supply";
 import { getSupplies } from "../../utils/Supply";
 
 const Home = observer(() => {
   const router = useRouter();
-
-  const [isPreloader, setIsPreloader] = useState(false);
-
-  useEffect(() => {
-    setIsPreloader(true);
-    getOrders()
-      .then((orders) => OrderData.setOrders(orders))
-      .then(() => setIsPreloader(false));
-  }, []);
 
   useEffect(() => {
     !Logged.loggedIn &&
@@ -87,7 +77,6 @@ const Home = observer(() => {
           rel="icon"
         ></link>
       </Head>
-      {isPreloader && <Preloader />}
       {!Logged.loggedIn && <Preloader />}
       {Logged.loggedIn && (
         <>

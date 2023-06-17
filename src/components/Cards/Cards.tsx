@@ -50,14 +50,13 @@ const Cards: FC<ICardsProps> = ({ payments }) => {
         </h2>
         <ul className={styles["cards__list"]}>
           {payments.map((item) => {
-            const filterItems = OrderData.orders.filter((filterItem) => {
-              if (
-                filterItem.paidAt > CardsData.cards.updatedAt! &&
-                filterItem.payment === `${item.title} ${item.number}`
-              ) {
-                return filterItem;
+            const filterItems = CardsData.ordersAfterUpdatedAt.filter(
+              (filterItem) => {
+                if (filterItem.payment === `${item.title} ${item.number}`) {
+                  return filterItem;
+                }
               }
-            });
+            );
 
             const total =
               filterItems &&

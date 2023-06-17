@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { ICards } from "../types/interfaces";
+import { ICards, IOrder } from "../types/interfaces";
 
 class CardsData {
   cards: ICards = {
@@ -7,12 +7,18 @@ class CardsData {
     _id: "",
   };
 
+  ordersAfterUpdatedAt: Array<IOrder> = [];
+
   constructor() {
     makeAutoObservable(this);
   }
 
   setUpdatedDate = (newDate: ICards) => {
     this.cards = newDate;
+  };
+
+  setOrdersAfterUpdatedAt = (orders: Array<IOrder>) => {
+    this.ordersAfterUpdatedAt = orders;
   };
 }
 
