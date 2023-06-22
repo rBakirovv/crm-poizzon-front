@@ -6,12 +6,12 @@ import { IPayments } from "../../types/interfaces";
 import OrderData from "../../store/order";
 import PromoCodeData from "../../store/promo-code";
 import CommissionData from "../../store/commission";
+import { observer } from "mobx-react-lite";
 import {
   updateOrderDraft,
   updateOrderImages,
   uploadImages,
   deleteOrderImage,
-  getCombinedOrders,
 } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { BASE_URL } from "../../utils/constants";
@@ -24,7 +24,6 @@ import Delivery from "../Delivery/Delivery";
 import Preloader from "../UI/Preloader/Preloader";
 import DeliveryDuplicate from "../DeliveryDuplicate/DeliveryDuplicate";
 import Link from "next/link";
-import order from "../../store/order";
 
 const dayjs = require("dayjs");
 
@@ -40,7 +39,7 @@ interface IOrderChangeProps {
   payments: Array<IPayments>;
 }
 
-const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
+const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
   const [data, setData] = useState({
     _id: OrderData.order._id,
     link: OrderData.order.link,
@@ -75,7 +74,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
 
   const [isCopy, setIsCopy] = useState(false);
 
-  const [combinedOrders, setCombinedOrders] = useState([]);
+  //const [combinedOrders, setCombinedOrders] = useState([]);
 
   const priceRub = Math.ceil(
     parseFloat(OrderData.order.priceCNY) *
@@ -736,13 +735,6 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
     data.commission,
   ]);
 
-  useEffect(() => {
-    OrderData.order.combinedOrder.length > 0 &&
-      getCombinedOrders(OrderData.order._id).then((data) =>
-        setCombinedOrders(data)
-      );
-  }, []);
-
   return (
     <section className={styles["order-change"]}>
       {uploading && <Preloader />}
@@ -786,7 +778,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
           <span className={styles["order-change__status_orange"]}>
             Объединён с:
           </span>
-          {combinedOrders!.map((item: any) => {
+          {OrderData.mergedOrders.map((item: any) => {
             return (
               item.orderId !== OrderData.order.orderId && (
                 <Link
@@ -1072,7 +1064,7 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
                 <option value="" selected disabled>
                   -- Выберите --
                 </option>
-                {payments.sort(sortCards).map((paymentItem) => {
+                {payments.slice().sort(sortCards).map((paymentItem) => {
                   return (
                     <option
                       key={paymentItem._id}
@@ -1218,6 +1210,6 @@ const OrderChange: FC<IOrderChangeProps> = ({ payments }) => {
       />
     </section>
   );
-};
+});
 
 export default OrderChange;

@@ -9,7 +9,7 @@ import UserData from "../../../store/user";
 import Logged from "../../../store/logged";
 import { getUserInfo } from "../../../utils/User";
 import Navigation from "../../../components/UI/Navigation/Navigation";
-import { getCurrentOrder } from "../../../utils/Order";
+import { getCombinedOrders, getCurrentOrder } from "../../../utils/Order";
 import OrderChange from "../../../components/OrderChange/OrderChange";
 import OrderData from "../../../store/order";
 import RateData from "../../../store/rate";
@@ -59,11 +59,32 @@ const Home = observer(() => {
       getCurrentOrder(router.query.orderChangeId)
         .then((order) => {
           OrderData.setOrder(order);
+
+          return order;
+        })
+        .then((order) => {
+          if (order.combinedOrder.length > 0) {
+            getCombinedOrders(router.query.orderChangeId as string).then(
+              (data) => {
+                OrderData.setMergedOrders(data);
+              }
+            );
+          }
         })
         .catch((err) => {
           console.log(err);
         });
   }, [router.query.orderChangeId]);
+
+  /*
+  useEffect(() => {
+    OrderData.order.combinedOrder.length > 0 &&
+      router.query.orderChangeId &&
+      getCombinedOrders(router.query.orderChangeId as string).then((data) => {
+        OrderData.setMergedOrders(data);
+      });
+  }, [router.query.orderChangeId]);
+  */
 
   useEffect(() => {
     getRate()
@@ -98,7 +119,11 @@ const Home = observer(() => {
       <Head>
         <title>{`Заказ #${OrderData.order.orderId}`}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link type="Image/x-icon" href="../images/favicon.ico" rel="icon"></link>
+        <link
+          type="Image/x-icon"
+          href="../images/favicon.ico"
+          rel="icon"
+        ></link>
       </Head>
       {!Logged.loggedIn && <Preloader />}
       {Logged.loggedIn && (
@@ -110,11 +135,11 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            {router.query.orderChangeId && OrderData.order._id && PaymentsData.paymentsList && (
-              <OrderChange
-                payments={PaymentsData.paymentsList}
-              />
-            )}
+            {router.query.orderChangeId &&
+              OrderData.order._id &&
+              PaymentsData.paymentsList && (
+                <OrderChange payments={PaymentsData.paymentsList} />
+              )}
           </Main>
         </>
       )}

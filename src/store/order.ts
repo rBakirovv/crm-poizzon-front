@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { IOrder } from "../types/interfaces";
+import { IMergedOrders, IOrder } from "../types/interfaces";
 
 class OrderData {
   order: IOrder = {
@@ -55,6 +55,8 @@ class OrderData {
 
   ordersTableLength: number = 0;
 
+  mergedOrders: Array<IMergedOrders> = [];
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -85,6 +87,10 @@ class OrderData {
 
   setOrdersTableLength(number: number) {
     this.ordersTableLength = number;
+  }
+
+  setMergedOrders(mergedOrdersData: Array<IMergedOrders>) {
+    this.mergedOrders = mergedOrdersData;
   }
 }
 
