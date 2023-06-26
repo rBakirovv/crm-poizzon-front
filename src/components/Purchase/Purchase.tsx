@@ -248,7 +248,7 @@ const Purchase = () => {
     if (OrderData.order.buyProofImages.length !== 0) {
       updatePurchaseData(
         OrderData.order._id,
-        data.poizon_code,
+        OrderData.order.poizonCode,
         UserData.userData.name
       )
         .then((order) => {
@@ -395,17 +395,69 @@ const Purchase = () => {
     return () => document.removeEventListener("paste", pasteHandler);
   }, []);
 
+  useEffect(() => {
+    OrderData.setOrder({
+      _id: OrderData.order._id,
+      creater: OrderData.order.creater,
+      buyer: OrderData.order.buyer,
+      stockman: OrderData.order.stockman,
+      createdAt: OrderData.order.createdAt,
+      overudeAfter: OrderData.order.overudeAfter,
+      paidAt: OrderData.order.paidAt,
+      buyAt: OrderData.order.buyAt,
+      inChinaStockAt: OrderData.order.inChinaStockAt,
+      deliveredAt: OrderData.order.deliveredAt,
+      orderId: OrderData.order.orderId,
+      combinedOrder: OrderData.order.combinedOrder,
+      status: OrderData.order.status,
+      link: OrderData.order.link,
+      payLink: OrderData.order.payLink,
+      paymentUUID: OrderData.order.paymentUUID,
+      category: OrderData.order.category,
+      subcategory: OrderData.order.subcategory,
+      brand: OrderData.order.brand,
+      model: OrderData.order.model,
+      size: OrderData.order.size,
+      orderImages: OrderData.order.orderImages,
+      payProofImages: OrderData.order.payProofImages,
+      buyProofImages: OrderData.order.buyProofImages,
+      uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
+      payment: OrderData.order.payment,
+      currentRate: OrderData.order.currentRate,
+      priceCNY: OrderData.order.priceCNY,
+      priceDeliveryChina: OrderData.order.priceDeliveryChina,
+      priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
+      commission: OrderData.order.commission,
+      promoCodePercent: OrderData.order.promoCodePercent,
+      comment: OrderData.order.comment,
+      poizonCode: data.poizon_code,
+      filledPoizonCode: OrderData.order.filledPoizonCode,
+      deliveryCode: OrderData.order.deliveryCode,
+      deliveryName: OrderData.order.deliveryName,
+      deliveryNameRecipient: OrderData.order.deliveryNameRecipient,
+      deliveryPhone: OrderData.order.deliveryPhone,
+      deliveryPhoneRecipient: OrderData.order.deliveryPhoneRecipient,
+      deliveryMethod: OrderData.order.deliveryMethod,
+      deliveryAddress: OrderData.order.deliveryAddress,
+      deliveryEntity: OrderData.order.deliveryEntity,
+      deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
+      reorder: OrderData.order.reorder,
+      __v: OrderData.order.__v,
+    });
+  }, [data]);
+
   return (
     <form onSubmit={openSubmitPopup} className={styles["purchase"]}>
       <TextInput
         label="Номер отправки Poizon"
         name="poizon_code"
-        value={data.poizon_code}
+        value={OrderData.order.poizonCode}
         handleChange={handleChange}
         required={false}
       />
-      {(OrderData.order.filledPoizonCode !== "" &&
-        OrderData.order.filledPoizonCode !== null) && OrderData.order.poizonCode !== "" && (
+      {OrderData.order.filledPoizonCode !== "" &&
+        OrderData.order.filledPoizonCode !== null &&
+        OrderData.order.poizonCode !== "" && (
           <p>
             Обновил: <strong>{OrderData.order.filledPoizonCode}</strong>
           </p>
@@ -416,7 +468,8 @@ const Purchase = () => {
         OrderData.order.status === "Ожидает закупки"
       ) && <p>Скриншоты чеков закупки</p>}
       {OrderData.order.uploadedBuyProofImages !== "" &&
-        OrderData.order.uploadedBuyProofImages !== null && OrderData.order.buyProofImages.length > 0 && (
+        OrderData.order.uploadedBuyProofImages !== null &&
+        OrderData.order.buyProofImages.length > 0 && (
           <p>
             Загрузил: <strong>{OrderData.order.uploadedBuyProofImages}</strong>
           </p>
