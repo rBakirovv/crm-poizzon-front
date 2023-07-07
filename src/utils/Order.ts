@@ -77,6 +77,14 @@ export const mergeOrders = (id: string, combinedOrder: Array<string>) => {
   }).then(checkResponse);
 };
 
+export const unmergeOrders = (id: string) => {
+  return fetch(`${BASE_URL}/order/unmerge/${id}`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
 export const getCombinedOrders = (id: string) => {
   return fetch(`${BASE_URL}/order/merge-info/${id}`, {
     credentials: "include",

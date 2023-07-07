@@ -52,3 +52,9 @@
 .merge__submit:active {
   background: #d96e3a;
 }
+
+.merge__checkbox {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}

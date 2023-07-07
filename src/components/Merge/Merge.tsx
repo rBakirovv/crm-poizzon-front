@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { IOrder } from "../../types/interfaces";
-import { getOrderByNumber, mergeOrders } from "../../utils/Order";
-//import OrdersList from "../OrdersList/OrdersList";
+import {
+  getOrderByNumber,
+  mergeOrders,
+  unmergeOrders,
+} from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import TextInput from "../UI/TextInput/TextInput";
 import styles from "./Merge.module.css";
@@ -12,6 +15,8 @@ const Merge = () => {
   });
 
   const [isSubmitPopup, setIsSubmitPopup] = useState(false);
+
+  const [isUnmerge, setIsUnmerge] = useState(false);
 
   let ordersList: Array<string> = [];
 
@@ -37,23 +42,42 @@ const Merge = () => {
   };
 
   async function handleSubmit() {
-    await data.orders.match(/(-?\d+(\.\d+)?)/g)?.map((item) => {
-      getOrderByNumber(item)
-        .then((order) => {
-          order.map((orderItem: IOrder) => {
-            ordersList.push(orderItem._id);
+    if (isUnmerge) {
+      await getOrderByNumber(
+        data.orders.match(/(-?\d+(\.\d+)?)/g)?.slice(0, 1)!
+      )
+        .then((orderData) => {
+          orderData[0].combinedOrder[0].combinedOrder.map((item: any) => {
+            unmergeOrders(item);
           });
         })
-        .then(() => {
-          ordersList.length === data.orders.match(/(-?\d+(\.\d+)?)/g)?.length &&
-            ordersList.map((item, index) => {
-              mergeOrders(ordersList[index], ordersList);
-            });
-        })
         .catch((err) => console.log(err));
-    });
 
-    await setData({ orders: "" });
+      await setData({ orders: "" });
+    } else {
+      await data.orders.match(/(-?\d+(\.\d+)?)/g)?.map((item) => {
+        getOrderByNumber(item)
+          .then((order) => {
+            order.map((orderItem: IOrder) => {
+              ordersList.push(orderItem._id);
+            });
+          })
+          .then(() => {
+            ordersList.length ===
+              data.orders.match(/(-?\d+(\.\d+)?)/g)?.length &&
+              ordersList.map((item, index) => {
+                mergeOrders(ordersList[index], ordersList);
+              });
+          })
+          .catch((err) => console.log(err));
+      });
+
+      await setData({ orders: "" });
+    }
+  }
+
+  function handleUnmergeChange() {
+    setIsUnmerge(!isUnmerge);
   }
 
   return (
@@ -70,12 +94,23 @@ const Merge = () => {
             handleChange={handleChange}
           />
           <button className={styles["merge__submit"]} type="submit">
-            Объединить
+            {isUnmerge ? "Разъединить" : "Объединить"}
           </button>
         </form>
+        <div className={styles["merge__checkbox"]}>
+          <input
+            type="checkbox"
+            name="unmerge"
+            checked={isUnmerge}
+            onChange={handleUnmergeChange}
+          />
+          <span>Удалить объединение</span>
+        </div>
       </div>
       <SubmitPopup
-        submitText={`Объединить заказы ${
+        submitText={`${
+          isUnmerge ? "Разъединить заказы" : "Объединить заказы"
+        } ${
           data.orders !== ""
             ? data.orders.match(/(-?\d+(\.\d+)?)/g)?.join(", ")
             : ""

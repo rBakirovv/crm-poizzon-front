@@ -57,7 +57,7 @@ const ChangeAddress: FC<IChangeAddressProps> = observer(
       setTarif(wat.tarif);
       setCurrentPVZId(wat.id);
       setCurrentPVZ(`г. ${wat.cityName}, ${wat.PVZ.Address}`);
-      setAmount(parseInt(wat.price) + 100);
+      setAmount(parseInt(wat.price) + 150);
       setIsPostamat(wat.PVZ.Postamat);
     }
 
