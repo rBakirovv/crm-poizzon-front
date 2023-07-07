@@ -139,4 +139,5 @@ export interface ICommission {
 export interface IMergedOrders {
   orderId: number,
   _id: string,
+  orderStatus: string,
 }

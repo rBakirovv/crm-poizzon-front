@@ -1,12 +1,11 @@
 import styles from "./Search.module.css";
 import TextInput from "../UI/TextInput/TextInput";
 import OrderData from "../../store/order";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { IOrder } from "../../types/interfaces";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { mergeOrders, searchOrder } from "../../utils/Order";
-import Preloader from "../UI/Preloader/Preloader";
 
 const dayjs = require("dayjs");
 
@@ -143,6 +142,7 @@ const Search = () => {
           required={false}
           placeholder="Номер / id / poizon / CDEK"
           value={data.search}
+          autoFocus={true}
           handleChange={handleChange}
         />
       </div>

@@ -782,7 +782,10 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
             return (
               item.orderId !== OrderData.order.orderId && (
                 <Link
-                  className={styles["order-change__order-link"]}
+                  className={`${styles["order-change__order-link"]} ${
+                    item.orderStatus === "На складе в РФ" &&
+                    styles["green-status"]
+                  }`}
                   href={`${BASE_URL_FRONT}/order/change/${item._id}`}
                   key={item.orderId}
                 >
@@ -1064,16 +1067,19 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                 <option value="" selected disabled>
                   -- Выберите --
                 </option>
-                {payments.slice().sort(sortCards).map((paymentItem) => {
-                  return (
-                    <option
-                      key={paymentItem._id}
-                      value={`${paymentItem.title} ${paymentItem.number}`}
-                    >
-                      {paymentItem.title} {paymentItem.number}
-                    </option>
-                  );
-                })}
+                {payments
+                  .slice()
+                  .sort(sortCards)
+                  .map((paymentItem) => {
+                    return (
+                      <option
+                        key={paymentItem._id}
+                        value={`${paymentItem.title} ${paymentItem.number}`}
+                      >
+                        {paymentItem.title} {paymentItem.number}
+                      </option>
+                    );
+                  })}
               </select>
             </div>
             <TextInput

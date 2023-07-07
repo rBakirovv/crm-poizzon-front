@@ -2,6 +2,11 @@
   color: red;
 }
 
+.green-status {
+  color: #75d843;
+  border-bottom: 1px dashed #75d843 !important; 
+}
+
 .order-change {
   position: relative;
   width: auto;
