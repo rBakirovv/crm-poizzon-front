@@ -1,8 +1,9 @@
 import Link from "next/link";
 import OrderData from "../../../store/order";
+import RateData from "../../../store/rate";
 import OrdersBar from "../../../store/ordersBar";
 import styles from "./OrderTable.module.css";
-import { FC, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import SubmitPopup from "../../SubmitPopup/SubmitPopup";
 import {
   deleteOrder,
@@ -12,8 +13,9 @@ import {
   deletePayProofImage,
   reorderStatus,
   getOrdersTable,
+  getInStockInRussia,
 } from "../../../utils/Order";
-import { IOrderImages } from "../../../types/interfaces";
+import { IOrder, IOrderImages } from "../../../types/interfaces";
 import { useRouter } from "next/router";
 import UserData from "../../../store/user";
 import PaymentsData from "../../../store/payments";
@@ -23,6 +25,8 @@ const dayjs = require("dayjs");
 
 var utc = require("dayjs/plugin/utc");
 var timezone = require("dayjs/plugin/timezone");
+
+var debounce = require("lodash.debounce");
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -53,7 +57,19 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
   const [filterPayment, setFilterPayment] = useState("");
   const [filterReorder, setFilterReorder] = useState("");
 
+  const [inStockInRussiaOrders, setInStockInRussiaOrders] = useState<
+    Array<IOrder>
+  >([]);
+
   const lastPageIndex = Math.ceil(OrderData.ordersTableLength / itemsPerPage);
+
+  function handleChange(e: React.SyntheticEvent) {
+    const target = e.target as HTMLInputElement;
+
+    if (target.name === "current_page") {
+      debouncePaste(parseInt(target.value));
+    }
+  }
 
   function hanfleFilterPurchased(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
@@ -82,13 +98,13 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
   function hanfleFilterPayment(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
 
-      getOrdersTable(0, OrdersBar.orderStatus, "", target.value, "").then(
-        (orders) => {
-          OrderData.setOrders(orders.orders);
-          OrderData.setOrdersTableLength(orders.total);
-          setCurrentPage(1);
-        }
-      );
+    getOrdersTable(0, OrdersBar.orderStatus, "", target.value, "").then(
+      (orders) => {
+        OrderData.setOrders(orders.orders);
+        OrderData.setOrdersTableLength(orders.total);
+        setCurrentPage(1);
+      }
+    );
 
     setFilterPayment(target.value);
   }
@@ -226,6 +242,37 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
       .catch((err) => console.log(err));
   }
 
+  function handleChangePage(page: number) {
+    getOrdersTable(
+      page - 1,
+      OrdersBar.orderStatus,
+      filterPurchased,
+      filterPayment,
+      filterReorder
+    ).then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    setCurrentPage(page);
+  }
+
+  const debouncePaste = useCallback(
+    debounce((value: number) => {
+      handleChangePage(value);
+    }, 100),
+    []
+  );
+
+  useEffect(() => {
+    getInStockInRussia().then((orders) => {
+      setInStockInRussiaOrders(orders);
+    });
+  }, []);
+
+  const totalPriceCNY = inStockInRussiaOrders.reduce(function (sum, current) {
+    return sum + parseFloat(current.priceCNY) * parseFloat(RateData.rate.rate);
+  }, 0);
+
   return (
     <>
       <div className={styles["orders-table__container"]}>
@@ -283,148 +330,157 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
             </div>
           )}
         </div>
-        <ul className={styles["orders-table__table"]}>
-          {OrderData.orders.map((orderItem) => {
-            return (
-              <li key={orderItem._id} className={styles["orders-table__item"]}>
-                {status === "Черновик" && isDeleteDraft && (
-                  <button
-                    onClick={() =>
-                      openSubmitPopup(orderItem.orderId, orderItem._id)
-                    }
-                    className={styles["orders-table__delete-item"]}
+        {OrderData.orders && OrderData.orders.length > 0 && (
+          <ul className={styles["orders-table__table"]}>
+            {OrderData.orders &&
+              OrderData.orders.length &&
+              OrderData.orders.map((orderItem) => {
+                return (
+                  <li
+                    key={orderItem._id}
+                    className={styles["orders-table__item"]}
                   >
-                    X
-                  </button>
-                )}
-                {status === "Проверка оплаты" && isDeletePaidOrder && (
-                  <button
-                    onClick={() =>
-                      openSubmitPopup(orderItem.orderId, orderItem._id)
-                    }
-                    className={styles["orders-table__delete-item"]}
-                  >
-                    X
-                  </button>
-                )}
-                {status === "Ожидает закупки" && isPurchase && (
-                  <button
-                    className={styles["orders-table__delete-item"]}
-                    onClick={() =>
-                      openSubmitPopup(orderItem.orderId, orderItem._id)
-                    }
-                  >
-                    ✓
-                  </button>
-                )}
-                <Link
-                  className={`${styles["orders-table__info-item"]} ${
-                    styles["orders-table__info-item_link"]
-                  } ${
-                    (orderItem.status === "На закупке" ||
-                      orderItem.status === "Закуплен" ||
-                      orderItem.status === "На складе в РФ") &&
-                    orderItem.poizonCode === "" &&
-                    styles["orders-table__info-item_poizon-code"]
-                  } ${
-                    (orderItem.status === "На складе в РФ" ||
-                      orderItem.status === "Доставляется") &&
-                    orderItem.deliveryCode === "" &&
-                    styles["orders-table__info-item_delivery-code"]
-                  } ${
-                    orderItem.combinedOrder.length !== 0 &&
-                    styles["orders-table__combined"]
-                  } ${styles["orders-table__header-item_number"]} ${
-                    orderItem.reorder === true &&
-                    styles["orders-table__reorder"]
-                  }`}
-                  href={`/order/change/${orderItem._id}`}
-                >
-                  {orderItem.orderId}
-                </Link>
-                <div
-                  className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_date"]}`}
-                >
-                  {orderItem.paidAt
-                    ? dayjs.tz(new Date(orderItem.paidAt!)).format("DD-MM-YYYY")
-                    : "-"}
-                </div>
-                <div
-                  className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_product"]}`}
-                >
-                  {orderItem.model !== "" &&
-                    `${orderItem.subcategory} ${orderItem.model}`}
-                </div>
-                <div
-                  className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_price"]}`}
-                >
-                  {orderItem.status === "Черновик" &&
-                    (Math.ceil(
-                      Math.round(
-                        new Date(orderItem.overudeAfter).getTime() -
-                          new Date(Date.now()).getTime()
-                      ) / 1000
-                    ) <= 0
-                      ? "Оплата просрочена"
-                      : Math.ceil(
+                    {status === "Черновик" && isDeleteDraft && (
+                      <button
+                        onClick={() =>
+                          openSubmitPopup(orderItem.orderId, orderItem._id)
+                        }
+                        className={styles["orders-table__delete-item"]}
+                      >
+                        X
+                      </button>
+                    )}
+                    {status === "Проверка оплаты" && isDeletePaidOrder && (
+                      <button
+                        onClick={() =>
+                          openSubmitPopup(orderItem.orderId, orderItem._id)
+                        }
+                        className={styles["orders-table__delete-item"]}
+                      >
+                        X
+                      </button>
+                    )}
+                    {status === "Ожидает закупки" && isPurchase && (
+                      <button
+                        className={styles["orders-table__delete-item"]}
+                        onClick={() =>
+                          openSubmitPopup(orderItem.orderId, orderItem._id)
+                        }
+                      >
+                        ✓
+                      </button>
+                    )}
+                    <Link
+                      className={`${styles["orders-table__info-item"]} ${
+                        styles["orders-table__info-item_link"]
+                      } ${
+                        (orderItem.status === "На закупке" ||
+                          orderItem.status === "Закуплен" ||
+                          orderItem.status === "На складе в РФ") &&
+                        orderItem.poizonCode === "" &&
+                        styles["orders-table__info-item_poizon-code"]
+                      } ${
+                        (orderItem.status === "На складе в РФ" ||
+                          orderItem.status === "Доставляется") &&
+                        orderItem.deliveryCode === "" &&
+                        styles["orders-table__info-item_delivery-code"]
+                      } ${
+                        orderItem.combinedOrder.length !== 0 &&
+                        styles["orders-table__combined"]
+                      } ${styles["orders-table__header-item_number"]} ${
+                        orderItem.reorder === true &&
+                        styles["orders-table__reorder"]
+                      }`}
+                      href={`/order/change/${orderItem._id}`}
+                    >
+                      {orderItem.orderId}
+                    </Link>
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_date"]}`}
+                    >
+                      {orderItem.paidAt
+                        ? dayjs
+                            .tz(new Date(orderItem.paidAt!))
+                            .format("DD-MM-YYYY")
+                        : "-"}
+                    </div>
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_product"]}`}
+                    >
+                      {orderItem.model !== "" &&
+                        `${orderItem.subcategory} ${orderItem.model}`}
+                    </div>
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_price"]}`}
+                    >
+                      {orderItem.status === "Черновик" &&
+                        (Math.ceil(
+                          Math.round(
+                            new Date(orderItem.overudeAfter).getTime() -
+                              new Date(Date.now()).getTime()
+                          ) / 1000
+                        ) <= 0
+                          ? "Оплата просрочена"
+                          : Math.ceil(
+                              parseFloat(orderItem.priceCNY) *
+                                parseFloat(orderItem.currentRate) +
+                                parseFloat(orderItem.priceDeliveryChina) +
+                                parseFloat(orderItem.priceDeliveryRussia) +
+                                parseFloat(orderItem.commission) -
+                                orderItem.promoCodePercent
+                            ))}
+                      {orderItem.status === "Черновик" && <br />}
+                      {orderItem.status !== "Черновик" &&
+                        Math.ceil(
                           parseFloat(orderItem.priceCNY) *
                             parseFloat(orderItem.currentRate) +
                             parseFloat(orderItem.priceDeliveryChina) +
                             parseFloat(orderItem.priceDeliveryRussia) +
                             parseFloat(orderItem.commission) -
                             orderItem.promoCodePercent
-                        ))}
-                  {orderItem.status === "Черновик" && <br />}
-                  {orderItem.status !== "Черновик" &&
-                    Math.ceil(
-                      parseFloat(orderItem.priceCNY) *
-                        parseFloat(orderItem.currentRate) +
-                        parseFloat(orderItem.priceDeliveryChina) +
-                        parseFloat(orderItem.priceDeliveryRussia) +
-                        parseFloat(orderItem.commission) -
-                        orderItem.promoCodePercent
+                        )}
+                    </div>
+                    {orderItem.status === "Проверка оплаты" && (
+                      <div
+                        className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_payment"]}`}
+                      >
+                        {orderItem.payment
+                          .toLowerCase()
+                          .includes("QR".toLowerCase())
+                          ? "Перевод по QR-коду"
+                          : orderItem.payment}
+                      </div>
                     )}
-                </div>
-                {orderItem.status === "Проверка оплаты" && (
-                  <div
-                    className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_payment"]}`}
-                  >
-                    {orderItem.payment
-                      .toLowerCase()
-                      .includes("QR".toLowerCase())
-                      ? "Перевод по QR-коду"
-                      : orderItem.payment}
-                  </div>
-                )}
-                <div
-                  className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
-                >
-                  {orderItem.creater}
-                </div>
-                {!(
-                  orderItem.status === "Черновик" ||
-                  orderItem.status === "Проверка оплаты" ||
-                  orderItem.status === "Ожидает закупки"
-                ) && (
-                  <div
-                    className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
-                  >
-                    {orderItem.buyer}
-                  </div>
-                )}
-                {(status === "На складе в РФ" ||
-                  status === "Доставляется" ||
-                  status === "Завершён") && (
-                  <div
-                    className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
-                  >
-                    {orderItem.stockman}
-                  </div>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+                    <div
+                      className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
+                    >
+                      {orderItem.creater}
+                    </div>
+                    {!(
+                      orderItem.status === "Черновик" ||
+                      orderItem.status === "Проверка оплаты" ||
+                      orderItem.status === "Ожидает закупки"
+                    ) && (
+                      <div
+                        className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
+                      >
+                        {orderItem.buyer}
+                      </div>
+                    )}
+                    {(status === "На складе в РФ" ||
+                      status === "Доставляется" ||
+                      status === "Завершён") && (
+                      <div
+                        className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_person"]}`}
+                      >
+                        {orderItem.stockman}
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+          </ul>
+        )}
       </div>
       <div className={styles["order-table__tools"]}>
         <div className={styles["pagination__container"]}>
@@ -436,7 +492,14 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
             {"<"}
           </button>
           <div className={styles["pagination__page"]}>
-            {currentPage} / {lastPageIndex}
+            <input
+              className={styles["pagination__page-input"]}
+              type="number"
+              name="current_page"
+              value={currentPage}
+              onChange={handleChange}
+            />{" "}
+            / {lastPageIndex}
           </div>
           <button
             className={styles["pagination__button"]}
@@ -508,6 +571,9 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
       )}
       {status === "Ожидает закупки" && (
         <div className={styles["orders-table__payment-filter-container"]}>
+          <span className={styles["orders-table__sum-yuan"]}>
+            Итого: {Math.ceil(totalPriceCNY)} ¥
+          </span>
           <select
             className={styles["orders-table__poizon-code-filter"]}
             onChange={hanfleFilterReorder}

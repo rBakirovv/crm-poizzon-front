@@ -140,4 +140,5 @@ export interface IMergedOrders {
   orderId: number,
   _id: string,
   orderStatus: string,
+  subcategory: string,
 }

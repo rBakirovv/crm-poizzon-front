@@ -386,6 +386,14 @@ export const inStockInRussia = (id: string, stockman: string) => {
   }).then(checkResponse);
 };
 
+export const getInStockInRussia = () => {
+  return fetch(`${BASE_URL}/orders-stock`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
 export const orderSent = (id: string, deliveryCode: string) => {
   return fetch(`${BASE_URL}/order/order-sent/${id}`, {
     credentials: "include",

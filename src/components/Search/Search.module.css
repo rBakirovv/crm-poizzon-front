@@ -28,7 +28,6 @@
   padding: 0.25rem 0;
 }
 
-
 .orders-table__header-item_number {
   min-width: 120px !important;
   max-width: 120px !important;
@@ -151,6 +150,19 @@
   align-items: center;
 }
 
+.pagination__page-input {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 18px;
+}
+
+.pagination__page-input::-webkit-outer-spin-button,
+.pagination__page-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
 .pagination__button {
   cursor: pointer;
 }
@@ -170,8 +182,4 @@
 
 .orders-table__finished {
   color: #61616130;
-  /*
-  background-color: red;
-  color: #FFF;
-  */
 }

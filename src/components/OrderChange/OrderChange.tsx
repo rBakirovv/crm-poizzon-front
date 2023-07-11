@@ -790,6 +790,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   key={item.orderId}
                 >
                   Заказ {item.orderId}
+                  {item.orderStatus === "На складе в РФ" &&
+                    `: ${item.subcategory}`}
                 </Link>
               )
             );

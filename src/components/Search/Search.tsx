@@ -1,7 +1,7 @@
 import styles from "./Search.module.css";
 import TextInput from "../UI/TextInput/TextInput";
 import OrderData from "../../store/order";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { IOrder } from "../../types/interfaces";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
@@ -11,6 +11,8 @@ const dayjs = require("dayjs");
 
 var utc = require("dayjs/plugin/utc");
 var timezone = require("dayjs/plugin/timezone");
+
+var debounce = require("lodash.debounce");
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -74,7 +76,13 @@ const Search = () => {
       [name]: value,
     });
 
-    setFilteredValue(target.value);
+    if (target.name === "search") {
+      setFilteredValue(target.value);
+    }
+
+    if (target.name === "current_page") {
+      debouncePaste(parseInt(target.value));
+    }
   }
 
   function nextPage() {
@@ -130,8 +138,33 @@ const Search = () => {
     await setOrdersArray([]);
     await setNumbersArray([]);
     await setIsMerge(false);
-    await alert("Пожалуйста, обновите страницу");
+
+    await searchOrder(
+      currentPage - 1,
+      parseInt(data.search) ? parseInt(data.search) : data.search
+    ).then((orders) => {
+      setSearchedOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
   }
+
+  function handleChangePage(page: number) {
+    setCurrentPage(page);
+    searchOrder(
+      page - 1,
+      parseInt(data.search) ? parseInt(data.search) : data.search
+    ).then((orders) => {
+      setSearchedOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+  }
+
+  const debouncePaste = useCallback(
+    debounce((value: number) => {
+      handleChangePage(value);
+    }, 100),
+    []
+  );
 
   return (
     <section className={styles["search"]}>
@@ -339,7 +372,14 @@ const Search = () => {
               {"<"}
             </button>
             <div className={styles["pagination__page"]}>
-              {currentPage} / {lastPageIndex}
+              <input
+                className={styles["pagination__page-input"]}
+                type="number"
+                name="current_page"
+                value={currentPage}
+                onChange={handleChange}
+              />{" "}
+              / {lastPageIndex}
             </div>
             <button
               className={styles["pagination__button"]}
