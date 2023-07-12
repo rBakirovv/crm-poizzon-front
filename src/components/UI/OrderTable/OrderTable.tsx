@@ -1,6 +1,5 @@
 import Link from "next/link";
 import OrderData from "../../../store/order";
-import RateData from "../../../store/rate";
 import OrdersBar from "../../../store/ordersBar";
 import styles from "./OrderTable.module.css";
 import { FC, useCallback, useEffect, useState } from "react";
@@ -270,7 +269,7 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
   }, []);
 
   const totalPriceCNY = inStockInRussiaOrders.reduce(function (sum, current) {
-    return sum + parseFloat(current.priceCNY) * parseFloat(RateData.rate.rate);
+    return sum + parseFloat(current.priceCNY);
   }, 0);
 
   return (
