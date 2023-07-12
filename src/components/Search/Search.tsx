@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { IOrder } from "../../types/interfaces";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
-import { mergeOrders, searchOrder } from "../../utils/Order";
+import { mergeOrders, searchOrder, unmergeOrders } from "../../utils/Order";
 
 const dayjs = require("dayjs");
 
@@ -32,10 +32,15 @@ const Search = () => {
   const [searchedOrders, setSearchedOrders] = useState<Array<IOrder>>();
 
   const [isMerge, setIsMerge] = useState<boolean>(false);
+  const [isUnmerge, setIsUnmerge] = useState<boolean>(false);
+  const [isUnmergeCheckbox, setIsUnmergeCheckbox] = useState<boolean>(false);
   const [ordersArray, setOrdersArray] = useState<Array<string>>([]);
   const [numbersArray, setNumbersArray] = useState<Array<number>>([]);
 
   const [isSubmitMergePopup, setIsSubmitMergePopup] = useState(false);
+  const [isSubmitUnmergePopup, setIsSubmitUnmergePopup] = useState(false);
+
+  const [currentOrderItem, setCurrentOrderItem] = useState<IOrder>();
 
   const lastPageIndex = Math.ceil(OrderData.ordersTableLength / itemsPerPage);
 
@@ -47,6 +52,16 @@ const Search = () => {
 
   function closeSubmitMergePopup() {
     setIsSubmitMergePopup(false);
+  }
+
+  function openSubmitUnmergePopup(e: React.SyntheticEvent) {
+    e.preventDefault();
+
+    setIsSubmitUnmergePopup(true);
+  }
+
+  function closeSubmitUnmergePopup() {
+    setIsSubmitUnmergePopup(false);
   }
 
   useEffect(() => {
@@ -117,6 +132,10 @@ const Search = () => {
     }
   }
 
+  function unmergeHandler() {
+    !isUnmerge && setIsUnmerge(!isUnmerge);
+  }
+
   function mergeItemClickHandler(
     e: React.SyntheticEvent,
     id: string,
@@ -128,6 +147,16 @@ const Search = () => {
       setOrdersArray(ordersArray.concat(id));
       setNumbersArray(numbersArray.concat(number));
     }
+  }
+
+  function unmergeItemClickHandler(e: React.SyntheticEvent, orderItem: IOrder) {
+    openSubmitUnmergePopup(e);
+
+    setCurrentOrderItem(orderItem);
+  }
+
+  function handleUnmergeChangeCheckbox() {
+    setIsUnmergeCheckbox(!isUnmergeCheckbox);
   }
 
   async function submitMergePopupFunction() {
@@ -146,6 +175,53 @@ const Search = () => {
       setSearchedOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);
     });
+  }
+
+  async function submitUnmergePopupFunction() {
+    //unmergeOrders()
+    if (isUnmergeCheckbox) {
+      await currentOrderItem?.combinedOrder[0].combinedOrder.map((item) => {
+        unmergeOrders(item);
+      });
+
+      await setIsUnmerge(false);
+
+      await searchOrder(
+        currentPage - 1,
+        parseInt(data.search) ? parseInt(data.search) : data.search
+      ).then((orders) => {
+        setSearchedOrders(orders.orders);
+        OrderData.setOrdersTableLength(orders.total);
+      });
+    } else {
+      if (currentOrderItem?.combinedOrder[0].combinedOrder.length === 2) {
+        await currentOrderItem?.combinedOrder[0].combinedOrder.map((item) => {
+          unmergeOrders(item);
+        });
+
+        await setIsUnmerge(false);
+
+        await searchOrder(
+          currentPage - 1,
+          parseInt(data.search) ? parseInt(data.search) : data.search
+        ).then((orders) => {
+          setSearchedOrders(orders.orders);
+          OrderData.setOrdersTableLength(orders.total);
+        });
+      } else {
+        await unmergeOrders(currentOrderItem?._id!);
+
+        await setIsUnmerge(false);
+
+        await searchOrder(
+          currentPage - 1,
+          parseInt(data.search) ? parseInt(data.search) : data.search
+        ).then((orders) => {
+          setSearchedOrders(orders.orders);
+          OrderData.setOrdersTableLength(orders.total);
+        });
+      }
+    }
   }
 
   function handleChangePage(page: number) {
@@ -278,6 +354,15 @@ const Search = () => {
                         ✓
                       </button>
                     )}
+                    {isUnmerge && (
+                      <button
+                        onClick={(e) => unmergeItemClickHandler(e, orderItem)}
+                        className={styles["orders-table__item-merge"]}
+                      >
+                        {" "}
+                        ✓
+                      </button>
+                    )}
                     {orderItem.orderId}
                   </Link>
                   <div
@@ -390,21 +475,45 @@ const Search = () => {
             </button>
           </div>
         )}
-        <div className={styles["orders-table__merge-container"]}>
-          <button onClick={mergeHandler}>
-            {isMerge ? "Применить" : "Объединить"}
-          </button>
-          {isMerge && (
-            <p className="">
-              Объединённые: <strong>{numbersArray.join(", ")}</strong>{" "}
-            </p>
-          )}
-        </div>
+        {filteredValue !== "" && (
+          <div className={styles["orders-table__merge-container"]}>
+            <button onClick={mergeHandler}>
+              {isMerge ? "Применить" : "Объединить"}
+            </button>
+            <button onClick={unmergeHandler}>
+              {isUnmerge ? "Применить" : "Разъединить"}
+            </button>
+            {isUnmerge && (
+              <div className={styles["merge__checkbox"]}>
+                <input
+                  type="checkbox"
+                  name="unmerge"
+                  checked={isUnmergeCheckbox}
+                  onChange={handleUnmergeChangeCheckbox}
+                />
+                <span>Разъединить все</span>
+              </div>
+            )}
+            {isMerge && (
+              <p className="">
+                Объединённые: <strong>{numbersArray.join(", ")}</strong>{" "}
+              </p>
+            )}
+          </div>
+        )}
         <SubmitPopup
           submitText={`Объединить ${numbersArray.join(", ")}`}
           isSubmitPopup={isSubmitMergePopup}
           closeSubmitPopup={closeSubmitMergePopup}
           onSubmit={submitMergePopupFunction}
+        />
+        <SubmitPopup
+          submitText={`Разъединить ${currentOrderItem?.orderId} ${
+            isUnmergeCheckbox ? "(Разъединить все)" : ""
+          }`}
+          isSubmitPopup={isSubmitUnmergePopup}
+          closeSubmitPopup={closeSubmitUnmergePopup}
+          onSubmit={submitUnmergePopupFunction}
         />
       </div>
     </section>
