@@ -293,18 +293,17 @@ const UserDataModal: FC<IUserDataModalProps> = ({
                   citySearch.splice(0, 10).map((item: any) => {
                     return (
                       <>
-                        <option
+                        <p
                           key={item.city_uuid}
                           className={
                             styles["user-data-modal__input-dropdown-item"]
                           }
-                          value={item.code}
                           onClick={() => {
                             pickCityOption(item.city, item.code);
                           }}
                         >
                           {item.city}
-                        </option>
+                        </p>
                       </>
                     );
                   })}

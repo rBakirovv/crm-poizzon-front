@@ -163,6 +163,7 @@
 .user-data-modal__input-dropdown-item {
   transition: all 0.4s ease-in-out;
   padding: 0.5rem 1rem;
+  margin: 0;
 }
 
 .user-data-modal__input-dropdown-item:first-of-type {

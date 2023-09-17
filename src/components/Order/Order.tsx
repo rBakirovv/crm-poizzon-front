@@ -720,7 +720,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
           closePopup={closeOverudeOrderPopup}
         />
       )}
-      {currentOrder.deliveryPhone === "" &&
+      {currentOrder.deliveryAddress === "" &&
         currentOrder.status !== "Черновик" &&
         currentOrder.status !== "Проверка оплаты" &&
         currentOrder.status !== "Завершён" && (
