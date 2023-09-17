@@ -201,8 +201,8 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
           >
             Открыть в Poizon
             <svg
-              width="20"
-              height="20"
+              width="12"
+              height="12"
               viewBox="0 0 20 20"
               fill="#4e7fea"
               xmlns="http://www.w3.org/2000/svg"
@@ -269,7 +269,8 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
               className={`${styles["order__status-box"]} ${
                 styles["order__status-box_paid"]
               } ${
-                currentOrder.status === "Ожидает закупки" &&
+                (currentOrder.status === "Ожидает закупки" ||
+                  currentOrder.status === "На закупке") &&
                 styles["order__status-box_active"]
               }`}
             >
@@ -334,6 +335,10 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                   1000 <
                   -43200 &&
                 currentOrder.inChinaStockAt !== null &&
+                styles["order__status-box_active"]
+              } ${
+                (currentOrder.status === "На складе в РФ" ||
+                  currentOrder.status === "Доставляется") &&
                 styles["order__status-box_active"]
               }`}
             >
@@ -423,6 +428,11 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
               </svg>
             </div>
           </div>
+          {currentOrder.deliveryAddress !== "" && (
+            <div className={styles["order__address"]}>
+              Адрес доставки: <br /> {currentOrder.deliveryAddress}
+            </div>
+          )}
           <ul className={styles["order__status-bar-container"]}>
             {currentOrder.payment !== "Перейти по ссылке -" && (
               <li

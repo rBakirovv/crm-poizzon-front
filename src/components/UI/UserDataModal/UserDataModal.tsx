@@ -312,7 +312,7 @@ const UserDataModal: FC<IUserDataModalProps> = ({
             {cityCode && (
               <div className={styles["user-data-modal__input-container"]}>
                 <label className={styles["user-data-modal__input-label"]}>
-                  Пункт выдачи заказов
+                  Пункт выдачи заказов СДЭК
                 </label>
                 <input
                   className={styles["user-data-modal__input"]}
