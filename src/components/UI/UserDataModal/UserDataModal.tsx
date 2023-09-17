@@ -336,12 +336,11 @@ const UserDataModal: FC<IUserDataModalProps> = ({
                       return (
                         item.type !== "POSTAMAT" && (
                           <>
-                            <option
+                            <p
                               key={item.code}
                               className={
                                 styles["user-data-modal__input-dropdown-item"]
                               }
-                              value={item.code}
                               onClick={() => {
                                 pickAddressOption(
                                   item.location.address,
@@ -350,7 +349,7 @@ const UserDataModal: FC<IUserDataModalProps> = ({
                               }}
                             >
                               {item.location.address}
-                            </option>
+                            </p>
                           </>
                         )
                       );
