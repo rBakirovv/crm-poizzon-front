@@ -88,6 +88,14 @@ const Navigation = observer(() => {
     router.replace("/");
   }
 
+  async function openRecentlyArrived() {
+    await getOrdersTable(0, "Недавно прибывшие", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Недавно прибывшие");
+  }
+
   async function openSent() {
     await getOrdersTable(0, "Доставляется", "", "", "").then((orders) => {
       OrderData.setOrders(orders.orders);
@@ -121,16 +129,15 @@ const Navigation = observer(() => {
             Заказы
           </Link>
           <div className={styles["nav__list-item-order-container"]}>
-            {
-              <button
-                className={styles["nav__list-item-order"]}
-                onClick={openDraft}
-              >
-                Черновик
-              </button>
-            }
+            <button
+              className={styles["nav__list-item-order"]}
+              onClick={openDraft}
+            >
+              Черновик
+            </button>
             {UserData.userData.position !== "Байер" &&
-              UserData.userData.position !== "Менеджер" && (
+              UserData.userData.position !== "Менеджер" &&
+              UserData.userData.position !== "Работник склада" && (
                 <button
                   className={styles["nav__list-item-order"]}
                   onClick={openPaymentVerification}
@@ -138,22 +145,24 @@ const Navigation = observer(() => {
                   Проверка оплаты
                 </button>
               )}
-            {UserData.userData.position !== "Менеджер" && (
-              <button
-                className={styles["nav__list-item-order"]}
-                onClick={openAwaitingPurchase}
-              >
-                Ожидает закупки
-              </button>
-            )}
-            {UserData.userData.position !== "Менеджер" && (
-              <button
-                className={styles["nav__list-item-order"]}
-                onClick={openOnPurchase}
-              >
-                На закупке
-              </button>
-            )}
+            {UserData.userData.position !== "Менеджер" &&
+              UserData.userData.position !== "Работник склада" && (
+                <button
+                  className={styles["nav__list-item-order"]}
+                  onClick={openAwaitingPurchase}
+                >
+                  Ожидает закупки
+                </button>
+              )}
+            {UserData.userData.position !== "Менеджер" &&
+              UserData.userData.position !== "Работник склада" && (
+                <button
+                  className={styles["nav__list-item-order"]}
+                  onClick={openOnPurchase}
+                >
+                  На закупке
+                </button>
+              )}
             {UserData.userData.position !== "Менеджер" && (
               <button
                 className={styles["nav__list-item-order"]}
@@ -172,7 +181,8 @@ const Navigation = observer(() => {
                 </button>
               )}
             {(UserData.userData.position === "Администратор" ||
-              UserData.userData.position === "Создатель") && (
+              UserData.userData.position === "Создатель" ||
+              UserData.userData.position === "Работник склада") && (
               <button
                 className={styles["nav__list-item-order"]}
                 onClick={openInRussia}
@@ -181,7 +191,18 @@ const Navigation = observer(() => {
               </button>
             )}
             {(UserData.userData.position === "Администратор" ||
-              UserData.userData.position === "Создатель") && (
+              UserData.userData.position === "Создатель" ||
+              UserData.userData.position === "Работник склада") && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openRecentlyArrived}
+              >
+                Недавно прибывшие
+              </button>
+            )}
+            {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Создатель" ||
+              UserData.userData.position === "Работник склада") && (
               <button
                 className={styles["nav__list-item-order"]}
                 onClick={openSent}
@@ -190,7 +211,8 @@ const Navigation = observer(() => {
               </button>
             )}
             {(UserData.userData.position === "Администратор" ||
-              UserData.userData.position === "Создатель") && (
+              UserData.userData.position === "Создатель" ||
+              UserData.userData.position === "Работник склада") && (
               <button
                 className={styles["nav__list-item-order"]}
                 onClick={openСompleted}
@@ -269,17 +291,20 @@ const Navigation = observer(() => {
             </Link>
           </li>
         )}
-        <li className={styles["nav__list-item"]}>
-          <Link
-            className={`${styles["nav__list-item-link"]} ${
-              router.pathname === "/cards" &&
-              styles["nav__list-item-link_active"]
-            }`}
-            href="/cards"
-          >
-            Статистика карт
-          </Link>
-        </li>
+        {UserData.userData.position !== "Байер" &&
+          UserData.userData.position !== "Работник склада" && (
+            <li className={styles["nav__list-item"]}>
+              <Link
+                className={`${styles["nav__list-item-link"]} ${
+                  router.pathname === "/cards" &&
+                  styles["nav__list-item-link_active"]
+                }`}
+                href="/cards"
+              >
+                Статистика карт
+              </Link>
+            </li>
+          )}
         {(UserData.userData.position === "Создатель" ||
           UserData.userData.position === "Администратор") && (
           <li className={styles["nav__list-item"]}>
@@ -295,7 +320,9 @@ const Navigation = observer(() => {
           </li>
         )}
         <li
-          onClick={handleLogOut}
+          onClick={() => {
+            handleLogOut();
+          }}
           className={`${styles["nav__list-item"]} ${styles["nav__list-item_exit"]}`}
         >
           Выход из аккаунта

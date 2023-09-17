@@ -118,14 +118,14 @@ const Header: FC<IHeaderProps> = ({
             CRM
           </Link>
           <div className={styles["header__buttons-container"]}>
-            {
+            {userPosition !== "Байер" && userPosition !== "Работник склада" && (
               <Link
                 className={`${styles["header__button"]} ${styles["header__button_black"]}`}
                 href="/create-order"
               >
                 Новый заказ
               </Link>
-            }
+            )}
             <Link
               className={`${styles["header__button"]} ${styles["header__button_white"]}`}
               href="/search-order"

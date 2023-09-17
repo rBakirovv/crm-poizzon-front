@@ -1,0 +1,65 @@
+.overude-order {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  transition: all 0.25s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.overude-order_active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.overude-order__close {
+  position: absolute;
+  right: 0px;
+  top: -20px;
+  transform: translateY(-55%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.overude-order__modal-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 23px;
+  background-color: #1B0F22;
+  max-width: 460px;
+  width: calc(100% - 60px);
+  padding: 1rem;
+}
+
+.overude-order__modal-emoji {
+  font-size: 56px;
+  line-height: normal;
+}
+
+.overude-order__modal-text {
+  display: inline-block;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.overude-order__modal-link {
+  display: inline;
+  color: #4e7fea;
+}

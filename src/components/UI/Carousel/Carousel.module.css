@@ -14,6 +14,7 @@
   bottom: 0;
   right: 0;
   opacity: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
 .carousel_active {
@@ -75,8 +76,11 @@
   border: none;
   right: 30px;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-55%);
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .carousel__close:active {

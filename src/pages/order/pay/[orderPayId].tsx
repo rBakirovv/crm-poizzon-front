@@ -22,19 +22,27 @@ const Page = observer(() => {
       <Head>
         {OrderData.order.orderId ? (
           <title>#{OrderData.order.orderId} - Оплата</title>
-        ) : <title>Оплата</title>}
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link type="Image/x-icon" href="../images/favicon.ico" rel="icon"></link>
-      </Head>
-      <>
-        {router.query.orderPayId && OrderData.order._id && (
-          <Header
-            orderId={OrderData.order.orderId}
-            orderStatus={OrderData.order.status}
-          />
+        ) : (
+          <title>Оплата</title>
         )}
-        {router.query.orderPayId && OrderData.order._id && <OrderPay />}
-      </>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link
+          type="Image/x-icon"
+          href="../images/favicon.ico"
+          rel="icon"
+        ></link>
+        <link rel="preconnect" href="https://fonts.googleapis.com"></link>
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin=""
+        ></link>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet"
+        ></link>
+      </Head>
+      <>{router.query.orderPayId && OrderData.order._id && <OrderPay />}</>
     </>
   );
 });

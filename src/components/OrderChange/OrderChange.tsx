@@ -4,6 +4,7 @@ import TextInput from "../UI/TextInput/TextInput";
 import styles from "./OrderChange.styles.module.css";
 import { IPayments } from "../../types/interfaces";
 import OrderData from "../../store/order";
+import UserData from "../../store/user";
 import PromoCodeData from "../../store/promo-code";
 import CommissionData from "../../store/commission";
 import { observer } from "mobx-react-lite";
@@ -353,7 +354,10 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           orderImages: OrderData.order.orderImages.concat(data.data),
           payProofImages: OrderData.order.payProofImages,
           buyProofImages: OrderData.order.buyProofImages,
+          receiptImages: OrderData.order.receiptImages,
           uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
+          uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
+          isReceiptImages: OrderData.order.isReceiptImages,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
           priceCNY: OrderData.order.priceCNY,
@@ -428,8 +432,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   orderImages: OrderData.order.orderImages.concat(data.data),
                   payProofImages: OrderData.order.payProofImages,
                   buyProofImages: OrderData.order.buyProofImages,
+                  receiptImages: OrderData.order.receiptImages,
                   uploadedBuyProofImages:
                     OrderData.order.uploadedBuyProofImages,
+                  uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
+                  isReceiptImages: OrderData.order.isReceiptImages,
                   payment: OrderData.order.payment,
                   currentRate: OrderData.order.currentRate,
                   priceCNY: OrderData.order.priceCNY,
@@ -508,7 +515,10 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           ),
           payProofImages: OrderData.order.payProofImages,
           buyProofImages: OrderData.order.buyProofImages,
+          receiptImages: OrderData.order.receiptImages,
           uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
+          uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
+          isReceiptImages: OrderData.order.isReceiptImages,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
           priceCNY: OrderData.order.priceCNY,
@@ -605,7 +615,10 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       orderImages: OrderData.order.orderImages,
       payProofImages: OrderData.order.payProofImages,
       buyProofImages: OrderData.order.buyProofImages,
+      receiptImages: OrderData.order.receiptImages,
       uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
+      uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
+      isReceiptImages: OrderData.order.isReceiptImages,
       payment: data.payment,
       currentRate: OrderData.order.currentRate,
       priceCNY: data.priceCNY,
@@ -807,22 +820,27 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         >
           Заказ
         </p>
-        <p
-          className={`${styles["order-change__nav-item"]} ${
-            orderСhapter === "Pay" && styles["order-change__nav-item_active"]
-          }`}
-          onClick={openPayment}
-        >
-          Оплата
-        </p>
-        <p
-          className={`${styles["order-change__nav-item"]} ${
-            orderСhapter === "Client" && styles["order-change__nav-item_active"]
-          }`}
-          onClick={openClientData}
-        >
-          Клиент
-        </p>
+        {UserData.userData.position !== "Работник склада" && (
+          <p
+            className={`${styles["order-change__nav-item"]} ${
+              orderСhapter === "Pay" && styles["order-change__nav-item_active"]
+            }`}
+            onClick={openPayment}
+          >
+            Оплата
+          </p>
+        )}
+        {UserData.userData.position !== "Работник склада" && (
+          <p
+            className={`${styles["order-change__nav-item"]} ${
+              orderСhapter === "Client" &&
+              styles["order-change__nav-item_active"]
+            }`}
+            onClick={openClientData}
+          >
+            Клиент
+          </p>
+        )}
         <p
           className={`${styles["order-change__nav-item"]} ${
             orderСhapter === "Purchase" &&
@@ -853,36 +871,38 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       </div>
       {orderСhapter === "Order" && (
         <div className={styles["order-change__order-container"]}>
-          <div className={styles["order-change__public-link-container"]}>
-            <p className={styles["order-change__public-link-text"]}>
-              Публичная ссылка
-            </p>
-            <a
-              className={styles["order-change__public-link"]}
-              href={`${BASE_URL_FRONT}/order/${OrderData.order._id}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {BASE_URL_FRONT}/order/{OrderData.order._id}
-            </a>
-            <div
-              onClick={copyLink}
-              className={styles["order-change__public-link-text-copy"]}
-            >
-              {!isCopy ? "Скопировать" : "Cкопировано в буфер обмена"}{" "}
-              <svg
-                x="0px"
-                y="0px"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                focusable="false"
-                fill="currentColor"
+          {UserData.userData.position !== "Работник склада" && (
+            <div className={styles["order-change__public-link-container"]}>
+              <p className={styles["order-change__public-link-text"]}>
+                Публичная ссылка
+              </p>
+              <a
+                className={styles["order-change__public-link"]}
+                href={`${BASE_URL_FRONT}/order/${OrderData.order._id}`}
+                target="_blank"
+                rel="noreferrer"
               >
-                <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
-              </svg>
+                {BASE_URL_FRONT}/order/{OrderData.order._id}
+              </a>
+              <div
+                onClick={copyLink}
+                className={styles["order-change__public-link-text-copy"]}
+              >
+                {!isCopy ? "Скопировать" : "Cкопировано в буфер обмена"}{" "}
+                <svg
+                  x="0px"
+                  y="0px"
+                  width="24px"
+                  height="24px"
+                  viewBox="0 0 24 24"
+                  focusable="false"
+                  fill="currentColor"
+                >
+                  <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+                </svg>
+              </div>
             </div>
-          </div>
+          )}
           <form
             onSubmit={openSubmitPopup}
             className={styles["order-change__order-form"]}
@@ -978,27 +998,29 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                       key={image.name}
                       className={styles["order-change__image"]}
                     >
-                      <div
-                        className={styles["order-change__delete-image"]}
-                        onClick={() => openImageSubmitPopup(image.name)}
-                      >
-                        <svg
-                          width="18"
-                          height="20"
-                          viewBox="0 0 18 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+                      {UserData.userData.position !== "Работник склада" && (
+                        <div
+                          className={styles["order-change__delete-image"]}
+                          onClick={() => openImageSubmitPopup(image.name)}
                         >
-                          <path
-                            d="M2.45763 18.1422C2.51857 18.8126 3.06711 19.3002 3.73754 19.3002H14.2612C14.9317 19.3002 15.4802 18.7923 15.5411 18.1422L16.7195 5.79004H1.2793L2.45763 18.1422Z"
-                            fill="black"
-                          />
-                          <path
-                            d="M16.7201 1.93002H11.5801V1.27991C11.5801 0.568849 11.0113 0 10.3002 0H7.72009C7.00903 0 6.44018 0.568849 6.44018 1.27991V1.93002H1.27991C0.568849 1.93002 0 2.49887 0 3.20993C0 3.92099 0.568849 4.48984 1.27991 4.48984H16.7201C17.4312 4.48984 18 3.92099 18 3.20993C18 2.49887 17.4312 1.93002 16.7201 1.93002Z"
-                            fill="black"
-                          />
-                        </svg>
-                      </div>
+                          <svg
+                            width="18"
+                            height="20"
+                            viewBox="0 0 18 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M2.45763 18.1422C2.51857 18.8126 3.06711 19.3002 3.73754 19.3002H14.2612C14.9317 19.3002 15.4802 18.7923 15.5411 18.1422L16.7195 5.79004H1.2793L2.45763 18.1422Z"
+                              fill="black"
+                            />
+                            <path
+                              d="M16.7201 1.93002H11.5801V1.27991C11.5801 0.568849 11.0113 0 10.3002 0H7.72009C7.00903 0 6.44018 0.568849 6.44018 1.27991V1.93002H1.27991C0.568849 1.93002 0 2.49887 0 3.20993C0 3.92099 0.568849 4.48984 1.27991 4.48984H16.7201C17.4312 4.48984 18 3.92099 18 3.20993C18 2.49887 17.4312 1.93002 16.7201 1.93002Z"
+                              fill="black"
+                            />
+                          </svg>
+                        </div>
+                      )}
 
                       <img
                         className={styles["order-change__image-item"]}
@@ -1014,183 +1036,191 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                 })}
             </ul>
 
-            <Dropzone
-              onDrop={(e: any) =>
-                uploadFileHandler(e, "/order-images", setUploading)
-              }
-              onDragEnter={dragHandler}
-              onDragLeave={dragLeaveHandler}
-              maxSize={MAX_SIZE}
-            >
-              {({ getRootProps, getInputProps }) => (
-                <div
-                  className={`${styles["drag-n-drop-container"]} ${
-                    isDrag && styles["drag-n-drop-container_active"]
-                  }`}
-                >
-                  <div {...getRootProps()}>
-                    <input {...getInputProps()} />
-                    <p className={styles["drag-n-drop-text"]}>
-                      {isDrag
-                        ? "Перетащите фото"
-                        : "Добавить фото или ctrl + v"}
-                      <svg
-                        width="18px"
-                        height="18px"
-                        viewBox="0 0 48 48"
-                        focusable="false"
-                        fill="black"
-                      >
-                        <path fill="none" d="M0 0h48v48H0V0z"></path>
-                        <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                      </svg>
-                    </p>
-                  </div>
-                </div>
-              )}
-            </Dropzone>
-
-            <h2 className={styles["order-change__order-title"]}>Расчёт</h2>
-            <div className={styles["order-change__input-container"]}>
-              <label>
-                Способ оплаты<span className={styles["red-star"]}>*</span>
-              </label>
-              <select
-                className={`${styles["order-change__select"]} ${
-                  OrderData.order.status !== "Черновик" &&
-                  styles["order-change__select_disabled"]
-                }`}
-                name="payment"
-                value={OrderData.order.payment}
-                onChange={handleChange}
-                disabled={OrderData.order.status !== "Черновик"}
-                required
-              >
-                <option value="" selected disabled>
-                  -- Выберите --
-                </option>
-                {payments
-                  .slice()
-                  .sort(sortCards)
-                  .map((paymentItem) => {
-                    return (
-                      <option
-                        key={paymentItem._id}
-                        value={`${paymentItem.title} ${paymentItem.number}`}
-                      >
-                        {paymentItem.title} {paymentItem.number}
-                      </option>
-                    );
-                  })}
-              </select>
-            </div>
-            <TextInput
-              name="currentRate"
-              label="Курс RUB/CNY"
-              value={OrderData.order.currentRate}
-              required={true}
-              readonly={true}
-            />
-            <TextInput
-              name="priceCNY"
-              label="Цена CNY"
-              value={OrderData.order.priceCNY}
-              handleChange={handleChange}
-              required={true}
-            />
-            <TextInput
-              name="priceRUB"
-              label="Цена RUB"
-              value={priceRub.toString()}
-              required={true}
-              readonly={true}
-            />
-            <TextInput
-              name="priceDeliveryChina"
-              label="Стоимость доставки POIZON - Cклад в Китае"
-              value={OrderData.order.priceDeliveryChina}
-              handleChange={handleChange}
-              required={true}
-            />
-            <TextInput
-              name="priceDeliveryRussia"
-              label="Стоимость доставки Cклад в Китае - Cклад в РФ"
-              value={OrderData.order.priceDeliveryRussia}
-              handleChange={handleChange}
-              required={true}
-            />
-            <TextInput
-              name="commission"
-              label="Комиссия сервиса"
-              value={OrderData.order.commission}
-              handleChange={handleChange}
-              required={true}
-            />
-            <div className={styles["order-change__input-container"]}>
-              <label>Промо-код</label>
-              <select
-                className={`${styles["order-change__select"]}`}
-                name="promoCodePercent"
-                value={
-                  data.promoCodePercent > 0 ||
-                  OrderData.order.promoCodePercent > 0
-                    ? OrderData.order.promoCodePercent
-                    : ""
+            {UserData.userData.position !== "Работник склада" && (
+              <Dropzone
+                onDrop={(e: any) =>
+                  uploadFileHandler(e, "/order-images", setUploading)
                 }
-                onChange={handleChange}
+                onDragEnter={dragHandler}
+                onDragLeave={dragLeaveHandler}
+                maxSize={MAX_SIZE}
               >
-                <option value="" selected disabled>
-                  -- Выберите --
-                </option>
-                {PromoCodeData.promoCodeList.map((promoCodeItem) => {
-                  return (
-                    <option
-                      key={promoCodeItem._id}
-                      value={`${promoCodeItem.percent}`}
-                    >
-                      {promoCodeItem.code} {promoCodeItem.percent}₽
+                {({ getRootProps, getInputProps }) => (
+                  <div
+                    className={`${styles["drag-n-drop-container"]} ${
+                      isDrag && styles["drag-n-drop-container_active"]
+                    }`}
+                  >
+                    <div {...getRootProps()}>
+                      <input {...getInputProps()} />
+                      <p className={styles["drag-n-drop-text"]}>
+                        {isDrag
+                          ? "Перетащите фото"
+                          : "Добавить фото или ctrl + v"}
+                        <svg
+                          width="18px"
+                          height="18px"
+                          viewBox="0 0 48 48"
+                          focusable="false"
+                          fill="black"
+                        >
+                          <path fill="none" d="M0 0h48v48H0V0z"></path>
+                          <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                        </svg>
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </Dropzone>
+            )}
+
+            {UserData.userData.position !== "Работник склада" && (
+              <>
+                <h2 className={styles["order-change__order-title"]}>Расчёт</h2>
+                <div className={styles["order-change__input-container"]}>
+                  <label>
+                    Способ оплаты<span className={styles["red-star"]}>*</span>
+                  </label>
+                  <select
+                    className={`${styles["order-change__select"]} ${
+                      OrderData.order.status !== "Черновик" &&
+                      styles["order-change__select_disabled"]
+                    }`}
+                    name="payment"
+                    value={OrderData.order.payment}
+                    onChange={handleChange}
+                    disabled={OrderData.order.status !== "Черновик"}
+                    required
+                  >
+                    <option value="" selected disabled>
+                      -- Выберите --
                     </option>
-                  );
-                })}
-              </select>
-              {OrderData.order.promoCodePercent > 0 && (
-                <span className={styles["order-change__promo-code_active"]}>
-                  Промо-код применён
-                </span>
-              )}
-              {OrderData.order.promoCodePercent === 0 && (
-                <span className={styles["order-change__promo-code_not-active"]}>
-                  Промо-код НЕ применён
-                </span>
-              )}
-            </div>
-            <TextInput
-              name="totalPrice"
-              label="Общая стоимость"
-              value={
-                data.promoCodePercent > 0 ||
-                OrderData.order.promoCodePercent > 0
-                  ? totalPriceWithPromo.toString()
-                  : totalPrice.toString()
-              }
-              required={true}
-              readonly={true}
-            />
-            <div className={styles["order-change__input-container"]}>
-              <label>Комментарий</label>
-              <textarea
-                className={`${styles["order-change__textarea"]}`}
-                name="comment"
-                onChange={handleChange}
-                value={OrderData.order.comment}
-              ></textarea>
-            </div>
-            <button
-              className={`${styles["order-change__order-submit"]}`}
-              type="submit"
-            >
-              Cохранить
-            </button>
+                    {payments
+                      .slice()
+                      .sort(sortCards)
+                      .map((paymentItem) => {
+                        return (
+                          <option
+                            key={paymentItem._id}
+                            value={`${paymentItem.title} ${paymentItem.number}`}
+                          >
+                            {paymentItem.title} {paymentItem.number}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </div>
+                <TextInput
+                  name="currentRate"
+                  label="Курс RUB/CNY"
+                  value={OrderData.order.currentRate}
+                  required={true}
+                  readonly={true}
+                />
+                <TextInput
+                  name="priceCNY"
+                  label="Цена CNY"
+                  value={OrderData.order.priceCNY}
+                  handleChange={handleChange}
+                  required={true}
+                />
+                <TextInput
+                  name="priceRUB"
+                  label="Цена RUB"
+                  value={priceRub.toString()}
+                  required={true}
+                  readonly={true}
+                />
+                <TextInput
+                  name="priceDeliveryChina"
+                  label="Стоимость доставки POIZON - Cклад в Китае"
+                  value={OrderData.order.priceDeliveryChina}
+                  handleChange={handleChange}
+                  required={true}
+                />
+                <TextInput
+                  name="priceDeliveryRussia"
+                  label="Стоимость доставки Cклад в Китае - Cклад в РФ"
+                  value={OrderData.order.priceDeliveryRussia}
+                  handleChange={handleChange}
+                  required={true}
+                />
+                <TextInput
+                  name="commission"
+                  label="Комиссия сервиса"
+                  value={OrderData.order.commission}
+                  handleChange={handleChange}
+                  required={true}
+                />
+                <div className={styles["order-change__input-container"]}>
+                  <label>Промо-код</label>
+                  <select
+                    className={`${styles["order-change__select"]}`}
+                    name="promoCodePercent"
+                    value={
+                      data.promoCodePercent > 0 ||
+                      OrderData.order.promoCodePercent > 0
+                        ? OrderData.order.promoCodePercent
+                        : ""
+                    }
+                    onChange={handleChange}
+                  >
+                    <option value="" selected disabled>
+                      -- Выберите --
+                    </option>
+                    {PromoCodeData.promoCodeList.map((promoCodeItem) => {
+                      return (
+                        <option
+                          key={promoCodeItem._id}
+                          value={`${promoCodeItem.percent}`}
+                        >
+                          {promoCodeItem.code} {promoCodeItem.percent}₽
+                        </option>
+                      );
+                    })}
+                  </select>
+                  {OrderData.order.promoCodePercent > 0 && (
+                    <span className={styles["order-change__promo-code_active"]}>
+                      Промо-код применён
+                    </span>
+                  )}
+                  {OrderData.order.promoCodePercent === 0 && (
+                    <span
+                      className={styles["order-change__promo-code_not-active"]}
+                    >
+                      Промо-код НЕ применён
+                    </span>
+                  )}
+                </div>
+                <TextInput
+                  name="totalPrice"
+                  label="Общая стоимость"
+                  value={
+                    data.promoCodePercent > 0 ||
+                    OrderData.order.promoCodePercent > 0
+                      ? totalPriceWithPromo.toString()
+                      : totalPrice.toString()
+                  }
+                  required={true}
+                  readonly={true}
+                />
+                <div className={styles["order-change__input-container"]}>
+                  <label>Комментарий</label>
+                  <textarea
+                    className={`${styles["order-change__textarea"]}`}
+                    name="comment"
+                    onChange={handleChange}
+                    value={OrderData.order.comment}
+                  ></textarea>
+                </div>
+                <button
+                  className={`${styles["order-change__order-submit"]}`}
+                  type="submit"
+                >
+                  Cохранить
+                </button>
+              </>
+            )}
           </form>
         </div>
       )}

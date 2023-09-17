@@ -86,6 +86,14 @@ export const unmergeOrders = (id: string) => {
 };
 
 export const getCombinedOrders = (id: string) => {
+  return fetch(`${BASE_URL}/order/client-merge-info/${id}`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const getClientCombinedOrders = (id: string) => {
   return fetch(`${BASE_URL}/order/merge-info/${id}`, {
     credentials: "include",
     method: "GET",
@@ -183,6 +191,14 @@ export const updateOrderDraft = (
       promoCodePercent: promoCodePercent,
       comment: comment,
     }),
+  }).then(checkResponse);
+};
+
+export const updatePaidAt = (id: string) => {
+  return fetch(`${BASE_URL}/order/paid/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
   }).then(checkResponse);
 };
 
@@ -518,7 +534,7 @@ export const deliveryCreate = (
   currentPVZId: string,
   name: string,
   amount: number,
-  deliveryPhone: string | undefined,
+  deliveryPhone: string,
   deliveryNameRecipient: string,
   tarif: number
 ) => {
@@ -533,9 +549,9 @@ export const deliveryCreate = (
       currentPVZId: currentPVZId,
       name: name,
       amount: amount,
-      deliveryPhone,
-      deliveryNameRecipient,
-      tarif,
+      deliveryPhone: deliveryPhone,
+      deliveryNameRecipient: deliveryNameRecipient,
+      tarif: tarif,
     }),
   }).then(checkResponse);
 };
@@ -608,7 +624,9 @@ export const getDeliveryDocument = (auth: string, uuid: string) => {
 export const updateClientDeliveryAddress = (
   id: string,
   deliveryAddress: string,
+  deliveryName: string,
   deliveryNameRecipient: string,
+  deliveryPhone: string,
   deliveryMethod: string,
   deliveryEntity: string
 ) => {
@@ -618,7 +636,9 @@ export const updateClientDeliveryAddress = (
     headers: HEADERS,
     body: JSON.stringify({
       deliveryAddress: deliveryAddress,
+      deliveryName: deliveryName,
       deliveryNameRecipient: deliveryNameRecipient,
+      deliveryPhone: deliveryPhone,
       deliveryMethod: deliveryMethod,
       deliveryEntity: deliveryEntity,
     }),
@@ -777,6 +797,79 @@ export const getOrdersAfterUpdatedAt = () => {
     credentials: "include",
     method: "GET",
     headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const getCities = (auth: string) => {
+  return fetch(`${BASE_URL}/delivery/cities`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+    }),
+  }).then(checkResponse);
+};
+
+export const getDeliverypoints = (auth: string, code: number) => {
+  return fetch(`${BASE_URL}/delivery/deliverypoints`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+      code: code,
+    }),
+  }).then(checkResponse);
+};
+
+export const calculateTariff = (auth: string, to_location: number) => {
+  return fetch(`${BASE_URL}/delivery/calculate-tariff`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      auth: auth,
+      to_location: to_location,
+    }),
+  }).then(checkResponse);
+};
+
+export const updateReceiptImages = (
+  id: string,
+  receiptImages: Array<IOrderImages>,
+  uploadedReceiptImages: string
+) => {
+  return fetch(`${BASE_URL}/order/receipt-images/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      receiptImages: receiptImages,
+      uploadedReceiptImages: uploadedReceiptImages,
+    }),
+  }).then(checkResponse);
+};
+
+export const deleteReceiptImage = (imageName: string, id: string) => {
+  return fetch(`${BASE_URL}/order/receipt-images/${id}`, {
+    credentials: "include",
+    method: "DELETE",
+    headers: HEADERS,
+    body: JSON.stringify({
+      imageName: imageName,
+    }),
+  }).then(checkResponse);
+};
+
+export const setIsReceiptImages = (id: string, isReceiptImages: boolean) => {
+  return fetch(`${BASE_URL}/order/is-receipt-images/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      isReceiptImages: isReceiptImages,
+    }),
   }).then(checkResponse);
 };
 

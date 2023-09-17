@@ -29,8 +29,8 @@ export interface IOrder {
   combinedOrder: Array<ICombinedOrder>;
   status: string;
   link: string;
-  payLink: string,
-  paymentUUID: string,
+  payLink: string;
+  paymentUUID: string;
   category: string;
   subcategory: string;
   brand: string;
@@ -39,7 +39,10 @@ export interface IOrder {
   orderImages: Array<IOrderImages>;
   payProofImages: Array<IOrderImages>;
   buyProofImages: Array<IOrderImages>;
-  uploadedBuyProofImages: string,
+  receiptImages: Array<IOrderImages>;
+  uploadedBuyProofImages: string;
+  uploadedReceiptImages: string;
+  isReceiptImages: boolean;
   payment: string;
   currentRate: string;
   priceCNY: string;
@@ -49,7 +52,7 @@ export interface IOrder {
   promoCodePercent: number;
   comment: string;
   poizonCode: string;
-  filledPoizonCode: string,
+  filledPoizonCode: string;
   deliveryCode: string;
   deliveryName?: string;
   deliveryNameRecipient?: string;
@@ -91,7 +94,7 @@ export interface ICards {
 }
 
 export interface ISupply {
-  createdAt: string,
+  createdAt: string;
   supply: Array<String>;
   stock: Array<String>;
   _id?: string;
@@ -99,7 +102,7 @@ export interface ISupply {
 }
 
 export interface ISupply {
-  createdAt: string,
+  createdAt: string;
   supply: Array<String>;
   stock: Array<String>;
   _id?: string;
@@ -107,38 +110,45 @@ export interface ISupply {
 }
 
 export interface ICommission {
-  sneakersChina: string,
-  sneakersRussia: string,
-  winterShoesChina: string,
-  winterShoesRussia: string,
-  jacketChina: string,
-  jacketRussia: string,
-  sweatshirtChina: string,
-  sweatshirtRussia: string,
-  tShirtChina: string,
-  tShirtRussia: string,
-  socksChina: string,
-  socksRussia: string,
-  bagChina: string,
-  bagRussia: string,
-  perfumeChina: string,
-  perfumeRussia: string,
-  pantsChina: string,
-  pantsRussia: string,
-  headdressChina: string,
-  headdressRussia: string,
-  techniqueChina: string,
-  techniqueRussia: string,
-  otherChina: string,
-  otherRussia: string,
-  commission: string,
+  sneakersChina: string;
+  sneakersRussia: string;
+  winterShoesChina: string;
+  winterShoesRussia: string;
+  jacketChina: string;
+  jacketRussia: string;
+  sweatshirtChina: string;
+  sweatshirtRussia: string;
+  tShirtChina: string;
+  tShirtRussia: string;
+  socksChina: string;
+  socksRussia: string;
+  bagChina: string;
+  bagRussia: string;
+  perfumeChina: string;
+  perfumeRussia: string;
+  pantsChina: string;
+  pantsRussia: string;
+  headdressChina: string;
+  headdressRussia: string;
+  techniqueChina: string;
+  techniqueRussia: string;
+  otherChina: string;
+  otherRussia: string;
+  commission: string;
   _id?: string;
   __v?: number;
 }
 
 export interface IMergedOrders {
-  orderId: number,
-  _id: string,
-  orderStatus: string,
-  subcategory: string,
+  orderId: number;
+  _id: string;
+  orderStatus: string;
+  subcategory: string;
+}
+
+export interface IMergedClientOrders {
+  orderId: number;
+  _id: string;
+  model: string;
+  subcategory: string;
 }

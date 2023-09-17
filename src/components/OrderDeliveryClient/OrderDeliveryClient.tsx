@@ -79,10 +79,10 @@ const OrderDeliveryClient = () => {
       })
     );
   }, [data.delivery_method === "Самовывоз из пункта выдачи CDEK"]);
-
   function handleCreateOrderRequest(e: React.SyntheticEvent) {
     e.preventDefault();
 
+    /*
     deliveryAuthorization()
       .then((authData) => {
         deliveryCreate(
@@ -137,6 +137,7 @@ const OrderDeliveryClient = () => {
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
+      */
   }
 
   return (

@@ -4,7 +4,13 @@ import UserData from "../../store/user";
 import OrderData from "../../store/order";
 import OrdersBar from "../../store/ordersBar";
 import { observer } from "mobx-react-lite";
-import { ADMIN, BUYER, SUPERADMIN, MANAGER } from "../../utils/constants";
+import {
+  ADMIN,
+  BUYER,
+  SUPERADMIN,
+  MANAGER,
+  WAREHOUSEWORKER,
+} from "../../utils/constants";
 import { getOrdersTable } from "../../utils/Order";
 
 const OrdersList = observer(() => {
@@ -64,6 +70,14 @@ const OrdersList = observer(() => {
     await OrdersBar.setNewStatus("На складе в РФ");
   }
 
+  async function openRecentlyArrived() {
+    await getOrdersTable(0, "Недавно прибывшие", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Недавно прибывшие");
+  }
+
   async function openSent() {
     await getOrdersTable(0, "Доставляется", "", "", "").then((orders) => {
       OrderData.setOrders(orders.orders);
@@ -83,23 +97,22 @@ const OrdersList = observer(() => {
   return (
     <section className={styles["orders-list"]}>
       <ul className={styles["orders-list__navigation"]}>
-        {
-          <li
-            onClick={openDraft}
-            className={styles["orders-list__navigation-item"]}
+        <li
+          onClick={openDraft}
+          className={styles["orders-list__navigation-item"]}
+        >
+          <p
+            className={`${styles["orders-list__navigation-text"]} ${
+              OrdersBar.orderStatus === "Черновик" &&
+              styles["orders-list__navigation-text_active"]
+            }`}
           >
-            <p
-              className={`${styles["orders-list__navigation-text"]} ${
-                OrdersBar.orderStatus === "Черновик" &&
-                styles["orders-list__navigation-text_active"]
-              }`}
-            >
-              Черновик
-            </p>
-          </li>
-        }
+            Черновик
+          </p>
+        </li>
         {UserData.userData.position !== BUYER &&
-          UserData.userData.position !== MANAGER && (
+          UserData.userData.position !== MANAGER &&
+          UserData.userData.position !== WAREHOUSEWORKER && (
             <li
               onClick={openPaymentVerification}
               className={styles["orders-list__navigation-item"]}
@@ -149,6 +162,7 @@ const OrdersList = observer(() => {
           </li>
         )}
         {(UserData.userData.position === BUYER ||
+          UserData.userData.position === WAREHOUSEWORKER ||
           UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
           <li
@@ -166,6 +180,7 @@ const OrdersList = observer(() => {
           </li>
         )}
         {(UserData.userData.position === ADMIN ||
+          UserData.userData.position === WAREHOUSEWORKER ||
           UserData.userData.position === SUPERADMIN) && (
           <li
             onClick={openWaitingDelivery}
@@ -182,6 +197,7 @@ const OrdersList = observer(() => {
           </li>
         )}
         {(UserData.userData.position === ADMIN ||
+          UserData.userData.position === WAREHOUSEWORKER ||
           UserData.userData.position === SUPERADMIN) && (
           <li
             onClick={openInRussia}
@@ -198,6 +214,24 @@ const OrdersList = observer(() => {
           </li>
         )}
         {(UserData.userData.position === ADMIN ||
+          UserData.userData.position === WAREHOUSEWORKER ||
+          UserData.userData.position === SUPERADMIN) && (
+          <li
+            onClick={openRecentlyArrived}
+            className={styles["orders-list__navigation-item"]}
+          >
+            <p
+              className={`${styles["orders-list__navigation-text"]} ${
+                OrdersBar.orderStatus === "Недавно прибывшие" &&
+                styles["orders-list__navigation-text_active"]
+              }`}
+            >
+              Недавно прибывшие
+            </p>
+          </li>
+        )}
+        {(UserData.userData.position === ADMIN ||
+          UserData.userData.position === WAREHOUSEWORKER ||
           UserData.userData.position === SUPERADMIN) && (
           <li
             onClick={openSent}
@@ -214,6 +248,7 @@ const OrdersList = observer(() => {
           </li>
         )}
         {(UserData.userData.position === ADMIN ||
+          UserData.userData.position === WAREHOUSEWORKER ||
           UserData.userData.position === SUPERADMIN) && (
           <li
             onClick={openСompleted}
@@ -234,7 +269,8 @@ const OrdersList = observer(() => {
         <OrderTable status={"Черновик"} />
       )}
       {OrdersBar.orderStatus === "Проверка оплаты" &&
-        UserData.userData.position !== BUYER && (
+        UserData.userData.position !== BUYER &&
+        UserData.userData.position !== WAREHOUSEWORKER && (
           <OrderTable status={"Проверка оплаты"} />
         )}
       {OrdersBar.orderStatus === "Ожидает закупки" &&
@@ -251,28 +287,39 @@ const OrdersList = observer(() => {
         )}
       {OrdersBar.orderStatus === "Закуплен" &&
         (UserData.userData.position === BUYER ||
+          UserData.userData.position === WAREHOUSEWORKER ||
           UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
           <OrderTable status={"Закуплен"} />
         )}
       {OrdersBar.orderStatus === "Ожидает данные" &&
         (UserData.userData.position === BUYER ||
+          UserData.userData.position === WAREHOUSEWORKER ||
           UserData.userData.position === ADMIN ||
           UserData.userData.position === SUPERADMIN) && (
           <OrderTable status={"Ожидает данные"} />
         )}
       {OrdersBar.orderStatus === "На складе в РФ" &&
         (UserData.userData.position === ADMIN ||
+          UserData.userData.position === WAREHOUSEWORKER ||
           UserData.userData.position === SUPERADMIN) && (
           <OrderTable status={"На складе в РФ"} />
         )}
+      {OrdersBar.orderStatus === "Недавно прибывшие" &&
+        (UserData.userData.position === ADMIN ||
+          UserData.userData.position === WAREHOUSEWORKER ||
+          UserData.userData.position === SUPERADMIN) && (
+          <OrderTable status={"Недавно прибывшие"} />
+        )}
       {OrdersBar.orderStatus === "Доставляется" &&
         (UserData.userData.position === ADMIN ||
+          UserData.userData.position === WAREHOUSEWORKER ||
           UserData.userData.position === SUPERADMIN) && (
           <OrderTable status={"Доставляется"} />
         )}
       {OrdersBar.orderStatus === "Завершён" &&
         (UserData.userData.position === ADMIN ||
+          UserData.userData.position === WAREHOUSEWORKER ||
           UserData.userData.position === SUPERADMIN) && (
           <OrderTable status={"Завершён"} />
         )}

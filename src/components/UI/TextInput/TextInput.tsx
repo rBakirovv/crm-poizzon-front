@@ -11,6 +11,7 @@ interface IInputProps {
   required: boolean;
   readonly?: boolean; 
   autoFocus?: boolean;
+  disabled?: boolean;
 }
 
 const TextInput: FC<IInputProps> = ({
@@ -23,6 +24,7 @@ const TextInput: FC<IInputProps> = ({
   required,
   readonly,
   autoFocus,
+  disabled,
 }) => {
   return (
     <div className={styles["input__container"]}>
@@ -41,6 +43,7 @@ const TextInput: FC<IInputProps> = ({
         readOnly={readonly}
         onClick={handleClick}
         autoFocus={autoFocus}
+        disabled={disabled}
       />
     </div>
   );

@@ -8,6 +8,8 @@ import Logged from "../../../store/logged";
 import styles from "./Burger.module.css";
 import OrdersBar from "../../../store/ordersBar";
 import { observer } from "mobx-react-lite";
+import { getOrdersTable } from "../../../utils/Order";
+import OrderData from "../../../store/order";
 
 interface IBurgerProps {
   isBurgerOpen: boolean;
@@ -36,49 +38,93 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
     setTimeout(() => router.push("/sign-in"), 200);
   }
 
-  function openDraft() {
-    OrdersBar.setNewStatus("Черновик");
+  async function openDraft() {
+    await getOrdersTable(0, "Черновик", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Черновик");
     router.replace("/");
   }
 
-  function openPaymentVerification() {
-    OrdersBar.setNewStatus("Проверка оплаты");
+  async function openPaymentVerification() {
+    await getOrdersTable(0, "Проверка оплаты", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Проверка оплаты");
     router.replace("/");
   }
 
-  function openAwaitingPurchase() {
-    OrdersBar.setNewStatus("Ожидает закупки");
+  async function openAwaitingPurchase() {
+    await getOrdersTable(0, "Ожидает закупки", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Ожидает закупки");
     router.replace("/");
   }
 
-  function openOnPurchase() {
-    OrdersBar.setNewStatus("На закупке");
+  async function openOnPurchase() {
+    await getOrdersTable(0, "На закупке", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("На закупке");
     router.replace("/");
   }
 
-  function openPurchased() {
-    OrdersBar.setNewStatus("Закуплен");
+  async function openPurchased() {
+    await getOrdersTable(0, "Закуплен", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Закуплен");
     router.replace("/");
   }
 
-  function openWaitingDelivery() {
-    OrdersBar.setNewStatus("Ожидает данные");
+  async function openWaitingDelivery() {
+    await getOrdersTable(0, "Ожидает данные", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Ожидает данные");
     router.replace("/");
   }
 
-  function openInRussia() {
-    OrdersBar.setNewStatus("На складе в РФ");
+  async function openInRussia() {
+    await getOrdersTable(0, "На складе в РФ", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("На складе в РФ");
     router.replace("/");
   }
 
-  function openSent() {
-    OrdersBar.setNewStatus("Доставляется");
-    router.replace("/");
+  async function openRecentlyArrived() {
+    await getOrdersTable(0, "Недавно прибывшие", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Недавно прибывшие");
   }
 
-  function openСompleted() {
-    OrdersBar.setNewStatus("Завершён");
-    router.replace("/");
+  async function openSent() {
+    await getOrdersTable(0, "Доставляется", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Доставляется");
+    await router.replace("/");
+  }
+
+  async function openСompleted() {
+    await getOrdersTable(0, "Завершён", "", "", "").then((orders) => {
+      OrderData.setOrders(orders.orders);
+      OrderData.setOrdersTableLength(orders.total);
+    });
+    await OrdersBar.setNewStatus("Завершён");
+    await router.replace("/");
   }
 
   const burgerElement = (
@@ -88,15 +134,16 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
       }`}
     >
       <div className={styles["burger__buttons-container"]}>
-        {UserData.userData.position !== "Байер" && (
-          <Link
-            className={`${styles["burger__button"]} ${styles["burger__button_black"]}`}
-            href="/create-order"
-            onClick={closeBurger}
-          >
-            Новый заказ
-          </Link>
-        )}
+        {UserData.userData.position !== "Байер" &&
+          UserData.userData.position !== "Работник склада" && (
+            <Link
+              className={`${styles["burger__button"]} ${styles["burger__button_black"]}`}
+              href="/create-order"
+              onClick={closeBurger}
+            >
+              Новый заказ
+            </Link>
+          )}
         <Link
           className={`${styles["burger__button"]} ${styles["burger__button_search"]}`}
           href="/search-order"
@@ -118,16 +165,15 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
             Заказы
           </Link>
           <div className={styles["nav__list-item-order-container"]}>
-            {
-              <button
-                className={styles["nav__list-item-order"]}
-                onClick={openDraft}
-              >
-                Черновик
-              </button>
-            }
+            <button
+              className={styles["nav__list-item-order"]}
+              onClick={openDraft}
+            >
+              Черновик
+            </button>
             {UserData.userData.position !== "Байер" &&
-              UserData.userData.position !== "Менеджер" && (
+              UserData.userData.position !== "Менеджер" &&
+              UserData.userData.position !== "Работник склада" && (
                 <button
                   className={styles["nav__list-item-order"]}
                   onClick={openPaymentVerification}
@@ -135,22 +181,24 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
                   Проверка оплаты
                 </button>
               )}
-            {UserData.userData.position !== "Менеджер" && (
-              <button
-                className={styles["nav__list-item-order"]}
-                onClick={openAwaitingPurchase}
-              >
-                Ожидает закупки
-              </button>
-            )}
-            {UserData.userData.position !== "Менеджер" && (
-              <button
-                className={styles["nav__list-item-order"]}
-                onClick={openOnPurchase}
-              >
-                На закупке
-              </button>
-            )}
+            {UserData.userData.position !== "Менеджер" &&
+              UserData.userData.position !== "Работник склада" && (
+                <button
+                  className={styles["nav__list-item-order"]}
+                  onClick={openAwaitingPurchase}
+                >
+                  Ожидает закупки
+                </button>
+              )}
+            {UserData.userData.position !== "Менеджер" &&
+              UserData.userData.position !== "Работник склада" && (
+                <button
+                  className={styles["nav__list-item-order"]}
+                  onClick={openOnPurchase}
+                >
+                  На закупке
+                </button>
+              )}
             {UserData.userData.position !== "Менеджер" && (
               <button
                 className={styles["nav__list-item-order"]}
@@ -169,7 +217,8 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
                 </button>
               )}
             {(UserData.userData.position === "Администратор" ||
-              UserData.userData.position === "Создатель") && (
+              UserData.userData.position === "Создатель" ||
+              UserData.userData.position === "Работник склада") && (
               <button
                 className={styles["nav__list-item-order"]}
                 onClick={openInRussia}
@@ -178,7 +227,18 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
               </button>
             )}
             {(UserData.userData.position === "Администратор" ||
-              UserData.userData.position === "Создатель") && (
+              UserData.userData.position === "Создатель" ||
+              UserData.userData.position === "Работник склада") && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openRecentlyArrived}
+              >
+                Недавно прибывшие
+              </button>
+            )}
+            {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Создатель" ||
+              UserData.userData.position === "Работник склада") && (
               <button
                 className={styles["nav__list-item-order"]}
                 onClick={openSent}
@@ -187,7 +247,8 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
               </button>
             )}
             {(UserData.userData.position === "Администратор" ||
-              UserData.userData.position === "Создатель") && (
+              UserData.userData.position === "Создатель" ||
+              UserData.userData.position === "Работник склада") && (
               <button
                 className={styles["nav__list-item-order"]}
                 onClick={openСompleted}
@@ -266,17 +327,20 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
             </Link>
           </li>
         )}
-        <li className={styles["nav__list-item"]}>
-          <Link
-            className={`${styles["nav__list-item-link"]} ${
-              router.pathname === "/cards" &&
-              styles["nav__list-item-link_active"]
-            }`}
-            href="/cards"
-          >
-            Статистика карт
-          </Link>
-        </li>
+        {UserData.userData.position !== "Байер" &&
+          UserData.userData.position !== "Работник склада" && (
+            <li className={styles["nav__list-item"]}>
+              <Link
+                className={`${styles["nav__list-item-link"]} ${
+                  router.pathname === "/cards" &&
+                  styles["nav__list-item-link_active"]
+                }`}
+                href="/cards"
+              >
+                Статистика карт
+              </Link>
+            </li>
+          )}
         {(UserData.userData.position === "Создатель" ||
           UserData.userData.position === "Администратор") && (
           <li className={styles["nav__list-item"]}>

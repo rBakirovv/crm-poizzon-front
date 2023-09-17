@@ -1,28 +1,49 @@
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
-import { IOrder } from "../../types/interfaces";
+import { IMergedClientOrders, IOrder } from "../../types/interfaces";
 import { BASE_URL, BASE_URL_FRONT } from "../../utils/constants";
 import Carousel from "../UI/Carousel/Carousel";
 import Timer from "../UI/Timer/Timer";
 import styles from "./Order.module.css";
 import UserDataModal from "../UI/UserDataModal/UserDataModal";
-import CarAnimate from "../UI/CarAnimate/CarAnimate";
+import OverudeOrder from "../UI/OverudeOrder/OverudeOrder";
 
 interface IOrderProps {
   currentOrder: IOrder;
+  mergedData: Array<IMergedClientOrders>;
 }
 
 const dayjs = require("dayjs");
 
 var utc = require("dayjs/plugin/utc");
 var timezone = require("dayjs/plugin/timezone");
+var updateLocale = require("dayjs/plugin/updateLocale");
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 dayjs.tz.setDefault("Europe/Moscow");
 
-const Order: FC<IOrderProps> = ({ currentOrder }) => {
+dayjs.extend(updateLocale);
+
+dayjs.updateLocale("en", {
+  months: [
+    "Январь",
+    "Февраль",
+    "Март",
+    "Апрель",
+    "Май",
+    "Июнь",
+    "Июль",
+    "Август",
+    "Сентябрь",
+    "Октябрь",
+    "Ноябрь",
+    "Декабрь",
+  ],
+});
+
+const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
   const router = useRouter();
 
   const [isBrowser, setIsBrowser] = useState<boolean>(false);
@@ -33,8 +54,10 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
     useState<boolean>(false);
   const [isBuyProofPopupOpen, setIsBuyProofPopupOpen] =
     useState<boolean>(false);
-
-  const ordersPull = currentOrder.combinedOrder[0];
+  const [isOverudeOrderModalOpen, setIsOverudeOrderModalOpen] =
+    useState<boolean>(false);
+  const [isReceiptImagesPopupOpen, setIsReceiptImagesPopupOpen] =
+    useState<boolean>(false);
 
   const [timeLeft, setTimeLeft] = useState<number>(
     Math.ceil(
@@ -44,8 +67,6 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
       ) / 1000
     )
   );
-
-  const [isLinkAnimation, setIsLinkAnimation] = useState<boolean>(false);
 
   const priceRub = Math.ceil(
     parseFloat(currentOrder.priceCNY) * parseFloat(currentOrder.currentRate)
@@ -92,6 +113,19 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
     setIsBuyProofPopupOpen(false);
   }
 
+  function openIsReceiptImagesPopup(index: number) {
+    setIsReceiptImagesPopupOpen(true);
+    setCurrentImageIndex(index);
+  }
+
+  function closeIsReceiptImagesPopup() {
+    setIsReceiptImagesPopupOpen(false);
+  }
+
+  function closeOverudeOrderPopup() {
+    setIsOverudeOrderModalOpen(false);
+  }
+
   function nextImage() {
     currentImageIndex === currentOrder.orderImages.length - 1
       ? setCurrentImageIndex(0)
@@ -106,42 +140,9 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
 
   function handleTimeLeft() {
     if (timeLeft <= 0) {
-      alert(
-        "Время для оплаты заказа истекло. Стоимость товара могла измениться. \n\nЕсли вы готовы оплатить товар, сообщите менеджеру в Telegram"
-      );
+      setIsOverudeOrderModalOpen(true);
     } else {
-      if (!isLinkAnimation) {
-        setIsLinkAnimation(true);
-        setTimeout(() => {
-          router.push(`pay/${currentOrder._id}`);
-        }, 2000);
-        setTimeout(() => {
-          setIsLinkAnimation(false);
-        }, 3000);
-      }
-    }
-  }
-
-  function handleTimeLeftLink(e: React.SyntheticEvent) {
-    const target = e.target as HTMLLinkElement;
-
-    if (timeLeft <= 0) {
-      e.preventDefault();
-      alert(
-        "Время для оплаты заказа истекло. Стоимость товара могла измениться. \n\nЕсли вы готовы оплатить товар, сообщите менеджеру в Telegram"
-      );
-    } else {
-      e.preventDefault();
-
-      if (!isLinkAnimation) {
-        setIsLinkAnimation(true);
-        setTimeout(() => {
-          window.location.replace(currentOrder.payLink);
-        }, 1260);
-        setTimeout(() => {
-          setIsLinkAnimation(false);
-        }, 3000);
-      }
+      router.push(`pay/${currentOrder._id}`);
     }
   }
 
@@ -152,43 +153,46 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
   return (
     <section className={styles["order"]}>
       <div className={styles["order__container"]}>
-        <div className={styles["order__shoes-image-container"]}>
-          <div className={styles["order__shoes-image-inner"]}>
-            {currentOrder.orderImages.length > 0 && (
-              <img
-                className={styles["order__shoes-image"]}
-                src={`${BASE_URL}${currentOrder.orderImages[0].path}`}
-                alt={currentOrder.model}
-                crossOrigin="anonymous"
-                onClick={() => openPopup(0)}
-              />
-            )}
+        <div className={styles["order__head-container"]}>
+          <div className={styles["order__head-content-container"]}>
+            <a
+              className={styles["order__social-container"]}
+              href="https://t.me/poizonqq"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="31"
+                height="31"
+                viewBox="0 0 31 31"
+                fill="none"
+              >
+                <circle cx="15.5" cy="15.5" r="15.5" fill="white" />
+                <path
+                  d="M15.5 5C9.704 5 5 9.704 5 15.5C5 21.296 9.704 26 15.5 26C21.296 26 26 21.296 26 15.5C26 9.704 21.296 5 15.5 5ZM20.372 12.14C20.2145 13.799 19.532 17.831 19.1855 19.6895C19.0385 20.477 18.7445 20.7395 18.4715 20.771C17.8625 20.8235 17.4005 20.372 16.8125 19.9835C15.8885 19.3745 15.3635 18.9965 14.471 18.4085C13.4315 17.726 14.1035 17.348 14.702 16.739C14.8595 16.5815 17.5475 14.135 17.6 13.9145C17.6073 13.8811 17.6063 13.8464 17.5972 13.8135C17.588 13.7806 17.571 13.7504 17.5475 13.7255C17.4845 13.673 17.4005 13.694 17.327 13.7045C17.2325 13.7255 15.7625 14.702 12.896 16.634C12.476 16.9175 12.098 17.0645 11.762 17.054C11.384 17.0435 10.67 16.844 10.1345 16.6655C9.473 16.4555 8.9585 16.34 9.0005 15.9725C9.0215 15.7835 9.284 15.5945 9.7775 15.395C12.8435 14.0615 14.8805 13.1795 15.899 12.7595C18.818 11.5415 19.4165 11.3315 19.8155 11.3315C19.8995 11.3315 20.099 11.3525 20.225 11.4575C20.33 11.5415 20.3615 11.657 20.372 11.741C20.3615 11.804 20.3825 11.993 20.372 12.14Z"
+                  fill="url(#paint0_linear_114_104)"
+                />
+                <defs>
+                  <linearGradient
+                    id="paint0_linear_114_104"
+                    x1="5"
+                    y1="15.5"
+                    x2="26"
+                    y2="15.5"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stopColor="#12C2E9" />
+                    <stop offset="0.5" stopColor="#C471ED" />
+                    <stop offset="1" stopColor="#F64F59" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <p className={styles["order__social-text"]}>@poizonqq</p>
+            </a>
           </div>
         </div>
-        <ul className={styles["order__shoes-image-collection"]}>
-          {currentOrder.orderImages.length > 0 &&
-            currentOrder.orderImages.slice(1).map((image, index) => {
-              return (
-                <li
-                  key={image.name}
-                  className={styles["order__shoes-image-collection-item"]}
-                >
-                  <img
-                    src={`${BASE_URL}${image.path}`}
-                    crossOrigin="anonymous"
-                    onClick={() => openPopup(index + 1)}
-                  />
-                </li>
-              );
-            })}
-        </ul>
-        <h2 className={styles["order__shoes-title"]}>
-          {currentOrder.brand} {currentOrder.model}
-        </h2>
-        <div className={styles["order__shoes-size-container"]}>
-          <p className={styles["order__shoes-size"]}>
-            Размер: {currentOrder.size}
-          </p>
+        <div className={styles["order__images-container"]}>
           <a
             className={styles["order__shoes-poizon-link"]}
             href={currentOrder.link}
@@ -209,178 +213,282 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
               ></path>
             </svg>
           </a>
-        </div>
-        <div
-          className={`${styles["order-divider"]} ${styles["order-divider_horizontal"]}`}
-        ></div>
-        <h2 className={styles["order__title"]}>
-          Итоговая сумма: {totalPrice} ₽
-        </h2>
-        {isBrowser && currentOrder.priceCNY !== "0" && (
-          <table cellPadding={"5px"} className={styles["order__price-table"]}>
-            <tbody>
-              <tr>
-                <td>Цена в CNY</td>
-                <td>{parseInt(currentOrder.priceCNY)} ¥</td>
-              </tr>
-              <tr>
-                <td>Курс обмена</td>
-                <td>{currentOrder.currentRate} ₽</td>
-              </tr>
-              <tr>
-                <td>Цена в RUB</td>
-                <td>{Math.ceil(priceRub)} ₽</td>
-              </tr>
-              <tr>
-                <td>Доставка по Китаю</td>
-                <td>{parseInt(currentOrder.priceDeliveryChina)} ₽</td>
-              </tr>
-              <tr>
-                <td>Доставка в РФ</td>
-                <td>{parseInt(currentOrder.priceDeliveryRussia)} ₽</td>
-              </tr>
-              <tr>
-                <td>Комиссия сервиса</td>
-                <td>{parseInt(currentOrder.commission)} ₽</td>
-              </tr>
-              {currentOrder.promoCodePercent !== 0 && (
-                <tr>
-                  <td>Скидка по промо-коду</td>
-                  <td>{currentOrder.promoCodePercent} ₽</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        )}
-        {currentOrder.deliveryMethod !== "" && (
-          <>
-            <div
-              className={`${styles["order-divider"]} ${styles["order-divider_horizontal"]}`}
-            ></div>
-            <p className={styles["order-text"]}>
-              <span className={styles["order__bold-span"]}>
-                Способ доставки:
-              </span>{" "}
-              {currentOrder.deliveryMethod}
-            </p>
-            <p className={styles["order-text"]}>
-              <span className={styles["order__bold-span"]}>Адрес:</span>{" "}
-              {currentOrder.deliveryAddress}
-            </p>
-          </>
-        )}
-        <div
-          className={`${styles["order-divider"]} ${styles["order-divider_horizontal"]}`}
-        ></div>
-        <h2 className={styles["order__title"]}>Отслеживание заказа</h2>
-        <ul className={styles["order-timeline"]}>
-          <li className={styles["order-timeline-item"]}>
-            <div className={styles["order-timeline-item-tail"]}></div>
-            <div
-              className={`${styles["order-timeline-item-head"]} ${
-                (currentOrder.status === "Проверка оплаты" ||
-                  currentOrder.status === "Оплачен" ||
-                  currentOrder.status === "Ожидает закупки" ||
-                  currentOrder.status === "На закупке" ||
-                  currentOrder.status === "Закуплен" ||
-                  currentOrder.status === "На складе в Китае" ||
-                  currentOrder.status === "Доставка в Москву" ||
-                  currentOrder.status === "На складе в РФ" ||
-                  currentOrder.status === "Доставляется" ||
-                  currentOrder.status === "Завершён") &&
-                styles["order-timeline-item-head-green"]
-              }`}
-            ></div>
-            <div className={styles["order-timeline-item-content"]}>
-              <div className={styles["order-typography"]}>Проверка оплаты</div>
-              {currentOrder.payProofImages.length > 0 && (
-                <div
-                  className={styles["order-typography-screen-link"]}
-                  onClick={() => openPayProofPopup(0)}
-                >
-                  Скриншот оплаты
-                </div>
+          <div className={styles["order__shoes-image-container"]}>
+            <div className={styles["order__shoes-image-inner"]}>
+              {currentOrder.orderImages.length > 0 && (
+                <img
+                  className={styles["order__shoes-image"]}
+                  src={`${BASE_URL}${currentOrder.orderImages[0].path}`}
+                  alt={currentOrder.model}
+                  crossOrigin="anonymous"
+                  onClick={() => openPopup(0)}
+                />
               )}
             </div>
-          </li>
-          <li className={styles["order-timeline-item"]}>
-            <div className={styles["order-timeline-item-tail"]}></div>
-            <div
-              className={`${styles["order-timeline-item-head"]} ${
-                (currentOrder.status === "Оплачен" ||
-                  currentOrder.status === "Ожидает закупки" ||
-                  currentOrder.status === "На закупке" ||
-                  currentOrder.status === "Закуплен" ||
-                  currentOrder.status === "На складе в Китае" ||
-                  currentOrder.status === "Доставка в Москву" ||
-                  currentOrder.status === "На складе в РФ" ||
-                  currentOrder.status === "Доставляется" ||
-                  currentOrder.status === "Завершён") &&
-                styles["order-timeline-item-head-green"]
-              }`}
-            ></div>
-            <div className={styles["order-timeline-item-content"]}>
-              <div className={styles["order-typography"]}>Оплачен</div>
-            </div>
-          </li>
-          <li className={styles["order-timeline-item"]}>
-            <div className={styles["order-timeline-item-tail"]}></div>
-            <div
-              className={`${styles["order-timeline-item-head"]} ${
-                (currentOrder.status === "На закупке" ||
-                  currentOrder.status === "Закуплен" ||
-                  currentOrder.status === "На складе в Китае" ||
-                  currentOrder.status === "Доставка в Москву" ||
-                  currentOrder.status === "На складе в РФ" ||
-                  currentOrder.status === "Доставляется" ||
-                  currentOrder.status === "Завершён") &&
-                styles["order-timeline-item-head-green"]
-              }`}
-            ></div>
-            <div className={styles["order-timeline-item-content"]}>
-              <div className={styles["order-typography"]}>На закупке</div>
-            </div>
-          </li>
-          <li className={styles["order-timeline-item"]}>
-            <div className={styles["order-timeline-item-tail"]}></div>
-            <div
-              className={`${styles["order-timeline-item-head"]} ${
-                (currentOrder.status === "Закуплен" ||
-                  currentOrder.status === "На складе в Китае" ||
-                  currentOrder.status === "Доставка в Москву" ||
-                  currentOrder.status === "На складе в РФ" ||
-                  currentOrder.status === "Доставляется" ||
-                  currentOrder.status === "Завершён") &&
-                styles["order-timeline-item-head-green"]
-              }`}
-            ></div>
-            <div className={styles["order-timeline-item-content"]}>
-              <div className={styles["order-typography"]}>
-                Закуплен{" "}
-                {currentOrder.buyAt !== "" &&
-                  currentOrder.buyAt !== null &&
-                  dayjs
-                    .tz(new Date(currentOrder.buyAt!))
-                    .format("DD-MM-YYYY в HH:mm")}
-              </div>
-              {currentOrder.buyProofImages.length > 0 &&
-                currentOrder.buyProofImages.map((image, index) => {
+          </div>
+          <div className={styles["order__shoes-title-container"]}>
+            <h2 className={styles["order__shoes-title"]}>
+              {currentOrder.brand} {currentOrder.model}
+            </h2>
+            <p className={styles["order__shoes-size"]}>
+              Размер: {currentOrder.size}
+            </p>
+          </div>
+          {currentOrder.orderImages.length > 1 && (
+            <ul className={styles["order__shoes-image-collection"]}>
+              {currentOrder.orderImages.length > 1 &&
+                currentOrder.orderImages.slice(1).map((image, index) => {
                   return (
-                    <div
+                    <li
                       key={image.name}
-                      onClick={() => openBuyProofPopup(index)}
-                      className={styles["order-typography-screen-link"]}
+                      className={styles["order__shoes-image-collection-item"]}
                     >
-                      Чек закупки №{index + 1}
-                    </div>
+                      <img
+                        src={`${BASE_URL}${image.path}`}
+                        crossOrigin="anonymous"
+                        onClick={() => openPopup(index + 1)}
+                      />
+                    </li>
                   );
                 })}
-            </div>
-          </li>
-          <li className={styles["order-timeline-item"]}>
-            <div className={styles["order-timeline-item-tail"]}></div>
+            </ul>
+          )}
+        </div>
+        <div className={styles["order__content-container"]}>
+          <h2
+            className={`${styles["order__title"]} ${styles["order__price-title"]}`}
+          >
+            {totalPrice} ₽
+          </h2>
+          <div className={styles["order__number-container"]}>
+            Заказ № {currentOrder.orderId}
+          </div>
+
+          <div className={styles["order__status-box-container"]}>
             <div
-              className={`${styles["order-timeline-item-head"]} ${
+              className={`${styles["order__status-box"]} ${
+                styles["order__status-box_paid"]
+              } ${
+                currentOrder.status === "Ожидает закупки" &&
+                styles["order__status-box_active"]
+              }`}
+            >
+              <span>Оплачен</span>
+              <svg
+                className={styles["order__status-box-image"]}
+                xmlns="http://www.w3.org/2000/svg"
+                width="60"
+                height="60"
+                viewBox="0 0 40 40"
+                fill="none"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M19.9999 5.83337C12.1759 5.83337 5.83325 12.176 5.83325 20C5.83325 27.824 12.1759 34.1667 19.9999 34.1667C27.8239 34.1667 34.1666 27.824 34.1666 20C34.1666 12.176 27.8239 5.83337 19.9999 5.83337ZM3.33325 20C3.33325 10.7953 10.7952 3.33337 19.9999 3.33337C29.2046 3.33337 36.6666 10.7953 36.6666 20C36.6666 29.2047 29.2046 36.6667 19.9999 36.6667C10.7952 36.6667 3.33325 29.2047 3.33325 20ZM25.8838 15.7828C26.3719 16.271 26.3719 17.0624 25.8838 17.5505L19.2171 24.2172C18.7289 24.7054 17.9376 24.7054 17.4494 24.2172L14.116 20.8839C13.6279 20.3957 13.6279 19.6044 14.116 19.1162C14.6042 18.628 15.3957 18.628 15.8838 19.1162L18.3333 21.5655L24.1161 15.7828C24.6043 15.2947 25.3956 15.2947 25.8838 15.7828Z"
+                  fill="#3B2746"
+                />
+              </svg>
+            </div>
+
+            <div
+              className={`${styles["order__status-box"]} ${
+                styles["order__status-box_purchased"]
+              } ${
+                currentOrder.status === "Закуплен" &&
+                Math.ceil(
+                  new Date(currentOrder.inChinaStockAt).getTime() -
+                    new Date(Date.now()).getTime()
+                ) /
+                  1000 >=
+                  -43200 &&
+                currentOrder.inChinaStockAt !== null &&
+                styles["order__status-box_active"]
+              }`}
+            >
+              <span>Закуплен</span>
+              <svg
+                className={styles["order__status-box-image"]}
+                xmlns="http://www.w3.org/2000/svg"
+                width="60"
+                height="60"
+                viewBox="0 0 40 40"
+                fill="none"
+              >
+                <path
+                  d="M32.4999 9.66667L22.6666 4C20.9999 3 18.9999 3 17.4999 4L7.49992 9.66667C5.83325 10.6667 4.83325 12.3333 4.83325 14.1667V25.6667C4.83325 27.5 5.83325 29.3333 7.49992 30.1667L17.3333 35.8333C18.1666 36.3333 18.9999 36.5 19.9999 36.5C20.9999 36.5 21.8333 36.3333 22.6666 35.8333L32.4999 30.1667C34.1666 29.1667 35.1666 27.5 35.1666 25.6667V14.3333C35.1666 12.5 34.1666 10.6667 32.4999 9.66667ZM18.6666 6.16667C19.1666 6 19.4999 5.83333 19.9999 5.83333C20.4999 5.83333 20.9999 6 21.3333 6.16667L30.8333 11.6667L26.8333 14.1667L16.4999 7.33333L18.6666 6.16667ZM14.1666 8.83333L24.6666 15.6667L19.9999 18.5L8.66658 11.8333L14.1666 8.83333ZM8.66658 28.1667C7.83325 27.6667 7.33325 26.8333 7.33325 25.8333V14.3333C7.33325 14.1667 7.33325 14.1667 7.33325 14L18.6666 20.6667V33.8333C18.6666 33.8333 18.6666 33.8333 18.4999 33.8333L8.66658 28.1667ZM21.3333 33.8333L21.1666 20.6667L25.3333 18V31.3333L21.3333 33.8333ZM32.6666 25.6667C32.6666 26.6667 32.1666 27.5 31.3333 28L27.9999 29.8333V16.5L32.4999 13.6667C32.4999 13.8333 32.6666 14.1667 32.6666 14.3333V25.6667Z"
+                  fill="#3B2746"
+                />
+              </svg>
+            </div>
+
+            <div
+              className={`${styles["order__status-box"]} ${
+                styles["order__status-box_delivery"]
+              } ${
+                currentOrder.status !== "Завершён" &&
+                Math.ceil(
+                  new Date(currentOrder.inChinaStockAt).getTime() -
+                    new Date(Date.now()).getTime()
+                ) /
+                  1000 <
+                  -43200 &&
+                currentOrder.inChinaStockAt !== null &&
+                styles["order__status-box_active"]
+              }`}
+            >
+              <span>В доставке</span>
+              <svg
+                className={styles["order__status-box-image"]}
+                width="60"
+                height="60"
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g clipPath="url(#clip0_17_1266)">
+                  <path
+                    d="M30.21 23.7815C27.4298 23.7815 25.168 26.0433 25.168 28.8235C25.168 31.6038 27.4298 33.8656 30.21 33.8656C32.9907 33.8656 35.252 31.6038 35.252 28.8235C35.252 26.0433 32.9902 23.7815 30.21 23.7815ZM30.21 31.3445C28.8197 31.3445 27.689 30.2138 27.689 28.8235C27.689 27.4332 28.8197 26.3025 30.21 26.3025C31.6003 26.3025 32.731 27.4332 32.731 28.8235C32.731 30.2139 31.6003 31.3445 30.21 31.3445Z"
+                    fill="#3B2746"
+                  />
+                  <path
+                    d="M12.9832 23.7815C10.203 23.7815 7.94116 26.0433 7.94116 28.8235C7.94116 31.6038 10.203 33.8656 12.9832 33.8656C15.7634 33.8656 18.0252 31.6038 18.0252 28.8235C18.0252 26.0433 15.7634 23.7815 12.9832 23.7815ZM12.9832 31.3445C11.5929 31.3445 10.4622 30.2138 10.4622 28.8235C10.4622 27.4332 11.5929 26.3025 12.9832 26.3025C14.3731 26.3025 15.5042 27.4332 15.5042 28.8235C15.5042 30.2139 14.3735 31.3445 12.9832 31.3445Z"
+                    fill="#3B2746"
+                  />
+                  <path
+                    d="M33.6055 9.34966C33.3912 8.92403 32.9555 8.65552 32.479 8.65552H25.8403V11.1765H31.7017L35.134 18.0034L37.387 16.8706L33.6055 9.34966Z"
+                    fill="#3B2746"
+                  />
+                  <path
+                    d="M26.4287 27.6051H16.8909V30.1261H26.4287V27.6051Z"
+                    fill="#3B2746"
+                  />
+                  <path
+                    d="M9.20169 27.6051H4.832C4.13575 27.6051 3.57153 28.1694 3.57153 28.8656C3.57153 29.5618 4.13583 30.126 4.832 30.126H9.20177C9.89802 30.126 10.4622 29.5617 10.4622 28.8656C10.4622 28.1693 9.89794 27.6051 9.20169 27.6051Z"
+                    fill="#3B2746"
+                  />
+                  <path
+                    d="M39.7354 19.8991L37.256 16.7058C37.0178 16.3982 36.6501 16.2184 36.2606 16.2184H27.1009V7.39487C27.1009 6.69862 26.5366 6.1344 25.8404 6.1344H4.832C4.13575 6.1344 3.57153 6.6987 3.57153 7.39487C3.57153 8.09104 4.13583 8.65534 4.832 8.65534H24.5799V17.4789C24.5799 18.1751 25.1442 18.7393 25.8404 18.7393H35.6433L37.479 21.104V27.6049H33.9916C33.2954 27.6049 32.7311 28.1692 32.7311 28.8653C32.7311 29.5616 33.2954 30.1258 33.9916 30.1258H38.7395C39.4358 30.1258 40 29.5615 40 28.8653V20.6722C40 20.3924 39.9068 20.1201 39.7354 19.8991Z"
+                    fill="#3B2746"
+                  />
+                  <path
+                    d="M9.11767 21.2185H3.31931C2.62306 21.2185 2.05884 21.7828 2.05884 22.479C2.05884 23.1752 2.62313 23.7394 3.31931 23.7394H9.11759C9.81384 23.7394 10.3781 23.1751 10.3781 22.479C10.3781 21.7828 9.81384 21.2185 9.11767 21.2185Z"
+                    fill="#3B2746"
+                  />
+                  <path
+                    d="M12.0168 16.2605H1.26047C0.564297 16.2605 0 16.8248 0 17.521C0 18.2173 0.564297 18.7815 1.26047 18.7815H12.0168C12.713 18.7815 13.2773 18.2172 13.2773 17.521C13.2773 16.8249 12.713 16.2605 12.0168 16.2605Z"
+                    fill="#3B2746"
+                  />
+                  <path
+                    d="M14.0756 11.3025H3.31931C2.62306 11.3025 2.05884 11.8668 2.05884 12.563C2.05884 13.2592 2.62313 13.8234 3.31931 13.8234H14.0756C14.7719 13.8234 15.3361 13.2591 15.3361 12.563C15.3362 11.8668 14.7719 11.3025 14.0756 11.3025Z"
+                    fill="#3B2746"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_17_1266">
+                    <rect width="40" height="40" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
+            </div>
+
+            <div
+              className={`${styles["order__status-box"]} ${
+                styles["order__status-box_finish"]
+              } ${
+                currentOrder.status === "Завершён" &&
+                styles["order__status-box_active"]
+              }`}
+            >
+              <span>Завершен</span>
+              <svg
+                className={styles["order__status-box-image"]}
+                xmlns="http://www.w3.org/2000/svg"
+                width="60"
+                height="60"
+                viewBox="0 0 40 40"
+                fill="none"
+              >
+                <g clipPath="url(#clip0_17_1268)">
+                  <path
+                    d="M34.1699 7.57326L17.5 1.6205V1.24998C17.5 0.559066 16.9409 0 16.25 0C15.5591 0 15 0.559066 15 1.24998C15 1.24998 14.9998 2.57121 15 2.57396V33.75C15 34.4409 15.5591 35 16.25 35C16.9409 35 17.5 34.4409 17.5 33.75V32.5C24.0612 32.5 27.5 34.358 27.5 35C27.5 35.6421 24.0613 37.5 17.5 37.5C10.9386 37.5 7.49996 35.6421 7.49996 35C7.49996 34.5497 9.22694 33.5115 12.5 32.9256V30.3782C8.36788 31.0258 5 32.525 5 35C5 38.435 11.4795 40 17.5 40C23.5204 40 30 38.435 30 35C30 31.5649 23.5204 30 17.5 30V18.2727L34.3091 9.86817C34.757 9.64361 35.028 9.17478 34.9976 8.67436C34.9671 8.175 34.6423 7.74166 34.1699 7.57326ZM17.5 15.4773V4.27396L30.5713 8.9416L17.5 15.4773Z"
+                    fill="#3B2746"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_17_1268">
+                    <rect width="40" height="40" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
+            </div>
+          </div>
+          <ul className={styles["order__status-bar-container"]}>
+            {currentOrder.payment !== "Перейти по ссылке -" && (
+              <li
+                className={`${styles["order__status-bar-item"]} ${
+                  currentOrder.status !== "Черновик" &&
+                  styles["order__status-bar-item_active"]
+                }`}
+              >
+                Проверка оплаты
+              </li>
+            )}
+            {currentOrder.payProofImages.length > 0 && (
+              <div
+                className={styles["order-typography-screen-link"]}
+                onClick={() => openPayProofPopup(0)}
+              >
+                Скриншот оплаты
+              </div>
+            )}
+            <li
+              className={`${styles["order__status-bar-item"]} ${
+                currentOrder.status !== "Черновик" &&
+                currentOrder.status !== "Проверка оплаты" &&
+                styles["order__status-bar-item_active"]
+              }`}
+            >
+              Оплачен{" "}
+              {currentOrder.status !== "Черновик" &&
+                currentOrder.status !== "Проверка оплаты" && (
+                  <span>
+                    {currentOrder.paidAt &&
+                      dayjs
+                        .tz(new Date(currentOrder.paidAt!))
+                        .format("DD MMM.")}
+                  </span>
+                )}
+            </li>
+            <li
+              className={`${styles["order__status-bar-item"]} ${
+                currentOrder.status !== "Черновик" &&
+                currentOrder.status !== "Проверка оплаты" &&
+                currentOrder.status !== "Ожидает закупки" &&
+                currentOrder.status !== "На закупке" &&
+                styles["order__status-bar-item_active"]
+              }`}
+            >
+              Закуплен
+              <span>
+                {currentOrder.buyAt &&
+                  dayjs.tz(new Date(currentOrder.buyAt!)).format("DD MMM.")}
+              </span>
+            </li>
+            {currentOrder.buyProofImages.length > 0 &&
+              currentOrder.buyProofImages.map((image, index) => {
+                return (
+                  <div
+                    key={image.name}
+                    onClick={() => openBuyProofPopup(index)}
+                    className={styles["order-typography-screen-link"]}
+                  >
+                    Чек закупки №{index + 1}
+                  </div>
+                );
+              })}
+            <li
+              className={`${styles["order__status-bar-item"]} ${
                 (currentOrder.status === "На складе в Китае" ||
                   currentOrder.status === "Доставка в Москву" ||
                   currentOrder.status === "На складе в РФ" ||
@@ -393,19 +501,13 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
                     1000 <
                     0 &&
                     currentOrder.inChinaStockAt !== null)) &&
-                styles["order-timeline-item-head-green"]
+                styles["order__status-bar-item_active"]
               }`}
-            ></div>
-            <div className={styles["order-timeline-item-content"]}>
-              <div className={styles["order-typography"]}>
-                На складе в Китае
-              </div>
-            </div>
-          </li>
-          <li className={styles["order-timeline-item"]}>
-            <div className={styles["order-timeline-item-tail"]}></div>
-            <div
-              className={`${styles["order-timeline-item-head"]} ${
+            >
+              На складе в Китае
+            </li>
+            <li
+              className={`${styles["order__status-bar-item"]} ${
                 (currentOrder.status === "На складе в РФ" ||
                   currentOrder.status === "Доставляется" ||
                   currentOrder.status === "Завершён" ||
@@ -416,167 +518,169 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
                     1000 <
                     -43200 &&
                     currentOrder.inChinaStockAt !== null)) &&
-                styles["order-timeline-item-head-green"]
+                styles["order__status-bar-item_active"]
               }`}
-            ></div>
-            <div className={styles["order-timeline-item-content"]}>
-              <div className={styles["order-typography"]}>
-                Доставка в Москву
-              </div>
-            </div>
-          </li>
-          <li className={styles["order-timeline-item"]}>
-            <div className={styles["order-timeline-item-tail"]}></div>
-            <div
-              className={`${styles["order-timeline-item-head"]} ${
+            >
+              Отправлено в РФ
+            </li>
+            <li
+              className={`${styles["order__status-bar-item"]} ${
                 (currentOrder.status === "На складе в РФ" ||
                   currentOrder.status === "Доставляется" ||
                   currentOrder.status === "Завершён") &&
-                styles["order-timeline-item-head-green"]
+                styles["order__status-bar-item_active"]
               }`}
-            ></div>
-            <div className={styles["order-timeline-item-content"]}>
-              <div className={styles["order-typography"]}>
-                На складе в РФ{" "}
-                {currentOrder.inRussiaStockAt !== "" &&
-                  currentOrder.inRussiaStockAt !== null &&
+            >
+              Принято в Москве
+              <span>
+                {currentOrder.inRussiaStockAt &&
                   dayjs
                     .tz(new Date(currentOrder.inRussiaStockAt!))
-                    .format("DD-MM-YYYY в HH:mm")}
-              </div>
-            </div>
-          </li>
-          <li className={styles["order-timeline-item"]}>
-            <div className={styles["order-timeline-item-tail"]}></div>
-            <div
-              className={`${styles["order-timeline-item-head"]} ${
-                (currentOrder.status === "Доставляется" ||
-                  currentOrder.status === "Завершён") &&
-                styles["order-timeline-item-head-green"]
-              }`}
-            ></div>
-            <div className={styles["order-timeline-item-content"]}>
-              <div className={styles["order-typography"]}>Доставляется</div>
-              {currentOrder.deliveryCode !== "" && (
-                <a
-                  href={`https://www.cdek.ru/ru/tracking?order_id=${currentOrder.deliveryCode}`}
-                  className={`${styles["order-typography"]} ${styles["order-typography-link"]}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Трек-номер CDEK:
-                  <span
-                    className={`${styles["order-span"]} ${styles["order-span-link"]}`}
-                  >
-                    {currentOrder.deliveryCode}
-                  </span>
-                </a>
-              )}
-            </div>
-          </li>
-          <li className={styles["order-timeline-item"]}>
-            <div
-              className={`${styles["order-timeline-item-head"]} ${
-                currentOrder.status === "Завершён" &&
-                styles["order-timeline-item-head-green"]
-              }`}
-            ></div>
-            <div className={styles["order-timeline-item-content"]}>
-              <div className={styles["order-typography"]}>Завершён</div>
-            </div>
-          </li>
-        </ul>
-        {currentOrder.status === "Черновик" &&
-          currentOrder.payment !== "Перейти по ссылке -" && (
-            <button
-              className={styles["order__pay-button"]}
-              onClick={handleTimeLeft}
-            >
-              {isBrowser && !isLinkAnimation && (
-                <Timer
-                  createdAt={currentOrder.createdAt}
-                  dedline={currentOrder.overudeAfter}
-                  timeLeft={timeLeft}
-                  setTimeLeft={setTimeLeft}
-                />
-              )}
-              {!isLinkAnimation && (
-                <span className={styles["order__pay-button-span"]}>
-                  Оплатить
-                </span>
-              )}
-              {!isLinkAnimation && <span>{totalPrice} ₽</span>}
-              {isLinkAnimation && <CarAnimate />}
-            </button>
-          )}
-        {currentOrder.status === "Черновик" &&
-          currentOrder.payment === "Перейти по ссылке -" && (
-            <a
-              className={`${styles["order__pay-button"]} ${
-                !isLinkAnimation && styles["order__pay-button-shimmering"]
-              }`}
-              href={`${currentOrder.payLink}`}
-              onClick={handleTimeLeftLink}
-            >
-              {isBrowser && !isLinkAnimation && (
-                <Timer
-                  createdAt={currentOrder.createdAt}
-                  dedline={currentOrder.overudeAfter}
-                  timeLeft={timeLeft}
-                  setTimeLeft={setTimeLeft}
-                />
-              )}
-              {!isLinkAnimation && (
-                <span className={styles["order__pay-button-span"]}>
-                  Оплатить
-                </span>
-              )}
-              {!isLinkAnimation && <span>{totalPrice} ₽</span>}
-              {isLinkAnimation && <CarAnimate />}
-            </a>
-          )}
-        {currentOrder.poizonCode !== "" &&
-          currentOrder.inChinaStockAt !== null &&
-          currentOrder.deliveryMethod === "" &&
-          currentOrder.status !== "Завершён" && (
-            <button
-              className={`${styles["order__pay-button"]} ${
-                !isLinkAnimation && styles["order__pay-button-shimmering"]
-              }`}
-              onClick={handleDelivery}
-            >
-              <span></span>
-              <span className={styles["order__pay-button-span"]}>
-                Заполнить данные
+                    .format("DD MMM.")}
               </span>
-              <span></span>
-            </button>
-          )}
-        {ordersPull && (
-          <div
-            className={`${styles["order-divider"]} ${styles["order-divider_horizontal"]}`}
-          ></div>
-        )}
-        {ordersPull && (
-          <h2 className={styles["order__title"]}>К остальным заказам</h2>
-        )}
-        {ordersPull && (
-          <div className={styles["combined-order__links"]}>
-            {ordersPull &&
-              ordersPull.combinedOrder.map((id, index) => {
+            </li>
+            {currentOrder.isReceiptImages &&
+              currentOrder.receiptImages.length > 0 &&
+              currentOrder.receiptImages.map((image, index) => {
                 return (
-                  id !== currentOrder._id && (
-                    <a
-                      className={styles["combined-order__link"]}
-                      href={`${BASE_URL_FRONT}/order/${id}`}
-                    >
-                      {index + 1}. заказ в списке
-                    </a>
-                  )
+                  <div
+                    key={image.name}
+                    onClick={() => openIsReceiptImagesPopup(index)}
+                    className={styles["order-typography-screen-link"]}
+                  >
+                    Квитанция
+                  </div>
                 );
               })}
-          </div>
-        )}
+            <li
+              className={`${styles["order__status-bar-item"]} ${
+                (currentOrder.status === "Доставляется" ||
+                  currentOrder.status === "Завершён") &&
+                styles["order__status-bar-item_active"]
+              }`}
+            >
+              Передан в доставку
+            </li>
+            {currentOrder.deliveryCode !== "" && (
+              <a
+                href={`https://www.cdek.ru/ru/tracking?order_id=${currentOrder.deliveryCode}`}
+                className={styles["order-typography-link"]}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Трек-номер CDEK:
+                <span
+                  className={`${styles["order-span"]} ${styles["order-span-link"]}`}
+                >
+                  {currentOrder.deliveryCode}
+                </span>
+              </a>
+            )}
+            <li
+              className={`${styles["order__status-bar-item"]} ${
+                currentOrder.status === "Завершён" &&
+                styles["order__status-bar-item_active"]
+              }`}
+            >
+              Завершен
+              <span>
+                {currentOrder.deliveredAt &&
+                  dayjs
+                    .tz(new Date(currentOrder.deliveredAt!))
+                    .format("DD MMM.")}
+              </span>
+            </li>
+          </ul>
+          {currentOrder.status === "Черновик" &&
+            currentOrder.payment !== "Перейти по ссылке -" && (
+              <button
+                className={styles["order__pay-button"]}
+                onClick={handleTimeLeft}
+              >
+                {isBrowser && (
+                  <Timer
+                    createdAt={currentOrder.createdAt}
+                    dedline={currentOrder.overudeAfter}
+                    timeLeft={timeLeft}
+                    setTimeLeft={setTimeLeft}
+                  />
+                )}
+                <span className={styles["order__pay-button-span"]}>
+                  Оплатить
+                </span>
+                <span>{totalPrice} ₽</span>
+              </button>
+            )}
+          {currentOrder.status === "Черновик" &&
+            currentOrder.payment === "Перейти по ссылке -" &&
+            timeLeft >= 0 && (
+              <a
+                className={`${styles["order__pay-button"]}`}
+                href={`${currentOrder.payLink}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {isBrowser && (
+                  <Timer
+                    createdAt={currentOrder.createdAt}
+                    dedline={currentOrder.overudeAfter}
+                    timeLeft={timeLeft}
+                    setTimeLeft={setTimeLeft}
+                  />
+                )}
+                <span className={styles["order__pay-button-span"]}>
+                  Оплатить
+                </span>
+                <span>{totalPrice} ₽</span>
+              </a>
+            )}
+          {currentOrder.status === "Черновик" &&
+            currentOrder.payment === "Перейти по ссылке -" &&
+            timeLeft <= 0 && (
+              <button
+                className={styles["order__pay-button"]}
+                onClick={handleTimeLeft}
+              >
+                {isBrowser && (
+                  <Timer
+                    createdAt={currentOrder.createdAt}
+                    dedline={currentOrder.overudeAfter}
+                    timeLeft={timeLeft}
+                    setTimeLeft={setTimeLeft}
+                  />
+                )}
+                <span className={styles["order__pay-button-span"]}>
+                  Оплатить
+                </span>
+                <span>{totalPrice} ₽</span>
+              </button>
+            )}
+          {mergedData.length > 0 && (
+            <div className={styles["order__orders-pull-container"]}>
+              <h2
+                className={`${styles["order__title"]} ${styles["order__orders-pull-title"]}`}
+              >
+                К остальным заказам
+              </h2>
+              <div className={styles["combined-order__links"]}>
+                {mergedData &&
+                  mergedData.map((item: IMergedClientOrders) => {
+                    return (
+                      item.orderId !== currentOrder.orderId && (
+                        <a
+                          className={styles["combined-order__link"]}
+                          href={`${BASE_URL_FRONT}/order/${item._id}`}
+                          key={item.orderId}
+                        >
+                          {item.subcategory} {item.model}
+                        </a>
+                      )
+                    );
+                  })}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <Carousel
         isImagePopupOpen={isImagePopupOpen}
@@ -602,11 +706,29 @@ const Order: FC<IOrderProps> = ({ currentOrder }) => {
         nextImage={nextImage}
         prevImage={prevImage}
       />
+      <Carousel
+        isImagePopupOpen={isReceiptImagesPopupOpen}
+        images={currentOrder.receiptImages}
+        currentImageIndex={currentImageIndex}
+        closePopup={closeIsReceiptImagesPopup}
+        nextImage={nextImage}
+        prevImage={prevImage}
+      />
+      {timeLeft <= 0 && (
+        <OverudeOrder
+          isOverudeOrderModalOpen={isOverudeOrderModalOpen}
+          closePopup={closeOverudeOrderPopup}
+        />
+      )}
       {currentOrder.deliveryPhone === "" &&
         currentOrder.status !== "Черновик" &&
         currentOrder.status !== "Проверка оплаты" &&
-        currentOrder.payment === "Перейти по ссылке -" && (
-          <UserDataModal _id={currentOrder._id} />
+        currentOrder.status !== "Завершён" && (
+          <UserDataModal
+            _id={currentOrder._id}
+            comment={currentOrder.model}
+            combinedOrder={currentOrder.combinedOrder}
+          />
         )}
     </section>
   );
