@@ -10,6 +10,7 @@ import {
   updateClientDeliveryAddress,
 } from "../../../utils/Order";
 import { BASE_URL_FRONT } from "../../../utils/constants";
+import PreloaderClient from "../PreloaderClient/PreloaderClient";
 
 interface IUserDataModalProps {
   _id: string;
@@ -49,7 +50,9 @@ const UserDataModal: FC<IUserDataModalProps> = ({
   const [amount, setAmount] = useState(0);
   const [tarif, setTarif] = useState(0);
 
-  const [isPending, startTransition] = useTransition();
+  const [isPreload, setIsPreload] = useState(false);
+
+  //const [isPending, startTransition] = useTransition();
 
   const [isPhoneValid, setIsPhoneValid] = useState<boolean>(false);
 
@@ -58,11 +61,13 @@ const UserDataModal: FC<IUserDataModalProps> = ({
 
     const { name, value } = target;
 
-    startTransition(() => {
-      setData({
-        ...data,
-        [name]: value,
-      });
+    /*startTransition(() => {
+    });
+    */
+
+    setData({
+      ...data,
+      [name]: value,
     });
   }
 
@@ -237,7 +242,9 @@ const UserDataModal: FC<IUserDataModalProps> = ({
 
   useEffect(() => {
     deliveryAuthorization().then((authData) => {
+      setIsPreload(true);
       getCities(authData.token).then((data) => {
+        setIsPreload(false);
         setCities(data);
       });
     });
@@ -259,6 +266,7 @@ const UserDataModal: FC<IUserDataModalProps> = ({
 
   return (
     <>
+      {isPreload && <PreloaderClient />}
       <div className={styles["user-data-modal"]}>
         <form
           onSubmit={handleSubmitDeliveyData}
@@ -270,7 +278,7 @@ const UserDataModal: FC<IUserDataModalProps> = ({
           <div className={styles["user-data-modal__inputs-container"]}>
             <div className={styles["user-data-modal__input-container"]}>
               <label className={styles["user-data-modal__input-label"]}>
-                Населённый пункт
+                Населённый пункт (адрес СДЭКа)
               </label>
               <input
                 className={styles["user-data-modal__input"]}
@@ -281,6 +289,7 @@ const UserDataModal: FC<IUserDataModalProps> = ({
                 type="text"
                 required
                 autoComplete="off"
+                placeholder="Выберите из списка"
               />
               <div
                 className={`${styles["user-data-modal__input-dropdown"]} ${
@@ -323,6 +332,7 @@ const UserDataModal: FC<IUserDataModalProps> = ({
                   type="text"
                   required
                   autoComplete="off"
+                  placeholder="Выберите из списка"
                 />
                 <div
                   className={`${styles["user-data-modal__input-dropdown"]} ${
@@ -405,6 +415,7 @@ const UserDataModal: FC<IUserDataModalProps> = ({
                 data.deliveryPhone === "" ||
                 data.deliveryCity === "" ||
                 data.deliveryAddress === "" ||
+                PVZCode === "" ||
                 !isPhoneValid) &&
               styles["order-pay__pay-submit_disabled"]
             }`}
@@ -415,6 +426,7 @@ const UserDataModal: FC<IUserDataModalProps> = ({
               data.deliveryPhone === "" ||
               data.deliveryCity === "" ||
               data.deliveryAddress === "" ||
+              PVZCode === "" ||
               !isPhoneValid
             }
           >

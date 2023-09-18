@@ -7,6 +7,7 @@ import Timer from "../UI/Timer/Timer";
 import styles from "./Order.module.css";
 import UserDataModal from "../UI/UserDataModal/UserDataModal";
 import OverudeOrder from "../UI/OverudeOrder/OverudeOrder";
+import { deliveryAuthorization, getCities } from "../../utils/Order";
 
 interface IOrderProps {
   currentOrder: IOrder;
@@ -144,10 +145,6 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
     } else {
       router.push(`pay/${currentOrder._id}`);
     }
-  }
-
-  function handleDelivery() {
-    router.push(`delivery/${currentOrder._id}`);
   }
 
   return (
