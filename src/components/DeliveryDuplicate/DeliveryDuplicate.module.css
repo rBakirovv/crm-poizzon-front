@@ -8,6 +8,15 @@
   padding: 1rem;
 }
 
+.delivery-duplicate h4 {
+  width: max-content;
+  margin: 0.7rem 0;
+}
+
+.delivery-duplicate p {
+  margin: 0.5rem 0;
+}
+
 .delivery-duplicate__create {
   font-weight: 500;
   display: flex;
@@ -78,6 +87,8 @@
 }
 
 .accordion-body {
+  display: flex;
+  gap: 1rem;
   max-height: 0;
   overflow: hidden;
   transition: all 0.3s ease-in-out;
@@ -85,6 +96,7 @@
 
 .accordion-head {
   display: flex;
+  justify-content: center;
   cursor: pointer;
 }
 
@@ -99,10 +111,6 @@
 
 .accordion_active .accordion-head-arrow {
   transform: rotate(0);
-}
-
-.delivery-packages {
-  margin-top: 1.5rem;
 }
 
 .delivery-packages-number-input {
@@ -163,5 +171,10 @@
 
   .delivery-duplicate__create:active {
     background: #d96e3a;
+  }
+
+  .accordion-body {
+    flex-direction: column;
+    gap: 0;
   }
 }

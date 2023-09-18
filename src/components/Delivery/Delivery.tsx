@@ -1410,7 +1410,6 @@ const Delivery = () => {
     <section className={styles["delivery"]}>
       {isPreloader && <Preloader />}
       <div className={styles["delivery__container"]}>
-        <h2 className={styles["delivery-title"]}>Доставка</h2>
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" && (
             <button
@@ -1431,467 +1430,510 @@ const Delivery = () => {
               </svg>
             </button>
           )}
-        {OrderData.order.deliveryAddress !== "" &&
-          OrderData.order.deliveryEntity !== "" && (
-            <button
-              onClick={openPDFHandler}
-              disabled={isPreloader}
-              className={styles["delivery-receipt"]}
-            >
-              Получить квитанцию
-              <svg
-                width="18px"
-                height="18px"
-                viewBox="0 0 48 48"
-                focusable="false"
-                fill="black"
-              >
-                <path fill="none" d="M0 0h48v48H0V0z"></path>
-                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-              </svg>
-            </button>
-          )}
-        {OrderData.order.deliveryAddress !== "" &&
-          OrderData.order.deliveryEntity !== "" && (
-            <>
-              <h4>Размеры коробки</h4>
-              <div
-                className={`${styles["delivery-packages"]} ${styles["delivery-packages-size"]}`}
-              >
-                <select
-                  onChange={handleChange}
-                  className={styles["delivery-packages-select"]}
+        <div className={styles["delivery-packages__container"]}>
+          {OrderData.order.deliveryAddress !== "" &&
+            OrderData.order.deliveryEntity !== "" && (
+              <div>
+                <h4>Размеры коробки</h4>
+                <div
+                  className={`${styles["delivery-packages"]} ${styles["delivery-packages-size"]}`}
                 >
-                  <option value="" selected disabled>
-                    Выберите
-                  </option>
-                  <option value="medium">Medium 37 * 27 * 16</option>
-                  <option value="large">Large 41 * 31 * 18</option>
-                  <option value="extra_large">Extra Large 45 * 36 * 21</option>
-                  <option value="y_01">Y-01 49 * 40 * 32</option>
-                  <option value="y_03">Y-03 60 * 44 * 31</option>
-                  <option value="y_06">Y-06 66 * 57 * 29</option>
-                  <option value="y_08">Y-08 39 * 30 * 31</option>
-                  <option value="y_10">Y-10 48 * 40 * 32</option>
-                  <option value="y_13">Y-13 56 * 49 * 22</option>
-                  <option value="y_37">Y-37 27 * 29 * 32</option>
-                  <option value="small">Small 34 * 21 * 16</option>
-                  <option value="mini">Mini 24 * 18 * 15</option>
-                </select>
-                <h4>length</h4>
-                <input
-                  className={styles["delivery-packages-number-input"]}
-                  type="number"
-                  name="delivery_length"
-                  value={data.delivery_length}
-                  onChange={handleChange}
-                />
-                <h4>width</h4>
-                <input
-                  className={styles["delivery-packages-number-input"]}
-                  type="number"
-                  name="delivery_width"
-                  value={data.delivery_width}
-                  onChange={handleChange}
-                />
-                <h4>height</h4>
-                <input
-                  className={styles["delivery-packages-number-input"]}
-                  type="number"
-                  name="delivery_height"
-                  value={data.delivery_height}
-                  onChange={handleChange}
-                />
-                <button
-                  className={styles["delivery-packages-size-button"]}
-                  onClick={openSubmitChangeSizePopup}
-                >
-                  Cохр.
-                </button>
+                  <select
+                    onChange={handleChange}
+                    className={styles["delivery-packages-select"]}
+                  >
+                    <option value="" selected disabled>
+                      Выберите
+                    </option>
+                    <option value="medium">Medium 37 * 27 * 16</option>
+                    <option value="large">Large 41 * 31 * 18</option>
+                    <option value="extra_large">
+                      Extra Large 45 * 36 * 21
+                    </option>
+                    <option value="y_01">Y-01 49 * 40 * 32</option>
+                    <option value="y_03">Y-03 60 * 44 * 31</option>
+                    <option value="y_06">Y-06 66 * 57 * 29</option>
+                    <option value="y_08">Y-08 39 * 30 * 31</option>
+                    <option value="y_10">Y-10 48 * 40 * 32</option>
+                    <option value="y_13">Y-13 56 * 49 * 22</option>
+                    <option value="y_37">Y-37 27 * 29 * 32</option>
+                    <option value="small">Small 34 * 21 * 16</option>
+                    <option value="mini">Mini 24 * 18 * 15</option>
+                  </select>
+                  <h4>length</h4>
+                  <input
+                    className={styles["delivery-packages-number-input"]}
+                    type="number"
+                    name="delivery_length"
+                    value={data.delivery_length}
+                    onChange={handleChange}
+                  />
+                  <h4>width</h4>
+                  <input
+                    className={styles["delivery-packages-number-input"]}
+                    type="number"
+                    name="delivery_width"
+                    value={data.delivery_width}
+                    onChange={handleChange}
+                  />
+                  <h4>height</h4>
+                  <input
+                    className={styles["delivery-packages-number-input"]}
+                    type="number"
+                    name="delivery_height"
+                    value={data.delivery_height}
+                    onChange={handleChange}
+                  />
+                  <button
+                    className={styles["delivery-packages-size-button"]}
+                    onClick={openSubmitChangeSizePopup}
+                  >
+                    Cохр.
+                  </button>
+                </div>
               </div>
-            </>
-          )}
-        {OrderData.order.deliveryAddress !== "" &&
-          OrderData.order.deliveryEntity !== "" && (
-            <div className={styles["delivery-packages"]}>
-              <h4>Номер на коробке</h4>
-              <input
-                className={styles["delivery-packages-number-input"]}
-                type="number"
-                name="delivery_number"
-                value={data.delivery_number}
-                onChange={handleChange}
-              />
-              {OrderData.order.combinedOrder.length > 0 && (
-                <button onClick={openSubmitChangeNumberPopup}>Cохр.</button>
-              )}
-            </div>
-          )}
-        {OrderData.order.deliveryAddress !== "" &&
-          OrderData.order.deliveryEntity !== "" && (
-            <div className={styles["delivery-packages"]}>
-              <h4>Cумма страховки</h4>
-              <input
-                className={styles["delivery-packages-number-input"]}
-                type="number"
-                name="delivery_insurance"
-                value={data.delivery_insurance}
-                onChange={handleChange}
-              />
-              {OrderData.order.combinedOrder.length > 0 && (
-                <button onClick={openSubmitChangeInsurancePopup}>Cохр.</button>
-              )}
-            </div>
-          )}
-        {OrderData.order.deliveryAddress !== "" &&
-          OrderData.order.deliveryEntity !== "" && (
-            <div className={styles["delivery-packages"]}>
-              <h4>Кол-во мест</h4>
-              <input
-                className={styles["delivery-packages-number-input"]}
-                type="number"
-                name="delivery_packages"
-                value={data.delivery_packages}
-                onChange={handleChange}
-              />
-              {OrderData.order.combinedOrder.length > 0 && (
-                <button onClick={openSubmitChangePackagesPopup}>Cохр.</button>
-              )}
-            </div>
-          )}
-        {OrderData.order.deliveryCode !== "" && (
-          <>
-            <h4>Номер CDEK</h4>
-            <p className={styles["delivery-copy"]} onClick={copyNumberCDEK}>
-              {OrderData.order.deliveryCode}{" "}
-              <svg
-                x="0px"
-                y="0px"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                focusable="false"
-                fill="currentColor"
-              >
-                <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
-              </svg>
-            </p>
-          </>
-        )}
-        <h4>Адрес доставки</h4>
-        {OrderData.order.deliveryAddress !== "" && (
-          <div className={styles["delivery__input-container"]}>
-            <p className={styles["delivery-copy"]} onClick={copyAddress}>
-              {OrderData.order.deliveryAddress}{" "}
-              <svg
-                x="0px"
-                y="0px"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                focusable="false"
-                fill="currentColor"
-              >
-                <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
-              </svg>
-            </p>
-            {OrderData.order.deliveryEntity !== "" && (
-              <button
-                className={styles["delivery__change"]}
-                onClick={openWidjet}
-              >
-                {"Изм."}
-              </button>
             )}
-          </div>
-        )}
-        {OrderData.order.deliveryName !== "" && (
-          <>
-            <h4>Telegram</h4>
-            <div className={styles["delivery__input-container"]}>
-              {!isChangeTg && OrderData.order.deliveryName !== "" && (
-                <p className={styles["delivery-copy"]} onClick={copyTg}>
-                  {OrderData.order.deliveryName}{" "}
-                  <svg
-                    x="0px"
-                    y="0px"
-                    width="24px"
-                    height="24px"
-                    viewBox="0 0 24 24"
-                    focusable="false"
-                    fill="currentColor"
-                  >
-                    <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
-                  </svg>
-                </p>
-              )}
-              {isChangeTg && (
-                <input
-                  className={styles["delivery__input"]}
-                  type="text"
-                  name="delivery_tg"
-                  value={data.delivery_tg}
-                  onChange={handleChange}
-                  readOnly={!isChangeTg}
-                />
-              )}
-              {!isChangeTg && (
-                <button
-                  className={styles["delivery__change"]}
-                  onClick={handleChangeTg}
-                >
-                  {"Изм."}
-                </button>
-              )}
-              {isChangeTg && (
-                <button
-                  className={styles["delivery__change"]}
-                  onClick={openSubmitChangeTgPopup}
-                >
-                  {"Сохр."}
-                </button>
-              )}
-            </div>
-          </>
-        )}
-        <h4>ФИО получателя</h4>
-        {OrderData.order.deliveryNameRecipient !== "" && (
-          <div className={styles["delivery__input-container"]}>
-            {!isChangeName && (
-              <p className={styles["delivery-copy"]} onClick={copyName}>
-                {OrderData.order.deliveryNameRecipient}
-                <svg
-                  x="0px"
-                  y="0px"
-                  width="24px"
-                  height="24px"
-                  viewBox="0 0 24 24"
-                  focusable="false"
-                  fill="currentColor"
-                >
-                  <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
-                </svg>
-              </p>
-            )}
-            {isChangeName && (
-              <input
-                className={styles["delivery__input"]}
-                type="text"
-                name="delivery_name"
-                value={data.delivery_name}
-                onChange={handleChange}
-                readOnly={!isChangeName}
-              />
-            )}
-            {!isChangeName &&
-              OrderData.order.deliveryEntity !== "" &&
-              OrderData.order.deliveryAddress !== "" && (
-                <button
-                  className={styles["delivery__change"]}
-                  onClick={handleChangeName}
-                >
-                  {"Изм."}
-                </button>
-              )}
-            {isChangeName && (
-              <button
-                className={styles["delivery__change"]}
-                onClick={openSubmitChangeNamePopup}
-              >
-                {"Сохр."}
-              </button>
-            )}
-          </div>
-        )}
-        <h4>Номер телефона получателя</h4>
-        <div className={styles["delivery__input-container"]}>
-          {!isChangePhone && OrderData.order.deliveryPhone !== "" && (
-            <p className={styles["delivery-copy"]} onClick={copyPhone}>
-              {OrderData.order.deliveryPhone}
-              <svg
-                x="0px"
-                y="0px"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                focusable="false"
-                fill="currentColor"
-              >
-                <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
-              </svg>
-            </p>
-          )}
-          {isChangePhone && (
-            <input
-              className={styles["delivery__input"]}
-              type="text"
-              name="delivery_phone"
-              value={data.delivery_phone}
-              onChange={handleChange}
-              readOnly={!isChangePhone}
-            />
-          )}
-          {!isChangePhone && (
-            <button
-              className={styles["delivery__change"]}
-              onClick={handleChangePhone}
-            >
-              {"Изм."}
-            </button>
-          )}
-          {isChangePhone && (
-            <button
-              className={styles["delivery__change"]}
-              onClick={openSubmitChangePhonePopup}
-            >
-              {"Сохр."}
-            </button>
-          )}
-        </div>
-        {(UserData.userData.position === "Работник склада" ||
-          UserData.userData.position === "Администратор" ||
-          UserData.userData.position === "Создатель") && (
-          <form
-            onSubmit={openSubmitChangePopup}
-            className={styles["delivery-form"]}
-          >
-            <h2 className={styles["delivery-title"]}>Управление доставкой</h2>
-            {(OrderData.order.status === "На складе в РФ" ||
-              OrderData.order.status === "Доставляется" ||
-              OrderData.order.status === "Завершён") && (
-              <>
-                <h4>Фотография квитанции</h4>
-                {OrderData.order.uploadedReceiptImages !== "" && (
-                  <p>
-                    Фотографию квитанции{" "}
-                    <span>
-                      загрузил:{" "}
-                      <strong>{OrderData.order.uploadedReceiptImages}</strong>
-                    </span>
-                  </p>
-                )}
-                {OrderData.order.receiptImages.length > 0 && (
-                  <ul className={styles["delivery-receipt__images-list"]}>
-                    {OrderData.order.receiptImages
-                      .slice()
-                      .reverse()
-                      .map((image) => {
-                        return (
-                          <li
-                            key={image.name}
-                            className={styles["delivery-receipt__image"]}
-                          >
-                            {OrderData.order.status !== "Завершён" && (
-                              <div
-                                className={
-                                  styles["delivery-receipt__delete-image"]
-                                }
-                                onClick={() => deleteImageHandler(image.name)}
-                              >
-                                <svg
-                                  width="18"
-                                  height="20"
-                                  viewBox="0 0 18 20"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M2.45763 18.1422C2.51857 18.8126 3.06711 19.3002 3.73754 19.3002H14.2612C14.9317 19.3002 15.4802 18.7923 15.5411 18.1422L16.7195 5.79004H1.2793L2.45763 18.1422Z"
-                                    fill="black"
-                                  />
-                                  <path
-                                    d="M16.7201 1.93002H11.5801V1.27991C11.5801 0.568849 11.0113 0 10.3002 0H7.72009C7.00903 0 6.44018 0.568849 6.44018 1.27991V1.93002H1.27991C0.568849 1.93002 0 2.49887 0 3.20993C0 3.92099 0.568849 4.48984 1.27991 4.48984H16.7201C17.4312 4.48984 18 3.92099 18 3.20993C18 2.49887 17.4312 1.93002 16.7201 1.93002Z"
-                                    fill="black"
-                                  />
-                                </svg>
-                              </div>
-                            )}
-                            <img
-                              className={styles["delivery-receipt__image-item"]}
-                              src={`${BASE_URL}${image.path}`}
-                              alt={image.name}
-                              crossOrigin="anonymous"
-                              onClick={() =>
-                                openImagePopup(`${BASE_URL}${image.path}`)
-                              }
-                            />
-                          </li>
-                        );
-                      })}
-                  </ul>
-                )}
-                {(OrderData.order.receiptImages.length === 0 ||
-                  OrderData.order.status !== "Завершён") && (
-                  <Dropzone
-                    onDrop={(e: any) =>
-                      uploadFileHandler(e, "/order-receipt", setUploading)
-                    }
-                    onDragEnter={dragHandler}
-                    onDragLeave={dragLeaveHandler}
-                    maxSize={MAX_SIZE}
-                    multiple={false}
-                  >
-                    {({ getRootProps, getInputProps }) => (
-                      <div
-                        className={`${styles["drag-n-drop-container"]} ${
-                          isDrag && styles["drag-n-drop-container_active"]
-                        }`}
-                      >
-                        <div {...getRootProps()}>
-                          <input {...getInputProps()} />
-                          <p className={styles["drag-n-drop-text"]}>
-                            {isDrag
-                              ? "Перетащите фото"
-                              : "Добавить фото или ctrl + v"}
-                            <svg
-                              width="18px"
-                              height="18px"
-                              viewBox="0 0 48 48"
-                              focusable="false"
-                              fill="black"
-                            >
-                              <path fill="none" d="M0 0h48v48H0V0z"></path>
-                              <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                            </svg>
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </Dropzone>
-                )}
-                {OrderData.order.receiptImages.length !== 0 && (
-                  <div
-                    className={styles["delivery-receipt__chekbox-container"]}
-                  >
+          {
+            <div>
+              {OrderData.order.deliveryAddress !== "" &&
+                OrderData.order.deliveryEntity !== "" && (
+                  <div className={styles["delivery-packages"]}>
+                    <h4>Номер на коробке</h4>
                     <input
-                      type="checkbox"
-                      checked={OrderData.order.isReceiptImages}
-                      onChange={openSubmitIsReceiptImagesPopup}
-                      disabled={OrderData.order.status === "Завершён"}
+                      className={styles["delivery-packages-number-input"]}
+                      type="number"
+                      name="delivery_number"
+                      value={data.delivery_number}
+                      onChange={handleChange}
                     />
-                    <label>квитанция видна пользователю</label>
+                    {OrderData.order.combinedOrder.length > 0 && (
+                      <button onClick={openSubmitChangeNumberPopup}>
+                        Cохр.
+                      </button>
+                    )}
                   </div>
                 )}
-              </>
-            )}
+              {OrderData.order.deliveryAddress !== "" &&
+                OrderData.order.deliveryEntity !== "" && (
+                  <div className={styles["delivery-packages"]}>
+                    <h4>Cумма страховки</h4>
+                    <input
+                      className={styles["delivery-packages-number-input"]}
+                      type="number"
+                      name="delivery_insurance"
+                      value={data.delivery_insurance}
+                      onChange={handleChange}
+                    />
+                    {OrderData.order.combinedOrder.length > 0 && (
+                      <button onClick={openSubmitChangeInsurancePopup}>
+                        Cохр.
+                      </button>
+                    )}
+                  </div>
+                )}
+              {OrderData.order.deliveryAddress !== "" &&
+                OrderData.order.deliveryEntity !== "" && (
+                  <div className={styles["delivery-packages"]}>
+                    <h4>Кол-во мест</h4>
+                    <input
+                      className={styles["delivery-packages-number-input"]}
+                      type="number"
+                      name="delivery_packages"
+                      value={data.delivery_packages}
+                      onChange={handleChange}
+                    />
+                    {OrderData.order.combinedOrder.length > 0 && (
+                      <button onClick={openSubmitChangePackagesPopup}>
+                        Cохр.
+                      </button>
+                    )}
+                  </div>
+                )}
+            </div>
+          }
+          <div className={styles["delivery-warehouseworker__extra-info"]}>
             <TextInput
-              label="Трек-номер CDEK"
-              name="delivery_code"
-              value={data.delivery_code}
-              required={false}
+              name="model"
+              label="Модель"
+              value={OrderData.order.model}
               handleChange={handleChange}
+              required={true}
+              disabled={true}
             />
-            {OrderData.order.status !== "Завершён" && (
-              <button
-                className={styles["delivery__submit-button"]}
-                type="submit"
-              >
-                {OrderData.order.status === "На складе в РФ"
-                  ? "Отправлено"
-                  : "Сохранить CDEK"}
-              </button>
-            )}
-          </form>
+            <TextInput
+              name="size"
+              label="Размер"
+              value={OrderData.order.size}
+              handleChange={handleChange}
+              required={true}
+              disabled={true}
+            />
+            <ul className={styles["delivery-receipt__images-list"]}>
+              {OrderData.order.orderImages
+                .slice()
+                .reverse()
+                .map((image) => {
+                  return (
+                    <li
+                      key={image.name}
+                      className={styles["delivery-receipt__image"]}
+                    >
+                      <img
+                        className={styles["delivery-receipt__image-item"]}
+                        src={`${BASE_URL}${image.path}`}
+                        alt={image.name}
+                        crossOrigin="anonymous"
+                        onClick={() =>
+                          openImagePopup(`${BASE_URL}${image.path}`)
+                        }
+                      />
+                    </li>
+                  );
+                })}
+            </ul>
+          </div>
+        </div>
+        <div className={styles["delivery__data-container"]}>
+          {UserData.userData.position !== "Работник склада" && (
+            <div>
+              {OrderData.order.deliveryCode !== "" && (
+                <div>
+                  <h4>Номер CDEK</h4>
+                  <p
+                    className={styles["delivery-copy"]}
+                    onClick={copyNumberCDEK}
+                  >
+                    {OrderData.order.deliveryCode}{" "}
+                    <svg
+                      x="0px"
+                      y="0px"
+                      width="24px"
+                      height="24px"
+                      viewBox="0 0 24 24"
+                      focusable="false"
+                      fill="currentColor"
+                    >
+                      <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+                    </svg>
+                  </p>
+                </div>
+              )}
+              <h4>Адрес доставки</h4>
+              {OrderData.order.deliveryAddress !== "" && (
+                <div className={styles["delivery__input-container"]}>
+                  <p className={styles["delivery-copy"]} onClick={copyAddress}>
+                    {OrderData.order.deliveryAddress}{" "}
+                    <svg
+                      x="0px"
+                      y="0px"
+                      width="24px"
+                      height="24px"
+                      viewBox="0 0 24 24"
+                      focusable="false"
+                      fill="currentColor"
+                    >
+                      <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+                    </svg>
+                  </p>
+                  {OrderData.order.deliveryEntity !== "" && (
+                    <button
+                      className={styles["delivery__change"]}
+                      onClick={openWidjet}
+                    >
+                      {"Изм."}
+                    </button>
+                  )}
+                </div>
+              )}
+              {OrderData.order.deliveryName !== "" && (
+                <>
+                  <h4>Telegram</h4>
+                  <div className={styles["delivery__input-container"]}>
+                    {!isChangeTg && OrderData.order.deliveryName !== "" && (
+                      <p className={styles["delivery-copy"]} onClick={copyTg}>
+                        {OrderData.order.deliveryName}{" "}
+                        <svg
+                          x="0px"
+                          y="0px"
+                          width="24px"
+                          height="24px"
+                          viewBox="0 0 24 24"
+                          focusable="false"
+                          fill="currentColor"
+                        >
+                          <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+                        </svg>
+                      </p>
+                    )}
+                    {isChangeTg && (
+                      <input
+                        className={styles["delivery__input"]}
+                        type="text"
+                        name="delivery_tg"
+                        value={data.delivery_tg}
+                        onChange={handleChange}
+                        readOnly={!isChangeTg}
+                      />
+                    )}
+                    {!isChangeTg && (
+                      <button
+                        className={styles["delivery__change"]}
+                        onClick={handleChangeTg}
+                      >
+                        {"Изм."}
+                      </button>
+                    )}
+                    {isChangeTg && (
+                      <button
+                        className={styles["delivery__change"]}
+                        onClick={openSubmitChangeTgPopup}
+                      >
+                        {"Сохр."}
+                      </button>
+                    )}
+                  </div>
+                </>
+              )}
+              <h4>ФИО получателя</h4>
+              {OrderData.order.deliveryNameRecipient !== "" && (
+                <div className={styles["delivery__input-container"]}>
+                  {!isChangeName && (
+                    <p className={styles["delivery-copy"]} onClick={copyName}>
+                      {OrderData.order.deliveryNameRecipient}
+                      <svg
+                        x="0px"
+                        y="0px"
+                        width="24px"
+                        height="24px"
+                        viewBox="0 0 24 24"
+                        focusable="false"
+                        fill="currentColor"
+                      >
+                        <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+                      </svg>
+                    </p>
+                  )}
+                  {isChangeName && (
+                    <input
+                      className={styles["delivery__input"]}
+                      type="text"
+                      name="delivery_name"
+                      value={data.delivery_name}
+                      onChange={handleChange}
+                      readOnly={!isChangeName}
+                    />
+                  )}
+                  {!isChangeName &&
+                    OrderData.order.deliveryEntity !== "" &&
+                    OrderData.order.deliveryAddress !== "" && (
+                      <button
+                        className={styles["delivery__change"]}
+                        onClick={handleChangeName}
+                      >
+                        {"Изм."}
+                      </button>
+                    )}
+                  {isChangeName && (
+                    <button
+                      className={styles["delivery__change"]}
+                      onClick={openSubmitChangeNamePopup}
+                    >
+                      {"Сохр."}
+                    </button>
+                  )}
+                </div>
+              )}
+              <h4>Номер телефона получателя</h4>
+              <div className={styles["delivery__input-container"]}>
+                {!isChangePhone && OrderData.order.deliveryPhone !== "" && (
+                  <p className={styles["delivery-copy"]} onClick={copyPhone}>
+                    {OrderData.order.deliveryPhone}
+                    <svg
+                      x="0px"
+                      y="0px"
+                      width="24px"
+                      height="24px"
+                      viewBox="0 0 24 24"
+                      focusable="false"
+                      fill="currentColor"
+                    >
+                      <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+                    </svg>
+                  </p>
+                )}
+                {isChangePhone && (
+                  <input
+                    className={styles["delivery__input"]}
+                    type="text"
+                    name="delivery_phone"
+                    value={data.delivery_phone}
+                    onChange={handleChange}
+                    readOnly={!isChangePhone}
+                  />
+                )}
+                {!isChangePhone && (
+                  <button
+                    className={styles["delivery__change"]}
+                    onClick={handleChangePhone}
+                  >
+                    {"Изм."}
+                  </button>
+                )}
+                {isChangePhone && (
+                  <button
+                    className={styles["delivery__change"]}
+                    onClick={openSubmitChangePhonePopup}
+                  >
+                    {"Сохр."}
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+          {(UserData.userData.position === "Работник склада" ||
+            UserData.userData.position === "Администратор" ||
+            UserData.userData.position === "Создатель") && (
+            <form className={styles["delivery-form"]}>
+              {(OrderData.order.status === "На складе в РФ" ||
+                OrderData.order.status === "Доставляется" ||
+                OrderData.order.status === "Завершён") && (
+                <>
+                  <h4>Фотография квитанции</h4>
+                  {OrderData.order.uploadedReceiptImages !== "" && (
+                    <p>
+                      Фотографию квитанции{" "}
+                      <span>
+                        загрузил:{" "}
+                        <strong>{OrderData.order.uploadedReceiptImages}</strong>
+                      </span>
+                    </p>
+                  )}
+                  {OrderData.order.receiptImages.length > 0 && (
+                    <ul className={styles["delivery-receipt__images-list"]}>
+                      {OrderData.order.receiptImages
+                        .slice()
+                        .reverse()
+                        .map((image) => {
+                          return (
+                            <li
+                              key={image.name}
+                              className={styles["delivery-receipt__image"]}
+                            >
+                              {OrderData.order.status !== "Завершён" && (
+                                <div
+                                  className={
+                                    styles["delivery-receipt__delete-image"]
+                                  }
+                                  onClick={() => deleteImageHandler(image.name)}
+                                >
+                                  <svg
+                                    width="18"
+                                    height="20"
+                                    viewBox="0 0 18 20"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M2.45763 18.1422C2.51857 18.8126 3.06711 19.3002 3.73754 19.3002H14.2612C14.9317 19.3002 15.4802 18.7923 15.5411 18.1422L16.7195 5.79004H1.2793L2.45763 18.1422Z"
+                                      fill="black"
+                                    />
+                                    <path
+                                      d="M16.7201 1.93002H11.5801V1.27991C11.5801 0.568849 11.0113 0 10.3002 0H7.72009C7.00903 0 6.44018 0.568849 6.44018 1.27991V1.93002H1.27991C0.568849 1.93002 0 2.49887 0 3.20993C0 3.92099 0.568849 4.48984 1.27991 4.48984H16.7201C17.4312 4.48984 18 3.92099 18 3.20993C18 2.49887 17.4312 1.93002 16.7201 1.93002Z"
+                                      fill="black"
+                                    />
+                                  </svg>
+                                </div>
+                              )}
+                              <img
+                                className={
+                                  styles["delivery-receipt__image-item"]
+                                }
+                                src={`${BASE_URL}${image.path}`}
+                                alt={image.name}
+                                crossOrigin="anonymous"
+                                onClick={() =>
+                                  openImagePopup(`${BASE_URL}${image.path}`)
+                                }
+                              />
+                            </li>
+                          );
+                        })}
+                    </ul>
+                  )}
+                  {OrderData.order.receiptImages.length === 0 &&
+                    OrderData.order.status !== "Завершён" && (
+                      <Dropzone
+                        onDrop={(e: any) =>
+                          uploadFileHandler(e, "/order-receipt", setUploading)
+                        }
+                        onDragEnter={dragHandler}
+                        onDragLeave={dragLeaveHandler}
+                        maxSize={MAX_SIZE}
+                        multiple={false}
+                      >
+                        {({ getRootProps, getInputProps }) => (
+                          <div
+                            className={`${styles["drag-n-drop-container"]} ${
+                              isDrag && styles["drag-n-drop-container_active"]
+                            }`}
+                          >
+                            <div {...getRootProps()}>
+                              <input {...getInputProps()} />
+                              <p className={styles["drag-n-drop-text"]}>
+                                {isDrag
+                                  ? "Перетащите фото"
+                                  : "Добавить фото или ctrl + v"}
+                                <svg
+                                  width="18px"
+                                  height="18px"
+                                  viewBox="0 0 48 48"
+                                  focusable="false"
+                                  fill="black"
+                                >
+                                  <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                  <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                </svg>
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </Dropzone>
+                    )}
+                  {OrderData.order.receiptImages.length !== 0 && (
+                    <div
+                      className={styles["delivery-receipt__chekbox-container"]}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={OrderData.order.isReceiptImages}
+                        onChange={openSubmitIsReceiptImagesPopup}
+                        disabled={OrderData.order.status === "Завершён"}
+                      />
+                      <label>квитанция видна пользователю</label>
+                    </div>
+                  )}
+                </>
+              )}
+              <TextInput
+                label="Трек-номер CDEK"
+                name="delivery_code"
+                value={data.delivery_code}
+                required={false}
+                handleChange={handleChange}
+              />
+            </form>
+          )}
+        </div>
+        {OrderData.order.status !== "Завершён" && (
+          <button
+            onClick={openSubmitChangePopup}
+            className={styles["delivery__submit-button"]}
+            type="button"
+          >
+            {OrderData.order.status === "На складе в РФ"
+              ? "Отправлено"
+              : "Сохранить CDEK"}
+          </button>
         )}
         {OrderData.order.status === "Закуплен" &&
           (UserData.userData.position === "Работник склада" ||

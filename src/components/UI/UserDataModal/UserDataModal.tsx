@@ -74,6 +74,8 @@ const UserDataModal: FC<IUserDataModalProps> = ({
   function handleSubmitDeliveyData(e: React.SyntheticEvent) {
     e.preventDefault();
 
+    setIsPreload(true);
+
     deliveryAuthorization()
       .then((authData) => {
         deliveryCreate(
@@ -88,54 +90,81 @@ const UserDataModal: FC<IUserDataModalProps> = ({
           tarif
         )
           .then((orderInfo) => {
-            getDeliveryInfo(authData.token, orderInfo.entity.uuid)
-              .then((orderCheckInfo) => {
-                if (orderCheckInfo.requests[0].state !== "INVALID") {
-                  updateClientDeliveryAddress(
-                    _id,
-                    `${data.deliveryCity} ${data.deliveryAddress}`,
-                    data.deliveryName,
-                    data.deliveryNameRecipient,
-                    data.deliveryPhone,
-                    "Самовывоз из пункта выдачи CDEK",
-                    orderInfo.entity.uuid
-                  )
-                    .then(() => {
-                      if (combinedOrder.length > 0) {
-                        combinedOrder[0].combinedOrder.map(
-                          /* костыль */
-                          (orderItem: any) => {
-                            if (_id !== orderItem) {
-                              updateClientDeliveryAddress(
-                                _id,
-                                `${data.deliveryCity} ${data.deliveryAddress}`,
-                                data.deliveryName,
-                                data.deliveryNameRecipient,
-                                data.deliveryPhone,
-                                "Самовывоз из пункта выдачи CDEK",
-                                orderInfo.entity.uuid
-                              );
+            getDeliveryInfo(authData.token, orderInfo.entity.uuid).then(() => {
+              getDeliveryInfo(authData.token, orderInfo.entity.uuid)
+                .then((orderCheckInfo) => {
+                  if (orderCheckInfo.requests[0].state !== "INVALID") {
+                    updateClientDeliveryAddress(
+                      _id,
+                      `${data.deliveryCity} ${data.deliveryAddress}`,
+                      data.deliveryName,
+                      data.deliveryNameRecipient,
+                      data.deliveryPhone,
+                      "Самовывоз из пункта выдачи CDEK",
+                      orderInfo.entity.uuid
+                    )
+                      .then(() => {
+                        if (combinedOrder.length > 0) {
+                          combinedOrder[0].combinedOrder.map(
+                            /* костыль */
+                            (orderItem: any) => {
+                              if (_id !== orderItem) {
+                                updateClientDeliveryAddress(
+                                  _id,
+                                  `${data.deliveryCity} ${data.deliveryAddress}`,
+                                  data.deliveryName,
+                                  data.deliveryNameRecipient,
+                                  data.deliveryPhone,
+                                  "Самовывоз из пункта выдачи CDEK",
+                                  orderInfo.entity.uuid
+                                );
+                              }
                             }
-                          }
-                        );
-                      }
-                    })
-                    .then(() => {
-                      setIsActive(false);
-                      setTimeout(() => {
-                        setIsSuccessActive(true);
-                      }, 200);
-                    })
-                    .catch((err) => console.log(err));
-                } else {
-                  alert("Ошибка! Проверьте корректность введённых данных.");
-                }
-              })
-              .catch((err) => console.log(err));
+                          );
+                        }
+                      })
+                      .then(() => {
+                        setIsPreload(false);
+                        setIsActive(false);
+                        setTimeout(() => {
+                          setIsSuccessActive(true);
+                        }, 200);
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                        setIsPreload(false);
+                      });
+                  } else {
+                    setIsPreload(false);
+                    if (
+                      orderCheckInfo.requests[0].errors[0].code ===
+                      "ev_cash_on_delivery_is_not_available_in_receiver_office"
+                    ) {
+                      alert(
+                        "Ошибка! В выбранном пункте выдачи CDEK недоступен наложенный платеж. Выберете другой пункт выдачи CDEK"
+                      );
+                    } else {
+                      alert(
+                        "Ошибка! Проверьте корректность введённых данных или выберите другой пункт выдачи CDEK"
+                      );
+                    }
+                  }
+                })
+                .catch((err) => {
+                  console.log(err);
+                  setIsPreload(false);
+                });
+            });
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err);
+            setIsPreload(false);
+          });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setIsPreload(false);
+      });
   }
 
   function closeCityDropdown(e: MouseEvent) {

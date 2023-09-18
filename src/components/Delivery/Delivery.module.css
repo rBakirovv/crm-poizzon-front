@@ -7,6 +7,15 @@
   padding-bottom: 0.5rem;
 }
 
+.delivery h4 {
+  width: max-content;
+  margin: 0.7rem 0;
+}
+
+.delivery p {
+  margin: 0.5rem 0;
+}
+
 .delivery-form .delivery-title {
   padding-top: 0.5rem;
   margin-bottom: 1rem;
@@ -15,12 +24,13 @@
 .delivery__container {
   background: #fff;
   border-radius: 0.5rem;
-  padding: 1rem 1rem 2rem;
+  padding: 1rem;
 }
 
 .delivery-copy {
   display: flex;
   align-items: center;
+  width: max-content;
   gap: 0.25rem;
   color: #4e7fea;
   cursor: pointer;
@@ -29,7 +39,7 @@
 
 .delivery__input-container {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.5rem;
 }
 
@@ -144,10 +154,6 @@
   color: red;
 }
 
-.delivery-packages {
-  margin-top: 1.5rem;
-}
-
 .delivery-packages-number-input {
   width: 5rem;
   margin-right: 0.5rem;
@@ -165,7 +171,7 @@
 }
 
 .delivery-packages-size-button {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .delivery-packages-select {
@@ -248,7 +254,7 @@
   gap: 0.5rem;
   min-width: 100%;
   min-height: 100%;
-  margin: 0;
+  margin: 0 !important;
 }
 
 .delivery-receipt__images-list {
@@ -291,4 +297,57 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
+}
+
+.delivery-packages__container {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+@media screen and (max-width: 500px) {
+  .delivery-packages__container {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.delivery__data-container {
+  display: flex;
+  gap: 1rem;
+}
+
+@media screen and (max-width: 500px) {
+  .delivery__data-container {
+    flex-direction: column;
+    gap: 0rem;
+  }
+}
+
+.delivery-warehouseworker__extra-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.delivery-warehouseworker__extra-info input {
+  max-width: 300px;
+}
+
+.delivery-warehouseworker__extra-info .delivery-receipt__images-list {
+  display: grid;
+  grid-template-columns: 100px 100px 100px;
+  gap: 0.5rem;
+}
+
+.delivery-warehouseworker__extra-info .delivery-receipt__image {
+  max-width: 100px;
+  max-height: 100px;
+}
+
+@media screen and (max-width: 500px) {
+  .delivery-warehouseworker__extra-info .delivery-receipt__images-list {
+    display: flex;
+    margin: 0.5rem 0 0;
+  }
 }

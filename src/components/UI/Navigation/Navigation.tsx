@@ -94,6 +94,7 @@ const Navigation = observer(() => {
       OrderData.setOrdersTableLength(orders.total);
     });
     await OrdersBar.setNewStatus("Недавно прибывшие");
+    router.replace("/");
   }
 
   async function openSent() {

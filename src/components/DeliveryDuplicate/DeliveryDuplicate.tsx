@@ -836,25 +836,6 @@ const DeliveryDuplicate = () => {
           OrderData.order.deliveryEntity !== "" && (
             <button
               className={styles["delivery-duplicate__document"]}
-              onClick={openPDFHandler}
-            >
-              Получить квитанцию
-              <svg
-                width="18px"
-                height="18px"
-                viewBox="0 0 48 48"
-                focusable="false"
-                fill="black"
-              >
-                <path fill="none" d="M0 0h48v48H0V0z"></path>
-                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-              </svg>
-            </button>
-          )}
-        {OrderData.order.deliveryAddress !== "" &&
-          OrderData.order.deliveryEntity !== "" && (
-            <button
-              className={styles["delivery-duplicate__document"]}
               onClick={openPDFBarcodeHandler}
             >
               Получить штрихкод
@@ -895,42 +876,46 @@ const DeliveryDuplicate = () => {
                 </svg>
               </div>
               <div className={styles["accordion-body"]}>
-                <div className={styles["delivery-packages"]}>
-                  <h4>Кол-во мест</h4>
-                  <input
-                    className={styles["delivery-packages-number-input"]}
-                    type="number"
-                    name="delivery_packages"
-                    value={data.delivery_packages}
-                    onChange={handleChange}
-                  />
-                  <button onClick={openSubmitChangePackagesPopup}>Cохр.</button>
+                <div>
+                  <div className={styles["delivery-packages"]}>
+                    <h4>Кол-во мест</h4>
+                    <input
+                      className={styles["delivery-packages-number-input"]}
+                      type="number"
+                      name="delivery_packages"
+                      value={data.delivery_packages}
+                      onChange={handleChange}
+                    />
+                    <button onClick={openSubmitChangePackagesPopup}>
+                      Cохр.
+                    </button>
+                  </div>
+                  <div className={styles["delivery-packages"]}>
+                    <h4>Номер на коробке</h4>
+                    <input
+                      className={styles["delivery-packages-number-input"]}
+                      type="number"
+                      name="delivery_number"
+                      value={data.delivery_number}
+                      onChange={handleChange}
+                    />
+                    <button onClick={openSubmitChangeNumberPopup}>Cохр.</button>
+                  </div>
+                  <div className={styles["delivery-packages"]}>
+                    <h4>Cумма страховки</h4>
+                    <input
+                      className={styles["delivery-packages-number-input"]}
+                      type="number"
+                      name="delivery_insurance"
+                      value={data.delivery_insurance}
+                      onChange={handleChange}
+                    />
+                    <button onClick={openSubmitChangeInsurancePopup}>
+                      Cохр.
+                    </button>
+                  </div>
                 </div>
-                <div className={styles["delivery-packages"]}>
-                  <h4>Номер на коробке</h4>
-                  <input
-                    className={styles["delivery-packages-number-input"]}
-                    type="number"
-                    name="delivery_number"
-                    value={data.delivery_number}
-                    onChange={handleChange}
-                  />
-                  <button onClick={openSubmitChangeNumberPopup}>Cохр.</button>
-                </div>
-                <div className={styles["delivery-packages"]}>
-                  <h4>Cумма страховки</h4>
-                  <input
-                    className={styles["delivery-packages-number-input"]}
-                    type="number"
-                    name="delivery_insurance"
-                    value={data.delivery_insurance}
-                    onChange={handleChange}
-                  />
-                  <button onClick={openSubmitChangeInsurancePopup}>
-                    Cохр.
-                  </button>
-                </div>
-                <>
+                <div>
                   <h4>Размеры коробки</h4>
                   <div
                     className={`${styles["delivery-packages"]} ${styles["delivery-packages-size"]}`}
@@ -988,7 +973,7 @@ const DeliveryDuplicate = () => {
                       Cохр.
                     </button>
                   </div>
-                </>
+                </div>
               </div>
             </div>
           )}

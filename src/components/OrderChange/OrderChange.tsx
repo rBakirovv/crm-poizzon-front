@@ -925,24 +925,26 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                 Перейти
               </a>
             )}
-            {OrderData.order.payment === "Перейти по ссылке -" && (
-              <TextInput
-                name="payLink"
-                label="Cсылка на оплату"
-                value={OrderData.order.payLink}
-                handleChange={handleChange}
-                required={false}
-              />
-            )}
-            {OrderData.order.payment === "Перейти по ссылке -" && (
-              <TextInput
-                name="paymentUUID"
-                label="UUID оплаты"
-                value={OrderData.order.paymentUUID}
-                handleChange={handleChange}
-                required={false}
-              />
-            )}
+            {OrderData.order.payment === "Перейти по ссылке -" &&
+              UserData.userData.position !== "Работник склада" && (
+                <TextInput
+                  name="payLink"
+                  label="Cсылка на оплату"
+                  value={OrderData.order.payLink}
+                  handleChange={handleChange}
+                  required={false}
+                />
+              )}
+            {OrderData.order.payment === "Перейти по ссылке -" &&
+              UserData.userData.position !== "Работник склада" && (
+                <TextInput
+                  name="paymentUUID"
+                  label="UUID оплаты"
+                  value={OrderData.order.paymentUUID}
+                  handleChange={handleChange}
+                  required={false}
+                />
+              )}
             <div className={styles["order-change__input-container"]}>
               <label>
                 Категория<span className={styles["red-star"]}>*</span>
