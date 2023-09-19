@@ -37,6 +37,7 @@
   text-align: left;
   transition: all 0.4s ease-in-out;
   cursor: pointer;
+  width: max-content;
 }
 
 .nav__list-item-order_line {

@@ -76,16 +76,6 @@ const Home = observer(() => {
         });
   }, [router.query.orderChangeId]);
 
-  /*
-  useEffect(() => {
-    OrderData.order.combinedOrder.length > 0 &&
-      router.query.orderChangeId &&
-      getCombinedOrders(router.query.orderChangeId as string).then((data) => {
-        OrderData.setMergedOrders(data);
-      });
-  }, [router.query.orderChangeId]);
-  */
-
   useEffect(() => {
     getRate()
       .then((rates) => {

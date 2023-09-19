@@ -60,7 +60,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
     comment: OrderData.order.comment,
   });
 
-  const [orderСhapter, setOrderСhapter] = useState<string>("Order");
+  const [orderСhapter, setOrderСhapter] = useState<string | null>(
+    typeof window !== "undefined" && sessionStorage.getItem("orderСhapter")
+      ? sessionStorage.getItem("orderСhapter")
+      : "Order"
+  );
 
   const [isSubmitPopup, setIsSubmitPopup] = useState<boolean>(false);
   const [isImageSubmitPopup, setIsImageSubmitPopup] = useState<boolean>(false);
@@ -94,6 +98,27 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       parseFloat(OrderData.order.commission) -
       data.promoCodePercent
   );
+
+  const combinedOrdersFiltered = OrderData.mergedOrders.filter((item) => {
+    if (item.orderStatus !== "Завершён") {
+      return true;
+    }
+  });
+
+  const combinedOrdersTotal =
+    combinedOrdersFiltered.length &&
+    Math.ceil(
+      combinedOrdersFiltered.reduce(function (sum, current) {
+        return (
+          sum +
+          (parseFloat(current.priceCNY) * parseFloat(current.currentRate) +
+            parseFloat(current.priceDeliveryChina) +
+            parseFloat(current.priceDeliveryRussia) +
+            parseFloat(current.commission) -
+            current.promoCodePercent)
+        );
+      }, 0)
+    );
 
   const MAX_SIZE = 5242880;
 
@@ -167,26 +192,32 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
 
   function openOrder() {
     setOrderСhapter("Order");
+    sessionStorage.setItem("orderСhapter", "Order");
   }
 
   function openPayment() {
     setOrderСhapter("Pay");
+    sessionStorage.setItem("orderСhapter", "Pay");
   }
 
   function openClientData() {
     setOrderСhapter("Client");
+    sessionStorage.setItem("orderСhapter", "Client");
   }
 
   function openPurchaseData() {
     setOrderСhapter("Purchase");
+    sessionStorage.setItem("orderСhapter", "Purchase");
   }
 
   function openDelivery() {
     setOrderСhapter("Delivery");
+    sessionStorage.setItem("orderСhapter", "Delivery");
   }
 
   function openDeliveryDuplicate() {
     setOrderСhapter("DeliveryDuplicate");
+    sessionStorage.setItem("orderСhapter", "DeliveryDuplicate");
   }
 
   function handleChange(e: React.SyntheticEvent) {
@@ -809,6 +840,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
               )
             );
           })}
+        </p>
+      )}
+      {OrderData.order.combinedOrder.length > 0 && (
+        <p>
+          Общая сумма: <span>{combinedOrdersTotal}</span>
         </p>
       )}
       <div className={styles["order-change__nav-bar"]}>

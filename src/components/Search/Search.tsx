@@ -242,6 +242,10 @@ const Search = () => {
     []
   );
 
+  function resetOrderСhapter() {
+    sessionStorage.setItem("orderСhapter", "Order");
+  }
+
   return (
     <section className={styles["search"]}>
       <div className={styles["search-container"]}>
@@ -338,6 +342,7 @@ const Search = () => {
                     } 
                        ${styles["orders-table__header-item_number"]}`}
                     href={`/order/change/${orderItem._id}`}
+                    onClick={resetOrderСhapter}
                   >
                     {isMerge && (
                       <button

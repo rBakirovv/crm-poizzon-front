@@ -39,7 +39,11 @@ interface IOrderTable {
 const OrderTable: FC<IOrderTable> = observer(({ status }) => {
   const router = useRouter();
 
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number | string | null>(
+    typeof window !== "undefined" && sessionStorage.getItem("ordersTablePage")
+      ? sessionStorage.getItem("ordersTablePage")
+      : 1
+  );
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
 
   const [isDeleteDraft, setIsDeleteDraft] = useState<boolean>(false);
@@ -77,6 +81,7 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
       getOrdersTable(0, OrdersBar.orderStatus, "", "", "").then((orders) => {
         OrderData.setOrders(orders.orders);
         OrderData.setOrdersTableLength(orders.total);
+        sessionStorage.setItem("ordersTablePage", "1");
         setCurrentPage(1);
       });
     }
@@ -86,6 +91,7 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
         (orders) => {
           OrderData.setOrders(orders.orders);
           OrderData.setOrdersTableLength(orders.total);
+          sessionStorage.setItem("ordersTablePage", "1");
           setCurrentPage(1);
         }
       );
@@ -101,6 +107,7 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
       (orders) => {
         OrderData.setOrders(orders.orders);
         OrderData.setOrdersTableLength(orders.total);
+        sessionStorage.setItem("ordersTablePage", "1");
         setCurrentPage(1);
       }
     );
@@ -115,6 +122,7 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
       getOrdersTable(0, OrdersBar.orderStatus, "", "", "").then((orders) => {
         OrderData.setOrders(orders.orders);
         OrderData.setOrdersTableLength(orders.total);
+        sessionStorage.setItem("ordersTablePage", "1");
         setCurrentPage(1);
       });
     }
@@ -124,6 +132,7 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
         (orders) => {
           OrderData.setOrders(orders.orders);
           OrderData.setOrdersTableLength(orders.total);
+          sessionStorage.setItem("ordersTablePage", "1");
           setCurrentPage(1);
         }
       );
@@ -146,7 +155,9 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
 
   function nextPage() {
     getOrdersTable(
-      currentPage - 1 + 1,
+      typeof currentPage === "string"
+        ? parseInt(currentPage) - 1 + 1
+        : currentPage! - 1 + 1,
       OrdersBar.orderStatus,
       filterPurchased,
       filterPayment,
@@ -155,12 +166,24 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
       OrderData.setOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);
     });
-    setCurrentPage(currentPage + 1);
+    setCurrentPage(
+      typeof currentPage === "string"
+        ? parseInt(currentPage) + 1
+        : currentPage! + 1
+    );
+    sessionStorage.setItem(
+      "ordersTablePage",
+      typeof currentPage === "string"
+        ? (parseInt(currentPage) + 1).toString()
+        : (currentPage! + 1).toString()
+    );
   }
 
   function prevPage() {
     getOrdersTable(
-      currentPage - 1 - 1,
+      typeof currentPage === "string"
+        ? parseInt(currentPage) - 1 - 1
+        : currentPage! - 1 - 1,
       OrdersBar.orderStatus,
       filterPurchased,
       filterPayment,
@@ -169,7 +192,17 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
       OrderData.setOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);
     });
-    setCurrentPage(currentPage - 1);
+    sessionStorage.setItem(
+      "ordersTablePage",
+      typeof currentPage === "string"
+        ? (parseInt(currentPage) - 1).toString()
+        : (currentPage! - 1).toString()
+    );
+    setCurrentPage(
+      typeof currentPage === "string"
+        ? parseInt(currentPage) - 1
+        : currentPage! - 1
+    );
   }
 
   function openSubmitPopup(orderId: number, _id: string) {
@@ -252,6 +285,7 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
       OrderData.setOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);
     });
+    sessionStorage.setItem("ordersTablePage", page.toString());
     setCurrentPage(page);
   }
 
@@ -271,6 +305,10 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
   const totalPriceCNY = inStockInRussiaOrders.reduce(function (sum, current) {
     return sum + parseFloat(current.priceCNY);
   }, 0);
+
+  function resetOrderСhapter() {
+    sessionStorage.setItem("orderСhapter", "Order");
+  }
 
   return (
     <>
@@ -391,6 +429,7 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
                         styles["orders-table__reorder"]
                       }`}
                       href={`/order/change/${orderItem._id}`}
+                      onClick={resetOrderСhapter}
                     >
                       {orderItem.orderId}
                     </Link>
@@ -486,7 +525,11 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
           <button
             className={styles["pagination__button"]}
             onClick={prevPage}
-            disabled={currentPage === 1}
+            disabled={
+              (typeof currentPage === "string"
+                ? parseInt(currentPage)
+                : currentPage) === 1
+            }
           >
             {"<"}
           </button>
@@ -495,7 +538,12 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
               className={styles["pagination__page-input"]}
               type="number"
               name="current_page"
-              value={currentPage}
+              value={
+                typeof window !== "undefined" &&
+                sessionStorage.getItem("ordersTablePage")
+                  ? parseInt(sessionStorage.getItem("ordersTablePage") as any)
+                  : 1
+              }
               onChange={handleChange}
             />{" "}
             / {lastPageIndex}
@@ -503,7 +551,11 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
           <button
             className={styles["pagination__button"]}
             onClick={nextPage}
-            disabled={currentPage === lastPageIndex || lastPageIndex === 0}
+            disabled={
+              (typeof currentPage === "string"
+                ? parseInt(currentPage)
+                : currentPage) === lastPageIndex || lastPageIndex === 0
+            }
           >
             {">"}
           </button>

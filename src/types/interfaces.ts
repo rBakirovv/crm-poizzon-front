@@ -144,6 +144,12 @@ export interface IMergedOrders {
   _id: string;
   orderStatus: string;
   subcategory: string;
+  priceCNY: string,
+  currentRate: string,
+  priceDeliveryChina: string,
+  priceDeliveryRussia: string,
+  commission: string,
+  promoCodePercent: number,
 }
 
 export interface IMergedClientOrders {

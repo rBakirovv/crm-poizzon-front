@@ -24,7 +24,15 @@ const Home = observer(() => {
   const router = useRouter();
 
   useEffect(() => {
-    getOrdersTable(0, OrdersBar.orderStatus, "", "", "").then((orders) => {
+    getOrdersTable(
+      typeof window !== "undefined" && sessionStorage.getItem("ordersTablePage")
+        ? parseInt(sessionStorage.getItem("ordersTablePage") as any) - 1
+        : 0,
+      OrdersBar.orderStatus,
+      "",
+      "",
+      ""
+    ).then((orders) => {
       OrderData.setOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);
     });

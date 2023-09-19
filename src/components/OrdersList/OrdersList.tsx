@@ -15,6 +15,7 @@ import { getOrdersTable } from "../../utils/Order";
 
 const OrdersList = observer(() => {
   async function openDraft() {
+    sessionStorage.setItem("ordersTablePage", "1");
     await getOrdersTable(0, "Черновик", "", "", "").then((orders) => {
       OrderData.setOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);
@@ -23,6 +24,7 @@ const OrdersList = observer(() => {
   }
 
   async function openPaymentVerification() {
+    sessionStorage.setItem("ordersTablePage", "1");
     await getOrdersTable(0, "Проверка оплаты", "", "", "").then((orders) => {
       OrderData.setOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);
@@ -31,6 +33,7 @@ const OrdersList = observer(() => {
   }
 
   async function openAwaitingPurchase() {
+    sessionStorage.setItem("ordersTablePage", "1");
     await getOrdersTable(0, "Ожидает закупки", "", "", "").then((orders) => {
       OrderData.setOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);
@@ -39,6 +42,7 @@ const OrdersList = observer(() => {
   }
 
   async function openOnPurchase() {
+    sessionStorage.setItem("ordersTablePage", "1");
     await getOrdersTable(0, "На закупке", "", "", "").then((orders) => {
       OrderData.setOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);
@@ -47,6 +51,7 @@ const OrdersList = observer(() => {
   }
 
   async function openPurchased() {
+    sessionStorage.setItem("ordersTablePage", "1");
     await getOrdersTable(0, "Закуплен", "", "", "").then((orders) => {
       OrderData.setOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);
@@ -55,6 +60,7 @@ const OrdersList = observer(() => {
   }
 
   async function openWaitingDelivery() {
+    sessionStorage.setItem("ordersTablePage", "1");
     await getOrdersTable(0, "Ожидает данные", "", "", "").then((orders) => {
       OrderData.setOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);
@@ -63,6 +69,7 @@ const OrdersList = observer(() => {
   }
 
   async function openInRussia() {
+    sessionStorage.setItem("ordersTablePage", "1");
     await getOrdersTable(0, "На складе в РФ", "", "", "").then((orders) => {
       OrderData.setOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);
@@ -71,6 +78,7 @@ const OrdersList = observer(() => {
   }
 
   async function openRecentlyArrived() {
+    sessionStorage.setItem("ordersTablePage", "1");
     await getOrdersTable(0, "Недавно прибывшие", "", "", "").then((orders) => {
       OrderData.setOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);
@@ -79,6 +87,7 @@ const OrdersList = observer(() => {
   }
 
   async function openSent() {
+    sessionStorage.setItem("ordersTablePage", "1");
     await getOrdersTable(0, "Доставляется", "", "", "").then((orders) => {
       OrderData.setOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);
@@ -87,6 +96,7 @@ const OrdersList = observer(() => {
   }
 
   async function openСompleted() {
+    sessionStorage.setItem("ordersTablePage", "1");
     await getOrdersTable(0, "Завершён", "", "", "").then((orders) => {
       OrderData.setOrders(orders.orders);
       OrderData.setOrdersTableLength(orders.total);

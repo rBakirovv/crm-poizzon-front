@@ -15,7 +15,7 @@ export const getOrders = () => {
 
 export const getOrdersTable = (
   index: number,
-  status: string,
+  status: string | null,
   filterPurchased: string,
   filterPayment: string,
   filterReorder: string
@@ -85,7 +85,7 @@ export const unmergeOrders = (id: string) => {
   }).then(checkResponse);
 };
 
-export const getCombinedOrders = (id: string) => {
+export const getClientCombinedOrders = (id: string) => {
   return fetch(`${BASE_URL}/order/client-merge-info/${id}`, {
     credentials: "include",
     method: "GET",
@@ -93,7 +93,7 @@ export const getCombinedOrders = (id: string) => {
   }).then(checkResponse);
 };
 
-export const getClientCombinedOrders = (id: string) => {
+export const getCombinedOrders = (id: string) => {
   return fetch(`${BASE_URL}/order/merge-info/${id}`, {
     credentials: "include",
     method: "GET",
