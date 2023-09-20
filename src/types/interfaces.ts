@@ -2,7 +2,7 @@ export interface IUserData {
   email: string;
   name: string;
   position: string;
-  username: string;
+  username?: string;
   _id?: string;
   __v?: number;
 }
