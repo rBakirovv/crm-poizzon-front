@@ -7,6 +7,7 @@ class UserData {
     name: "",
     position: "",
     _id: "",
+    username: "",
   };
 
   constructor() {

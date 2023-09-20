@@ -105,9 +105,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 90%;
-  background: #fff;
-  margin: 0 0 0 auto;
+  width: 100%;
+  background: transparent;
+  margin: 0 0 0 1rem;
 }
 
 .users__table-name-container {
@@ -124,8 +124,10 @@
   background: #f9f9f9;
   border: 1px solid #000;
   border-right: none;
-  min-width: 250px;
-  max-width: 250px;
+  min-width: 200px;
+  max-width: 200px;
+  box-sizing: border-box;
+  padding: 1rem 0;
 }
 
 .users__table-name:last-of-type {
@@ -154,7 +156,7 @@
   width: 15px;
   height: 15px;
   border: none;
-  left: -2.5rem;
+  left: -1.5rem;
   bottom: 50%;
   transform: translateY(50%);
   cursor: pointer;
@@ -167,11 +169,13 @@
   text-align: center;
   width: 100%;
   min-height: 100%;
-  min-width: 250px;
-  max-width: 250px;
+  min-width: 200px;
+  max-width: 200px;
+  word-break: break-all;
   border-left: 1px solid #000;
   margin: 0;
-  padding: 1rem 0;
+  box-sizing: border-box;
+  padding: 1rem 0.5rem;
 }
 
 .users__table-list-text:last-of-type {
@@ -194,12 +198,12 @@
 
   .users__table {
     width: 100%;
-    margin-left: 3rem;
+    margin-left: 1rem;
   }
 
   .users__table-item-delete {
     right: inherit;
-    left: 4rem;
+    left: 2rem;
   }
 
   .users__create-submit:hover {

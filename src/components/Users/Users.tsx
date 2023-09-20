@@ -24,6 +24,7 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
     email: "",
     position: "",
     password: "",
+    username: "",
   });
 
   function handleChange(e: React.SyntheticEvent) {
@@ -43,7 +44,8 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
       userData.name,
       userData.email,
       userData.position,
-      userData.password
+      userData.password,
+      userData.username
     )
       .then((user) => {
         usersList.createUser(user);
@@ -52,6 +54,7 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
           email: "",
           position: "",
           password: "",
+          username: "",
         });
       })
       .catch((err) => {
@@ -98,6 +101,13 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
             handleChange={handleChange}
             value={userData.name}
             required={true}
+          />
+          <TextInput
+            label="@username"
+            name="username"
+            handleChange={handleChange}
+            value={userData.username}
+            required={userData.position === "Работник склада" ? true : false}
           />
           <TextInput
             label="E-mail"
@@ -153,6 +163,7 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
             <div className={styles["users__table-name"]}>Имя</div>
             <div className={styles["users__table-name"]}>E-mail</div>
             <div className={styles["users__table-name"]}>Должность</div>
+            <div className={styles["users__table-name"]}>username</div>
           </div>
           <ul className={styles["users__table-list"]}>
             {users
@@ -172,6 +183,9 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
                     </p>
                     <p className={styles["users__table-list-text"]}>
                       {userItem.position}
+                    </p>
+                    <p className={styles["users__table-list-text"]}>
+                      {userItem.username}
                     </p>
                     {userId !== userItem._id &&
                       userPosition === SUPERADMIN &&

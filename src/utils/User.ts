@@ -24,7 +24,8 @@ export const createUser = (
   name: string,
   email: string,
   position: string,
-  password: string
+  password: string,
+  username: string
 ) => {
   return fetch(`${BASE_URL}/users/create`, {
     credentials: "include",
@@ -35,6 +36,7 @@ export const createUser = (
       email: email,
       position: position,
       password: password,
+      username: username,
     }),
   }).then(checkResponse);
 };
