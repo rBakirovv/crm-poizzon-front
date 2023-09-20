@@ -107,7 +107,7 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
             name="username"
             handleChange={handleChange}
             value={userData.username}
-            required={userData.position === "Работник склада" ? true : false}
+            required={false}
           />
           <TextInput
             label="E-mail"

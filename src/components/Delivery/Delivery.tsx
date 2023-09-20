@@ -1651,12 +1651,42 @@ const Delivery = () => {
             </div>
           }
           <div className={styles["delivery-warehouseworker__extra-info"]}>
+            {UserData.userData.position === "Работник склада" && (
+              <div>
+                <TextInput
+                  name="deliveryName"
+                  label="@Tg"
+                  value={OrderData.order.deliveryName as any}
+                  handleChange={handleChange}
+                  required={false}
+                  disabled={true}
+                />
+                <div className={styles["delivery-copy"]} onClick={copyTg}>
+                  Скопировать
+                </div>
+              </div>
+            )}
+            {UserData.userData.position === "Работник склада" && (
+              <div>
+                <TextInput
+                  name="deliveryNameRecipient"
+                  label="ФИО"
+                  value={OrderData.order.deliveryNameRecipient as any}
+                  handleChange={handleChange}
+                  required={false}
+                  disabled={true}
+                />
+                <div className={styles["delivery-copy"]} onClick={copyName}>
+                  Скопировать
+                </div>
+              </div>
+            )}
             <TextInput
               name="model"
               label="Модель"
               value={OrderData.order.model}
               handleChange={handleChange}
-              required={true}
+              required={false}
               disabled={true}
             />
             <TextInput
@@ -1664,7 +1694,7 @@ const Delivery = () => {
               label="Размер"
               value={OrderData.order.size}
               handleChange={handleChange}
-              required={true}
+              required={false}
               disabled={true}
             />
             <ul className={styles["delivery-receipt__images-list"]}>
