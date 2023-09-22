@@ -25,6 +25,7 @@ import {
   updateReceiptImages,
   deleteReceiptImage,
   setIsReceiptImages,
+  orderDeliveryCode,
 } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import Preloader from "../UI/Preloader/Preloader";
@@ -78,6 +79,7 @@ const Delivery = () => {
   const [isSubmitChangeInsurancePopup, setIsSubmitChangeInsurancePopup] =
     useState(false);
   const [isSubmitChangeSizePopup, setIsSubmitChangeSizePopup] = useState(false);
+  const [isCombinedCDEKPopup, setIsCombinedCDEKPopup] = useState(false);
 
   const [isChangePhone, setIsChangePhone] = useState(false);
   const [isChangeName, setIsChangeName] = useState(false);
@@ -173,6 +175,15 @@ const Delivery = () => {
 
   function closeSubmitChangeSizePopup() {
     setIsSubmitChangeSizePopup(false);
+  }
+
+  function openCombinedCDEKPopup(e: React.SyntheticEvent) {
+    e.preventDefault();
+    setIsCombinedCDEKPopup(true);
+  }
+
+  function closeCombinedCDEKPopup() {
+    setIsCombinedCDEKPopup(false);
   }
 
   function openWidjet() {
@@ -1505,6 +1516,14 @@ const Delivery = () => {
     setIsSubmitIsReceiptImagesChange(false);
   }
 
+  function handleChangeCombinedCDEK() {
+    OrderData.order.combinedOrder[0].combinedOrder.map((orderItem) => {
+      if (OrderData.order._id !== orderItem) {
+        orderDeliveryCode(orderItem, data.delivery_code);
+      }
+    });
+  }
+
   return (
     <section className={styles["delivery"]}>
       {uploading && <Preloader />}
@@ -2064,6 +2083,16 @@ const Delivery = () => {
               : "Сохранить CDEK"}
           </button>
         )}
+        {OrderData.order.combinedOrder.length > 0 &&
+          OrderData.order.status !== "Завершён" && (
+            <button
+              onClick={openCombinedCDEKPopup}
+              className={styles["delivery__submit-button"]}
+              type="button"
+            >
+              CDEK ко всем закзам
+            </button>
+          )}
         {OrderData.order.status === "Закуплен" &&
           (UserData.userData.position === "Работник склада" ||
             UserData.userData.position === "Администратор" ||
@@ -2160,6 +2189,12 @@ const Delivery = () => {
         } видна пользователю`}
         onSubmit={handlesIsReceiptImagesChange}
         closeSubmitPopup={closeSubmitIsReceiptImagesPopup}
+      />
+      <SubmitPopup
+        isSubmitPopup={isCombinedCDEKPopup}
+        submitText={`Изменить трек-номер CDEK ${data.delivery_code} всем объединённым заказам`}
+        onSubmit={handleChangeCombinedCDEK}
+        closeSubmitPopup={closeCombinedCDEKPopup}
       />
       <ChangeAddress isWidjet={isWidjet} closeWidjet={closeWidjet} />
       <ImagePopup
