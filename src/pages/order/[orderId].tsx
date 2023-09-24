@@ -41,6 +41,15 @@ const Page: NextPage<ICurrentOrderProps> = ({ currentOrder, mergedData }) => {
         <meta name="next-head-count" content="5"></meta>
       </Head>
       <Order currentOrder={currentOrder} mergedData={mergedData} />
+      <style>
+        {
+          `
+            html {
+              background-color: #1B0F22;
+            }
+          `
+        }
+      </style>
     </>
   );
 };

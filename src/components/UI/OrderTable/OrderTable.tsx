@@ -19,6 +19,7 @@ import { useRouter } from "next/router";
 import UserData from "../../../store/user";
 import PaymentsData from "../../../store/payments";
 import { observer } from "mobx-react-lite";
+import { BASE_URL_FRONT } from "../../../utils/constants";
 
 const dayjs = require("dayjs");
 
@@ -59,6 +60,8 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
   const [filterPurchased, setFilterPurchased] = useState("");
   const [filterPayment, setFilterPayment] = useState("");
   const [filterReorder, setFilterReorder] = useState("");
+
+  const [isCopyLink, setIsCopyLink] = useState(false);
 
   const [inStockInRussiaOrders, setInStockInRussiaOrders] = useState<
     Array<IOrder>
@@ -310,6 +313,16 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
     sessionStorage.setItem("orderСhapter", "Order");
   }
 
+  function handleCopyLinkClick() {
+    setIsCopyLink(!isCopyLink)
+  }
+
+  function handleCopyLink(id: string) {
+    navigator.clipboard.writeText(
+      `${BASE_URL_FRONT}/order/${id}`
+    );
+  }
+
   return (
     <>
       <div className={styles["orders-table__container"]}>
@@ -402,6 +415,16 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
                         className={styles["orders-table__delete-item"]}
                         onClick={() =>
                           openSubmitPopup(orderItem.orderId, orderItem._id)
+                        }
+                      >
+                        ✓
+                      </button>
+                    )}
+                    {status === "Недавно прибывшие" && isCopyLink && (
+                      <button
+                        className={styles["orders-table__delete-item"]}
+                        onClick={() =>
+                          handleCopyLink(orderItem._id)
                         }
                       >
                         ✓
@@ -560,6 +583,11 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
             {">"}
           </button>
         </div>
+        {status === "Недавно прибывшие" && (
+          <button className={styles["orders-table__poizon-code-filter"]} onClick={handleCopyLinkClick}>
+            {!isCopyLink ? "Копировать" : "Закрыть"}
+          </button>
+        )}
         {status === "Черновик" && (
           <button
             className={styles["delete-draft-button"]}
