@@ -21,6 +21,7 @@ export interface IOrder {
   stockman: string;
   createdAt: Date;
   overudeAfter: Date;
+  payBeforeSplit: Date;
   paidAt: Date;
   buyAt: Date | string;
   inChinaStockAt: Date | string;
@@ -31,7 +32,15 @@ export interface IOrder {
   status: string;
   link: string;
   payLink: string;
+  payLinkSplit: string;
   paymentUUID: string;
+  paymentUUIDSplit: string;
+  payLinkSplitSecond: string;
+  paymentUUIDSplitSecond: string;
+  isSplitPaid: boolean;
+  isSplitPaidSecond: boolean;
+  paidAtSplit: Date;
+  paidAtSplitSecond: Date;
   category: string;
   subcategory: string;
   brand: string;

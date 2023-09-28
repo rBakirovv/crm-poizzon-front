@@ -22,6 +22,7 @@ dayjs.tz.setDefault("Europe/Moscow");
 const Search = () => {
   const [data, setData] = useState({
     search: "",
+    current_page: 0,
   });
 
   const [filteredValue, setFilteredValue] = useState("");
@@ -74,7 +75,7 @@ const Search = () => {
         OrderData.setOrdersTableLength(orders.total);
       });
       setCurrentPage(1);
-    }, 300);
+    }, 500);
 
     return () => {
       clearTimeout(Debounce);
@@ -96,7 +97,7 @@ const Search = () => {
     }
 
     if (target.name === "current_page") {
-      debouncePaste(parseInt(target.value));
+      handleChangePage(parseInt(target.value))
     }
   }
 
@@ -225,22 +226,14 @@ const Search = () => {
   }
 
   function handleChangePage(page: number) {
-    setCurrentPage(page);
     searchOrder(
       page - 1,
       parseInt(data.search) ? parseInt(data.search) : data.search
     ).then((orders) => {
       setSearchedOrders(orders.orders);
-      OrderData.setOrdersTableLength(orders.total);
     });
+    setCurrentPage(page);
   }
-
-  const debouncePaste = useCallback(
-    debounce((value: number) => {
-      handleChangePage(value);
-    }, 100),
-    []
-  );
 
   function resetOrderСhapter() {
     sessionStorage.setItem("orderСhapter", "Order");

@@ -7,7 +7,9 @@ import Timer from "../UI/Timer/Timer";
 import styles from "./Order.module.css";
 import UserDataModal from "../UI/UserDataModal/UserDataModal";
 import OverudeOrder from "../UI/OverudeOrder/OverudeOrder";
-import { deliveryAuthorization, getCities } from "../../utils/Order";
+import { getPayment, updatePayment } from "../../utils/Order";
+import { createPayLink } from "../../utils/PaySystem";
+import PreloaderClient from "../UI/PreloaderClient/PreloaderClient";
 
 interface IOrderProps {
   currentOrder: IOrder;
@@ -68,6 +70,10 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
       ) / 1000
     )
   );
+
+  const [isSplit, setIsSplit] = useState(false);
+
+  const [isPreload, setIsPreload] = useState(false);
 
   const priceRub = Math.ceil(
     parseFloat(currentOrder.priceCNY) * parseFloat(currentOrder.currentRate)
@@ -145,6 +151,130 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
     } else {
       router.push(`pay/${currentOrder._id}`);
     }
+  }
+
+  function handleIsSplitToggle() {
+    setIsSplit(!isSplit);
+  }
+
+  function payLinkRedirect() {
+    setIsPreload(true);
+
+    getPayment(currentOrder.paymentUUID).then((paymentData) => {
+      if (paymentData.data.attributes.payment_status === "cancelled") {
+        createPayLink(
+          currentOrder.orderId.toString(),
+          totalPrice,
+          `${BASE_URL_FRONT}/order/${currentOrder._id}`,
+          `${BASE_URL}/pay/link/${currentOrder._id}`
+        )
+          .then((payment) => {
+            if (payment.data.id) {
+              updatePayment(
+                currentOrder._id,
+                payment.data.attributes.url,
+                payment.data.attributes.uuid,
+                currentOrder.payLinkSplit,
+                currentOrder.paymentUUIDSplit,
+                currentOrder.payLinkSplitSecond,
+                currentOrder.paymentUUIDSplitSecond
+              )
+                .then(() => {
+                  setIsPreload(false);
+                  router.replace(payment.data.attributes.url);
+                })
+                .catch(() => {
+                  setIsPreload(false);
+                });
+            }
+          })
+          .catch(() => {
+            setIsPreload(false);
+          });
+      } else {
+        router.replace(currentOrder.payLink);
+      }
+    });
+  }
+
+  function payLinkSplitRedirect() {
+    setIsPreload(true);
+
+    getPayment(currentOrder.paymentUUIDSplit).then((paymentData) => {
+      if (paymentData.data.attributes.payment_status === "cancelled") {
+        createPayLink(
+          currentOrder.orderId.toString(),
+          totalPrice,
+          `${BASE_URL_FRONT}/order/${currentOrder._id}`,
+          `${BASE_URL}/pay/link/${currentOrder._id}`
+        )
+          .then((payment) => {
+            if (payment.data.id) {
+              updatePayment(
+                currentOrder._id,
+                currentOrder.payLink,
+                currentOrder.paymentUUID,
+                payment.data.attributes.url,
+                payment.data.attributes.uuid,
+                currentOrder.payLinkSplitSecond,
+                currentOrder.paymentUUIDSplitSecond
+              )
+                .then(() => {
+                  setIsPreload(false);
+                  router.replace(payment.data.attributes.url);
+                })
+                .catch(() => {
+                  setIsPreload(false);
+                });
+            }
+          })
+          .catch(() => {
+            setIsPreload(false);
+          });
+      } else {
+        router.replace(currentOrder.payLinkSplit);
+      }
+    });
+  }
+
+  function payLinkSplitSecondRedirect() {
+    setIsPreload(true);
+
+    getPayment(currentOrder.paymentUUIDSplitSecond).then((paymentData) => {
+      if (paymentData.data.attributes.payment_status === "cancelled") {
+        createPayLink(
+          currentOrder.orderId.toString(),
+          totalPrice,
+          `${BASE_URL_FRONT}/order/${currentOrder._id}`,
+          `${BASE_URL}/pay/link/${currentOrder._id}`
+        )
+          .then((payment) => {
+            if (payment.data.id) {
+              updatePayment(
+                currentOrder._id,
+                currentOrder.payLink,
+                currentOrder.paymentUUID,
+                currentOrder.payLinkSplit,
+                currentOrder.paymentUUIDSplit,
+                payment.data.attributes.url,
+                payment.data.attributes.uuid
+              )
+                .then(() => {
+                  setIsPreload(false);
+                  router.replace(payment.data.attributes.url);
+                })
+                .catch(() => {
+                  setIsPreload(false);
+                });
+            }
+          })
+          .catch(() => {
+            setIsPreload(false);
+          });
+      } else {
+        router.replace(currentOrder.payLinkSplitSecond);
+      }
+    });
   }
 
   return (
@@ -253,7 +383,12 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
         </div>
         <div className={styles["order__content-container"]}>
           <h2
-            className={`${styles["order__title"]} ${styles["order__price-title"]}`}
+            className={`${styles["order__title"]} ${
+              styles["order__price-title"]
+            } ${
+              (isSplit || currentOrder.payment === "Сплит -") &&
+              styles["order__price-title_disabled"]
+            }`}
           >
             {totalPrice} ₽
           </h2>
@@ -430,6 +565,51 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
               Адрес доставки: <br /> {currentOrder.deliveryAddress}
             </div>
           )}
+          {(currentOrder.payment === "Перейти по ссылке -" ||
+            currentOrder.payment === "Сплит -") && (
+            <div className={styles["order__split-container"]}>
+              <div className={styles["checkbox__container"]}>
+                <input
+                  className={styles["checkbox__button"]}
+                  type="checkbox"
+                  disabled={currentOrder.status !== "Черновик" || timeLeft <= 0}
+                  checked={currentOrder.payment === "Сплит -" ? true : isSplit}
+                  onChange={handleIsSplitToggle}
+                />
+                <label className={styles["checkbox__title"]}>
+                  <strong>Оплатить в сплит</strong>
+                </label>
+              </div>
+              <div className={styles["order__split-price-container"]}>
+                <div>
+                  <span className={styles["order__split-price-title"]}>
+                    Сейчас
+                  </span>
+                  <p
+                    className={`${styles["order__split-price"]} ${
+                      (isSplit || currentOrder.payment === "Сплит -") &&
+                      styles["order__split-price_active"]
+                    }`}
+                  >
+                    {Math.ceil(totalPrice / 2)} ₽
+                  </p>
+                </div>
+                <div>
+                  <span className={styles["order__split-price-title"]}>
+                    Через 3 недели
+                  </span>
+                  <p
+                    className={`${styles["order__split-price"]} ${
+                      (isSplit || currentOrder.payment === "Сплит -") &&
+                      styles["order__split-price_active"]
+                    }`}
+                  >
+                    {Math.ceil(totalPrice / 2)} ₽
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
           <ul className={styles["order__status-bar-container"]}>
             {currentOrder.payment !== "Перейти по ссылке -" && (
               <li
@@ -457,15 +637,41 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
               }`}
             >
               Оплачен{" "}
-              {currentOrder.status !== "Черновик" &&
-                currentOrder.status !== "Проверка оплаты" && (
-                  <span>
-                    {currentOrder.paidAt &&
-                      dayjs
-                        .tz(new Date(currentOrder.paidAt!))
-                        .format("DD MMM.")}
-                  </span>
-                )}
+              <div className={styles["order__status-bar-dates"]}>
+                {currentOrder.status !== "Черновик" &&
+                  currentOrder.status !== "Проверка оплаты" && (
+                    <span>
+                      {currentOrder.paidAt &&
+                        dayjs
+                          .tz(new Date(currentOrder.paidAt!))
+                          .format("DD MMM.")}
+                    </span>
+                  )}
+                {currentOrder.status !== "Черновик" &&
+                  currentOrder.status !== "Проверка оплаты" &&
+                  currentOrder.payment === "Сплит -" &&
+                  currentOrder.isSplitPaid && (
+                    <span>
+                      Первая часть:{" "}
+                      {currentOrder.paidAtSplit &&
+                        dayjs
+                          .tz(new Date(currentOrder.paidAtSplit!))
+                          .format("DD MMM.")}
+                    </span>
+                  )}
+                {currentOrder.status !== "Черновик" &&
+                  currentOrder.status !== "Проверка оплаты" &&
+                  currentOrder.payment === "Сплит -" &&
+                  currentOrder.isSplitPaidSecond && (
+                    <span>
+                      Вторая часть:{" "}
+                      {currentOrder.paidAtSplitSecond &&
+                        dayjs
+                          .tz(new Date(currentOrder.paidAtSplitSecond!))
+                          .format("DD MMM.")}
+                    </span>
+                  )}
+              </div>
             </li>
             <li
               className={`${styles["order__status-bar-item"]} ${
@@ -599,7 +805,8 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
             </li>
           </ul>
           {currentOrder.status === "Черновик" &&
-            currentOrder.payment !== "Перейти по ссылке -" && (
+            currentOrder.payment !== "Перейти по ссылке -" &&
+            currentOrder.payment !== "Сплит -" && (
               <button
                 className={styles["order__pay-button"]}
                 onClick={handleTimeLeft}
@@ -620,12 +827,11 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
             )}
           {currentOrder.status === "Черновик" &&
             currentOrder.payment === "Перейти по ссылке -" &&
+            !isSplit &&
             timeLeft >= 0 && (
-              <a
+              <button
                 className={`${styles["order__pay-button"]}`}
-                href={`${currentOrder.payLink}`}
-                target="_blank"
-                rel="noreferrer"
+                onClick={payLinkRedirect}
               >
                 {isBrowser && (
                   <Timer
@@ -639,10 +845,11 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                   Оплатить
                 </span>
                 <span>{totalPrice} ₽</span>
-              </a>
+              </button>
             )}
           {currentOrder.status === "Черновик" &&
             currentOrder.payment === "Перейти по ссылке -" &&
+            !isSplit &&
             timeLeft <= 0 && (
               <button
                 className={styles["order__pay-button"]}
@@ -656,10 +863,67 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                     setTimeLeft={setTimeLeft}
                   />
                 )}
+                <span>
+                  {currentOrder.payment === "Перейти по ссылке -"
+                    ? totalPrice
+                    : Math.ceil(totalPrice / 2)}{" "}
+                  ₽
+                </span>
+                <span>{totalPrice} ₽</span>
+              </button>
+            )}
+          {currentOrder.status === "Черновик" &&
+            (currentOrder.payment === "Сплит -" || isSplit) &&
+            !currentOrder.isSplitPaid &&
+            timeLeft > 0 && (
+              <button
+                className={`${styles["order__pay-button"]}`}
+                onClick={payLinkSplitRedirect}
+              >
+                {isBrowser && (
+                  <Timer
+                    createdAt={currentOrder.createdAt}
+                    dedline={currentOrder.overudeAfter}
+                    timeLeft={timeLeft}
+                    setTimeLeft={setTimeLeft}
+                  />
+                )}
                 <span className={styles["order__pay-button-span"]}>
                   Оплатить
                 </span>
+                <span>{Math.ceil(totalPrice / 2)} ₽</span>
+              </button>
+            )}
+          {currentOrder.status === "Черновик" &&
+            (currentOrder.payment === "Сплит -" || isSplit) &&
+            timeLeft <= 0 && (
+              <button
+                className={styles["order__pay-button"]}
+                onClick={handleTimeLeft}
+              >
+                {isBrowser && (
+                  <Timer
+                    createdAt={currentOrder.createdAt}
+                    dedline={currentOrder.overudeAfter}
+                    timeLeft={timeLeft}
+                    setTimeLeft={setTimeLeft}
+                  />
+                )}
+                <span>{Math.ceil(totalPrice / 2)} ₽</span>
                 <span>{totalPrice} ₽</span>
+              </button>
+            )}
+          {currentOrder.status !== "Черновик" &&
+            currentOrder.payment === "Сплит -" &&
+            !currentOrder.isSplitPaidSecond && (
+              <button
+                className={`${styles["order__pay-button"]}`}
+                onClick={payLinkSplitSecondRedirect}
+              >
+                <span className={styles["order__pay-button-span"]}>
+                  Оплатить вторую часть
+                </span>
+                <span>{Math.ceil(totalPrice / 2)} ₽</span>
               </button>
             )}
           {mergedData.length > 0 && (
@@ -737,6 +1001,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
             combinedOrder={currentOrder.combinedOrder}
           />
         )}
+      {isPreload && <PreloaderClient />}
     </section>
   );
 };

@@ -144,6 +144,49 @@ export const createOrder = (
   }).then(checkResponse);
 };
 
+export const createOrderSplit = (
+  creater: string,
+  link: string,
+  category: string,
+  subcategory: string,
+  brand: string,
+  model: string,
+  size: string,
+  orderImages: Array<IOrderImages>,
+  payment: string,
+  currentRate: string,
+  priceCNY: string,
+  priceDeliveryChina: string,
+  priceDeliveryRussia: string,
+  commission: string,
+  promoCodePercent: number,
+  comment: string
+) => {
+  return fetch(`${BASE_URL}/orders/create-split`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      creater: creater,
+      link: link,
+      category: category,
+      subcategory: subcategory,
+      brand: brand,
+      model: model,
+      size: size,
+      orderImages: orderImages,
+      payment: payment,
+      currentRate: currentRate,
+      priceCNY: priceCNY,
+      priceDeliveryChina: priceDeliveryChina,
+      priceDeliveryRussia: priceDeliveryRussia,
+      commission: commission,
+      promoCodePercent: promoCodePercent,
+      comment: comment,
+    }),
+  }).then(checkResponse);
+};
+
 export const deleteOrder = (id: string) => {
   return fetch(`${BASE_URL}/orders/${id}`, {
     credentials: "include",
@@ -157,6 +200,10 @@ export const updateOrderDraft = (
   link: string,
   payLink: string,
   paymentUUID: string,
+  payLinkSplit: string,
+  paymentUUIDSplit: string,
+  payLinkSplitSecond: string,
+  paymentUUIDSplitSecond: string,
   category: string,
   subcategory: string,
   brand: string,
@@ -178,6 +225,10 @@ export const updateOrderDraft = (
       link: link,
       payLink: payLink,
       paymentUUID: paymentUUID,
+      payLinkSplit: payLinkSplit,
+      paymentUUIDSplit: paymentUUIDSplit,
+      payLinkSplitSecond: payLinkSplitSecond,
+      paymentUUIDSplitSecond: paymentUUIDSplitSecond,
       category: category,
       subcategory: subcategory,
       brand: brand,
@@ -315,6 +366,22 @@ export const uploadImages = (files: FormData, folder: string) => {
 
 export const acceptPayment = (id: string) => {
   return fetch(`${BASE_URL}/order/order-accept-pay/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const acceptPaymentSplit = (id: string) => {
+  return fetch(`${BASE_URL}/order/order-accept-pay-split/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const acceptPaymentSplitSecond = (id: string) => {
+  return fetch(`${BASE_URL}/order/order-accept-pay-split-second/${id}`, {
     credentials: "include",
     method: "PATCH",
     headers: HEADERS,
@@ -880,6 +947,38 @@ export const setIsReceiptImages = (id: string, isReceiptImages: boolean) => {
     headers: HEADERS,
     body: JSON.stringify({
       isReceiptImages: isReceiptImages,
+    }),
+  }).then(checkResponse);
+};
+
+export const getPayment = (id: string) => {
+  return fetch(`${BASE_URL}/pay/link-info/${id}`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const updatePayment = (
+  id: string,
+  payLink: string,
+  paymentUUID: string,
+  payLinkSplit: string,
+  paymentUUIDSplit: string,
+  payLinkSplitSecond: string,
+  paymentUUIDSplitSecond: string
+) => {
+  return fetch(`${BASE_URL}/order/update-payment/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      payLink: payLink,
+      paymentUUID: paymentUUID,
+      payLinkSplit: payLinkSplit,
+      paymentUUIDSplit: paymentUUIDSplit,
+      payLinkSplitSecond: payLinkSplitSecond,
+      paymentUUIDSplitSecond: paymentUUIDSplitSecond,
     }),
   }).then(checkResponse);
 };

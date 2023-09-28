@@ -11,6 +11,7 @@ import Dropzone from "react-dropzone";
 import { BASE_URL, BASE_URL_FRONT, MAX_SIZE } from "../../utils/constants";
 import {
   createOrder,
+  createOrderSplit,
   deleteDraftImage,
   updateOrderDraft,
   uploadImages,
@@ -259,87 +260,228 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
   }
 
   function handleSubmitCreate() {
-    createOrder(
-      UserData.userData.name,
-      data.link,
-      data.category,
-      data.subcategory,
-      data.brand,
-      data.model,
-      data.size,
-      images,
-      data.payment,
-      RateData.rate.rate,
-      data.priceCNY,
-      data.priceDeliveryChina,
-      data.priceDeliveryRussia,
-      data.commission,
-      data.promoCodePercent,
-      data.comment
-    )
-      .then((order) => {
-        OrderData.setOrder(order);
-
-        return order;
-      })
-      .then((order) => {
-        if (data.payment === "Перейти по ссылке -") {
+    if (data.payment === "Сплит -" || data.payment === "Перейти по ссылке -") {
+      createOrderSplit(
+        UserData.userData.name,
+        data.link,
+        data.category,
+        data.subcategory,
+        data.brand,
+        data.model,
+        data.size,
+        images,
+        data.payment,
+        RateData.rate.rate,
+        data.priceCNY,
+        data.priceDeliveryChina,
+        data.priceDeliveryRussia,
+        data.commission,
+        data.promoCodePercent,
+        data.comment
+      )
+        .then((order) => {
+          OrderData.setOrder(order);
+          return order;
+        })
+        .then((order) => {
           createPayLink(
             order.orderId.toString(),
             totalPrice,
             `${BASE_URL_FRONT}/order/${order._id}`,
             `${BASE_URL}/pay/link/${order._id}`
-          ).then((payment) => {
-            if (payment.data.id) {
-              updateOrderDraft(
-                order._id,
-                order.link,
-                payment.data.attributes.url,
-                payment.data.attributes.uuid,
-                order.category,
-                order.subcategory,
-                order.brand,
-                order.model,
-                order.size,
-                order.payment,
-                order.priceCNY,
-                order.priceDeliveryChina,
-                order.priceDeliveryRussia,
-                order.commission,
-                order.promoCodePercent,
-                order.comment
-              ).then((order) => {
-                OrderData.setOrder(order);
-              });
-            }
-          });
-        }
-      })
-      .then(() => {
-        setData({
-          link: "",
+          )
+            .then((payment) => {
+              if (payment.data.id) {
+                updateOrderDraft(
+                  order._id,
+                  order.link,
+                  payment.data.attributes.url,
+                  payment.data.attributes.uuid,
+                  "",
+                  "",
+                  "",
+                  "",
+                  order.category,
+                  order.subcategory,
+                  order.brand,
+                  order.model,
+                  order.size,
+                  order.payment,
+                  order.priceCNY,
+                  order.priceDeliveryChina,
+                  order.priceDeliveryRussia,
+                  order.commission,
+                  order.promoCodePercent,
+                  order.comment
+                )
+                  .then((orderUpdated) => {
+                    createPayLink(
+                      order.orderId.toString(),
+                      Math.ceil(totalPrice / 2),
+                      `${BASE_URL_FRONT}/order/${order._id}`,
+                      `${BASE_URL}/pay/link/${order._id}`
+                    )
+                      .then((splitPayment) => {
+                        if (splitPayment.data.id) {
+                          updateOrderDraft(
+                            order._id,
+                            order.link,
+                            orderUpdated.payLink,
+                            orderUpdated.paymentUUID,
+                            splitPayment.data.attributes.url,
+                            splitPayment.data.attributes.uuid,
+                            "",
+                            "",
+                            order.category,
+                            order.subcategory,
+                            order.brand,
+                            order.model,
+                            order.size,
+                            order.payment,
+                            order.priceCNY,
+                            order.priceDeliveryChina,
+                            order.priceDeliveryRussia,
+                            order.commission,
+                            order.promoCodePercent,
+                            order.comment
+                          )
+                            .then((orderUpdatedSecond) => {
+                              createPayLink(
+                                order.orderId.toString(),
+                                Math.ceil(totalPrice / 2),
+                                `${BASE_URL_FRONT}/order/${order._id}`,
+                                `${BASE_URL}/pay/link/${order._id}`
+                              )
+                                .then((splitPaymentSecond) => {
+                                  if (splitPaymentSecond.data.id) {
+                                    updateOrderDraft(
+                                      order._id,
+                                      order.link,
+                                      orderUpdated.payLink,
+                                      orderUpdated.paymentUUID,
+                                      orderUpdatedSecond.payLinkSplit,
+                                      orderUpdatedSecond.paymentUUIDSplit,
+                                      splitPaymentSecond.data.attributes.url,
+                                      splitPaymentSecond.data.attributes.uuid,
+                                      order.category,
+                                      order.subcategory,
+                                      order.brand,
+                                      order.model,
+                                      order.size,
+                                      order.payment,
+                                      order.priceCNY,
+                                      order.priceDeliveryChina,
+                                      order.priceDeliveryRussia,
+                                      order.commission,
+                                      order.promoCodePercent,
+                                      order.comment
+                                    )
+                                      .then(() => {
+                                        setData({
+                                          link: "",
+                                          category: "",
+                                          subcategory: "",
+                                          brand: "",
+                                          model: "",
+                                          size: "",
+                                          payment: "",
+                                          currentRate: RateData.rate.rate,
+                                          priceCNY: "0",
+                                          priceDeliveryChina: "0",
+                                          priceDeliveryRussia: "0",
+                                          commission: "0",
+                                          promoCodePercent: 0,
+                                          comment: "",
+                                        });
 
-          category: "",
-          subcategory: "",
-          brand: "",
-          model: "",
-          size: "",
-          payment: "",
-          currentRate: RateData.rate.rate,
-          priceCNY: "0",
-          priceDeliveryChina: "0",
-          priceDeliveryRussia: "0",
-          commission: "0",
-          promoCodePercent: 0,
-          comment: "",
+                                        setImages([]);
+                                        setUploading(false);
+                                      })
+                                      .then(() => {
+                                        router.replace(
+                                          `/order/change/${OrderData.order._id}`
+                                        );
+                                      })
+                                      .catch((err) => {
+                                        console.log(err);
+                                      });
+                                  }
+                                })
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                        }
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
         });
+    } else {
+      createOrder(
+        UserData.userData.name,
+        data.link,
+        data.category,
+        data.subcategory,
+        data.brand,
+        data.model,
+        data.size,
+        images,
+        data.payment,
+        RateData.rate.rate,
+        data.priceCNY,
+        data.priceDeliveryChina,
+        data.priceDeliveryRussia,
+        data.commission,
+        data.promoCodePercent,
+        data.comment
+      )
+        .then((order) => {
+          OrderData.setOrder(order);
+        })
+        .then(() => {
+          setData({
+            link: "",
+            category: "",
+            subcategory: "",
+            brand: "",
+            model: "",
+            size: "",
+            payment: "",
+            currentRate: RateData.rate.rate,
+            priceCNY: "0",
+            priceDeliveryChina: "0",
+            priceDeliveryRussia: "0",
+            commission: "0",
+            promoCodePercent: 0,
+            comment: "",
+          });
 
-        setImages([]);
-        setUploading(false);
-      })
-      .then(() => {
-        router.replace(`/order/change/${OrderData.order._id}`);
-      });
+          setImages([]);
+          setUploading(false);
+        })
+        .then(() => {
+          router.replace(`/order/change/${OrderData.order._id}`);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 
   useEffect(() => {

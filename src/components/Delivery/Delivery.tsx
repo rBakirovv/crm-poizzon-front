@@ -1268,6 +1268,7 @@ const Delivery = () => {
               stockman: OrderData.order.stockman,
               createdAt: OrderData.order.createdAt,
               overudeAfter: OrderData.order.overudeAfter,
+              payBeforeSplit: OrderData.order.payBeforeSplit,
               paidAt: OrderData.order.paidAt,
               buyAt: OrderData.order.buyAt,
               inChinaStockAt: OrderData.order.inChinaStockAt,
@@ -1277,7 +1278,15 @@ const Delivery = () => {
               status: OrderData.order.status,
               link: OrderData.order.link,
               payLink: OrderData.order.payLink,
+              payLinkSplit: OrderData.order.payLinkSplit,
               paymentUUID: OrderData.order.paymentUUID,
+              paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+              payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+              paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+              isSplitPaid: OrderData.order.isSplitPaid,
+              isSplitPaidSecond: OrderData.order.isSplitPaidSecond,
+              paidAtSplit: OrderData.order.paidAtSplit,
+              paidAtSplitSecond: OrderData.order.paidAtSplitSecond,
               category: OrderData.order.category,
               subcategory: OrderData.order.subcategory,
               brand: OrderData.order.brand,
@@ -1353,6 +1362,7 @@ const Delivery = () => {
                   stockman: OrderData.order.stockman,
                   createdAt: OrderData.order.createdAt,
                   overudeAfter: OrderData.order.overudeAfter,
+                  payBeforeSplit: OrderData.order.payBeforeSplit,
                   paidAt: OrderData.order.paidAt,
                   buyAt: OrderData.order.buyAt,
                   inChinaStockAt: OrderData.order.inChinaStockAt,
@@ -1362,7 +1372,15 @@ const Delivery = () => {
                   status: OrderData.order.status,
                   link: OrderData.order.link,
                   payLink: OrderData.order.payLink,
+                  payLinkSplit: OrderData.order.payLinkSplit,
                   paymentUUID: OrderData.order.paymentUUID,
+                  paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+                  payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+                  paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+                  isSplitPaid: OrderData.order.isSplitPaid,
+                  isSplitPaidSecond: OrderData.order.isSplitPaidSecond,
+                  paidAtSplit: OrderData.order.paidAtSplit,
+                  paidAtSplitSecond: OrderData.order.paidAtSplitSecond,
                   category: OrderData.order.category,
                   subcategory: OrderData.order.subcategory,
                   brand: OrderData.order.brand,
@@ -1432,6 +1450,7 @@ const Delivery = () => {
           stockman: OrderData.order.stockman,
           createdAt: OrderData.order.createdAt,
           overudeAfter: OrderData.order.overudeAfter,
+          payBeforeSplit: OrderData.order.payBeforeSplit,
           paidAt: OrderData.order.paidAt,
           buyAt: OrderData.order.buyAt,
           inChinaStockAt: OrderData.order.inChinaStockAt,
@@ -1441,7 +1460,15 @@ const Delivery = () => {
           status: OrderData.order.status,
           link: OrderData.order.link,
           payLink: OrderData.order.payLink,
+          payLinkSplit: OrderData.order.payLinkSplit,
           paymentUUID: OrderData.order.paymentUUID,
+          paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+          payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+          paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+          isSplitPaid: OrderData.order.isSplitPaid,
+          isSplitPaidSecond: OrderData.order.isSplitPaidSecond,
+          paidAtSplit: OrderData.order.paidAtSplit,
+          paidAtSplitSecond: OrderData.order.paidAtSplitSecond,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -1526,10 +1553,33 @@ const Delivery = () => {
 
   return (
     <section className={styles["delivery"]}>
-      {uploading && <Preloader />}
+      {isPreloader && <Preloader />}
       <div className={styles["delivery__container"]}>
         {OrderData.order.deliveryAddress !== "" &&
-          OrderData.order.deliveryEntity !== "" && (
+          OrderData.order.deliveryEntity !== "" &&
+          OrderData.order.payment !== "Сплит -" && (
+            <button
+              onClick={openPDFBarcodeHandler}
+              disabled={isPreloader}
+              className={styles["delivery-receipt"]}
+            >
+              Получить штрихкод
+              <svg
+                width="18px"
+                height="18px"
+                viewBox="0 0 48 48"
+                focusable="false"
+                fill="black"
+              >
+                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+              </svg>
+            </button>
+          )}
+        {OrderData.order.deliveryAddress !== "" &&
+          OrderData.order.deliveryEntity !== "" &&
+          OrderData.order.payment === "Сплит -" &&
+          OrderData.order.isSplitPaid && OrderData.order.isSplitPaidSecond && (
             <button
               onClick={openPDFBarcodeHandler}
               disabled={isPreloader}

@@ -46,6 +46,10 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
     link: OrderData.order.link,
     payLink: OrderData.order.payLink,
     paymentUUID: OrderData.order.paymentUUID,
+    payLinkSplit: OrderData.order.payLinkSplit,
+    paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+    payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+    paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
     category: OrderData.order.category,
     subcategory: OrderData.order.subcategory,
     brand: OrderData.order.brand,
@@ -80,8 +84,6 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
   const [isCopy, setIsCopy] = useState(false);
   const [isCopyNumberLink, setIsCopyNumberLink] = useState(false);
   const [isCopySizePhoto, setIsCopySizePhoto] = useState(false);
-
-  //const [combinedOrders, setCombinedOrders] = useState([]);
 
   const priceRub = Math.ceil(
     parseFloat(OrderData.order.priceCNY) *
@@ -129,7 +131,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       _id: OrderData.order._id,
       link: OrderData.order.link,
       payLink: OrderData.order.payLink,
+      payLinkSplit: OrderData.order.payLinkSplit,
       paymentUUID: OrderData.order.paymentUUID,
+      paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+      payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+      paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
       category: OrderData.order.category,
       subcategory: OrderData.order.subcategory,
       brand: OrderData.order.brand,
@@ -265,6 +271,32 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       ...data,
       [name]: value,
     });
+
+    if (target.value === "Сплит -") {
+      setData({
+        ...data,
+        payment: "Сплит -",
+        payLink: OrderData.order.payLink,
+        payLinkSplit: OrderData.order.payLinkSplit,
+        paymentUUID: OrderData.order.paymentUUID,
+        paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+        payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+        paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+      });
+    }
+
+    if (target.value === "Перейти по ссылке -") {
+      setData({
+        ...data,
+        payment: "Перейти по ссылке -",
+        payLink: OrderData.order.payLink,
+        payLinkSplit: OrderData.order.payLinkSplit,
+        paymentUUID: OrderData.order.paymentUUID,
+        paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+        payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+        paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+      });
+    }
 
     if (target.value === "Кроссовки") {
       setData({
@@ -403,6 +435,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           stockman: OrderData.order.stockman,
           createdAt: OrderData.order.createdAt,
           overudeAfter: OrderData.order.overudeAfter,
+          payBeforeSplit: OrderData.order.payBeforeSplit,
           paidAt: OrderData.order.paidAt,
           buyAt: OrderData.order.buyAt,
           inChinaStockAt: OrderData.order.inChinaStockAt,
@@ -411,8 +444,16 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           combinedOrder: OrderData.order.combinedOrder,
           status: OrderData.order.status,
           link: OrderData.order.link,
+          payLink: OrderData.order.payLink,
+          payLinkSplit: OrderData.order.payLinkSplit,
           paymentUUID: OrderData.order.paymentUUID,
-          payLink: data.payLink,
+          paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+          payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+          paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+          isSplitPaid: OrderData.order.isSplitPaid,
+          isSplitPaidSecond: OrderData.order.isSplitPaidSecond,
+          paidAtSplit: OrderData.order.paidAtSplit,
+          paidAtSplitSecond: OrderData.order.paidAtSplitSecond,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -481,6 +522,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   stockman: OrderData.order.stockman,
                   createdAt: OrderData.order.createdAt,
                   overudeAfter: OrderData.order.overudeAfter,
+                  payBeforeSplit: OrderData.order.payBeforeSplit,
                   paidAt: OrderData.order.paidAt,
                   buyAt: OrderData.order.buyAt,
                   inChinaStockAt: OrderData.order.inChinaStockAt,
@@ -489,8 +531,17 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   combinedOrder: OrderData.order.combinedOrder,
                   status: OrderData.order.status,
                   link: OrderData.order.link,
+                  payLink: OrderData.order.payLink,
+                  payLinkSplit: OrderData.order.payLinkSplit,
                   paymentUUID: OrderData.order.paymentUUID,
-                  payLink: data.payLink,
+                  paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+                  payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+                  paymentUUIDSplitSecond:
+                    OrderData.order.paymentUUIDSplitSecond,
+                  isSplitPaid: OrderData.order.isSplitPaid,
+                  isSplitPaidSecond: OrderData.order.isSplitPaidSecond,
+                  paidAtSplit: OrderData.order.paidAtSplit,
+                  paidAtSplitSecond: OrderData.order.paidAtSplitSecond,
                   category: OrderData.order.category,
                   subcategory: OrderData.order.subcategory,
                   brand: OrderData.order.brand,
@@ -562,6 +613,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           stockman: OrderData.order.stockman,
           createdAt: OrderData.order.createdAt,
           overudeAfter: OrderData.order.overudeAfter,
+          payBeforeSplit: OrderData.order.payBeforeSplit,
           paidAt: OrderData.order.paidAt,
           buyAt: OrderData.order.buyAt,
           inChinaStockAt: OrderData.order.inChinaStockAt,
@@ -570,8 +622,16 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           combinedOrder: OrderData.order.combinedOrder,
           status: OrderData.order.status,
           link: OrderData.order.link,
-          payLink: data.payLink,
+          payLink: OrderData.order.payLink,
+          payLinkSplit: OrderData.order.payLinkSplit,
           paymentUUID: OrderData.order.paymentUUID,
+          paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+          payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+          paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+          isSplitPaid: OrderData.order.isSplitPaid,
+          isSplitPaidSecond: OrderData.order.isSplitPaidSecond,
+          paidAtSplit: OrderData.order.paidAtSplit,
+          paidAtSplitSecond: OrderData.order.paidAtSplitSecond,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -621,6 +681,10 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       OrderData.order.link,
       OrderData.order.payLink,
       OrderData.order.paymentUUID,
+      OrderData.order.payLinkSplit,
+      OrderData.order.paymentUUIDSplit,
+      OrderData.order.payLinkSplitSecond,
+      OrderData.order.paymentUUIDSplitSecond,
       OrderData.order.category,
       OrderData.order.subcategory,
       OrderData.order.brand,
@@ -664,6 +728,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       stockman: OrderData.order.stockman,
       createdAt: OrderData.order.createdAt,
       overudeAfter: OrderData.order.overudeAfter,
+      payBeforeSplit: OrderData.order.payBeforeSplit,
       paidAt: OrderData.order.paidAt,
       buyAt: OrderData.order.buyAt,
       inChinaStockAt: OrderData.order.inChinaStockAt,
@@ -673,7 +738,15 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       status: OrderData.order.status,
       link: data.link,
       payLink: data.payLink,
+      payLinkSplit: data.payLinkSplit,
       paymentUUID: data.paymentUUID,
+      paymentUUIDSplit: data.paymentUUIDSplit,
+      payLinkSplitSecond: data.payLinkSplitSecond,
+      paymentUUIDSplitSecond: data.paymentUUIDSplitSecond,
+      isSplitPaid: OrderData.order.isSplitPaid,
+      isSplitPaidSecond: OrderData.order.isSplitPaidSecond,
+      paidAtSplit: OrderData.order.paidAtSplit,
+      paidAtSplitSecond: OrderData.order.paidAtSplitSecond,
       category: data.category,
       subcategory: data.subcategory,
       brand: data.brand,
@@ -717,7 +790,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           _id: OrderData.order._id,
           link: OrderData.order.link,
           payLink: OrderData.order.payLink,
+          payLinkSplit: OrderData.order.payLinkSplit,
           paymentUUID: OrderData.order.paymentUUID,
+          paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+          payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+          paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -743,7 +820,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           _id: OrderData.order._id,
           link: OrderData.order.link,
           payLink: OrderData.order.payLink,
+          payLinkSplit: OrderData.order.payLinkSplit,
           paymentUUID: OrderData.order.paymentUUID,
+          paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+          payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+          paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -769,7 +850,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           _id: OrderData.order._id,
           link: OrderData.order.link,
           payLink: OrderData.order.payLink,
+          payLinkSplit: OrderData.order.payLinkSplit,
           paymentUUID: OrderData.order.paymentUUID,
+          paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+          payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+          paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -792,7 +877,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           _id: OrderData.order._id,
           link: OrderData.order.link,
           payLink: OrderData.order.payLink,
+          payLinkSplit: OrderData.order.payLinkSplit,
           paymentUUID: OrderData.order.paymentUUID,
+          paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+          payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+          paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
           category: OrderData.order.category,
           subcategory: OrderData.order.subcategory,
           brand: OrderData.order.brand,
@@ -832,6 +921,21 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
             .format("DD-MM-YYYY в HH:mm")}
         </p>
       )}
+      {!OrderData.order.isSplitPaid &&
+        !OrderData.order.isSplitPaidSecond &&
+        Math.ceil(
+          Math.round(
+            new Date(OrderData.order.payBeforeSplit).getTime() -
+              new Date(Date.now()).getTime()
+          ) / 1000
+        ) <= 0 &&
+        OrderData.order.payment === "Сплит -" && (
+          <p>
+            <span className={styles["order-change__status_red"]}>
+              Сплит не погашен
+            </span>
+          </p>
+        )}
       {OrderData.order.comment !== "" && (
         <p>
           Комментарий:{" "}
@@ -1035,7 +1139,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                 Перейти
               </a>
             )}
-            {OrderData.order.payment === "Перейти по ссылке -" &&
+            {(OrderData.order.payment === "Перейти по ссылке -" ||
+              OrderData.order.payment === "Сплит -") &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
                   name="payLink"
@@ -1043,9 +1148,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   value={OrderData.order.payLink}
                   handleChange={handleChange}
                   required={false}
+                  disabled={true}
                 />
               )}
-            {OrderData.order.payment === "Перейти по ссылке -" &&
+            {(OrderData.order.payment === "Перейти по ссылке -" ||
+              OrderData.order.payment === "Сплит -") &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
                   name="paymentUUID"
@@ -1053,6 +1160,51 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   value={OrderData.order.paymentUUID}
                   handleChange={handleChange}
                   required={false}
+                  disabled={true}
+                />
+              )}
+            {OrderData.order.payment === "Сплит -" &&
+              UserData.userData.position !== "Работник склада" && (
+                <TextInput
+                  name="payLinkSplit"
+                  label="Cсылка на оплату (сплит 1/2)"
+                  value={OrderData.order.payLinkSplit}
+                  handleChange={handleChange}
+                  required={false}
+                  disabled={true}
+                />
+              )}
+            {OrderData.order.payment === "Сплит -" &&
+              UserData.userData.position !== "Работник склада" && (
+                <TextInput
+                  name="paymentUUIDSplit"
+                  label="UUID оплаты (сплит 1/2)"
+                  value={OrderData.order.paymentUUIDSplit}
+                  handleChange={handleChange}
+                  required={false}
+                  disabled={true}
+                />
+              )}
+            {OrderData.order.payment === "Сплит -" &&
+              UserData.userData.position !== "Работник склада" && (
+                <TextInput
+                  name="payLinkSplitSecond"
+                  label="Cсылка на оплату (сплит 2/2)"
+                  value={OrderData.order.payLinkSplitSecond}
+                  handleChange={handleChange}
+                  required={false}
+                  disabled={true}
+                />
+              )}
+            {OrderData.order.payment === "Сплит -" &&
+              UserData.userData.position !== "Работник склада" && (
+                <TextInput
+                  name="paymentUUIDSplitSecond"
+                  label="UUID оплаты (сплит 2/2)"
+                  value={OrderData.order.paymentUUIDSplitSecond}
+                  handleChange={handleChange}
+                  required={false}
+                  disabled={true}
                 />
               )}
             <div className={styles["order-change__input-container"]}>
