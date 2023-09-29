@@ -566,7 +566,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
             </div>
           )}
           {(currentOrder.payment === "Перейти по ссылке -" ||
-            currentOrder.payment === "Сплит -") && (
+            currentOrder.payment === "Сплит -") && false && (
             <div className={styles["order__split-container"]}>
               <div className={styles["checkbox__container"]}>
                 <input
