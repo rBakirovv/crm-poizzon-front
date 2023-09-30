@@ -998,12 +998,6 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       )}
       {!OrderData.order.isSplitPaid &&
         !OrderData.order.isSplitPaidSecond &&
-        Math.ceil(
-          Math.round(
-            new Date(OrderData.order.payBeforeSplit).getTime() -
-              new Date(Date.now()).getTime()
-          ) / 1000
-        ) <= 0 &&
         OrderData.order.payment === "Сплит -" &&
         OrderData.order.isSplit && (
           <p>
