@@ -457,7 +457,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
           if (data.payment === "Перейти по ссылке -") {
             createPayLink(
               order.orderId.toString(),
-              Math.ceil(totalPrice / 2),
+              totalPrice,
               `${BASE_URL_FRONT}/order/${order._id}`,
               `${BASE_URL}/pay/link/${order._id}`
             )
