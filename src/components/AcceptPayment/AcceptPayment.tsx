@@ -288,6 +288,7 @@ const AcceptPayment = () => {
       <h4>Cпособ оплаты</h4>
       <p className={styles["accept-payment__text"]}>
         {OrderData.order.payment}
+        {OrderData.order.payment === "Сплит -" && !OrderData.order.isSplit && " полная оплата"}
       </p>
       {OrderData.order.payProofImages.length !== 0 && (
         <>
@@ -332,7 +333,8 @@ const AcceptPayment = () => {
           </>
         )}
       {OrderData.order.status === "Черновик" &&
-        !OrderData.order.isSplitPaid && (
+        !OrderData.order.isSplitPaid &&
+        OrderData.order.payment === "Сплит -" && (
           <>
             <button
               className={styles["accept-payment__resume"]}
@@ -343,7 +345,8 @@ const AcceptPayment = () => {
           </>
         )}
       {OrderData.order.status !== "Черновик" &&
-        !OrderData.order.isSplitPaidSecond && OrderData.order.payment === "Сплит -" && (
+        !OrderData.order.isSplitPaidSecond &&
+        OrderData.order.payment === "Сплит -" && OrderData.order.isSplit && (
           <>
             <button
               className={styles["accept-payment__resume"]}
@@ -374,8 +377,7 @@ const AcceptPayment = () => {
             </button>
           )}
         {OrderData.order.status === "Черновик" &&
-          (OrderData.order.payment === "Перейти по ссылке -" ||
-            OrderData.order.payment === "Сплит -") &&
+          OrderData.order.payment === "Сплит -" &&
           UserData.userData.position === "Создатель" &&
           !OrderData.order.isSplitPaid && (
             <button
@@ -388,7 +390,7 @@ const AcceptPayment = () => {
         {OrderData.order.status !== "Черновик" &&
           OrderData.order.payment === "Сплит -" &&
           UserData.userData.position === "Создатель" &&
-          !OrderData.order.isSplitPaidSecond && (
+          !OrderData.order.isSplitPaidSecond && OrderData.order.isSplit && (
             <button
               className={styles["accept-payment__submit"]}
               onClick={openSubmitAcceptSplitSecondPopup}

@@ -1299,6 +1299,7 @@ const Delivery = () => {
               uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
               uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
               isReceiptImages: OrderData.order.isReceiptImages,
+              isSplit: OrderData.order.isSplit,
               payment: OrderData.order.payment,
               currentRate: OrderData.order.currentRate,
               priceCNY: OrderData.order.priceCNY,
@@ -1376,7 +1377,8 @@ const Delivery = () => {
                   paymentUUID: OrderData.order.paymentUUID,
                   paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
                   payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
-                  paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+                  paymentUUIDSplitSecond:
+                    OrderData.order.paymentUUIDSplitSecond,
                   isSplitPaid: OrderData.order.isSplitPaid,
                   isSplitPaidSecond: OrderData.order.isSplitPaidSecond,
                   paidAtSplit: OrderData.order.paidAtSplit,
@@ -1396,6 +1398,7 @@ const Delivery = () => {
                     OrderData.order.uploadedBuyProofImages,
                   uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
                   isReceiptImages: OrderData.order.isReceiptImages,
+                  isSplit: OrderData.order.isSplit,
                   payment: OrderData.order.payment,
                   currentRate: OrderData.order.currentRate,
                   priceCNY: OrderData.order.priceCNY,
@@ -1483,6 +1486,7 @@ const Delivery = () => {
           uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
           uploadedReceiptImages: "",
           isReceiptImages: OrderData.order.isReceiptImages,
+          isSplit: OrderData.order.isSplit,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
           priceCNY: OrderData.order.priceCNY,
@@ -1579,7 +1583,31 @@ const Delivery = () => {
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" &&
           OrderData.order.payment === "Сплит -" &&
-          OrderData.order.isSplitPaid && OrderData.order.isSplitPaidSecond && (
+          OrderData.order.isSplit &&
+          OrderData.order.isSplitPaid &&
+          OrderData.order.isSplitPaidSecond && (
+            <button
+              onClick={openPDFBarcodeHandler}
+              disabled={isPreloader}
+              className={styles["delivery-receipt"]}
+            >
+              Получить штрихкод
+              <svg
+                width="18px"
+                height="18px"
+                viewBox="0 0 48 48"
+                focusable="false"
+                fill="black"
+              >
+                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+              </svg>
+            </button>
+          )}
+        {OrderData.order.deliveryAddress !== "" &&
+          OrderData.order.deliveryEntity !== "" &&
+          OrderData.order.payment === "Сплит -" &&
+          !OrderData.order.isSplit && (
             <button
               onClick={openPDFBarcodeHandler}
               disabled={isPreloader}

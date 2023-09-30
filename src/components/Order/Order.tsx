@@ -71,7 +71,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
     )
   );
 
-  const [isSplit, setIsSplit] = useState(false);
+  const [isSplit, setIsSplit] = useState(currentOrder.isSplit);
 
   const [isPreload, setIsPreload] = useState(false);
 
@@ -385,10 +385,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
           <h2
             className={`${styles["order__title"]} ${
               styles["order__price-title"]
-            } ${
-              (isSplit || currentOrder.payment === "Сплит -") &&
-              styles["order__price-title_disabled"]
-            }`}
+            } ${isSplit && styles["order__price-title_disabled"]}`}
           >
             {totalPrice} ₽
           </h2>
@@ -565,15 +562,14 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
               Адрес доставки: <br /> {currentOrder.deliveryAddress}
             </div>
           )}
-          {(currentOrder.payment === "Перейти по ссылке -" ||
-            currentOrder.payment === "Сплит -") && false && (
+          {currentOrder.payment === "Сплит -" && (
             <div className={styles["order__split-container"]}>
               <div className={styles["checkbox__container"]}>
                 <input
                   className={styles["checkbox__button"]}
                   type="checkbox"
                   disabled={currentOrder.status !== "Черновик" || timeLeft <= 0}
-                  checked={currentOrder.payment === "Сплит -" ? true : isSplit}
+                  checked={isSplit}
                   onChange={handleIsSplitToggle}
                 />
                 <label className={styles["checkbox__title"]}>
@@ -587,8 +583,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                   </span>
                   <p
                     className={`${styles["order__split-price"]} ${
-                      (isSplit || currentOrder.payment === "Сплит -") &&
-                      styles["order__split-price_active"]
+                      isSplit && styles["order__split-price_active"]
                     }`}
                   >
                     {Math.ceil(totalPrice / 2)} ₽
@@ -600,8 +595,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                   </span>
                   <p
                     className={`${styles["order__split-price"]} ${
-                      (isSplit || currentOrder.payment === "Сплит -") &&
-                      styles["order__split-price_active"]
+                      isSplit && styles["order__split-price_active"]
                     }`}
                   >
                     {Math.ceil(totalPrice / 2)} ₽
@@ -827,7 +821,6 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
             )}
           {currentOrder.status === "Черновик" &&
             currentOrder.payment === "Перейти по ссылке -" &&
-            !isSplit &&
             timeLeft >= 0 && (
               <button
                 className={`${styles["order__pay-button"]}`}
@@ -849,6 +842,50 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
             )}
           {currentOrder.status === "Черновик" &&
             currentOrder.payment === "Перейти по ссылке -" &&
+            timeLeft <= 0 && (
+              <button
+                className={styles["order__pay-button"]}
+                onClick={handleTimeLeft}
+              >
+                {isBrowser && (
+                  <Timer
+                    createdAt={currentOrder.createdAt}
+                    dedline={currentOrder.overudeAfter}
+                    timeLeft={timeLeft}
+                    setTimeLeft={setTimeLeft}
+                  />
+                )}
+                <span className={styles["order__pay-button-span"]}>
+                  Оплатить
+                </span>
+                <span>{totalPrice} ₽</span>
+              </button>
+            )}
+          {currentOrder.status === "Черновик" &&
+            currentOrder.payment === "Сплит -" &&
+            !isSplit &&
+            !currentOrder.isSplitPaid &&
+            timeLeft > 0 && (
+              <button
+                className={`${styles["order__pay-button"]}`}
+                onClick={payLinkRedirect}
+              >
+                {isBrowser && (
+                  <Timer
+                    createdAt={currentOrder.createdAt}
+                    dedline={currentOrder.overudeAfter}
+                    timeLeft={timeLeft}
+                    setTimeLeft={setTimeLeft}
+                  />
+                )}
+                <span className={styles["order__pay-button-span"]}>
+                  Оплатить
+                </span>
+                <span>{totalPrice} ₽</span>
+              </button>
+            )}
+          {currentOrder.status === "Черновик" &&
+            currentOrder.payment === "Сплит -" &&
             !isSplit &&
             timeLeft <= 0 && (
               <button
@@ -863,17 +900,15 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                     setTimeLeft={setTimeLeft}
                   />
                 )}
-                <span>
-                  {currentOrder.payment === "Перейти по ссылке -"
-                    ? totalPrice
-                    : Math.ceil(totalPrice / 2)}{" "}
-                  ₽
+                <span className={styles["order__pay-button-span"]}>
+                  Оплатить
                 </span>
                 <span>{totalPrice} ₽</span>
               </button>
             )}
           {currentOrder.status === "Черновик" &&
-            (currentOrder.payment === "Сплит -" || isSplit) &&
+            currentOrder.payment === "Сплит -" &&
+            isSplit &&
             !currentOrder.isSplitPaid &&
             timeLeft > 0 && (
               <button
@@ -895,7 +930,8 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
               </button>
             )}
           {currentOrder.status === "Черновик" &&
-            (currentOrder.payment === "Сплит -" || isSplit) &&
+            currentOrder.payment === "Сплит -" &&
+            isSplit &&
             timeLeft <= 0 && (
               <button
                 className={styles["order__pay-button"]}
@@ -909,13 +945,16 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                     setTimeLeft={setTimeLeft}
                   />
                 )}
+                <span className={styles["order__pay-button-span"]}>
+                  Оплатить
+                </span>
                 <span>{Math.ceil(totalPrice / 2)} ₽</span>
-                <span>{totalPrice} ₽</span>
               </button>
             )}
           {currentOrder.status !== "Черновик" &&
             currentOrder.payment === "Сплит -" &&
-            !currentOrder.isSplitPaidSecond && (
+            !currentOrder.isSplitPaidSecond &&
+            currentOrder.isSplit && (
               <button
                 className={`${styles["order__pay-button"]}`}
                 onClick={payLinkSplitSecondRedirect}

@@ -322,3 +322,8 @@
     background: #d96e3a;
   }
 }
+
+.checkbox__container {
+  display: flex;
+  gap: 0.5rem;
+}

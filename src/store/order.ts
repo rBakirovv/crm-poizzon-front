@@ -40,6 +40,7 @@ class OrderData {
     uploadedBuyProofImages: "",
     uploadedReceiptImages: "",
     isReceiptImages: false,
+    isSplit: false,
     payment: "",
     currentRate: "0",
     priceCNY: "0",

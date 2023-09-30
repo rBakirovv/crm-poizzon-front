@@ -856,7 +856,29 @@ const DeliveryDuplicate = () => {
           OrderData.order.deliveryEntity !== "" &&
           OrderData.order.payment === "Сплит -" &&
           OrderData.order.isSplitPaid &&
-          OrderData.order.isSplitPaidSecond && (
+          OrderData.order.isSplitPaidSecond &&
+          OrderData.order.isSplit && (
+            <button
+              className={styles["delivery-duplicate__document"]}
+              onClick={openPDFBarcodeHandler}
+            >
+              Получить штрихкод
+              <svg
+                width="18px"
+                height="18px"
+                viewBox="0 0 48 48"
+                focusable="false"
+                fill="black"
+              >
+                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+              </svg>
+            </button>
+          )}
+        {OrderData.order.deliveryAddress !== "" &&
+          OrderData.order.deliveryEntity !== "" &&
+          OrderData.order.payment === "Сплит -" &&
+          !OrderData.order.isSplit && (
             <button
               className={styles["delivery-duplicate__document"]}
               onClick={openPDFBarcodeHandler}

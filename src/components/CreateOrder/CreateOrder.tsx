@@ -260,7 +260,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
   }
 
   function handleSubmitCreate() {
-    if (data.payment === "Сплит -" || data.payment === "Перейти по ссылке -") {
+    if (data.payment === "Сплит -") {
       createOrderSplit(
         UserData.userData.name,
         data.link,
@@ -453,6 +453,50 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       )
         .then((order) => {
           OrderData.setOrder(order);
+
+          if (data.payment === "Перейти по ссылке -") {
+            createPayLink(
+              order.orderId.toString(),
+              Math.ceil(totalPrice / 2),
+              `${BASE_URL_FRONT}/order/${order._id}`,
+              `${BASE_URL}/pay/link/${order._id}`
+            )
+              .then((payment) => {
+                if (payment.data.id) {
+                  updateOrderDraft(
+                    order._id,
+                    order.link,
+                    payment.data.attributes.url,
+                    payment.data.attributes.uuid,
+                    "",
+                    "",
+                    "",
+                    "",
+                    order.category,
+                    order.subcategory,
+                    order.brand,
+                    order.model,
+                    order.size,
+                    order.payment,
+                    order.priceCNY,
+                    order.priceDeliveryChina,
+                    order.priceDeliveryRussia,
+                    order.commission,
+                    order.promoCodePercent,
+                    order.comment
+                  )
+                    .then((orderUpdated) => {
+                      OrderData.setOrder(orderUpdated);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
         })
         .then(() => {
           setData({

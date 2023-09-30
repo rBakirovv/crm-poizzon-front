@@ -983,6 +983,17 @@ export const updatePayment = (
   }).then(checkResponse);
 };
 
+export const setIsSplitHandler = (id: string, isSplit: boolean) => {
+  return fetch(`${BASE_URL}/order/is-split/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      isSplit: isSplit,
+    }),
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();

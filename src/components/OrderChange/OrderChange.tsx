@@ -13,6 +13,7 @@ import {
   updateOrderImages,
   uploadImages,
   deleteOrderImage,
+  setIsSplitHandler,
 } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { BASE_URL } from "../../utils/constants";
@@ -63,6 +64,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
     promoCodePercent: OrderData.order.promoCodePercent,
     comment: OrderData.order.comment,
   });
+
+  const [isSplit, setIsSplit] = useState(OrderData.order.isSplit || false);
 
   const [orderСhapter, setOrderСhapter] = useState<string | null>(
     typeof window !== "undefined" && sessionStorage.getItem("orderСhapter")
@@ -407,6 +410,74 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
     }
   }
 
+  function handleIsSplitChange() {
+    setIsSplit(!isSplit);
+
+    setIsSplitHandler(OrderData.order._id, !isSplit).then(() => {
+      OrderData.setOrder({
+        _id: OrderData.order._id,
+        creater: OrderData.order.creater,
+        buyer: OrderData.order.buyer,
+        stockman: OrderData.order.stockman,
+        createdAt: OrderData.order.createdAt,
+        overudeAfter: OrderData.order.overudeAfter,
+        payBeforeSplit: OrderData.order.payBeforeSplit,
+        paidAt: OrderData.order.paidAt,
+        buyAt: OrderData.order.buyAt,
+        inChinaStockAt: OrderData.order.inChinaStockAt,
+        deliveredAt: OrderData.order.deliveredAt,
+        orderId: OrderData.order.orderId,
+        combinedOrder: OrderData.order.combinedOrder,
+        status: OrderData.order.status,
+        link: OrderData.order.link,
+        payLink: OrderData.order.payLink,
+        payLinkSplit: OrderData.order.payLinkSplit,
+        paymentUUID: OrderData.order.paymentUUID,
+        paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+        payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+        paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+        isSplitPaid: OrderData.order.isSplitPaid,
+        isSplitPaidSecond: OrderData.order.isSplitPaidSecond,
+        paidAtSplit: OrderData.order.paidAtSplit,
+        paidAtSplitSecond: OrderData.order.paidAtSplitSecond,
+        category: OrderData.order.category,
+        subcategory: OrderData.order.subcategory,
+        brand: OrderData.order.brand,
+        model: OrderData.order.model,
+        size: OrderData.order.size,
+        orderImages: OrderData.order.orderImages,
+        payProofImages: OrderData.order.payProofImages,
+        buyProofImages: OrderData.order.buyProofImages,
+        receiptImages: OrderData.order.receiptImages,
+        uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
+        uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
+        isReceiptImages: OrderData.order.isReceiptImages,
+        isSplit: !isSplit,
+        payment: OrderData.order.payment,
+        currentRate: OrderData.order.currentRate,
+        priceCNY: OrderData.order.priceCNY,
+        priceDeliveryChina: OrderData.order.priceDeliveryChina,
+        priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
+        commission: OrderData.order.commission,
+        promoCodePercent: OrderData.order.promoCodePercent,
+        comment: OrderData.order.comment,
+        poizonCode: OrderData.order.poizonCode,
+        filledPoizonCode: OrderData.order.filledPoizonCode,
+        deliveryCode: OrderData.order.deliveryCode,
+        deliveryName: OrderData.order.deliveryName,
+        deliveryNameRecipient: OrderData.order.deliveryNameRecipient,
+        deliveryPhone: OrderData.order.deliveryPhone,
+        deliveryPhoneRecipient: OrderData.order.deliveryPhoneRecipient,
+        deliveryMethod: OrderData.order.deliveryMethod,
+        deliveryAddress: OrderData.order.deliveryAddress,
+        deliveryEntity: OrderData.order.deliveryEntity,
+        deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
+        reorder: OrderData.order.reorder,
+        __v: OrderData.order.__v,
+      });
+    });
+  }
+
   const uploadFileHandler = async (
     e: any, // Костыль!
     folder: string,
@@ -466,6 +537,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
           uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
           isReceiptImages: OrderData.order.isReceiptImages,
+          isSplit: OrderData.order.isSplit,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
           priceCNY: OrderData.order.priceCNY,
@@ -555,6 +627,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                     OrderData.order.uploadedBuyProofImages,
                   uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
                   isReceiptImages: OrderData.order.isReceiptImages,
+                  isSplit: OrderData.order.isSplit,
                   payment: OrderData.order.payment,
                   currentRate: OrderData.order.currentRate,
                   priceCNY: OrderData.order.priceCNY,
@@ -646,6 +719,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
           uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
           isReceiptImages: OrderData.order.isReceiptImages,
+          isSplit: OrderData.order.isSplit,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
           priceCNY: OrderData.order.priceCNY,
@@ -759,6 +833,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
       uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
       isReceiptImages: OrderData.order.isReceiptImages,
+      isSplit: OrderData.order.isSplit,
       payment: data.payment,
       currentRate: OrderData.order.currentRate,
       priceCNY: data.priceCNY,
@@ -929,7 +1004,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
               new Date(Date.now()).getTime()
           ) / 1000
         ) <= 0 &&
-        OrderData.order.payment === "Сплит -" && (
+        OrderData.order.payment === "Сплит -" &&
+        OrderData.order.isSplit && (
           <p>
             <span className={styles["order-change__status_red"]}>
               Сплит не погашен
@@ -1138,6 +1214,20 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
               >
                 Перейти
               </a>
+            )}
+            {OrderData.order.payment === "Сплит -" && (
+              <div className={styles["checkbox__container"]}>
+                <input
+                  className={styles["checkbox__button"]}
+                  type="checkbox"
+                  disabled={OrderData.order.status !== "Черновик"}
+                  checked={OrderData.order.isSplit}
+                  onChange={handleIsSplitChange}
+                />
+                <label className={styles["checkbox__title"]}>
+                  Оплатить в сплит
+                </label>
+              </div>
             )}
             {(OrderData.order.payment === "Перейти по ссылке -" ||
               OrderData.order.payment === "Сплит -") &&

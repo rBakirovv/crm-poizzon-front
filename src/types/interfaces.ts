@@ -54,6 +54,7 @@ export interface IOrder {
   uploadedReceiptImages: string;
   isReceiptImages: boolean;
   payment: string;
+  isSplit: boolean;
   currentRate: string;
   priceCNY: string;
   priceDeliveryChina: string;

@@ -128,6 +128,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
             uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
             uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
             isReceiptImages: OrderData.order.isReceiptImages,
+            isSplit: OrderData.order.isSplit,
             payment: OrderData.order.payment,
             currentRate: OrderData.order.currentRate,
             priceCNY: OrderData.order.priceCNY,
@@ -204,7 +205,8 @@ const OrderPay: FC<IOrderPayProps> = () => {
                     paymentUUID: OrderData.order.paymentUUID,
                     paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
                     payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
-                    paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+                    paymentUUIDSplitSecond:
+                      OrderData.order.paymentUUIDSplitSecond,
                     isSplitPaid: OrderData.order.isSplitPaid,
                     isSplitPaidSecond: OrderData.order.isSplitPaidSecond,
                     paidAtSplit: OrderData.order.paidAtSplit,
@@ -224,6 +226,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
                       OrderData.order.uploadedBuyProofImages,
                     uploadedReceiptImages:
                       OrderData.order.uploadedReceiptImages,
+                    isSplit: OrderData.order.isSplit,
                     isReceiptImages: OrderData.order.isReceiptImages,
                     payment: OrderData.order.payment,
                     currentRate: OrderData.order.currentRate,
@@ -318,6 +321,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
           uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
           uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
           isReceiptImages: OrderData.order.isReceiptImages,
+          isSplit: OrderData.order.isSplit,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
           priceCNY: OrderData.order.priceCNY,
