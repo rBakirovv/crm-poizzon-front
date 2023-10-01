@@ -461,13 +461,13 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
               `${BASE_URL_FRONT}/order/${order._id}`,
               `${BASE_URL}/pay/link/${order._id}`
             )
-              .then((payment) => {
-                if (payment.data.id) {
+              .then((paymentFullPrice) => {
+                if (paymentFullPrice.data.id) {
                   updateOrderDraft(
                     order._id,
                     order.link,
-                    payment.data.attributes.url,
-                    payment.data.attributes.uuid,
+                    paymentFullPrice.data.attributes.url,
+                    paymentFullPrice.data.attributes.uuid,
                     "",
                     "",
                     "",
