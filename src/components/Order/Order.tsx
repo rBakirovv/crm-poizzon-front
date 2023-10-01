@@ -204,7 +204,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
       if (paymentData.data.attributes.payment_status === "cancelled") {
         createPayLink(
           currentOrder.orderId.toString(),
-          totalPrice,
+          Math.ceil(totalPrice / 2),
           `${BASE_URL_FRONT}/order/${currentOrder._id}`,
           `${BASE_URL}/pay/link/${currentOrder._id}`
         )
@@ -244,7 +244,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
       if (paymentData.data.attributes.payment_status === "cancelled") {
         createPayLink(
           currentOrder.orderId.toString(),
-          totalPrice,
+          Math.ceil(totalPrice / 2),
           `${BASE_URL_FRONT}/order/${currentOrder._id}`,
           `${BASE_URL}/pay/link/${currentOrder._id}`
         )
