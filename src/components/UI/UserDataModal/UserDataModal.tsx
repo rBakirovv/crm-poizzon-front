@@ -95,7 +95,7 @@ const UserDataModal: FC<IUserDataModalProps> = ({
                 .then((orderCheckInfo) => {
                   if (orderCheckInfo.requests[0].state !== "INVALID") {
                     updateClientDeliveryAddress(
-                      _id,
+                      `${_id}-poizonqq`,
                       `${data.deliveryCity} ${data.deliveryAddress}`,
                       data.deliveryName,
                       data.deliveryNameRecipient,

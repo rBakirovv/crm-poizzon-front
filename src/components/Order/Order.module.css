@@ -349,13 +349,13 @@
 
 .order__status-box span {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   display: inline-block;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
   line-height: 93.4%;
-  color: rgba(255, 255, 255, .6);
+  color: #FFF;
 }
 
 .order__status-box-image {
@@ -381,9 +381,12 @@
   transform: translateY(-2px);
 }
 
+.order__status-box svg path {
+  fill: rgba(59, 39, 70, .9);
+}
+
 .order__status-box_active svg path {
-  fill: white;
-  fill-opacity: 0.14;
+  fill: rgba(255, 255, 255, .14); 
 }
 
 .order__status-box_active.order__status-box span {
