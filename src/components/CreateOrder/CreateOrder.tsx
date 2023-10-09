@@ -10,6 +10,9 @@ import { IOrderImages, IPayments } from "../../types/interfaces";
 import Dropzone from "react-dropzone";
 import { BASE_URL, BASE_URL_FRONT, MAX_SIZE } from "../../utils/constants";
 import {
+  addPayLink,
+  addPayLinkSplit,
+  addPayLinkSplitSecond,
   createOrder,
   createOrderSplit,
   deleteDraftImage,
@@ -377,6 +380,30 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                                       order.comment
                                     )
                                       .then(() => {
+                                        addPayLink(
+                                          order._id,
+                                          payment.data.attributes.url
+                                        ).catch((err) => {
+                                          console.log(err);
+                                        });
+                                      })
+                                      .then(() => {
+                                        addPayLinkSplit(
+                                          order._id,
+                                          splitPayment.data.attributes.url
+                                        ).catch((err) => {
+                                          console.log(err);
+                                        });
+                                      })
+                                      .then(() => {
+                                        addPayLinkSplitSecond(
+                                          order._id,
+                                          splitPaymentSecond.data.attributes.url
+                                        ).catch((err) => {
+                                          console.log(err);
+                                        });
+                                      })
+                                      .then(() => {
                                         setData({
                                           link: "",
                                           category: "",
@@ -485,8 +512,17 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                     order.promoCodePercent,
                     order.comment
                   )
-                    .then((orderUpdated) => {
-                      OrderData.setOrder(orderUpdated);
+                    .then(() => {
+                      addPayLink(
+                        order._id,
+                        paymentFullPrice.data.attributes.url
+                      )
+                        .then((orderUpdated) => {
+                          OrderData.setOrder(orderUpdated);
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
                     })
                     .catch((err) => {
                       console.log(err);

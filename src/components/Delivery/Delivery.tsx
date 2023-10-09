@@ -1320,6 +1320,9 @@ const Delivery = () => {
               deliveryEntity: OrderData.order.deliveryEntity,
               deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
               reorder: OrderData.order.reorder,
+              payLinksArray: OrderData.order.payLinksArray,
+              splitLinksArray: OrderData.order.splitLinksArray,
+              splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
               __v: OrderData.order.__v,
             });
           })
@@ -1421,6 +1424,9 @@ const Delivery = () => {
                   deliveryRelatedEntities:
                     OrderData.order.deliveryRelatedEntities,
                   reorder: OrderData.order.reorder,
+                  payLinksArray: OrderData.order.payLinksArray,
+                  splitLinksArray: OrderData.order.splitLinksArray,
+                  splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
                   __v: OrderData.order.__v,
                 });
               })
@@ -1507,6 +1513,9 @@ const Delivery = () => {
           deliveryEntity: OrderData.order.deliveryEntity,
           deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
           reorder: OrderData.order.reorder,
+          payLinksArray: OrderData.order.payLinksArray,
+          splitLinksArray: OrderData.order.splitLinksArray,
+          splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
           __v: OrderData.order.__v,
         });
       })

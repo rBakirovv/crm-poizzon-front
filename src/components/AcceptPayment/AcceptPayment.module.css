@@ -85,3 +85,27 @@
     background: #d96e3a;
   }
 }
+
+.accept-payment__links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+  margin-top: 0.5rem;
+}
+
+.accept-payment__links .accept-payment__text {
+  color: #4e7fea;
+}
+
+.accept-payment__links_active {
+  max-height: 10000px;
+  overflow: visible;
+}
+
+.accept-payment__links-title {
+  margin: 1rem 0 0;
+  cursor: pointer;
+}

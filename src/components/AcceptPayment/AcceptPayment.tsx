@@ -9,6 +9,9 @@ import {
   acceptPayment,
   acceptPaymentSplit,
   acceptPaymentSplitSecond,
+  addPayLink,
+  addPayLinkSplit,
+  addPayLinkSplitSecond,
   orderResume,
   updateOrderDraft,
 } from "../../utils/Order";
@@ -35,6 +38,10 @@ const AcceptPayment = () => {
     useState<boolean>(false);
   const [isSubmitAcceptSplitSecondPopup, setIsSubmitAcceptSplitSecondPopup] =
     useState<boolean>(false);
+
+  const [isPayLinks, setIsPayLinks] = useState(false);
+  const [isPayLinksSplit, setIsPayLinksSplit] = useState(false);
+  const [isPayLinksSplitSecond, setIsPayLinksSplitSecond] = useState(false);
 
   const priceRub = Math.ceil(
     parseFloat(OrderData.order.priceCNY) *
@@ -143,6 +150,18 @@ const AcceptPayment = () => {
     });
   }
 
+  function openPayLinks() {
+    setIsPayLinks(!isPayLinks);
+  }
+
+  function openPayLinksSplit() {
+    setIsPayLinksSplit(!isPayLinksSplit);
+  }
+
+  function openPayLinksSplitSecond() {
+    setIsPayLinksSplitSecond(!isPayLinksSplitSecond);
+  }
+
   function handlePayLinkSubmit() {
     createPayLink(
       OrderData.order.orderId.toString(),
@@ -172,8 +191,12 @@ const AcceptPayment = () => {
           OrderData.order.commission,
           OrderData.order.promoCodePercent,
           OrderData.order.comment
-        ).then((order) => {
-          OrderData.setOrder(order);
+        ).then(() => {
+          addPayLink(OrderData.order._id, payment.data.attributes.url).then(
+            (order) => {
+              OrderData.setOrder(order);
+            }
+          );
         });
       }
     });
@@ -237,9 +260,21 @@ const AcceptPayment = () => {
                 OrderData.order.commission,
                 OrderData.order.promoCodePercent,
                 OrderData.order.comment
-              ).then((orderUpdatedSecond) => {
-                OrderData.setOrder(orderUpdatedSecond);
-              });
+              )
+                .then(() => {
+                  addPayLinkSplit(
+                    OrderData.order._id,
+                    payment.data.attributes.url
+                  );
+                })
+                .then(() => {
+                  addPayLinkSplitSecond(
+                    OrderData.order._id,
+                    paymentSecond.data.attributes.url
+                  ).then((orderUpdatedSecond) => {
+                    OrderData.setOrder(orderUpdatedSecond);
+                  });
+                });
             }
           });
         });
@@ -276,8 +311,13 @@ const AcceptPayment = () => {
           OrderData.order.commission,
           OrderData.order.promoCodePercent,
           OrderData.order.comment
-        ).then((order) => {
-          OrderData.setOrder(order);
+        ).then(() => {
+          addPayLinkSplitSecond(
+            OrderData.order._id,
+            payment.data.attributes.url
+          ).then((order) => {
+            OrderData.setOrder(order);
+          });
         });
       }
     });
@@ -288,7 +328,9 @@ const AcceptPayment = () => {
       <h4>Cпособ оплаты</h4>
       <p className={styles["accept-payment__text"]}>
         {OrderData.order.payment}
-        {OrderData.order.payment === "Сплит -" && !OrderData.order.isSplit && " полная оплата"}
+        {OrderData.order.payment === "Сплит -" &&
+          !OrderData.order.isSplit &&
+          " полная оплата"}
       </p>
       {OrderData.order.payProofImages.length !== 0 && (
         <>
@@ -346,7 +388,8 @@ const AcceptPayment = () => {
         )}
       {OrderData.order.status !== "Черновик" &&
         !OrderData.order.isSplitPaidSecond &&
-        OrderData.order.payment === "Сплит -" && OrderData.order.isSplit && (
+        OrderData.order.payment === "Сплит -" &&
+        OrderData.order.isSplit && (
           <>
             <button
               className={styles["accept-payment__resume"]}
@@ -355,6 +398,93 @@ const AcceptPayment = () => {
               Обновить ссылку на оплату (сплит)
             </button>
           </>
+        )}
+      {OrderData.order.payLinksArray &&
+        OrderData.order.payLinksArray.length > 0 && (
+          <div>
+            <h4
+              className={styles["accept-payment__links-title"]}
+              onClick={openPayLinks}
+            >
+              Ссылки оплаты
+            </h4>
+            <div
+              className={`${styles["accept-payment__links"]} ${
+                isPayLinks && styles["accept-payment__links_active"]
+              }`}
+            >
+              {OrderData.order.payLinksArray.map((link) => {
+                return (
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles["accept-payment__text"]}
+                  >
+                    {link}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      {OrderData.order.splitLinksArray &&
+        OrderData.order.splitLinksArray.length > 0 && (
+          <div>
+            <h4
+              className={styles["accept-payment__links-title"]}
+              onClick={openPayLinksSplit}
+            >
+              Ссылки оплаты (сплит)
+            </h4>
+            <div
+              className={`${styles["accept-payment__links"]} ${
+                isPayLinksSplit && styles["accept-payment__links_active"]
+              }`}
+            >
+              {OrderData.order.splitLinksArray.map((link) => {
+                return (
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles["accept-payment__text"]}
+                  >
+                    {link}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      {OrderData.order.splitSecondLinksArray &&
+        OrderData.order.splitSecondLinksArray.length > 0 && (
+          <div>
+            <h4
+              className={styles["accept-payment__links-title"]}
+              onClick={openPayLinksSplitSecond}
+            >
+              Ссылки оплаты (сплит вторая часть)
+            </h4>
+            <div
+              className={`${styles["accept-payment__links"]} ${
+                isPayLinksSplitSecond && styles["accept-payment__links_active"]
+              }`}
+            >
+              {OrderData.order.splitSecondLinksArray.map((link) => {
+                return (
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles["accept-payment__text"]}
+                  >
+                    {link}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
         )}
       <div className={styles["accept-payment__buttons"]}>
         {OrderData.order.status === "Проверка оплаты" &&
@@ -379,7 +509,19 @@ const AcceptPayment = () => {
         {OrderData.order.status === "Черновик" &&
           OrderData.order.payment === "Сплит -" &&
           UserData.userData.position === "Создатель" &&
-          !OrderData.order.isSplitPaid && (
+          !OrderData.order.isSplit && (
+            <button
+              className={styles["accept-payment__submit"]}
+              onClick={openSubmitAcceptPaymentPopup}
+            >
+              Принять оплату досрочно
+            </button>
+          )}
+        {OrderData.order.status === "Черновик" &&
+          OrderData.order.payment === "Сплит -" &&
+          UserData.userData.position === "Создатель" &&
+          !OrderData.order.isSplitPaid &&
+          OrderData.order.isSplit && (
             <button
               className={styles["accept-payment__submit"]}
               onClick={openSubmitAcceptSplitPopup}
@@ -390,7 +532,8 @@ const AcceptPayment = () => {
         {OrderData.order.status !== "Черновик" &&
           OrderData.order.payment === "Сплит -" &&
           UserData.userData.position === "Создатель" &&
-          !OrderData.order.isSplitPaidSecond && OrderData.order.isSplit && (
+          !OrderData.order.isSplitPaidSecond &&
+          OrderData.order.isSplit && (
             <button
               className={styles["accept-payment__submit"]}
               onClick={openSubmitAcceptSplitSecondPopup}

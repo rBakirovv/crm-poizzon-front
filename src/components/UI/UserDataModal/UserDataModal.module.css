@@ -205,3 +205,18 @@
 .order-pay__success-btn {
   margin-top: 1rem;
 }
+
+.user-data-modal__number {
+  position: absolute;
+  top: 1.5rem;
+  right: 1rem;
+  display: inline-flex;
+  font-size: 0.95rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  color: #FFF;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.5rem 1rem;
+}

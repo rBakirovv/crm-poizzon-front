@@ -174,6 +174,9 @@ const Purchase = () => {
             deliveryEntity: OrderData.order.deliveryEntity,
             deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
             reorder: OrderData.order.reorder,
+            payLinksArray: OrderData.order.payLinksArray,
+            splitLinksArray: OrderData.order.splitLinksArray,
+            splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
             __v: OrderData.order.__v,
           });
         })
@@ -257,6 +260,9 @@ const Purchase = () => {
           deliveryEntity: OrderData.order.deliveryEntity,
           deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
           reorder: OrderData.order.reorder,
+          payLinksArray: OrderData.order.payLinksArray,
+          splitLinksArray: OrderData.order.splitLinksArray,
+          splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
           __v: OrderData.order.__v,
         });
       })
@@ -361,7 +367,8 @@ const Purchase = () => {
                     paymentUUID: OrderData.order.paymentUUID,
                     paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
                     payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
-                    paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+                    paymentUUIDSplitSecond:
+                      OrderData.order.paymentUUIDSplitSecond,
                     isSplitPaid: OrderData.order.isSplitPaid,
                     isSplitPaidSecond: OrderData.order.isSplitPaidSecond,
                     paidAtSplit: OrderData.order.paidAtSplit,
@@ -406,6 +413,10 @@ const Purchase = () => {
                     deliveryRelatedEntities:
                       OrderData.order.deliveryRelatedEntities,
                     reorder: OrderData.order.reorder,
+                    payLinksArray: OrderData.order.payLinksArray,
+                    splitLinksArray: OrderData.order.splitLinksArray,
+                    splitSecondLinksArray:
+                      OrderData.order.splitSecondLinksArray,
                     __v: OrderData.order.__v,
                   });
                 })
@@ -495,6 +506,9 @@ const Purchase = () => {
       deliveryEntity: OrderData.order.deliveryEntity,
       deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
       reorder: OrderData.order.reorder,
+      payLinksArray: OrderData.order.payLinksArray,
+      splitLinksArray: OrderData.order.splitLinksArray,
+      splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
       __v: OrderData.order.__v,
     });
   }, [data]);

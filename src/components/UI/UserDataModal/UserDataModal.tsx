@@ -14,12 +14,14 @@ import PreloaderClient from "../PreloaderClient/PreloaderClient";
 
 interface IUserDataModalProps {
   _id: string;
+  orderId: number;
   comment: string;
   combinedOrder: any /* костыль */;
 }
 
 const UserDataModal: FC<IUserDataModalProps> = ({
   _id,
+  orderId,
   comment,
   combinedOrder,
 }) => {
@@ -304,6 +306,7 @@ const UserDataModal: FC<IUserDataModalProps> = ({
           }`}
         >
           <h2 className={styles["user-data-modal__title"]}>Заказ оплачен</h2>
+          <div className={styles["user-data-modal__number"]}>{orderId}</div>
           <div className={styles["user-data-modal__inputs-container"]}>
             <div className={styles["user-data-modal__input-container"]}>
               <label className={styles["user-data-modal__input-label"]}>

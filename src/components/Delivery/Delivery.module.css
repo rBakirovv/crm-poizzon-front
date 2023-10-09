@@ -21,6 +21,10 @@
   margin-bottom: 1rem;
 }
 
+.delivery-form .input__item {
+  width: auto;
+}
+
 .delivery__container {
   background: #fff;
   border-radius: 0.5rem;

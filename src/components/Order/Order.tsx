@@ -7,7 +7,13 @@ import Timer from "../UI/Timer/Timer";
 import styles from "./Order.module.css";
 import UserDataModal from "../UI/UserDataModal/UserDataModal";
 import OverudeOrder from "../UI/OverudeOrder/OverudeOrder";
-import { getPayment, updatePayment } from "../../utils/Order";
+import {
+  addPayLink,
+  addPayLinkSplit,
+  addPayLinkSplitSecond,
+  getPayment,
+  updatePayment,
+} from "../../utils/Order";
 import { createPayLink } from "../../utils/PaySystem";
 import PreloaderClient from "../UI/PreloaderClient/PreloaderClient";
 
@@ -180,6 +186,9 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                 currentOrder.paymentUUIDSplitSecond
               )
                 .then(() => {
+                  addPayLink(currentOrder._id, payment.data.attributes.url);
+                })
+                .then(() => {
                   setIsPreload(false);
                   router.replace(payment.data.attributes.url);
                 })
@@ -220,6 +229,12 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                 currentOrder.paymentUUIDSplitSecond
               )
                 .then(() => {
+                  addPayLinkSplit(
+                    currentOrder._id,
+                    payment.data.attributes.url
+                  );
+                })
+                .then(() => {
                   setIsPreload(false);
                   router.replace(payment.data.attributes.url);
                 })
@@ -259,6 +274,12 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                 payment.data.attributes.url,
                 payment.data.attributes.uuid
               )
+                .then(() => {
+                  addPayLinkSplitSecond(
+                    currentOrder._id,
+                    payment.data.attributes.url
+                  );
+                })
                 .then(() => {
                   setIsPreload(false);
                   router.replace(payment.data.attributes.url);
@@ -1036,6 +1057,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
         currentOrder.status !== "Завершён" && (
           <UserDataModal
             _id={currentOrder._id}
+            orderId={currentOrder.orderId}
             comment={currentOrder.model}
             combinedOrder={currentOrder.combinedOrder}
           />

@@ -473,6 +473,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         deliveryEntity: OrderData.order.deliveryEntity,
         deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
         reorder: OrderData.order.reorder,
+        payLinksArray: OrderData.order.payLinksArray,
+        splitLinksArray: OrderData.order.splitLinksArray,
+        splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
         __v: OrderData.order.__v,
       });
     });
@@ -558,6 +561,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           deliveryEntity: OrderData.order.deliveryEntity,
           deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
           reorder: OrderData.order.reorder,
+          payLinksArray: OrderData.order.payLinksArray,
+          splitLinksArray: OrderData.order.splitLinksArray,
+          splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
           __v: OrderData.order.__v,
         });
         setUploading(false);
@@ -650,6 +656,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   deliveryRelatedEntities:
                     OrderData.order.deliveryRelatedEntities,
                   reorder: OrderData.order.reorder,
+                  payLinksArray: OrderData.order.payLinksArray,
+                  splitLinksArray: OrderData.order.splitLinksArray,
+                  splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
                   __v: OrderData.order.__v,
                 });
                 setUploading(false);
@@ -740,6 +749,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           deliveryEntity: OrderData.order.deliveryEntity,
           deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
           reorder: OrderData.order.reorder,
+          payLinksArray: OrderData.order.payLinksArray,
+          splitLinksArray: OrderData.order.splitLinksArray,
+          splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
           __v: OrderData.order.__v,
         });
       })
@@ -854,6 +866,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       deliveryEntity: OrderData.order.deliveryEntity,
       deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
       reorder: OrderData.order.reorder,
+      payLinksArray: OrderData.order.payLinksArray,
+      splitLinksArray: OrderData.order.splitLinksArray,
+      splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
       __v: OrderData.order.__v,
     });
   }, [data]);

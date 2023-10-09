@@ -994,6 +994,39 @@ export const setIsSplitHandler = (id: string, isSplit: boolean) => {
   }).then(checkResponse);
 };
 
+export const addPayLink = (id: string, payLink: string) => {
+  return fetch(`${BASE_URL}/order/add-pay-link/${id}`, {
+    credentials: "include",
+    method: "PUT",
+    headers: HEADERS,
+    body: JSON.stringify({
+      payLink: payLink,
+    }),
+  }).then(checkResponse);
+};
+
+export const addPayLinkSplit = (id: string, splitLink: string) => {
+  return fetch(`${BASE_URL}/order/add-pay-link-split/${id}`, {
+    credentials: "include",
+    method: "PUT",
+    headers: HEADERS,
+    body: JSON.stringify({
+      splitLink: splitLink,
+    }),
+  }).then(checkResponse);
+};
+
+export const addPayLinkSplitSecond = (id: string, splitLinkSecond: string) => {
+  return fetch(`${BASE_URL}/order/add-pay-link-split-second/${id}`, {
+    credentials: "include",
+    method: "PUT",
+    headers: HEADERS,
+    body: JSON.stringify({
+      splitLinkSecond: splitLinkSecond,
+    }),
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();

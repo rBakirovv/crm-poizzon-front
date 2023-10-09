@@ -74,6 +74,9 @@ export interface IOrder {
   deliveryEntity: string;
   deliveryRelatedEntities: string;
   reorder: boolean;
+  payLinksArray: Array<string>;
+  splitLinksArray: Array<string>;
+  splitSecondLinksArray: Array<string>;
   __v?: number;
 }
 
