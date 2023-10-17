@@ -65,7 +65,7 @@
   position: relative;
   min-width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-top: 1rem;
 }
 
@@ -185,9 +185,4 @@
 
 .orders-table__reorder {
   color: red;
-}
-
-.orders-table__sum-yuan {
-  position: absolute;
-  left: 0;
 }

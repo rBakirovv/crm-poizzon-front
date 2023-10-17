@@ -17,6 +17,7 @@ import {
 import { IOrder, IOrderImages } from "../../../types/interfaces";
 import { useRouter } from "next/router";
 import UserData from "../../../store/user";
+import RateData from "../../../store/rate";
 import PaymentsData from "../../../store/payments";
 import { observer } from "mobx-react-lite";
 import { BASE_URL_FRONT } from "../../../utils/constants";
@@ -305,6 +306,10 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
     });
   }, []);
 
+  const totalPriceRub = inStockInRussiaOrders.reduce(function (sum, current) {
+    return sum + parseFloat(current.priceCNY) * parseFloat(RateData.rate.rate);
+  }, 0);
+
   const totalPriceCNY = inStockInRussiaOrders.reduce(function (sum, current) {
     return sum + parseFloat(current.priceCNY);
   }, 0);
@@ -314,13 +319,11 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
   }
 
   function handleCopyLinkClick() {
-    setIsCopyLink(!isCopyLink)
+    setIsCopyLink(!isCopyLink);
   }
 
   function handleCopyLink(id: string) {
-    navigator.clipboard.writeText(
-      `${BASE_URL_FRONT}/order/${id}`
-    );
+    navigator.clipboard.writeText(`${BASE_URL_FRONT}/order/${id}`);
   }
 
   return (
@@ -423,9 +426,7 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
                     {status === "Недавно прибывшие" && isCopyLink && (
                       <button
                         className={styles["orders-table__delete-item"]}
-                        onClick={() =>
-                          handleCopyLink(orderItem._id)
-                        }
+                        onClick={() => handleCopyLink(orderItem._id)}
                       >
                         ✓
                       </button>
@@ -584,7 +585,10 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
           </button>
         </div>
         {status === "Недавно прибывшие" && (
-          <button className={styles["orders-table__poizon-code-filter"]} onClick={handleCopyLinkClick}>
+          <button
+            className={styles["orders-table__poizon-code-filter"]}
+            onClick={handleCopyLinkClick}
+          >
             {!isCopyLink ? "Копировать" : "Закрыть"}
           </button>
         )}
@@ -650,9 +654,14 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
       )}
       {status === "Ожидает закупки" && (
         <div className={styles["orders-table__payment-filter-container"]}>
-          <span className={styles["orders-table__sum-yuan"]}>
-            Итого: {Math.ceil(totalPriceCNY)} ¥
-          </span>
+          <div>
+            <div className={styles["orders-table__sum-yuan"]}>
+              Итого: {Math.ceil(totalPriceCNY)} ¥
+            </div>
+            <div className={styles["orders-table__sum-rub"]}>
+              Итого: {Math.ceil(totalPriceRub)} ₽
+            </div>
+          </div>
           <select
             className={styles["orders-table__poizon-code-filter"]}
             onChange={hanfleFilterReorder}
