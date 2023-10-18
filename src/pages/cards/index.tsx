@@ -18,8 +18,13 @@ import OrderData from "../../store/order";
 import CardsData from "../../store/cards";
 import {
   getCardsUpdatedAt,
-  getOrders,
   getOrdersAfterUpdatedAt,
+  getOrdersPaidToday,
+  getOrdersPaidYesterday,
+  getOrdersSplitSecondToday,
+  getOrdersSplitSecondYesterday,
+  getOrdersSplitToday,
+  getOrdersSplitYesterday,
 } from "../../utils/Order";
 
 const Home = observer(() => {
@@ -32,6 +37,36 @@ const Home = observer(() => {
     getOrdersAfterUpdatedAt()
       .then((orders) => {
         CardsData.setOrdersAfterUpdatedAt(orders);
+      })
+      .then(() => {
+        getOrdersPaidToday().then((paidOrders) => {
+          CardsData.setOrdersTodayPaidAt(paidOrders);
+        });
+      })
+      .then(() => {
+        getOrdersSplitToday().then((splitOrders) => {
+          CardsData.setOrdersTodaySplitAt(splitOrders);
+        });
+      })
+      .then(() => {
+        getOrdersSplitSecondToday().then((splitSecondOrders) => {
+          CardsData.setOrdersTodaySplitSecondAt(splitSecondOrders);
+        });
+      })
+      .then(() => {
+        getOrdersPaidYesterday().then((splitSecondOrdersYesterday) => {
+          CardsData.setOrdersYesterdayPaidAt(splitSecondOrdersYesterday);
+        });
+      })
+      .then(() => {
+        getOrdersSplitYesterday().then((splitOrdersYesterday) => {
+          CardsData.setOrdersYesterdaySplitAt(splitOrdersYesterday);
+        });
+      })
+      .then(() => {
+        getOrdersSplitSecondYesterday().then((splitSecondOrdersYesterday) => {
+          CardsData.setOrdersYesterdaySplitSecondAt(splitSecondOrdersYesterday);
+        });
       })
       .then(() => setIsPreloader(false))
       .catch((err) => {

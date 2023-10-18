@@ -1,10 +1,10 @@
 import styles from "./Cards.module.css";
 import { IPayments } from "../../types/interfaces";
-import OrderData from "../../store/order";
 import CardsData from "../../store/cards";
 import { FC, useState } from "react";
 import { updateCardsStatistics } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
+import { observer } from "mobx-react-lite";
 
 interface ICardsProps {
   payments: Array<IPayments>;
@@ -20,7 +20,7 @@ dayjs.extend(timezone);
 
 dayjs.tz.setDefault("Europe/Moscow");
 
-const Cards: FC<ICardsProps> = ({ payments }) => {
+const Cards: FC<ICardsProps> = observer(({ payments }) => {
   const [isDateUpdatePopup, setIsDateUpdatePopup] = useState(false);
 
   function openDateUpdatePopup() {
@@ -38,6 +38,150 @@ const Cards: FC<ICardsProps> = ({ payments }) => {
       })
       .then(() => alert("Успешно! Необходимо обновить страницу"));
   }
+
+  const filteredTotalPaidToday =
+    CardsData.ordersTodayPaidAt &&
+    CardsData.ordersTodayPaidAt.filter((item) => {
+      if (
+        dayjs.tz(new Date(item.paidAt)).format("DD-MM-YY") ===
+        dayjs.tz(new Date(Date.now())).format("DD-MM-YY")
+      ) {
+        return true;
+      }
+    });
+
+  const totalPaidToday =
+    filteredTotalPaidToday.length &&
+    filteredTotalPaidToday.reduce(function (sum, current) {
+      return (
+        sum +
+        (parseFloat(current.priceCNY) * parseFloat(current.currentRate) +
+          parseFloat(current.priceDeliveryChina) +
+          parseFloat(current.priceDeliveryRussia) +
+          parseFloat(current.commission) -
+          current.promoCodePercent)
+      );
+    }, 0);
+
+  const filteredTotalSplitToday =
+    CardsData.ordersTodaySplitAt &&
+    CardsData.ordersTodaySplitAt.filter((item) => {
+      if (
+        dayjs.tz(new Date(item.paidAtSplit)).format("DD-MM-YY") ===
+        dayjs.tz(new Date(Date.now())).format("DD-MM-YY")
+      ) {
+        return true;
+      }
+    });
+
+  const totalSplitToday =
+    filteredTotalSplitToday.length &&
+    filteredTotalSplitToday.reduce(function (sum, current) {
+      return (
+        sum +
+        (parseFloat(current.priceCNY) * parseFloat(current.currentRate) +
+          parseFloat(current.priceDeliveryChina) +
+          parseFloat(current.priceDeliveryRussia) +
+          parseFloat(current.commission) -
+          current.promoCodePercent)
+      );
+    }, 0);
+
+  const filteredTotalSplitSecondToday =
+    CardsData.ordersTodaySplitSecondAt &&
+    CardsData.ordersTodaySplitSecondAt.filter((item) => {
+      if (
+        dayjs.tz(new Date(item.paidAtSplitSecond)).format("DD-MM-YY") ===
+        dayjs.tz(new Date(Date.now())).format("DD-MM-YY")
+      ) {
+        return true;
+      }
+    });
+
+  const totalSplitSecondToday =
+    filteredTotalSplitSecondToday.length &&
+    filteredTotalSplitSecondToday.reduce(function (sum, current) {
+      return (
+        sum +
+        (parseFloat(current.priceCNY) * parseFloat(current.currentRate) +
+          parseFloat(current.priceDeliveryChina) +
+          parseFloat(current.priceDeliveryRussia) +
+          parseFloat(current.commission) -
+          current.promoCodePercent)
+      );
+    }, 0);
+
+  const filteredTotalPaidYesterday =
+    CardsData.ordersYesterdayPaidAt &&
+    CardsData.ordersYesterdayPaidAt.filter((item) => {
+      if (
+        dayjs.tz(new Date(item.paidAt)).format("DD-MM-YY") ===
+        dayjs.tz(new Date(Date.now() - 86400000)).format("DD-MM-YY")
+      ) {
+        return true;
+      }
+    });
+
+  const totalPaidYesterday =
+    filteredTotalPaidYesterday.length &&
+    filteredTotalPaidYesterday.reduce(function (sum, current) {
+      return (
+        sum +
+        (parseFloat(current.priceCNY) * parseFloat(current.currentRate) +
+          parseFloat(current.priceDeliveryChina) +
+          parseFloat(current.priceDeliveryRussia) +
+          parseFloat(current.commission) -
+          current.promoCodePercent)
+      );
+    }, 0);
+
+  const filteredTotalSplitYesterday =
+    CardsData.ordersYesterdaySplitAt &&
+    CardsData.ordersYesterdaySplitAt.filter((item) => {
+      if (
+        dayjs.tz(new Date(item.paidAtSplit)).format("DD-MM-YY") ===
+        dayjs.tz(new Date(Date.now() - 86400000)).format("DD-MM-YY")
+      ) {
+        return true;
+      }
+    });
+
+  const totalSplitYesterday =
+    filteredTotalSplitYesterday.length &&
+    filteredTotalSplitYesterday.reduce(function (sum, current) {
+      return (
+        sum +
+        (parseFloat(current.priceCNY) * parseFloat(current.currentRate) +
+          parseFloat(current.priceDeliveryChina) +
+          parseFloat(current.priceDeliveryRussia) +
+          parseFloat(current.commission) -
+          current.promoCodePercent)
+      );
+    }, 0);
+
+  const filteredTotalSplitSecondYesterday =
+    CardsData.ordersYesterdaySplitSecondAt &&
+    CardsData.ordersYesterdaySplitSecondAt.filter((item) => {
+      if (
+        dayjs.tz(new Date(item.paidAtSplitSecond)).format("DD-MM-YY") ===
+        dayjs.tz(new Date(Date.now() - 86400000)).format("DD-MM-YY")
+      ) {
+        return true;
+      }
+    });
+
+  const totalSplitSecondYesterday =
+    filteredTotalSplitSecondYesterday.length &&
+    filteredTotalSplitSecondYesterday.reduce(function (sum, current) {
+      return (
+        sum +
+        (parseFloat(current.priceCNY) * parseFloat(current.currentRate) +
+          parseFloat(current.priceDeliveryChina) +
+          parseFloat(current.priceDeliveryRussia) +
+          parseFloat(current.commission) -
+          current.promoCodePercent)
+      );
+    }, 0);
 
   return (
     <section className={styles["cards"]}>
@@ -85,6 +229,26 @@ const Cards: FC<ICardsProps> = ({ payments }) => {
           })}
         </ul>
       </div>
+      <div className={styles["cards__day"]}>
+        Сегодня {dayjs.tz(Date.now()).format("DD.MM")}:
+      </div>
+      <div className={styles["cards__paid-at"]}>
+        Оплачено сегодня: <strong>{Math.ceil(totalPaidToday)} ₽</strong>
+      </div>
+      <div className={styles["cards__paid-at"]}>
+        Оплачено сегодня (сплит):{" "}
+        <strong>{totalSplitToday + totalSplitSecondToday} ₽</strong>
+      </div>
+      <div className={styles["cards__day"]}>
+        Вчера {dayjs.tz(Date.now() - 86400000).format("DD.MM")}:
+      </div>
+      <div className={styles["cards__paid-at"]}>
+        Оплачено сегодня: <strong>{Math.ceil(totalPaidYesterday)} ₽</strong>
+      </div>
+      <div className={styles["cards__paid-at"]}>
+        Оплачено сегодня (сплит):{" "}
+        <strong>{totalSplitYesterday + totalSplitSecondYesterday} ₽</strong>
+      </div>
       <button
         onClick={openDateUpdatePopup}
         className={styles["cards__button-update"]}
@@ -99,6 +263,6 @@ const Cards: FC<ICardsProps> = ({ payments }) => {
       />
     </section>
   );
-};
+});
 
 export default Cards;

@@ -63,6 +63,7 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
   const [filterReorder, setFilterReorder] = useState("");
 
   const [isCopyLink, setIsCopyLink] = useState(false);
+  const [isCopyTg, setIsCopyTg] = useState(false);
 
   const [inStockInRussiaOrders, setInStockInRussiaOrders] = useState<
     Array<IOrder>
@@ -322,8 +323,20 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
     setIsCopyLink(!isCopyLink);
   }
 
+  function handleCopyTgClick() {
+    setIsCopyTg(!isCopyTg);
+  }
+
   function handleCopyLink(id: string) {
     navigator.clipboard.writeText(`${BASE_URL_FRONT}/order/${id}`);
+  }
+
+  function handleCopyTg(tg: string) {
+    if (tg[0] === "@") {
+      navigator.clipboard.writeText(tg.slice(1));
+    } else {
+      navigator.clipboard.writeText(tg);
+    }
   }
 
   return (
@@ -427,6 +440,14 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
                       <button
                         className={styles["orders-table__delete-item"]}
                         onClick={() => handleCopyLink(orderItem._id)}
+                      >
+                        ✓
+                      </button>
+                    )}
+                    {status === "Недавно прибывшие" && isCopyTg && (
+                      <button
+                        className={styles["orders-table__delete-item"]}
+                        onClick={() => handleCopyTg(orderItem.deliveryName!)}
                       >
                         ✓
                       </button>
@@ -584,14 +605,24 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
             {">"}
           </button>
         </div>
-        {status === "Недавно прибывшие" && (
-          <button
-            className={styles["orders-table__poizon-code-filter"]}
-            onClick={handleCopyLinkClick}
-          >
-            {!isCopyLink ? "Копировать" : "Закрыть"}
-          </button>
-        )}
+        <div className={styles["orders-table__recently-arrived-buttons"]}>
+          {status === "Недавно прибывшие" && (
+            <button
+              className={styles["orders-table__poizon-code-filter"]}
+              onClick={handleCopyLinkClick}
+            >
+              {!isCopyLink ? "Копировать" : "Закрыть"}
+            </button>
+          )}
+          {status === "Недавно прибывшие" && (
+            <button
+              className={styles["orders-table__poizon-code-filter"]}
+              onClick={handleCopyTgClick}
+            >
+              {!isCopyTg ? "@telegram" : "Закрыть"}
+            </button>
+          )}
+        </div>
         {status === "Черновик" && (
           <button
             className={styles["delete-draft-button"]}

@@ -50,3 +50,11 @@
 .cards__button-update {
   margin: 1rem 0;
 }
+
+.cards__day {
+  margin-top: 1rem;
+}
+
+.cards__paid-at {
+  margin-top: 0.5rem;
+}

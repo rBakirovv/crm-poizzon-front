@@ -854,30 +854,6 @@ export const reorderStatus = (id: string) => {
   }).then(checkResponse);
 };
 
-export const getCardsUpdatedAt = () => {
-  return fetch(`${BASE_URL}/cards/statistics`, {
-    credentials: "include",
-    method: "GET",
-    headers: HEADERS,
-  }).then(checkResponse);
-};
-
-export const updateCardsStatistics = (id: string) => {
-  return fetch(`${BASE_URL}/cards/update/${id}`, {
-    credentials: "include",
-    method: "PATCH",
-    headers: HEADERS,
-  }).then(checkResponse);
-};
-
-export const getOrdersAfterUpdatedAt = () => {
-  return fetch(`${BASE_URL}/cards/orders`, {
-    credentials: "include",
-    method: "GET",
-    headers: HEADERS,
-  }).then(checkResponse);
-};
-
 export const getCities = (auth: string) => {
   return fetch(`${BASE_URL}/delivery/cities`, {
     credentials: "include",
@@ -1024,6 +1000,80 @@ export const addPayLinkSplitSecond = (id: string, splitLinkSecond: string) => {
     body: JSON.stringify({
       splitLinkSecond: splitLinkSecond,
     }),
+  }).then(checkResponse);
+};
+
+/* Статистика карт */
+
+export const getCardsUpdatedAt = () => {
+  return fetch(`${BASE_URL}/cards/statistics`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const updateCardsStatistics = (id: string) => {
+  return fetch(`${BASE_URL}/cards/update/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const getOrdersAfterUpdatedAt = () => {
+  return fetch(`${BASE_URL}/cards/orders`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const getOrdersPaidToday = () => {
+  return fetch(`${BASE_URL}/cards/orders-today`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const getOrdersSplitToday = () => {
+  return fetch(`${BASE_URL}/cards/split-today`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const getOrdersSplitSecondToday = () => {
+  return fetch(`${BASE_URL}/cards/split-second-today`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const getOrdersPaidYesterday = () => {
+  return fetch(`${BASE_URL}/cards/orders-yesterday`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const getOrdersSplitYesterday = () => {
+  return fetch(`${BASE_URL}/cards/split-yesterday`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const getOrdersSplitSecondYesterday = () => {
+  return fetch(`${BASE_URL}/cards/split-second-yesterday`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
   }).then(checkResponse);
 };
 
