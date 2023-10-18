@@ -237,7 +237,7 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
       </div>
       <div className={styles["cards__paid-at"]}>
         Оплачено сегодня (сплит):{" "}
-        <strong>{totalSplitToday + totalSplitSecondToday} ₽</strong>
+        <strong>{Math.ceil(totalSplitToday + totalSplitSecondToday)} ₽</strong>
       </div>
       <div className={styles["cards__day"]}>
         Вчера {dayjs.tz(Date.now() - 86400000).format("DD.MM")}:
@@ -247,7 +247,7 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
       </div>
       <div className={styles["cards__paid-at"]}>
         Оплачено сегодня (сплит):{" "}
-        <strong>{totalSplitYesterday + totalSplitSecondYesterday} ₽</strong>
+        <strong>{Math.ceil(totalSplitYesterday + totalSplitSecondYesterday)} ₽</strong>
       </div>
       <button
         onClick={openDateUpdatePopup}
