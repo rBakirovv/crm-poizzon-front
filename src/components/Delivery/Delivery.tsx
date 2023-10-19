@@ -34,6 +34,16 @@ import Dropzone from "react-dropzone";
 import { BASE_URL } from "../../utils/constants";
 import ImagePopup from "../ImagePopup/ImagePopup";
 
+const dayjs = require("dayjs");
+
+var utc = require("dayjs/plugin/utc");
+var timezone = require("dayjs/plugin/timezone");
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+dayjs.tz.setDefault("Europe/Moscow");
+
 const Delivery = () => {
   const [data, setData] = useState({
     delivery_code: OrderData.order.deliveryCode,
@@ -1568,6 +1578,12 @@ const Delivery = () => {
     <section className={styles["delivery"]}>
       {isPreloader && <Preloader />}
       <div className={styles["delivery__container"]}>
+        {OrderData.order.inRussiaStockAt !== null && (
+          <p>
+            Доставлен:{" "}
+            {dayjs.tz(OrderData.order.inRussiaStockAt).format("DD.MM.YYYY")}
+          </p>
+        )}
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" &&
           OrderData.order.payment !== "Сплит -" && (

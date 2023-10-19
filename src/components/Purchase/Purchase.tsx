@@ -19,6 +19,16 @@ import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { IOrderImages } from "../../types/interfaces";
 import Preloader from "../UI/Preloader/Preloader";
 
+const dayjs = require("dayjs");
+
+var utc = require("dayjs/plugin/utc");
+var timezone = require("dayjs/plugin/timezone");
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+dayjs.tz.setDefault("Europe/Moscow");
+
 const Purchase = () => {
   const [data, setData] = useState({
     poizon_code: OrderData.order.poizonCode,
@@ -523,6 +533,9 @@ const Purchase = () => {
         required={false}
         disabled={UserData.userData.position === "Работник склада"}
       />
+      {OrderData.order.buyAt !== null && (
+        <p>Закуплен: {dayjs.tz(OrderData.order.buyAt).format("DD.MM.YYYY")}</p>
+      )}
       {OrderData.order.filledPoizonCode !== "" &&
         OrderData.order.filledPoizonCode !== null &&
         OrderData.order.poizonCode !== "" && (
