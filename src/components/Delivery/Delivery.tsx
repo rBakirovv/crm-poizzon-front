@@ -1282,6 +1282,7 @@ const Delivery = () => {
               paidAt: OrderData.order.paidAt,
               buyAt: OrderData.order.buyAt,
               inChinaStockAt: OrderData.order.inChinaStockAt,
+              inRussiaStockAt: OrderData.order.inRussiaStockAt,
               deliveredAt: OrderData.order.deliveredAt,
               orderId: OrderData.order.orderId,
               combinedOrder: OrderData.order.combinedOrder,
@@ -1380,6 +1381,7 @@ const Delivery = () => {
                   paidAt: OrderData.order.paidAt,
                   buyAt: OrderData.order.buyAt,
                   inChinaStockAt: OrderData.order.inChinaStockAt,
+                  inRussiaStockAt: OrderData.order.inRussiaStockAt,
                   deliveredAt: OrderData.order.deliveredAt,
                   orderId: OrderData.order.orderId,
                   combinedOrder: OrderData.order.combinedOrder,
@@ -1473,6 +1475,7 @@ const Delivery = () => {
           paidAt: OrderData.order.paidAt,
           buyAt: OrderData.order.buyAt,
           inChinaStockAt: OrderData.order.inChinaStockAt,
+          inRussiaStockAt: OrderData.order.inRussiaStockAt,
           deliveredAt: OrderData.order.deliveredAt,
           orderId: OrderData.order.orderId,
           combinedOrder: OrderData.order.combinedOrder,
@@ -1578,7 +1581,7 @@ const Delivery = () => {
     <section className={styles["delivery"]}>
       {isPreloader && <Preloader />}
       <div className={styles["delivery__container"]}>
-        {OrderData.order.inRussiaStockAt !== null && (
+        {OrderData.order.inRussiaStockAt && (
           <p>
             На складе в РФ:{" "}
             {dayjs.tz(OrderData.order.inRussiaStockAt).format("DD.MM.YYYY")}

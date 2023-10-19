@@ -14,6 +14,7 @@ class OrderData {
     deliveredAt: new Date(Date.now()),
     buyAt: "",
     inChinaStockAt: "",
+    inRussiaStockAt: "",
     orderId: 0,
     combinedOrder: [],
     status: "",

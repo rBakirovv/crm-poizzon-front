@@ -25,7 +25,7 @@ export interface IOrder {
   paidAt: Date;
   buyAt: Date | string;
   inChinaStockAt: Date | string;
-  inRussiaStockAt?: Date | string;
+  inRussiaStockAt: Date | string;
   deliveredAt: Date | string;
   orderId: number;
   combinedOrder: Array<ICombinedOrder>;
@@ -65,10 +65,10 @@ export interface IOrder {
   poizonCode: string;
   filledPoizonCode: string;
   deliveryCode: string;
-  deliveryName?: string;
-  deliveryNameRecipient?: string;
-  deliveryPhone?: string;
-  deliveryPhoneRecipient?: string;
+  deliveryName: string;
+  deliveryNameRecipient: string;
+  deliveryPhone: string;
+  deliveryPhoneRecipient: string;
   deliveryMethod: string;
   deliveryAddress: string;
   deliveryEntity: string;

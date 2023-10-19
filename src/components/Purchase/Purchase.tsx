@@ -136,6 +136,7 @@ const Purchase = () => {
             paidAt: OrderData.order.paidAt,
             buyAt: OrderData.order.buyAt,
             inChinaStockAt: OrderData.order.inChinaStockAt,
+            inRussiaStockAt: OrderData.order.inRussiaStockAt,
             deliveredAt: OrderData.order.deliveredAt,
             orderId: OrderData.order.orderId,
             combinedOrder: OrderData.order.combinedOrder,
@@ -220,6 +221,7 @@ const Purchase = () => {
           paidAt: OrderData.order.paidAt,
           buyAt: OrderData.order.buyAt,
           inChinaStockAt: OrderData.order.inChinaStockAt,
+          inRussiaStockAt: OrderData.order.inRussiaStockAt,
           deliveredAt: OrderData.order.deliveredAt,
           orderId: OrderData.order.orderId,
           combinedOrder: OrderData.order.combinedOrder,
@@ -367,6 +369,7 @@ const Purchase = () => {
                     paidAt: OrderData.order.paidAt,
                     buyAt: OrderData.order.buyAt,
                     inChinaStockAt: OrderData.order.inChinaStockAt,
+                    inRussiaStockAt: OrderData.order.inRussiaStockAt,
                     deliveredAt: OrderData.order.deliveredAt,
                     orderId: OrderData.order.orderId,
                     combinedOrder: OrderData.order.combinedOrder,
@@ -468,6 +471,7 @@ const Purchase = () => {
       paidAt: OrderData.order.paidAt,
       buyAt: OrderData.order.buyAt,
       inChinaStockAt: OrderData.order.inChinaStockAt,
+      inRussiaStockAt: OrderData.order.inRussiaStockAt,
       deliveredAt: OrderData.order.deliveredAt,
       orderId: OrderData.order.orderId,
       combinedOrder: OrderData.order.combinedOrder,
@@ -533,7 +537,7 @@ const Purchase = () => {
         required={false}
         disabled={UserData.userData.position === "Работник склада"}
       />
-      {OrderData.order.buyAt !== null && (
+      {OrderData.order.buyAt && (
         <p>Закуплен: {dayjs.tz(OrderData.order.buyAt).format("DD.MM.YYYY")}</p>
       )}
       {OrderData.order.filledPoizonCode !== "" &&
