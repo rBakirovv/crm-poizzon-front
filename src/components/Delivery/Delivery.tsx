@@ -1580,7 +1580,7 @@ const Delivery = () => {
       <div className={styles["delivery__container"]}>
         {OrderData.order.inRussiaStockAt !== null && (
           <p>
-            Доставлен:{" "}
+            На складе в РФ:{" "}
             {dayjs.tz(OrderData.order.inRussiaStockAt).format("DD.MM.YYYY")}
           </p>
         )}
