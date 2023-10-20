@@ -538,7 +538,7 @@ const Purchase = () => {
         disabled={UserData.userData.position === "Работник склада"}
       />
       {OrderData.order.buyAt && (
-        <p>Закуплен: {dayjs.tz(OrderData.order.buyAt).format("DD.MM.YYYY")}</p>
+        <p>Закуплен: {dayjs.tz(OrderData.order.buyAt).format("DD.MM.YYYY в HH:mm")}</p>
       )}
       {OrderData.order.filledPoizonCode !== "" &&
         OrderData.order.filledPoizonCode !== null &&

@@ -1584,7 +1584,7 @@ const Delivery = () => {
         {OrderData.order.inRussiaStockAt && (
           <p>
             На складе в РФ:{" "}
-            {dayjs.tz(OrderData.order.inRussiaStockAt).format("DD.MM.YYYY")}
+            {dayjs.tz(OrderData.order.inRussiaStockAt).format("DD.MM.YYYY в HH:mm")}
           </p>
         )}
         {OrderData.order.deliveryAddress !== "" &&
