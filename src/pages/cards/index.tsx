@@ -25,6 +25,7 @@ import {
   getOrdersSplitSecondYesterday,
   getOrdersSplitToday,
   getOrdersSplitYesterday,
+  getSplitDebt,
 } from "../../utils/Order";
 
 const Home = observer(() => {
@@ -66,6 +67,11 @@ const Home = observer(() => {
       .then(() => {
         getOrdersSplitSecondYesterday().then((splitSecondOrdersYesterday) => {
           CardsData.setOrdersYesterdaySplitSecondAt(splitSecondOrdersYesterday);
+        });
+      })
+      .then(() => {
+        getSplitDebt().then((splitDebtOrders) => {
+          CardsData.setSplitDebt(splitDebtOrders);
         });
       })
       .then(() => setIsPreloader(false))

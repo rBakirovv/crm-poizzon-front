@@ -8,7 +8,7 @@ class CardsData {
   };
 
   ordersAfterUpdatedAt: Array<IOrder> = [];
-  
+
   ordersTodayPaidAt: Array<IOrder> = [];
   ordersTodaySplitAt: Array<IOrder> = [];
   ordersTodaySplitSecondAt: Array<IOrder> = [];
@@ -16,6 +16,8 @@ class CardsData {
   ordersYesterdayPaidAt: Array<IOrder> = [];
   ordersYesterdaySplitAt: Array<IOrder> = [];
   ordersYesterdaySplitSecondAt: Array<IOrder> = [];
+
+  splitDebt: Array<IOrder> = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -51,6 +53,10 @@ class CardsData {
 
   setOrdersYesterdaySplitSecondAt = (orders: Array<IOrder>) => {
     this.ordersYesterdaySplitSecondAt = orders;
+  };
+
+  setSplitDebt = (orders: Array<IOrder>) => {
+    this.splitDebt = orders;
   };
 }
 

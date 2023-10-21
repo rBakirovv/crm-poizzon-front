@@ -1077,6 +1077,14 @@ export const getOrdersSplitSecondYesterday = () => {
   }).then(checkResponse);
 };
 
+export const getSplitDebt = () => {
+  return fetch(`${BASE_URL}/cards/split-debt`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();
