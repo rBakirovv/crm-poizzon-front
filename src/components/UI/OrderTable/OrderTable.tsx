@@ -308,7 +308,14 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
   }, []);
 
   const totalPriceRub = inStockInRussiaOrders.reduce(function (sum, current) {
-    return sum + parseFloat(current.priceCNY) * parseFloat(RateData.rate.rate);
+    return (
+      sum +
+      (parseFloat(current.priceCNY) * parseFloat(current.currentRate) +
+        parseFloat(current.priceDeliveryChina) +
+        parseFloat(current.priceDeliveryRussia) +
+        parseFloat(current.commission) -
+        current.promoCodePercent)
+    );
   }, 0);
 
   const totalPriceCNY = inStockInRussiaOrders.reduce(function (sum, current) {
