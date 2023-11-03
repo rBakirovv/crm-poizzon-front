@@ -17,7 +17,6 @@ import {
 import { IOrder, IOrderImages } from "../../../types/interfaces";
 import { useRouter } from "next/router";
 import UserData from "../../../store/user";
-import RateData from "../../../store/rate";
 import PaymentsData from "../../../store/payments";
 import { observer } from "mobx-react-lite";
 import { BASE_URL_FRONT } from "../../../utils/constants";

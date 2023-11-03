@@ -914,6 +914,7 @@ const Delivery = () => {
       });
   }
 
+  /*
   function openPDFHandler() {
     deliveryAuthorization()
       .then((authData) => {
@@ -1068,152 +1069,67 @@ const Delivery = () => {
         console.log(err);
       });
   }
+  */
 
   function openPDFBarcodeHandler() {
     deliveryAuthorization()
       .then((authData) => {
         setIsPreloader(true);
 
-        if (OrderData.order.combinedOrder.length === 0) {
-          getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
-            .then((orderInfo) => {
-              return orderInfo.entity.packages;
-            })
-            .then((packages) => {
-              let packagesArray: any = [];
-
-              for (let i = 0; i < packages.length; i++) {
-                if (i === 0) {
-                  packagesArray.push({
-                    number: `${data.delivery_number}-${i + 1}`,
-                    weight: "100",
-                    length: data.delivery_length,
-                    width: data.delivery_width,
-                    height: data.delivery_height,
-                    items: [
-                      {
-                        ware_key: `${data.delivery_number}`,
-                        payment: {
-                          value: 0,
-                        },
-                        name: packages[i].items[0].name,
-                        cost: data.delivery_insurance,
-                        amount: 1,
-                        weight: 100,
-                      },
-                    ],
-                  });
-                } else {
-                  packagesArray.push({
-                    number: `${data.delivery_number}-${i + 1}`,
-                    weight: "100",
-                    length: data.delivery_length,
-                    width: data.delivery_width,
-                    height: data.delivery_height,
-                    items: [
-                      {
-                        ware_key: `${data.delivery_number}`,
-                        payment: {
-                          value: 0,
-                        },
-                        name: packages[i].items[0].name,
-                        cost: data.delivery_insurance,
-                        amount: 1,
-                        weight: 100,
-                      },
-                    ],
-                  });
-                }
-              }
-
-              return packagesArray;
-            })
-            .then((packagesArray) => {
+        createDeliveryBarcode(authData.token, OrderData.order.deliveryEntity)
+          .then((deliveryDocument) => {
+            if (OrderData.order.deliveryCode === "") {
               getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
-                .then((orderInfoForSum) => {
-                  changeTotalSum(
-                    authData.token,
-                    orderInfoForSum.entity.tariff_code,
-                    orderInfoForSum.entity.from_location.code,
-                    orderInfoForSum.entity.to_location.code,
-                    packagesArray,
-                    orderInfoForSum.entity.packages[0].items[0].cost
-                  ).then((sumInfo) => {
-                    changeOrderDeliveryPackages(
-                      authData.token,
-                      OrderData.order.deliveryEntity,
-                      sumInfo.total_sum + 100,
-                      packagesArray
-                    ).catch((err) => {
+                .then((orderData) => {
+                  updateDeliveryCDEKCode(
+                    OrderData.order._id,
+                    orderData.entity.cdek_number
+                  )
+                    .then((orderData) => {
+                      OrderData.setOrder(orderData);
+                      if (OrderData.order.combinedOrder.length > 0) {
+                        OrderData.order.combinedOrder[0].combinedOrder.map(
+                          (orderItem) => {
+                            if (OrderData.order._id !== orderItem) {
+                              updateDeliveryCDEKCode(
+                                orderItem,
+                                orderData.entity.cdek_number
+                              ).catch((err) => {
+                                setIsPreloader(false);
+                                console.log(err);
+                              });
+                            }
+                          }
+                        );
+                      }
+                    })
+                    .catch((err) => {
+                      setIsPreloader(false);
                       console.log(err);
                     });
-                  });
                 })
                 .catch((err) => {
+                  setIsPreloader(false);
                   console.log(err);
                 });
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-
-        setTimeout(() => {
-          createDeliveryBarcode(authData.token, OrderData.order.deliveryEntity)
-            .then((deliveryDocument) => {
-              if (OrderData.order.deliveryCode === "") {
-                getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
-                  .then((orderData) => {
-                    updateDeliveryCDEKCode(
-                      OrderData.order._id,
-                      orderData.entity.cdek_number
-                    )
-                      .then((orderData) => {
-                        OrderData.setOrder(orderData);
-                        if (OrderData.order.combinedOrder.length > 0) {
-                          OrderData.order.combinedOrder[0].combinedOrder.map(
-                            (orderItem) => {
-                              if (OrderData.order._id !== orderItem) {
-                                updateDeliveryCDEKCode(
-                                  orderItem,
-                                  orderData.entity.cdek_number
-                                ).catch((err) => {
-                                  setIsPreloader(false);
-                                  console.log(err);
-                                });
-                              }
-                            }
-                          );
-                        }
-                      })
-                      .catch((err) => {
-                        setIsPreloader(false);
-                        console.log(err);
-                      });
-                  })
-                  .catch((err) => {
-                    setIsPreloader(false);
-                    console.log(err);
-                  });
-              }
-              setIsPreloader(true);
-              setTimeout(() => {
-                getDeliveryBarcode(authData.token, deliveryDocument.entity.uuid)
-                  .then((pdfData) => {
-                    setIsPreloader(false);
-                    openPDF(pdfData.pdf);
-                  })
-                  .catch((err) => {
-                    setIsPreloader(false);
-                    console.log(err);
-                  });
-              }, 2500);
-            })
-            .catch((err) => {
-              setIsPreloader(false);
-              console.log(err);
-            });
-        }, 5000);
+            }
+            setIsPreloader(true);
+            setTimeout(() => {
+              getDeliveryBarcode(authData.token, deliveryDocument.entity.uuid)
+                .then((pdfData) => {
+                  setIsPreloader(false);
+                  openPDF(pdfData.pdf);
+                })
+                .catch((err) => {
+                  setIsPreloader(false);
+                  console.log(err);
+                });
+            }, 2500);
+          })
+          .catch((err) => {
+            setIsPreloader(false);
+            console.log(err);
+          });
       })
       .catch((err) => {
         setIsPreloader(false);
@@ -1331,6 +1247,7 @@ const Delivery = () => {
               deliveryEntity: OrderData.order.deliveryEntity,
               deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
               reorder: OrderData.order.reorder,
+              totalReorder: OrderData.order.totalReorder,
               payLinksArray: OrderData.order.payLinksArray,
               splitLinksArray: OrderData.order.splitLinksArray,
               splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
@@ -1436,6 +1353,7 @@ const Delivery = () => {
                   deliveryRelatedEntities:
                     OrderData.order.deliveryRelatedEntities,
                   reorder: OrderData.order.reorder,
+                  totalReorder: OrderData.order.totalReorder,
                   payLinksArray: OrderData.order.payLinksArray,
                   splitLinksArray: OrderData.order.splitLinksArray,
                   splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
@@ -1526,6 +1444,7 @@ const Delivery = () => {
           deliveryEntity: OrderData.order.deliveryEntity,
           deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
           reorder: OrderData.order.reorder,
+          totalReorder: OrderData.order.totalReorder,
           payLinksArray: OrderData.order.payLinksArray,
           splitLinksArray: OrderData.order.splitLinksArray,
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
@@ -1584,7 +1503,9 @@ const Delivery = () => {
         {OrderData.order.inRussiaStockAt && (
           <p>
             На складе в РФ:{" "}
-            {dayjs.tz(OrderData.order.inRussiaStockAt).format("DD.MM.YYYY в HH:mm")}
+            {dayjs
+              .tz(OrderData.order.inRussiaStockAt)
+              .format("DD.MM.YYYY в HH:mm")}
           </p>
         )}
         {OrderData.order.deliveryAddress !== "" &&

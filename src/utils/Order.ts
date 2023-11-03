@@ -117,7 +117,8 @@ export const createOrder = (
   priceDeliveryRussia: string,
   commission: string,
   promoCodePercent: number,
-  comment: string
+  comment: string,
+  totalReorder: boolean,
 ) => {
   return fetch(`${BASE_URL}/orders/create`, {
     credentials: "include",
@@ -140,6 +141,7 @@ export const createOrder = (
       commission: commission,
       promoCodePercent: promoCodePercent,
       comment: comment,
+      totalReorder: totalReorder,
     }),
   }).then(checkResponse);
 };
@@ -160,7 +162,8 @@ export const createOrderSplit = (
   priceDeliveryRussia: string,
   commission: string,
   promoCodePercent: number,
-  comment: string
+  comment: string,
+  totalReorder: boolean
 ) => {
   return fetch(`${BASE_URL}/orders/create-split`, {
     credentials: "include",
@@ -183,6 +186,7 @@ export const createOrderSplit = (
       commission: commission,
       promoCodePercent: promoCodePercent,
       comment: comment,
+      totalReorder: totalReorder
     }),
   }).then(checkResponse);
 };

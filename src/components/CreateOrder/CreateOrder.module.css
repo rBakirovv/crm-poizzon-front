@@ -195,6 +195,11 @@
   margin: 0;
 }
 
+.order-change__reorder-checkbox {
+  display: flex;
+  gap: 0.5rem;
+}
+
 @media screen and (max-width: 500px) {
   .order-change__nav-bar {
     justify-content: flex-start;

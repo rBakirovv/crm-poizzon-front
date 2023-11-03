@@ -62,6 +62,7 @@ class OrderData {
     deliveryEntity: "",
     deliveryRelatedEntities: "",
     reorder: false,
+    totalReorder: false,
     payLinksArray: [],
     splitLinksArray: [],
     splitSecondLinksArray: [],

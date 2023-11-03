@@ -58,3 +58,28 @@
 .cards__paid-at {
   margin-top: 0.5rem;
 }
+
+.cards__paid-dropdown {
+  margin-top: 0.5rem;
+  cursor: pointer;
+}
+
+.cards__paid-dropdown-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem
+}
+
+.cards__paid-dropdown-title {
+  margin: 0.5rem 0;
+}
+
+.cards__paid-dropdown-container {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.cards__paid-dropdown-container_active {
+  max-height: 10000px;
+  overflow: visible;
+}

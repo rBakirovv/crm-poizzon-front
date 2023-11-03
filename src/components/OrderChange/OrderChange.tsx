@@ -474,6 +474,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         deliveryEntity: OrderData.order.deliveryEntity,
         deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
         reorder: OrderData.order.reorder,
+        totalReorder: OrderData.order.totalReorder,
         payLinksArray: OrderData.order.payLinksArray,
         splitLinksArray: OrderData.order.splitLinksArray,
         splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
@@ -563,6 +564,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           deliveryEntity: OrderData.order.deliveryEntity,
           deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
           reorder: OrderData.order.reorder,
+          totalReorder: OrderData.order.totalReorder,
           payLinksArray: OrderData.order.payLinksArray,
           splitLinksArray: OrderData.order.splitLinksArray,
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
@@ -659,6 +661,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   deliveryRelatedEntities:
                     OrderData.order.deliveryRelatedEntities,
                   reorder: OrderData.order.reorder,
+                  totalReorder: OrderData.order.totalReorder,
                   payLinksArray: OrderData.order.payLinksArray,
                   splitLinksArray: OrderData.order.splitLinksArray,
                   splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
@@ -753,6 +756,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           deliveryEntity: OrderData.order.deliveryEntity,
           deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
           reorder: OrderData.order.reorder,
+          totalReorder: OrderData.order.totalReorder,
           payLinksArray: OrderData.order.payLinksArray,
           splitLinksArray: OrderData.order.splitLinksArray,
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
@@ -871,6 +875,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       deliveryEntity: OrderData.order.deliveryEntity,
       deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
       reorder: OrderData.order.reorder,
+      totalReorder: OrderData.order.totalReorder,
       payLinksArray: OrderData.order.payLinksArray,
       splitLinksArray: OrderData.order.splitLinksArray,
       splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
@@ -1006,7 +1011,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         Заказ #{OrderData.order.orderId}
       </h2>
       <p className={styles["order-change__status"]}>
-        Статус: {OrderData.order.status}
+        Статус: {OrderData.order.status}{OrderData.order.totalReorder && ', перезаказан'}
       </p>
       {OrderData.order.deliveredAt && OrderData.order.deliveredAt !== "" && (
         <p className={styles["order-change__status"]}>

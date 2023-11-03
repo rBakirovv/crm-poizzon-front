@@ -5,6 +5,7 @@ import { FC, useState } from "react";
 import { updateCardsStatistics } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { observer } from "mobx-react-lite";
+import Link from "next/link";
 
 interface ICardsProps {
   payments: Array<IPayments>;
@@ -23,6 +24,9 @@ dayjs.tz.setDefault("Europe/Moscow");
 const Cards: FC<ICardsProps> = observer(({ payments }) => {
   const [isDateUpdatePopup, setIsDateUpdatePopup] = useState(false);
 
+  const [isSplitTodayDropdownActive, setIsSplitTodayDropdownActive] =
+    useState(false);
+
   function openDateUpdatePopup() {
     setIsDateUpdatePopup(true);
   }
@@ -37,6 +41,10 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
         CardsData.setUpdatedDate(data);
       })
       .then(() => alert("Успешно! Необходимо обновить страницу"));
+  }
+
+  function handleSplitTodayDropdownClick() {
+    setIsSplitTodayDropdownActive(!isSplitTodayDropdownActive);
   }
 
   const filteredTotalPaidToday =
@@ -253,6 +261,31 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
         <strong>
           {Math.ceil((totalSplitToday + totalSplitSecondToday) / 2)} ₽
         </strong>
+      </div>
+      <div className={styles["cards__paid-dropdown"]}>
+        <strong onClick={handleSplitTodayDropdownClick}>Оплаченые заказы</strong>
+        <div
+          className={`${styles["cards__paid-dropdown-container"]} ${isSplitTodayDropdownActive && styles["cards__paid-dropdown-container_active"]}`}
+        >
+          <p className={styles["cards__paid-dropdown-title"]}>
+            <strong>1 часть:</strong>
+          </p>
+          <div className={styles["cards__paid-dropdown-links"]}>
+            {filteredTotalSplitToday &&
+              filteredTotalSplitToday.map((item) => {
+                return <Link href={`/order/change/${item._id}`}>{item.orderId}</Link>;
+              })}
+          </div>
+          <p className={styles["cards__paid-dropdown-title"]}>
+            <strong>2 часть:</strong>
+          </p>
+          <div className={styles["cards__paid-dropdown-links"]}>
+            {filteredTotalSplitSecondToday &&
+              filteredTotalSplitSecondToday.map((item) => {
+                return <Link href={item._id}>{item.orderId}</Link>;
+              })}
+          </div>
+        </div>
       </div>
       <div className={styles["cards__day"]}>
         Вчера {dayjs.tz(Date.now() - 86400000).format("DD.MM")}:

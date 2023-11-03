@@ -185,6 +185,7 @@ const Purchase = () => {
             deliveryEntity: OrderData.order.deliveryEntity,
             deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
             reorder: OrderData.order.reorder,
+            totalReorder: OrderData.order.totalReorder,
             payLinksArray: OrderData.order.payLinksArray,
             splitLinksArray: OrderData.order.splitLinksArray,
             splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
@@ -272,6 +273,7 @@ const Purchase = () => {
           deliveryEntity: OrderData.order.deliveryEntity,
           deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
           reorder: OrderData.order.reorder,
+          totalReorder: OrderData.order.totalReorder,
           payLinksArray: OrderData.order.payLinksArray,
           splitLinksArray: OrderData.order.splitLinksArray,
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
@@ -426,6 +428,7 @@ const Purchase = () => {
                     deliveryRelatedEntities:
                       OrderData.order.deliveryRelatedEntities,
                     reorder: OrderData.order.reorder,
+                    totalReorder: OrderData.order.totalReorder,
                     payLinksArray: OrderData.order.payLinksArray,
                     splitLinksArray: OrderData.order.splitLinksArray,
                     splitSecondLinksArray:
@@ -520,6 +523,7 @@ const Purchase = () => {
       deliveryEntity: OrderData.order.deliveryEntity,
       deliveryRelatedEntities: OrderData.order.deliveryRelatedEntities,
       reorder: OrderData.order.reorder,
+      totalReorder: OrderData.order.totalReorder,
       payLinksArray: OrderData.order.payLinksArray,
       splitLinksArray: OrderData.order.splitLinksArray,
       splitSecondLinksArray: OrderData.order.splitSecondLinksArray,

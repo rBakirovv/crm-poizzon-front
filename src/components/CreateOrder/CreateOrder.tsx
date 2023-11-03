@@ -60,6 +60,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
 
   const [isDrag, setIsDrag] = useState(false);
 
+  const [isReorder, setIsReorder] = useState(false);
+
   const priceRub = Math.ceil(
     parseFloat(data.priceCNY) * parseFloat(RateData.rate.rate)
   );
@@ -280,7 +282,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
         data.priceDeliveryRussia,
         data.commission,
         data.promoCodePercent,
-        data.comment
+        data.comment,
+        isReorder
       )
         .then((order) => {
           OrderData.setOrder(order);
@@ -476,7 +479,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
         data.priceDeliveryRussia,
         data.commission,
         data.promoCodePercent,
-        data.comment
+        data.comment,
+        isReorder
       )
         .then((order) => {
           OrderData.setOrder(order);
@@ -698,6 +702,10 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       return -1;
     }
   };
+
+  function reorderHandler() {
+    setIsReorder(!isReorder);
+  }
 
   useEffect(() => {
     document.addEventListener("paste", pasteHandler);
@@ -962,6 +970,14 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
               onChange={handleChange}
               value={data.comment}
             ></textarea>
+          </div>
+          <div className={styles["order-change__reorder-checkbox"]}>
+            <input
+              type="checkbox"
+              checked={isReorder}
+              onChange={reorderHandler}
+            />
+            <label>Перезаказ</label>
           </div>
           <button
             className={`${styles["order-change__order-submit"]}`}

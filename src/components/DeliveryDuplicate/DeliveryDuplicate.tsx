@@ -654,6 +654,7 @@ const DeliveryDuplicate = () => {
       });
   }
 
+  /*
   function openPDFHandler() {
     deliveryAuthorization()
       .then((authData) => {
@@ -725,6 +726,7 @@ const DeliveryDuplicate = () => {
         console.log(err);
       });
   }
+  */
 
   function openPDFBarcodeHandler() {
     deliveryAuthorization()
