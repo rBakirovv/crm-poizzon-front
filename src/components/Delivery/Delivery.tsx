@@ -8,8 +8,6 @@ import {
   orderSent,
   orderСompleted,
   deliveryAuthorization,
-  createDeliveryDocument,
-  getDeliveryDocument,
   createDeliveryBarcode,
   getDeliveryBarcode,
   getDeliveryInfo,

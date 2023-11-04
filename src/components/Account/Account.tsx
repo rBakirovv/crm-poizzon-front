@@ -2,8 +2,21 @@ import React, { useState } from "react";
 import { changePassword } from "../../utils/User";
 import TextInput from "../UI/TextInput/TextInput";
 import styles from "./Account.module.css";
+import UserData from "../../store/user";
+import { observer } from "mobx-react-lite";
+import {
+  deleteFinalOrder,
+  deleteOrder,
+  deleteOrderImage,
+  deletePayProofImage,
+  deletePurchaseImage,
+  deleteReceiptImage,
+  getCurrentOrder,
+  getLongCompletedOrders,
+} from "../../utils/Order";
+import { IOrder, IOrderImages } from "../../types/interfaces";
 
-const Account = () => {
+const Account = observer(() => {
   const [data, setData] = useState({
     new_password: "",
     new_password_copy: "",
@@ -43,6 +56,60 @@ const Account = () => {
     }
   };
 
+  function handleDelete() {
+    getLongCompletedOrders().then((longCompletedOrders) => {
+      longCompletedOrders.length > 0 &&
+        longCompletedOrders.map((item: IOrder) => {
+          if (longCompletedOrders.length !== 0) {
+            getCurrentOrder(item._id)
+              .then((order) => {
+                if (order.orderImages.length !== 0) {
+                  order.orderImages.map((imageItem: IOrderImages) => {
+                    order.orderImages.length !== 0 &&
+                      deleteOrderImage(imageItem.name, order._id).catch((err) =>
+                        console.log(err)
+                      );
+                  });
+                }
+
+                if (order.payProofImages.length !== 0) {
+                  order.payProofImages.map((imageItem: IOrderImages) => {
+                    order.payProofImages.length !== 0 &&
+                      deletePayProofImage(imageItem.name, order._id).catch(
+                        (err) => console.log(err)
+                      );
+                  });
+                }
+
+                if (order.buyProofImages.length !== 0) {
+                  order.buyProofImages.map((imageItem: IOrderImages) => {
+                    order.buyProofImages.length !== 0 &&
+                      deletePurchaseImage(imageItem.name, order._id).catch(
+                        (err) => console.log(err)
+                      );
+                  });
+                }
+
+                if (order.receiptImages.length !== 0) {
+                  order.receiptImages.map((imageItem: IOrderImages) => {
+                    order.receiptImages.length !== 0 &&
+                      deleteReceiptImage(imageItem.name, order._id).catch(
+                        (err) => console.log(err)
+                      );
+                  });
+                }
+              })
+              .then(() => {
+                deleteFinalOrder(item._id);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        });
+    });
+  }
+
   return (
     <section className={styles["account"]}>
       <div className={styles["account__container"]}>
@@ -62,6 +129,9 @@ const Account = () => {
             value={data.new_password_copy}
             handleChange={handleChange}
           />
+          {UserData.userData.position === "Создатель" && (
+            <button onClick={handleDelete}>Удалить старые заказы</button>
+          )}
           <button className={styles["account__submit"]} type="submit">
             Cохранить
           </button>
@@ -69,6 +139,6 @@ const Account = () => {
       </div>
     </section>
   );
-};
+});
 
 export default Account;

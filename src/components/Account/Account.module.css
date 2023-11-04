@@ -33,7 +33,7 @@
   justify-content: center;
   transition: all 0.4s ease-in-out;
   cursor: pointer;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 .account__submit:hover {

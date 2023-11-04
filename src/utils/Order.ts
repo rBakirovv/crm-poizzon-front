@@ -1089,6 +1089,24 @@ export const getSplitDebt = () => {
   }).then(checkResponse);
 };
 
+/* Удаление старых */
+
+export const getLongCompletedOrders = () => {
+  return fetch(`${BASE_URL}/orders-long-completed`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const deleteFinalOrder = (id: string) => {
+  return fetch(`${BASE_URL}/orders-final/${id}`, {
+    credentials: "include",
+    method: "DELETE",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();
