@@ -62,6 +62,45 @@ const Account = observer(() => {
         longCompletedOrders.map((item: IOrder) => {
           if (longCompletedOrders.length !== 0) {
             getCurrentOrder(item._id)
+              .then((order) => {
+                /*
+                if (order.orderImages.length !== 0) {
+                  order.orderImages.map((imageItem: IOrderImages) => {
+                    order.orderImages.length !== 0 &&
+                      deleteOrderImage(imageItem.name, order._id).catch((err) =>
+                        console.log(err)
+                      );
+                  });
+                }
+
+                if (order.payProofImages.length !== 0) {
+                  order.payProofImages.map((imageItem: IOrderImages) => {
+                    order.payProofImages.length !== 0 &&
+                      deletePayProofImage(imageItem.name, order._id).catch(
+                        (err) => console.log(err)
+                      );
+                  });
+                }
+
+                if (order.buyProofImages.length !== 0) {
+                  order.buyProofImages.map((imageItem: IOrderImages) => {
+                    order.buyProofImages.length !== 0 &&
+                      deletePurchaseImage(imageItem.name, order._id).catch(
+                        (err) => console.log(err)
+                      );
+                  });
+                }
+
+                if (order.receiptImages.length !== 0) {
+                  order.receiptImages.map((imageItem: IOrderImages) => {
+                    order.receiptImages.length !== 0 &&
+                      deleteReceiptImage(imageItem.name, order._id).catch(
+                        (err) => console.log(err)
+                      );
+                  });
+                }
+                */
+              })
               .then(() => {
                 deleteFinalOrder(item._id);
               })
@@ -72,6 +111,12 @@ const Account = observer(() => {
         });
     });
   }
+
+  /*
+    {UserData.userData.position === "Создатель" && (
+      <button onClick={handleDelete}>Удалить старые заказы</button>
+    )}
+  */
 
   return (
     <section className={styles["account"]}>
@@ -92,9 +137,6 @@ const Account = observer(() => {
             value={data.new_password_copy}
             handleChange={handleChange}
           />
-          {UserData.userData.position === "Создатель" && (
-            <button onClick={handleDelete}>Удалить старые заказы</button>
-          )}
           <button className={styles["account__submit"]} type="submit">
             Cохранить
           </button>
