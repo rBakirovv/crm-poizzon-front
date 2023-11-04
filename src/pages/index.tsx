@@ -38,6 +38,7 @@ const Home = observer(() => {
     });
   }, []);
 
+  /*
   useEffect(() => {
     getOrders()
       .then(() => {
@@ -81,6 +82,7 @@ const Home = observer(() => {
           });
       });
   }, []);
+  */
 
   useEffect(() => {
     !Logged.loggedIn &&
