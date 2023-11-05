@@ -8,7 +8,7 @@ import Preloader from "../components/UI/Preloader/Preloader";
 import UserData from "../store/user";
 import Logged from "../store/logged";
 import { getUserInfo } from "../utils/User";
-import { getOrders, getOrdersTable } from "../utils/Order";
+import { getLongDrafts, getOrders, getOrdersTable } from "../utils/Order";
 import OrderData from "../store/order";
 import OrdersBar from "../store/ordersBar";
 import Navigation from "../components/UI/Navigation/Navigation";
@@ -16,7 +16,7 @@ import { getRate } from "../utils/Rate";
 import RateData from "../store/rate";
 import OrdersList from "../components/OrdersList/OrdersList";
 import { deleteOrder, getCurrentOrder, deleteOrderImage } from "../utils/Order";
-import { IOrderImages } from "../types/interfaces";
+import { IOrder, IOrderImages } from "../types/interfaces";
 import { getPayments } from "../utils/Payment";
 import PaymentsData from "../store/payments";
 
@@ -38,51 +38,33 @@ const Home = observer(() => {
     });
   }, []);
 
-  /*
   useEffect(() => {
-    getOrders()
-      .then(() => {
-        return OrderData.orders.filter((item) => {
-          if (
-            item.status === "Черновик" &&
-            Math.ceil(
-              Math.round(
-                new Date(item.overudeAfter).getTime() -
-                  new Date(Date.now()).getTime()
-              ) / 1000
-            ) <= -172800
-          ) {
-            return true;
-          }
+    getLongDrafts().then((overudeOrders) => {
+      overudeOrders.length > 0 &&
+        overudeOrders.map((item: IOrder) => {
+          getCurrentOrder(item._id)
+            .then((order) => {
+              if (order.orderImages.length !== 0) {
+                order.orderImages.map((imageItem: IOrderImages) => {
+                  order.orderImages.length !== 0 &&
+                    deleteOrderImage(imageItem.name, order._id).catch((err) =>
+                      console.log(err)
+                    );
+                });
+              }
+            })
+            .then(() => {
+              deleteOrder(item._id);
+            })
+            .then(() => {
+              OrderData.deleteOrder(item._id);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         });
-      })
-      .then((overudeOrders) => {
-        overudeOrders.length > 0 &&
-          overudeOrders.map((item) => {
-            getCurrentOrder(item._id)
-              .then((order) => {
-                if (order.orderImages.length !== 0) {
-                  order.orderImages.map((imageItem: IOrderImages) => {
-                    order.orderImages.length !== 0 &&
-                      deleteOrderImage(imageItem.name, order._id).catch((err) =>
-                        console.log(err)
-                      );
-                  });
-                }
-              })
-              .then(() => {
-                deleteOrder(item._id);
-              })
-              .then(() => {
-                OrderData.deleteOrder(item._id);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          });
-      });
+    });
   }, []);
-  */
 
   useEffect(() => {
     !Logged.loggedIn &&

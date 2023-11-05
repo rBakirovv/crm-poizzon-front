@@ -1100,9 +1100,25 @@ export const getLongCompletedOrders = () => {
 };
 
 export const deleteFinalOrder = (id: string) => {
-  return fetch(`${BASE_URL}/orders-final/${id}`, {
+  return fetch(`${BASE_URL}/order/orders-final/${id}`, {
     credentials: "include",
     method: "DELETE",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const getLongDrafts = () => {
+  return fetch(`${BASE_URL}/orders-long-drafts`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const getRecentlyArrived = () => {
+  return fetch(`${BASE_URL}/recently-arrived`, {
+    credentials: "include",
+    method: "GET",
     headers: HEADERS,
   }).then(checkResponse);
 };

@@ -1,6 +1,7 @@
 import styles from "./Delivery.module.css";
 import OrderData from "../../store/order";
 import UserData from "../../store/user";
+import WarehouseData from "../../store/warehouse";
 import TextInput from "../UI/TextInput/TextInput";
 import React, { useState } from "react";
 import {
@@ -24,6 +25,7 @@ import {
   deleteReceiptImage,
   setIsReceiptImages,
   orderDeliveryCode,
+  getRecentlyArrived,
 } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import Preloader from "../UI/Preloader/Preloader";
@@ -331,11 +333,15 @@ const Delivery = () => {
   }
 
   function handleInStockInRussia() {
-    inStockInRussia(OrderData.order._id, UserData.userData.name).then(
-      (order) => {
+    inStockInRussia(OrderData.order._id, UserData.userData.name)
+      .then((order) => {
         OrderData.setOrder(order);
-      }
-    );
+      })
+      .then(() => {
+        getRecentlyArrived().then((orders) => {
+          WarehouseData.setordersRecentlyArrived(orders);
+        });
+      });
   }
 
   function handleOrderSent() {

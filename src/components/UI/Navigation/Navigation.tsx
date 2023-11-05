@@ -312,7 +312,7 @@ const Navigation = observer(() => {
                 }`}
                 href="/cards"
               >
-                Статистика карт
+                Статистика
               </Link>
             </li>
           )}

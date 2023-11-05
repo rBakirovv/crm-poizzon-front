@@ -36,6 +36,11 @@
   margin-top: 0.5rem;
 }
 
+.account__delete {
+  max-width: 334px;
+  width: 100%;
+}
+
 .account__submit:hover {
   background: #ff7f00;
 }

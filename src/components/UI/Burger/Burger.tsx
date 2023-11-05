@@ -347,7 +347,7 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
                 }`}
                 href="/cards"
               >
-                Статистика карт
+                Статистика
               </Link>
             </li>
           )}
