@@ -88,27 +88,30 @@ const WarehouseTable = observer(() => {
                     return sum + 1;
                   }, 0);
                 return (
-                  <li className={styles["warehouse-table__list-item"]}>
-                    {user.position === "Работник склада" && (
-                      <>
-                        <p className={styles["warehouse-table__list-text"]}>
-                          {UserData.userData.name === user.name ? (
-                            <strong>{user.name}</strong>
-                          ) : (
-                            user.name
-                          )}
-                        </p>
-                        <p className={styles["warehouse-table__list-text"]}>
-                          {UserData.userData.name === user.name ? (
-                            <strong>{total > 0 ? total : 0}</strong>
-                          ) : total > 0 ? (
-                            total
-                          ) : (
-                            0
-                          )}
-                        </p>
-                      </>
-                    )}
+                  <li
+                    className={`${styles["warehouse-table__list-item"]} ${
+                      user.position !== "Работник склада" &&
+                      styles["warehouse-table__list-item_disable"]
+                    }`}
+                  >
+                    <>
+                      <p className={styles["warehouse-table__list-text"]}>
+                        {UserData.userData.name === user.name ? (
+                          <strong>{user.name}</strong>
+                        ) : (
+                          user.name
+                        )}
+                      </p>
+                      <p className={styles["warehouse-table__list-text"]}>
+                        {UserData.userData.name === user.name ? (
+                          <strong>{total > 0 ? total : 0}</strong>
+                        ) : total > 0 ? (
+                          total
+                        ) : (
+                          0
+                        )}
+                      </p>
+                    </>
                   </li>
                 );
               })}

@@ -83,3 +83,30 @@
   max-height: 10000px;
   overflow: visible;
 }
+
+.cards__warehouse {
+  margin-top: 1rem;
+}
+
+.cards__warehouse-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 280px;
+  margin: 0.5rem 0 0;
+  padding: 0;
+}
+
+.cards__warehouse-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cards__warehouse-list-item_disable {
+  display: none;
+}
+
+.cards__warehouse-list-text {
+  margin: 0;
+}

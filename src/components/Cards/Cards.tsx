@@ -1,11 +1,14 @@
 import styles from "./Cards.module.css";
-import { IPayments } from "../../types/interfaces";
+import { IPayments, IUserData } from "../../types/interfaces";
 import CardsData from "../../store/cards";
 import { FC, useState } from "react";
 import { updateCardsStatistics } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { observer } from "mobx-react-lite";
 import Link from "next/link";
+import UsersDataList from "../../store/usersList";
+import UserData from "../../store/user";
+import WarehouseData from "../../store/warehouse";
 
 interface ICardsProps {
   payments: Array<IPayments>;
@@ -204,6 +207,17 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
       );
     }, 0);
 
+  const filteredRecentlyArrived =
+    WarehouseData.ordersRecentlyArrived &&
+    WarehouseData.ordersRecentlyArrived.filter((item) => {
+      if (
+        dayjs.tz(new Date(item.inRussiaStockAt)).format("DD-MM-YY") ===
+        dayjs.tz(new Date(Date.now())).format("DD-MM-YY")
+      ) {
+        return true;
+      }
+    });
+
   return (
     <section className={styles["cards"]}>
       <div className={styles["cards__container"]}>
@@ -263,9 +277,14 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
         </strong>
       </div>
       <div className={styles["cards__paid-dropdown"]}>
-        <strong onClick={handleSplitTodayDropdownClick}>Оплаченые заказы</strong>
+        <strong onClick={handleSplitTodayDropdownClick}>
+          Оплаченые заказы
+        </strong>
         <div
-          className={`${styles["cards__paid-dropdown-container"]} ${isSplitTodayDropdownActive && styles["cards__paid-dropdown-container_active"]}`}
+          className={`${styles["cards__paid-dropdown-container"]} ${
+            isSplitTodayDropdownActive &&
+            styles["cards__paid-dropdown-container_active"]
+          }`}
         >
           <p className={styles["cards__paid-dropdown-title"]}>
             <strong>1 часть:</strong>
@@ -273,7 +292,9 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
           <div className={styles["cards__paid-dropdown-links"]}>
             {filteredTotalSplitToday &&
               filteredTotalSplitToday.map((item) => {
-                return <Link href={`/order/change/${item._id}`}>{item.orderId}</Link>;
+                return (
+                  <Link href={`/order/change/${item._id}`}>{item.orderId}</Link>
+                );
               })}
           </div>
           <p className={styles["cards__paid-dropdown-title"]}>
@@ -301,6 +322,51 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
       </div>
       <div className={styles["cards__day"]}>
         Долг по сплиту: <strong>{Math.ceil(totalSplitDebt / 2)} ₽</strong>
+      </div>
+      <div className={styles["cards__warehouse"]}>
+        Статистика склада:
+        <ul className={`${styles["cards__warehouse-list"]}`}>
+          {UsersDataList.usersList.map((user: IUserData) => {
+            const filterItems = filteredRecentlyArrived.filter((filterItem) => {
+              if (filterItem.stockman === user.name) {
+                return filterItem;
+              }
+            });
+
+            const total =
+              filterItems &&
+              filterItems.reduce(function (sum, current) {
+                return sum + 1;
+              }, 0);
+            return (
+              <li
+                className={`${styles["cards__warehouse-list-item"]} ${
+                  user.position !== "Работник склада" &&
+                  styles["cards__warehouse-list-item_disable"]
+                }`}
+              >
+                <>
+                  <p className={styles["cards__warehouse-list-text"]}>
+                    {UserData.userData.name === user.name ? (
+                      <strong>{user.name}</strong>
+                    ) : (
+                      user.name
+                    )}
+                  </p>
+                  <p className={styles["cards__warehouse-list-text"]}>
+                    {UserData.userData.name === user.name ? (
+                      <strong>{total > 0 ? total : 0}</strong>
+                    ) : total > 0 ? (
+                      total
+                    ) : (
+                      0
+                    )}
+                  </p>
+                </>
+              </li>
+            );
+          })}
+        </ul>
       </div>
       <button
         onClick={openDateUpdatePopup}

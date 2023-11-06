@@ -7,7 +7,7 @@ import Header from "../../components/UI/Header/Header";
 import Preloader from "../../components/UI/Preloader/Preloader";
 import UserData from "../../store/user";
 import Logged from "../../store/logged";
-import { getUserInfo } from "../../utils/User";
+import { getUserInfo, getUsers } from "../../utils/User";
 import Navigation from "../../components/UI/Navigation/Navigation";
 import RateData from "../../store/rate";
 import { getRate } from "../../utils/Rate";
@@ -16,6 +16,8 @@ import PaymentsData from "../../store/payments";
 import Cards from "../../components/Cards/Cards";
 import OrderData from "../../store/order";
 import CardsData from "../../store/cards";
+import UsersDataList from "../../store/usersList";
+import WarehouseData from "../../store/warehouse";
 import {
   getCardsUpdatedAt,
   getOrdersAfterUpdatedAt,
@@ -25,6 +27,7 @@ import {
   getOrdersSplitSecondYesterday,
   getOrdersSplitToday,
   getOrdersSplitYesterday,
+  getRecentlyArrived,
   getSplitDebt,
 } from "../../utils/Order";
 
@@ -132,6 +135,16 @@ const Home = observer(() => {
     getCardsUpdatedAt().then((data) => {
       CardsData.setUpdatedDate(data[0]);
     });
+  }, []);
+
+  useEffect(() => {
+    getRecentlyArrived().then((orders) => {
+      WarehouseData.setordersRecentlyArrived(orders);
+    });
+  }, []);
+
+  useEffect(() => {
+    getUsers().then((users) => UsersDataList.setUsersList(users));
   }, []);
 
   return (

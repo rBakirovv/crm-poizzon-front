@@ -46,6 +46,10 @@
   align-items: center;
 }
 
+.warehouse-table__list-item_disable {
+  display: none;
+}
+
 .warehouse-table__list-text {
   margin: 0;
 }
