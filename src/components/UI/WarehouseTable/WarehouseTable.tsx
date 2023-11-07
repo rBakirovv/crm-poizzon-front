@@ -19,9 +19,16 @@ dayjs.extend(timezone);
 dayjs.tz.setDefault("Europe/Moscow");
 
 const WarehouseTable = observer(() => {
-  const [isDropdownActive, setIsDropdownActive] = useState(true);
+  const [isDropdownActive, setIsDropdownActive] = useState(
+    typeof window !== "undefined" && sessionStorage.getItem("warehouseDropdown")
+      ? sessionStorage.getItem("warehouseDropdown") === "true"
+        ? true
+        : false
+      : true
+  );
 
   function handleDropdownClick() {
+    sessionStorage.setItem("warehouseDropdown", (!isDropdownActive).toString());
     setIsDropdownActive(!isDropdownActive);
   }
 

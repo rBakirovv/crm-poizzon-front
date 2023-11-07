@@ -26,6 +26,8 @@ import {
   setIsReceiptImages,
   orderDeliveryCode,
   getRecentlyArrived,
+  getDeliveryDocument,
+  createDeliveryDocument,
 } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import Preloader from "../UI/Preloader/Preloader";
@@ -924,149 +926,60 @@ const Delivery = () => {
       .then((authData) => {
         setIsPreloader(true);
 
-        if (OrderData.order.combinedOrder.length === 0) {
-          getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
-            .then((orderInfo) => {
-              return orderInfo.entity.packages;
-            })
-            .then((packages) => {
-              let packagesArray: any = [];
-
-              for (let i = 0; i < packages.length; i++) {
-                if (i === 0) {
-                  packagesArray.push({
-                    number: `${data.delivery_number}-${i + 1}`,
-                    weight: "100",
-                    length: data.delivery_length,
-                    width: data.delivery_width,
-                    height: data.delivery_height,
-                    items: [
-                      {
-                        ware_key: `${data.delivery_number}`,
-                        payment: {
-                          value: 0,
-                        },
-                        name: packages[i].items[0].name,
-                        cost: data.delivery_insurance,
-                        amount: 1,
-                        weight: 100,
-                      },
-                    ],
-                  });
-                } else {
-                  packagesArray.push({
-                    number: `${data.delivery_number}-${i + 1}`,
-                    weight: "100",
-                    length: data.delivery_length,
-                    width: data.delivery_width,
-                    height: data.delivery_height,
-                    items: [
-                      {
-                        ware_key: `${data.delivery_number}`,
-                        payment: {
-                          value: 0,
-                        },
-                        name: packages[i].items[0].name,
-                        cost: data.delivery_insurance,
-                        amount: 1,
-                        weight: 100,
-                      },
-                    ],
-                  });
-                }
-              }
-
-              return packagesArray;
-            })
-            .then((packagesArray) => {
+        createDeliveryDocument(authData.token, OrderData.order.deliveryEntity)
+          .then((deliveryDocument) => {
+            if (OrderData.order.deliveryCode === "") {
               getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
-                .then((orderInfoForSum) => {
-                  changeTotalSum(
-                    authData.token,
-                    orderInfoForSum.entity.tariff_code,
-                    orderInfoForSum.entity.from_location.code,
-                    orderInfoForSum.entity.to_location.code,
-                    packagesArray,
-                    orderInfoForSum.entity.packages[0].items[0].cost
-                  ).then((sumInfo) => {
-                    changeOrderDeliveryPackages(
-                      authData.token,
-                      OrderData.order.deliveryEntity,
-                      sumInfo.total_sum + 100,
-                      packagesArray
-                    ).catch((err) => {
+                .then((orderData) => {
+                  updateDeliveryCDEKCode(
+                    OrderData.order._id,
+                    orderData.entity.cdek_number
+                  )
+                    .then((orderData) => {
+                      OrderData.setOrder(orderData);
+                      if (OrderData.order.combinedOrder.length > 0) {
+                        OrderData.order.combinedOrder[0].combinedOrder.map(
+                          (orderItem) => {
+                            if (OrderData.order._id !== orderItem) {
+                              updateDeliveryCDEKCode(
+                                orderItem,
+                                orderData.entity.cdek_number
+                              ).catch((err) => {
+                                setIsPreloader(false);
+                                console.log(err);
+                              });
+                            }
+                          }
+                        );
+                      }
+                    })
+                    .catch((err) => {
+                      setIsPreloader(false);
                       console.log(err);
                     });
-                  });
                 })
                 .catch((err) => {
+                  setIsPreloader(false);
                   console.log(err);
                 });
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-
-        setTimeout(() => {
-          createDeliveryDocument(authData.token, OrderData.order.deliveryEntity)
-            .then((deliveryDocument) => {
-              if (OrderData.order.deliveryCode === "") {
-                getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
-                  .then((orderData) => {
-                    updateDeliveryCDEKCode(
-                      OrderData.order._id,
-                      orderData.entity.cdek_number
-                    )
-                      .then((orderData) => {
-                        OrderData.setOrder(orderData);
-                        if (OrderData.order.combinedOrder.length > 0) {
-                          OrderData.order.combinedOrder[0].combinedOrder.map(
-                            (orderItem) => {
-                              if (OrderData.order._id !== orderItem) {
-                                updateDeliveryCDEKCode(
-                                  orderItem,
-                                  orderData.entity.cdek_number
-                                ).catch((err) => {
-                                  setIsPreloader(false);
-                                  console.log(err);
-                                });
-                              }
-                            }
-                          );
-                        }
-                      })
-                      .catch((err) => {
-                        setIsPreloader(false);
-                        console.log(err);
-                      });
-                  })
-                  .catch((err) => {
-                    setIsPreloader(false);
-                    console.log(err);
-                  });
-              }
-              setIsPreloader(true);
-              setTimeout(() => {
-                getDeliveryDocument(
-                  authData.token,
-                  deliveryDocument.entity.uuid
-                )
-                  .then((pdfData) => {
-                    setIsPreloader(false);
-                    openPDF(pdfData.pdf);
-                  })
-                  .catch((err) => {
-                    setIsPreloader(false);
-                    console.log(err);
-                  });
-              }, 2500);
-            })
-            .catch((err) => {
-              setIsPreloader(false);
-              console.log(err);
-            });
-        }, 5000);
+            }
+            setIsPreloader(true);
+            setTimeout(() => {
+              getDeliveryDocument(authData.token, deliveryDocument.entity.uuid)
+                .then((pdfData) => {
+                  setIsPreloader(false);
+                  openPDF(pdfData.pdf);
+                })
+                .catch((err) => {
+                  setIsPreloader(false);
+                  console.log(err);
+                });
+            }, 2500);
+          })
+          .catch((err) => {
+            setIsPreloader(false);
+            console.log(err);
+          });
       })
       .catch((err) => {
         setIsPreloader(false);
@@ -1647,6 +1560,25 @@ const Delivery = () => {
               {OrderData.order.deliveryAddress !== "" &&
                 OrderData.order.deliveryEntity !== "" && (
                   <div className={styles["delivery-packages"]}>
+                    <h4>Cумма страховки</h4>
+                    <input
+                      className={styles["delivery-packages-number-input"]}
+                      type="number"
+                      name="delivery_insurance"
+                      value={data.delivery_insurance}
+                      onChange={handleChange}
+                    />
+                    <button
+                      onClick={openSubmitChangeInsurancePopup}
+                      style={{ marginTop: "0.5rem" }}
+                    >
+                      Cохр.
+                    </button>
+                  </div>
+                )}
+              {OrderData.order.deliveryAddress !== "" &&
+                OrderData.order.deliveryEntity !== "" && (
+                  <div className={styles["delivery-packages"]}>
                     <h4>Номер на коробке</h4>
                     <input
                       className={styles["delivery-packages-number-input"]}
@@ -1657,24 +1589,6 @@ const Delivery = () => {
                     />
                     {OrderData.order.combinedOrder.length > 0 && (
                       <button onClick={openSubmitChangeNumberPopup}>
-                        Cохр.
-                      </button>
-                    )}
-                  </div>
-                )}
-              {OrderData.order.deliveryAddress !== "" &&
-                OrderData.order.deliveryEntity !== "" && (
-                  <div className={styles["delivery-packages"]}>
-                    <h4>Cумма страховки</h4>
-                    <input
-                      className={styles["delivery-packages-number-input"]}
-                      type="number"
-                      name="delivery_insurance"
-                      value={data.delivery_insurance}
-                      onChange={handleChange}
-                    />
-                    {OrderData.order.combinedOrder.length > 0 && (
-                      <button onClick={openSubmitChangeInsurancePopup}>
                         Cохр.
                       </button>
                     )}
