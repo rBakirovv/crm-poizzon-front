@@ -1123,6 +1123,17 @@ export const getRecentlyArrived = () => {
   }).then(checkResponse);
 };
 
+export const setIsPost = (id: string, isPost: boolean) => {
+  return fetch(`${BASE_URL}/order/is-post/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      isPost: isPost,
+    }),
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();

@@ -28,6 +28,7 @@ import {
   getRecentlyArrived,
   getDeliveryDocument,
   createDeliveryDocument,
+  setIsPost,
 } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import Preloader from "../UI/Preloader/Preloader";
@@ -106,6 +107,8 @@ const Delivery = () => {
 
   const [isSubmitIsReceiptImagesChange, setIsSubmitIsReceiptImagesChange] =
     useState<boolean>(false);
+
+  const [isSubmitPostChange, setIsSubmitPostChange] = useState<boolean>(false);
 
   function dragHandler() {
     setIsDrag(true);
@@ -187,6 +190,14 @@ const Delivery = () => {
 
   function closeSubmitChangeSizePopup() {
     setIsSubmitChangeSizePopup(false);
+  }
+
+  function openSubmitPostChange() {
+    setIsSubmitPostChange(true);
+  }
+
+  function closeSubmitPostChange() {
+    setIsSubmitPostChange(false);
   }
 
   function openCombinedCDEKPopup(e: React.SyntheticEvent) {
@@ -1168,6 +1179,7 @@ const Delivery = () => {
               payLinksArray: OrderData.order.payLinksArray,
               splitLinksArray: OrderData.order.splitLinksArray,
               splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+              isPost: OrderData.order.isPost,
               __v: OrderData.order.__v,
             });
           })
@@ -1274,6 +1286,7 @@ const Delivery = () => {
                   payLinksArray: OrderData.order.payLinksArray,
                   splitLinksArray: OrderData.order.splitLinksArray,
                   splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+                  isPost: OrderData.order.isPost,
                   __v: OrderData.order.__v,
                 });
               })
@@ -1365,6 +1378,7 @@ const Delivery = () => {
           payLinksArray: OrderData.order.payLinksArray,
           splitLinksArray: OrderData.order.splitLinksArray,
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+          isPost: OrderData.order.isPost,
           __v: OrderData.order.__v,
         });
       })
@@ -1413,6 +1427,12 @@ const Delivery = () => {
     });
   }
 
+  function handleChangePost() {
+    setIsPost(OrderData.order._id, !OrderData.order.isPost).then((order) => {
+      OrderData.setOrder(order);
+    });
+  }
+
   return (
     <section className={styles["delivery"]}>
       {isPreloader && <Preloader />}
@@ -1427,7 +1447,8 @@ const Delivery = () => {
         )}
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" &&
-          OrderData.order.payment !== "Сплит -" && (
+          OrderData.order.payment !== "Сплит -" &&
+          !OrderData.order.isPost && (
             <button
               onClick={openPDFBarcodeHandler}
               disabled={isPreloader}
@@ -1451,7 +1472,8 @@ const Delivery = () => {
           OrderData.order.payment === "Сплит -" &&
           OrderData.order.isSplit &&
           OrderData.order.isSplitPaid &&
-          OrderData.order.isSplitPaidSecond && (
+          OrderData.order.isSplitPaidSecond &&
+          !OrderData.order.isPost && (
             <button
               onClick={openPDFBarcodeHandler}
               disabled={isPreloader}
@@ -1473,7 +1495,8 @@ const Delivery = () => {
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" &&
           OrderData.order.payment === "Сплит -" &&
-          !OrderData.order.isSplit && (
+          !OrderData.order.isSplit &&
+          !OrderData.order.isPost && (
             <button
               onClick={openPDFBarcodeHandler}
               disabled={isPreloader}
@@ -1492,11 +1515,28 @@ const Delivery = () => {
               </svg>
             </button>
           )}
+        <div
+          className={styles["delivery-receipt__chekbox-container"]}
+          style={{ marginBottom: 0, marginTop: "0.5rem" }}
+        >
+          <input
+            type="checkbox"
+            checked={OrderData.order.isPost}
+            onChange={openSubmitPostChange}
+            disabled={
+              OrderData.order.status === "Завершён" ||
+              OrderData.order.status === "Доставляется" ||
+              UserData.userData.position === "Байер" ||
+              UserData.userData.position === "Работник склада"
+            }
+          />
+          <label>Почта РФ</label>
+        </div>
         <div className={styles["delivery-packages__container"]}>
           {OrderData.order.deliveryAddress !== "" &&
             OrderData.order.deliveryEntity !== "" && (
               <div>
-                <h4>Размеры коробки</h4>
+                <h4 style={{ marginTop: 0 }}>Размеры коробки</h4>
                 <div
                   className={`${styles["delivery-packages"]} ${styles["delivery-packages-size"]}`}
                 >
@@ -1560,7 +1600,7 @@ const Delivery = () => {
               {OrderData.order.deliveryAddress !== "" &&
                 OrderData.order.deliveryEntity !== "" && (
                   <div className={styles["delivery-packages"]}>
-                    <h4>Cумма страховки</h4>
+                    <h4 style={{ marginTop: 0 }}>Cумма страховки</h4>
                     <input
                       className={styles["delivery-packages-number-input"]}
                       type="number"
@@ -2140,6 +2180,16 @@ const Delivery = () => {
         submitText={`Изменить трек-номер CDEK ${data.delivery_code} всем объединённым заказам`}
         onSubmit={handleChangeCombinedCDEK}
         closeSubmitPopup={closeCombinedCDEKPopup}
+      />
+      <SubmitPopup
+        isSubmitPopup={isSubmitPostChange}
+        submitText={
+          !OrderData.order.isPost
+            ? "Изменить доставку на почту"
+            : "Изменить доставку на СДЭК"
+        }
+        onSubmit={handleChangePost}
+        closeSubmitPopup={closeSubmitPostChange}
       />
       <ChangeAddress isWidjet={isWidjet} closeWidjet={closeWidjet} />
       <ImagePopup

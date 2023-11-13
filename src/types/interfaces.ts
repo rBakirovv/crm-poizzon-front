@@ -78,6 +78,7 @@ export interface IOrder {
   payLinksArray: Array<string>;
   splitLinksArray: Array<string>;
   splitSecondLinksArray: Array<string>;
+  isPost: boolean;
   __v?: number;
 }
 

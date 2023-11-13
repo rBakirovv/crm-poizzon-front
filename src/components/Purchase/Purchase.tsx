@@ -189,6 +189,7 @@ const Purchase = () => {
             payLinksArray: OrderData.order.payLinksArray,
             splitLinksArray: OrderData.order.splitLinksArray,
             splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+            isPost: OrderData.order.isPost,
             __v: OrderData.order.__v,
           });
         })
@@ -277,6 +278,7 @@ const Purchase = () => {
           payLinksArray: OrderData.order.payLinksArray,
           splitLinksArray: OrderData.order.splitLinksArray,
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+          isPost: OrderData.order.isPost,
           __v: OrderData.order.__v,
         });
       })
@@ -433,6 +435,7 @@ const Purchase = () => {
                     splitLinksArray: OrderData.order.splitLinksArray,
                     splitSecondLinksArray:
                       OrderData.order.splitSecondLinksArray,
+                    isPost: OrderData.order.isPost,
                     __v: OrderData.order.__v,
                   });
                 })
@@ -527,6 +530,7 @@ const Purchase = () => {
       payLinksArray: OrderData.order.payLinksArray,
       splitLinksArray: OrderData.order.splitLinksArray,
       splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+      isPost: OrderData.order.isPost,
       __v: OrderData.order.__v,
     });
   }, [data]);
@@ -542,7 +546,10 @@ const Purchase = () => {
         disabled={UserData.userData.position === "Работник склада"}
       />
       {OrderData.order.buyAt && (
-        <p>Закуплен: {dayjs.tz(OrderData.order.buyAt).format("DD.MM.YYYY в HH:mm")}</p>
+        <p>
+          Закуплен:{" "}
+          {dayjs.tz(OrderData.order.buyAt).format("DD.MM.YYYY в HH:mm")}
+        </p>
       )}
       {OrderData.order.filledPoizonCode !== "" &&
         OrderData.order.filledPoizonCode !== null &&

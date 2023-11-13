@@ -66,6 +66,7 @@ class OrderData {
     payLinksArray: [],
     splitLinksArray: [],
     splitSecondLinksArray: [],
+    isPost: false,
     __v: 0,
   };
 

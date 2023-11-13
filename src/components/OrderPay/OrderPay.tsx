@@ -154,6 +154,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
             payLinksArray: OrderData.order.payLinksArray,
             splitLinksArray: OrderData.order.splitLinksArray,
             splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+            isPost: OrderData.order.isPost,
             __v: OrderData.order.__v,
           });
         })
@@ -260,6 +261,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
                     payLinksArray: OrderData.order.payLinksArray,
                     splitLinksArray: OrderData.order.splitLinksArray,
                     splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+                    isPost: OrderData.order.isPost,
                     __v: OrderData.order.__v,
                   });
                 })
@@ -357,6 +359,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
           payLinksArray: OrderData.order.payLinksArray,
           splitLinksArray: OrderData.order.splitLinksArray,
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+          isPost: OrderData.order.isPost,
           __v: OrderData.order.__v,
         });
       })

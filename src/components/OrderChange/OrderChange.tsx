@@ -478,6 +478,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         payLinksArray: OrderData.order.payLinksArray,
         splitLinksArray: OrderData.order.splitLinksArray,
         splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+        isPost: OrderData.order.isPost,
         __v: OrderData.order.__v,
       });
     });
@@ -568,6 +569,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           payLinksArray: OrderData.order.payLinksArray,
           splitLinksArray: OrderData.order.splitLinksArray,
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+          isPost: OrderData.order.isPost,
           __v: OrderData.order.__v,
         });
         setUploading(false);
@@ -665,6 +667,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   payLinksArray: OrderData.order.payLinksArray,
                   splitLinksArray: OrderData.order.splitLinksArray,
                   splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+                  isPost: OrderData.order.isPost,
                   __v: OrderData.order.__v,
                 });
                 setUploading(false);
@@ -760,6 +763,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           payLinksArray: OrderData.order.payLinksArray,
           splitLinksArray: OrderData.order.splitLinksArray,
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+          isPost: OrderData.order.isPost,
           __v: OrderData.order.__v,
         });
       })
@@ -879,6 +883,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       payLinksArray: OrderData.order.payLinksArray,
       splitLinksArray: OrderData.order.splitLinksArray,
       splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+      isPost: OrderData.order.isPost,
       __v: OrderData.order.__v,
     });
   }, [data]);
@@ -1011,7 +1016,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         Заказ #{OrderData.order.orderId}
       </h2>
       <p className={styles["order-change__status"]}>
-        Статус: {OrderData.order.status}{OrderData.order.totalReorder && ', перезаказан'}
+        Статус: {OrderData.order.status}{OrderData.order.totalReorder && ', перезаказан'}{OrderData.order.isPost && ', почта РФ'}
       </p>
       {OrderData.order.deliveredAt && OrderData.order.deliveredAt !== "" && (
         <p className={styles["order-change__status"]}>
