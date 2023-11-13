@@ -1525,9 +1525,7 @@ const Delivery = () => {
             onChange={openSubmitPostChange}
             disabled={
               OrderData.order.status === "Завершён" ||
-              OrderData.order.status === "Доставляется" ||
-              UserData.userData.position === "Байер" ||
-              UserData.userData.position === "Работник склада"
+              OrderData.order.status === "Доставляется"
             }
           />
           <label>Почта РФ</label>
