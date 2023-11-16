@@ -491,7 +491,16 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
                         ? dayjs
                             .tz(new Date(orderItem.paidAt!))
                             .format("DD-MM-YYYY")
+                        : orderItem.paidAtSplit
+                        ? dayjs
+                            .tz(new Date(orderItem.paidAtSplit!))
+                            .format("DD-MM-YYYY")
                         : "-"}
+                      <br />
+                      {orderItem.paidAtSplitSecond &&
+                        dayjs
+                          .tz(new Date(orderItem.paidAtSplitSecond!))
+                          .format("DD-MM-YYYY")}
                     </div>
                     <div
                       className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_product"]}`}

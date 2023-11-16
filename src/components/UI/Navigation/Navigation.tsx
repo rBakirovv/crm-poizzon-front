@@ -192,6 +192,7 @@ const Navigation = observer(() => {
                 </button>
               )}
             {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Главный администратор" ||
               UserData.userData.position === "Создатель" ||
               UserData.userData.position === "Работник склада") && (
               <button
@@ -202,6 +203,7 @@ const Navigation = observer(() => {
               </button>
             )}
             {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Главный администратор" ||
               UserData.userData.position === "Создатель" ||
               UserData.userData.position === "Работник склада") && (
               <button
@@ -212,6 +214,7 @@ const Navigation = observer(() => {
               </button>
             )}
             {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Главный администратор" ||
               UserData.userData.position === "Создатель" ||
               UserData.userData.position === "Работник склада") && (
               <button
@@ -222,6 +225,7 @@ const Navigation = observer(() => {
               </button>
             )}
             {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Главный администратор" ||
               UserData.userData.position === "Создатель" ||
               UserData.userData.position === "Работник склада") && (
               <button
@@ -234,6 +238,7 @@ const Navigation = observer(() => {
           </div>
         </li>
         {(UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Главный администратор" ||
           UserData.userData.position === "Администратор") && (
           <li className={styles["nav__list-item"]}>
             <Link
@@ -261,6 +266,7 @@ const Navigation = observer(() => {
           </li>
         )}
         {(UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Главный администратор" ||
           UserData.userData.position === "Администратор") && (
           <li className={styles["nav__list-item"]}>
             <Link
@@ -275,6 +281,7 @@ const Navigation = observer(() => {
           </li>
         )}
         {(UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Главный администратор" ||
           UserData.userData.position === "Администратор") && (
           <li className={styles["nav__list-item"]}>
             <Link
@@ -289,6 +296,7 @@ const Navigation = observer(() => {
           </li>
         )}
         {(UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Главный администратор" ||
           UserData.userData.position === "Администратор") && (
           <li className={styles["nav__list-item"]}>
             <Link
@@ -317,6 +325,7 @@ const Navigation = observer(() => {
             </li>
           )}
         {(UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Главный администратор" ||
           UserData.userData.position === "Администратор") && (
           <li className={styles["nav__list-item"]}>
             <Link

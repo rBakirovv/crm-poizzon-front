@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { observer } from "mobx-react-lite";
 import Head from "next/head";
@@ -11,7 +11,6 @@ import { getUserInfo } from "../../utils/User";
 import Navigation from "../../components/UI/Navigation/Navigation";
 import RateData from "../../store/rate";
 import { getRate } from "../../utils/Rate";
-import OrderData from "../../store/order";
 import SupplyData from "../../store/supplies";
 import Supply from "../../components/Supply/Supply";
 import { getSupplies } from "../../utils/Supply";
@@ -88,9 +87,9 @@ const Home = observer(() => {
           <Navigation />
           <Main>
             {(UserData.userData.position === "Создатель" ||
-              UserData.userData.position === "Администратор") && <Supply />}
+              UserData.userData.position === "Администратор" || UserData.userData.position === "Главный администратор") && <Supply />}
             {UserData.userData.position !== "Создатель" &&
-              UserData.userData.position !== "Администратор" && <Preloader />}
+              UserData.userData.position !== "Администратор" && UserData.userData.position !== "Главный администратор" && <Preloader />}
           </Main>
         </>
       )}

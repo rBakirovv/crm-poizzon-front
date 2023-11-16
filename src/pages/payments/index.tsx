@@ -12,7 +12,7 @@ import { getUserInfo } from "../../utils/User";
 import { getPayments } from "../../utils/Payment";
 import Navigation from "../../components/UI/Navigation/Navigation";
 import Payments from "../../components/Payments/Payments";
-import { SUPERADMIN, ADMIN } from "../../utils/constants";
+import { SUPERADMIN, ADMIN, MAINADMIN } from "../../utils/constants";
 import { getRate } from "../../utils/Rate";
 import RateData from "../../store/rate";
 
@@ -83,7 +83,7 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            {UserData.userData.position === SUPERADMIN ||
+            {UserData.userData.position === SUPERADMIN || UserData.userData.position === MAINADMIN ||
             UserData.userData.position === ADMIN ? (
               <Payments paymentsList={Payment.paymentsList} />
             ) : (

@@ -9,7 +9,7 @@ import UserData from "../../store/user";
 import Logged from "../../store/logged";
 import { getUserInfo } from "../../utils/User";
 import Navigation from "../../components/UI/Navigation/Navigation";
-import { SUPERADMIN, ADMIN } from "../../utils/constants";
+import { SUPERADMIN, ADMIN, MAINADMIN } from "../../utils/constants";
 import PoromoCode from "../../components/PoromoCode/PoromoCode";
 import PromoCodeData from "../../store/promo-code";
 import { getPoromoCodes } from "../../utils/PoromoCode";
@@ -70,7 +70,11 @@ const Home = observer(() => {
     <>
       <Head>
         <title>Poizonqq CRM - Промо-код</title>
-        <link type="Image/x-icon" href="../images/favicon.ico" rel="icon"></link>
+        <link
+          type="Image/x-icon"
+          href="../images/favicon.ico"
+          rel="icon"
+        ></link>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {!Logged.loggedIn && <Preloader />}
@@ -84,6 +88,7 @@ const Home = observer(() => {
           <Navigation />
           <Main>
             {UserData.userData.position === SUPERADMIN ||
+            UserData.userData.position === MAINADMIN ||
             UserData.userData.position === ADMIN ? (
               <PoromoCode promoCodes={PromoCodeData.promoCodeList} />
             ) : (

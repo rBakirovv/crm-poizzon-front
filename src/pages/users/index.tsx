@@ -11,7 +11,7 @@ import UsersDataList from "../../store/usersList";
 import { getUserInfo, getUsers } from "../../utils/User";
 import Navigation from "../../components/UI/Navigation/Navigation";
 import Users from "../../components/Users/Users";
-import { SUPERADMIN, ADMIN } from "../../utils/constants";
+import { SUPERADMIN, ADMIN, MAINADMIN } from "../../utils/constants";
 import RateData from "../../store/rate";
 import { getRate } from "../../utils/Rate";
 
@@ -82,7 +82,7 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            {UserData.userData.position === SUPERADMIN ||
+            {UserData.userData.position === SUPERADMIN || UserData.userData.position === MAINADMIN || 
             UserData.userData.position === ADMIN ? (
               <Users
                 userPosition={UserData.userData.position}

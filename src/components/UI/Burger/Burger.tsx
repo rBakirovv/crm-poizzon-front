@@ -227,6 +227,7 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
                 </button>
               )}
             {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Главный администратор" ||
               UserData.userData.position === "Создатель" ||
               UserData.userData.position === "Работник склада") && (
               <button
@@ -237,6 +238,7 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
               </button>
             )}
             {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Главный администратор" ||
               UserData.userData.position === "Создатель" ||
               UserData.userData.position === "Работник склада") && (
               <button
@@ -247,6 +249,7 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
               </button>
             )}
             {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Главный администратор" ||
               UserData.userData.position === "Создатель" ||
               UserData.userData.position === "Работник склада") && (
               <button
@@ -257,6 +260,7 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
               </button>
             )}
             {(UserData.userData.position === "Администратор" ||
+              UserData.userData.position === "Главный администратор" ||
               UserData.userData.position === "Создатель" ||
               UserData.userData.position === "Работник склада") && (
               <button
@@ -269,6 +273,7 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
           </div>
         </li>
         {(UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Главный администратор" ||
           UserData.userData.position === "Администратор") && (
           <li onClick={closeBurger} className={styles["nav__list-item"]}>
             <Link
@@ -296,6 +301,7 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
           </li>
         )}
         {(UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Главный администратор" ||
           UserData.userData.position === "Администратор") && (
           <li onClick={closeBurger} className={styles["nav__list-item"]}>
             <Link
@@ -310,6 +316,7 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
           </li>
         )}
         {(UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Главный администратор" ||
           UserData.userData.position === "Администратор") && (
           <li onClick={closeBurger} className={styles["nav__list-item"]}>
             <Link
@@ -324,6 +331,7 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
           </li>
         )}
         {(UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Главный администратор" ||
           UserData.userData.position === "Администратор") && (
           <li onClick={closeBurger} className={styles["nav__list-item"]}>
             <Link
@@ -352,6 +360,7 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
             </li>
           )}
         {(UserData.userData.position === "Создатель" ||
+          UserData.userData.position === "Главный администратор" ||
           UserData.userData.position === "Администратор") && (
           <li className={styles["nav__list-item"]}>
             <Link

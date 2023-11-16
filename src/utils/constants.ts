@@ -9,6 +9,7 @@ export const BASE_PAYMENT_URL = "https://onepayments.tech";
 export const API_PAYMENT_KEY = "43527fb3dd744f5290c90da1427c981d02f6eee69cb7fd00";
 export const SUPERADMIN = "Создатель";
 export const ADMIN = "Администратор";
+export const MAINADMIN = "Главный администратор";
 export const BUYER = "Байер";
 export const MANAGER = "Менеджер";
 export const WAREHOUSEWORKER = "Работник склада";

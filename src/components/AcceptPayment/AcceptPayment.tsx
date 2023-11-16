@@ -498,7 +498,8 @@ const AcceptPayment = () => {
           )}
         {OrderData.order.status === "Черновик" &&
           OrderData.order.payment === "Перейти по ссылке -" &&
-          UserData.userData.position === "Создатель" && (
+          (UserData.userData.position === "Создатель" ||
+            UserData.userData.position === "Главный администратор") && (
             <button
               className={styles["accept-payment__submit"]}
               onClick={openSubmitAcceptPaymentPopup}
@@ -508,7 +509,8 @@ const AcceptPayment = () => {
           )}
         {OrderData.order.status === "Черновик" &&
           OrderData.order.payment === "Сплит -" &&
-          UserData.userData.position === "Создатель" &&
+          (UserData.userData.position === "Создатель" ||
+            UserData.userData.position === "Главный администратор") &&
           !OrderData.order.isSplit && (
             <button
               className={styles["accept-payment__submit"]}
@@ -519,7 +521,8 @@ const AcceptPayment = () => {
           )}
         {OrderData.order.status === "Черновик" &&
           OrderData.order.payment === "Сплит -" &&
-          UserData.userData.position === "Создатель" &&
+          (UserData.userData.position === "Создатель" ||
+            UserData.userData.position === "Главный администратор") &&
           !OrderData.order.isSplitPaid &&
           OrderData.order.isSplit && (
             <button
@@ -531,7 +534,8 @@ const AcceptPayment = () => {
           )}
         {OrderData.order.status !== "Черновик" &&
           OrderData.order.payment === "Сплит -" &&
-          UserData.userData.position === "Создатель" &&
+          (UserData.userData.position === "Создатель" ||
+            UserData.userData.position === "Главный администратор") &&
           !OrderData.order.isSplitPaidSecond &&
           OrderData.order.isSplit && (
             <button

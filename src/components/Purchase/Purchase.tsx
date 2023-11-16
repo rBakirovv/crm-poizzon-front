@@ -562,19 +562,18 @@ const Purchase = () => {
         OrderData.order.status === "Черновик" ||
         OrderData.order.status === "Проверка оплаты" ||
         OrderData.order.status === "Ожидает закупки"
-      ) && (
-        <p>
-          Скриншоты чеков закупки{" "}
-          {OrderData.order.uploadedBuyProofImages !== "" &&
-            OrderData.order.uploadedBuyProofImages !== null &&
-            OrderData.order.buyProofImages.length > 0 && (
-              <span>
-                загрузил:{" "}
-                <strong>{OrderData.order.uploadedBuyProofImages}</strong>
-              </span>
-            )}
-        </p>
-      )}
+      ) &&
+        OrderData.order.uploadedBuyProofImages !== "" &&
+        OrderData.order.uploadedBuyProofImages !== null &&
+        OrderData.order.buyProofImages.length > 0 && (
+          <p>
+            Скриншоты чеков закупки{" "}
+            <span>
+              загрузил:{" "}
+              <strong>{OrderData.order.uploadedBuyProofImages}</strong>
+            </span>
+          </p>
+        )}
       <ul className={styles["purchase__images-list"]}>
         {OrderData.order.buyProofImages.length > 0 &&
           OrderData.order.buyProofImages
@@ -675,7 +674,7 @@ const Purchase = () => {
                 На закупку
               </button>
             )}
-            {
+            {OrderData.order.status !== "Завершён" && (
               <button
                 className={`${styles["purchase__button-submit"]} ${
                   UserData.userData.position === "Менеджер" &&
@@ -687,7 +686,7 @@ const Purchase = () => {
                   ? "Сохранить POIZON"
                   : "Закуплен"}
               </button>
-            }
+            )}
             {(OrderData.order.status === "На закупке" ||
               OrderData.order.status === "Закуплен") && (
               <button
