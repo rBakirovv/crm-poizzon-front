@@ -241,7 +241,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
   };
 
   function deleteImageHandler(imageName: string) {
-    deleteDraftImage(imageName);
+    deleteDraftImage(imageName, OrderData.order._id);
 
     setImages(images.filter((item) => item.name !== imageName));
   }

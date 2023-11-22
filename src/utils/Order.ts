@@ -336,7 +336,7 @@ export const deleteOrderImage = (imageName: string, id: string) => {
   }).then(checkResponse);
 };
 
-export const deleteDraftImage = (imageName: string) => {
+export const deleteDraftImage = (imageName: string, id: string) => {
   return fetch(`${BASE_URL}/order/order-draft-images`, {
     credentials: "include",
     method: "DELETE",

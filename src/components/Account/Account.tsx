@@ -5,6 +5,7 @@ import styles from "./Account.module.css";
 import UserData from "../../store/user";
 import { observer } from "mobx-react-lite";
 import {
+  deleteDraftImage,
   deleteFinalOrder,
   deleteOrder,
   deleteOrderImage,
@@ -76,7 +77,7 @@ const Account = observer(() => {
               .then((order) => {
                 if (order.orderImages.length !== 0) {
                   order.orderImages.map((imageItem: IOrderImages) => {
-                    deleteOrderImage(imageItem.name, order._id).catch((err) =>
+                    deleteDraftImage(imageItem.name, order._id).catch((err) =>
                       console.log(err)
                     );
                   });
@@ -142,6 +143,7 @@ const Account = observer(() => {
               type="button"
               className={styles["account__delete"]}
               onClick={openDeletePopup}
+              style={{display: "none"}}
             >
               Удалить старые заказы
             </button>
