@@ -135,6 +135,7 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
               <option value="Работник склада">Работник склада</option>
               <option value="Администратор">Администратор</option>
               <option value="Главный администратор">Главный администратор</option>
+              <option value="Дропшиппер">Дропшиппер</option>
             </select>
           </div>
           <TextInput

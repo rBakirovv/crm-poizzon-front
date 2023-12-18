@@ -11,6 +11,7 @@ import {
   MANAGER,
   WAREHOUSEWORKER,
   MAINADMIN,
+  DROPSHIPPER,
 } from "../../utils/constants";
 import { getOrdersTable } from "../../utils/Order";
 
@@ -123,7 +124,7 @@ const OrdersList = observer(() => {
         </li>
         {UserData.userData.position !== BUYER &&
           UserData.userData.position !== MANAGER &&
-          UserData.userData.position !== WAREHOUSEWORKER && (
+          UserData.userData.position !== WAREHOUSEWORKER && UserData.userData.position !== DROPSHIPPER && (
             <li
               onClick={openPaymentVerification}
               className={styles["orders-list__navigation-item"]}
@@ -289,7 +290,7 @@ const OrdersList = observer(() => {
       )}
       {OrdersBar.orderStatus === "Проверка оплаты" &&
         UserData.userData.position !== BUYER &&
-        UserData.userData.position !== WAREHOUSEWORKER && (
+        UserData.userData.position !== WAREHOUSEWORKER && UserData.userData.position !== DROPSHIPPER && (
           <OrderTable status={"Проверка оплаты"} />
         )}
       {OrdersBar.orderStatus === "Ожидает закупки" &&

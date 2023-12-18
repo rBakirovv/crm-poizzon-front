@@ -33,7 +33,7 @@ const TextInput: FC<IInputProps> = ({
         {required && <span className={styles["red-star"]}>*</span>}
       </label>
       <input
-        className={`${styles["input__item"]} ${readonly && styles["input__item_disabled"]}`}
+        className={`${styles["input__item"]} ${(readonly || disabled) && styles["input__item_disabled"]}`}
         type="text"
         name={name}
         placeholder={placeholder}

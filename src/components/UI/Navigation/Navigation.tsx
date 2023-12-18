@@ -140,15 +140,18 @@ const Navigation = observer(() => {
             Заказы
           </Link>
           <div className={styles["nav__list-item-order-container"]}>
-            <button
-              className={styles["nav__list-item-order"]}
-              onClick={openDraft}
-            >
-              Черновик
-            </button>
+            {UserData.userData.position !== "Дропшиппер" && (
+              <button
+                className={styles["nav__list-item-order"]}
+                onClick={openDraft}
+              >
+                Черновик
+              </button>
+            )}
             {UserData.userData.position !== "Байер" &&
               UserData.userData.position !== "Менеджер" &&
-              UserData.userData.position !== "Работник склада" && (
+              UserData.userData.position !== "Работник склада" &&
+              UserData.userData.position !== "Дропшиппер" && (
                 <button
                   className={styles["nav__list-item-order"]}
                   onClick={openPaymentVerification}
@@ -157,7 +160,8 @@ const Navigation = observer(() => {
                 </button>
               )}
             {UserData.userData.position !== "Менеджер" &&
-              UserData.userData.position !== "Работник склада" && (
+              UserData.userData.position !== "Работник склада" &&
+              UserData.userData.position !== "Дропшиппер" && (
                 <button
                   className={styles["nav__list-item-order"]}
                   onClick={openAwaitingPurchase}
@@ -166,7 +170,8 @@ const Navigation = observer(() => {
                 </button>
               )}
             {UserData.userData.position !== "Менеджер" &&
-              UserData.userData.position !== "Работник склада" && (
+              UserData.userData.position !== "Работник склада" &&
+              UserData.userData.position !== "Дропшиппер" && (
                 <button
                   className={styles["nav__list-item-order"]}
                   onClick={openOnPurchase}
@@ -174,16 +179,18 @@ const Navigation = observer(() => {
                   На закупке
                 </button>
               )}
-            {UserData.userData.position !== "Менеджер" && (
-              <button
-                className={styles["nav__list-item-order"]}
-                onClick={openPurchased}
-              >
-                Закуплен
-              </button>
-            )}
             {UserData.userData.position !== "Менеджер" &&
-              UserData.userData.position !== "Байер" && (
+              UserData.userData.position !== "Дропшиппер" && (
+                <button
+                  className={styles["nav__list-item-order"]}
+                  onClick={openPurchased}
+                >
+                  Закуплен
+                </button>
+              )}
+            {UserData.userData.position !== "Менеджер" &&
+              UserData.userData.position !== "Байер" &&
+              UserData.userData.position !== "Дропшиппер" && (
                 <button
                   className={`${styles["nav__list-item-order"]}`}
                   onClick={openWaitingDelivery}
@@ -311,7 +318,8 @@ const Navigation = observer(() => {
           </li>
         )}
         {UserData.userData.position !== "Байер" &&
-          UserData.userData.position !== "Работник склада" && (
+          UserData.userData.position !== "Работник склада" &&
+          UserData.userData.position !== "Дропшиппер" && (
             <li className={styles["nav__list-item"]}>
               <Link
                 className={`${styles["nav__list-item-link"]} ${

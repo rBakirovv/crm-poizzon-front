@@ -169,10 +169,12 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            {CardsData.cards.updatedAt && (
-              <Cards payments={PaymentsData.paymentsList} />
-            )}
-            {!OrderData.orders.length && !CardsData.cards.updatedAt && (
+            {CardsData.cards.updatedAt &&
+              UserData.userData.position !== "Дропшиппер" && (
+                <Cards payments={PaymentsData.paymentsList} />
+              )}
+            {(UserData.userData.position === "Дропшиппер" ||
+              (!OrderData.orders.length && !CardsData.cards.updatedAt)) && (
               <Preloader />
             )}
           </Main>

@@ -8,7 +8,12 @@ import OrderData from "../../store/order";
 import CommissionData from "../../store/commission";
 import { IOrderImages, IPayments } from "../../types/interfaces";
 import Dropzone from "react-dropzone";
-import { BASE_URL, BASE_URL_FRONT, MAX_SIZE } from "../../utils/constants";
+import {
+  BASE_URL,
+  BASE_URL_FRONT,
+  DROPSHIPPER,
+  MAX_SIZE,
+} from "../../utils/constants";
 import {
   addPayLink,
   addPayLinkSplit,
@@ -850,32 +855,54 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
             )}
           </Dropzone>
           <h2 className={styles["order-change__order-title"]}>Расчёт</h2>
-          <div className={styles["order-change__input-container"]}>
-            <label>
-              Способ оплаты<span className={styles["red-star"]}>*</span>
-            </label>
-            <select
-              className={`${styles["order-change__select"]}`}
-              name="payment"
-              value={data.payment}
-              onChange={handleChange}
-              required
-            >
-              <option value="" selected disabled>
-                -- Выберите --
-              </option>
-              {payments.sort(sortCards).map((paymentItem) => {
-                return (
-                  <option
-                    key={paymentItem._id}
-                    value={`${paymentItem.title} ${paymentItem.number}`}
-                  >
-                    {paymentItem.title} {paymentItem.number}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
+          {UserData.userData.position !== DROPSHIPPER && (
+            <div className={styles["order-change__input-container"]}>
+              <label>
+                Способ оплаты<span className={styles["red-star"]}>*</span>
+              </label>
+              <select
+                className={`${styles["order-change__select"]}`}
+                name="payment"
+                value={data.payment}
+                onChange={handleChange}
+                required
+              >
+                <option value="" selected disabled>
+                  -- Выберите --
+                </option>
+                {payments.sort(sortCards).map((paymentItem) => {
+                  return (
+                    <option
+                      key={paymentItem._id}
+                      value={`${paymentItem.title} ${paymentItem.number}`}
+                    >
+                      {paymentItem.title} {paymentItem.number}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          )}
+          {UserData.userData.position === DROPSHIPPER && (
+            <div className={styles["order-change__input-container"]}>
+              <label>
+                Способ оплаты<span className={styles["red-star"]}>*</span>
+              </label>
+              <select
+                className={`${styles["order-change__select"]}`}
+                name="payment"
+                value={data.payment}
+                onChange={handleChange}
+                required
+              >
+                <option value="" selected disabled>
+                  -- Выберите --
+                </option>
+                <option value="Перейти по ссылке -">Перейти по ссылке -</option>
+                <option value="Сплит -">Сплит -</option>
+              </select>
+            </div>
+          )}
           <TextInput
             name="currentRate"
             label="Курс RUB/CNY"
@@ -971,14 +998,16 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
               value={data.comment}
             ></textarea>
           </div>
-          <div className={styles["order-change__reorder-checkbox"]}>
-            <input
-              type="checkbox"
-              checked={isReorder}
-              onChange={reorderHandler}
-            />
-            <label>Перезаказ</label>
-          </div>
+          {UserData.userData.position !== DROPSHIPPER && (
+            <div className={styles["order-change__reorder-checkbox"]}>
+              <input
+                type="checkbox"
+                checked={isReorder}
+                onChange={reorderHandler}
+              />
+              <label>Перезаказ</label>
+            </div>
+          )}
           <button
             className={`${styles["order-change__order-submit"]}`}
             type="submit"

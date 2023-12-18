@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { BASE_URL_FRONT } from "../../utils/constants";
+import { BASE_URL_FRONT, DROPSHIPPER } from "../../utils/constants";
 import TextInput from "../UI/TextInput/TextInput";
 import styles from "./OrderChange.styles.module.css";
 import { IPayments } from "../../types/interfaces";
@@ -1016,7 +1016,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         Заказ #{OrderData.order.orderId}
       </h2>
       <p className={styles["order-change__status"]}>
-        Статус: {OrderData.order.status}{OrderData.order.totalReorder && ', перезаказан'}{OrderData.order.isPost && ', почта РФ'}
+        Статус: {OrderData.order.status}
+        {OrderData.order.totalReorder && ", перезаказан"}
+        {OrderData.order.isPost && ", почта РФ"}
       </p>
       {OrderData.order.deliveredAt && OrderData.order.deliveredAt !== "" && (
         <p className={styles["order-change__status"]}>
@@ -1068,6 +1070,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   className={`${styles["order-change__order-link"]} ${
                     item.orderStatus === "На складе в РФ" &&
                     styles["green-status"]
+                  } ${
+                    item.orderStatus === "Завершён" &&
+                    styles["red-star"]
                   }`}
                   href={`${BASE_URL_FRONT}/order/change/${item._id}`}
                   key={item.orderId}
@@ -1116,33 +1121,39 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
             Клиент
           </p>
         )}
-        <p
-          className={`${styles["order-change__nav-item"]} ${
-            orderСhapter === "Purchase" &&
-            styles["order-change__nav-item_active"]
-          }`}
-          onClick={openPurchaseData}
-        >
-          Закупка
-        </p>
-        <p
-          className={`${styles["order-change__nav-item"]} ${
-            orderСhapter === "Delivery" &&
-            styles["order-change__nav-item_active"]
-          }`}
-          onClick={openDelivery}
-        >
-          Доставка
-        </p>
-        <p
-          className={`${styles["order-change__nav-item"]} ${
-            orderСhapter === "DeliveryDuplicate" &&
-            styles["order-change__nav-item_active"]
-          }`}
-          onClick={openDeliveryDuplicate}
-        >
-          Дубликат
-        </p>
+        {UserData.userData.position !== DROPSHIPPER && (
+          <p
+            className={`${styles["order-change__nav-item"]} ${
+              orderСhapter === "Purchase" &&
+              styles["order-change__nav-item_active"]
+            }`}
+            onClick={openPurchaseData}
+          >
+            Закупка
+          </p>
+        )}
+        {UserData.userData.position !== DROPSHIPPER && (
+          <p
+            className={`${styles["order-change__nav-item"]} ${
+              orderСhapter === "Delivery" &&
+              styles["order-change__nav-item_active"]
+            }`}
+            onClick={openDelivery}
+          >
+            Доставка
+          </p>
+        )}
+        {UserData.userData.position !== DROPSHIPPER && (
+          <p
+            className={`${styles["order-change__nav-item"]} ${
+              orderСhapter === "DeliveryDuplicate" &&
+              styles["order-change__nav-item_active"]
+            }`}
+            onClick={openDeliveryDuplicate}
+          >
+            Дубликат
+          </p>
+        )}
       </div>
       {orderСhapter === "Order" && (
         <div className={styles["order-change__order-container"]}>
@@ -1176,44 +1187,48 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
                 </svg>
               </div>
-              <div
-                className={styles["order-change__public-link-text-copy"]}
-                onClick={copyNumberLink}
-              >
-                {!isCopyNumberLink
-                  ? "Скопировать номер + ссылку"
-                  : "Cкопировано в буфер обмена"}{" "}
-                <svg
-                  x="0px"
-                  y="0px"
-                  width="24px"
-                  height="24px"
-                  viewBox="0 0 24 24"
-                  focusable="false"
-                  fill="currentColor"
+              {UserData.userData.position !== DROPSHIPPER && (
+                <div
+                  className={styles["order-change__public-link-text-copy"]}
+                  onClick={copyNumberLink}
                 >
-                  <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
-                </svg>
-              </div>
-              <div
-                className={styles["order-change__public-link-text-copy"]}
-                onClick={copyImage}
-              >
-                {!isCopySizePhoto
-                  ? "Скопировать фото с размером"
-                  : "Cкопировано в буфер обмена"}{" "}
-                <svg
-                  x="0px"
-                  y="0px"
-                  width="24px"
-                  height="24px"
-                  viewBox="0 0 24 24"
-                  focusable="false"
-                  fill="currentColor"
+                  {!isCopyNumberLink
+                    ? "Скопировать номер + ссылку"
+                    : "Cкопировано в буфер обмена"}{" "}
+                  <svg
+                    x="0px"
+                    y="0px"
+                    width="24px"
+                    height="24px"
+                    viewBox="0 0 24 24"
+                    focusable="false"
+                    fill="currentColor"
+                  >
+                    <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+                  </svg>
+                </div>
+              )}
+              {UserData.userData.position !== DROPSHIPPER && (
+                <div
+                  className={styles["order-change__public-link-text-copy"]}
+                  onClick={copyImage}
                 >
-                  <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
-                </svg>
-              </div>
+                  {!isCopySizePhoto
+                    ? "Скопировать фото с размером"
+                    : "Cкопировано в буфер обмена"}{" "}
+                  <svg
+                    x="0px"
+                    y="0px"
+                    width="24px"
+                    height="24px"
+                    viewBox="0 0 24 24"
+                    focusable="false"
+                    fill="currentColor"
+                  >
+                    <path d="M3.9,12c0-1.7,1.4-3.1,3.1-3.1h4V7H7c-2.8,0-5,2.2-5,5s2.2,5,5,5h4v-1.9H7C5.3,15.1,3.9,13.7,3.9,12z M8,13h8v-2H8V13zM17,7h-4v1.9h4c1.7,0,3.1,1.4,3.1,3.1s-1.4,3.1-3.1,3.1h-4V17h4c2.8,0,5-2.2,5-5S19.8,7,17,7z"></path>
+                  </svg>
+                </div>
+              )}
             </div>
           )}
           <form
@@ -1226,6 +1241,10 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
               label="Ссылка"
               value={OrderData.order.link}
               handleChange={handleChange}
+              disabled={
+                UserData.userData.position === DROPSHIPPER &&
+                OrderData.order.status !== "Черновик"
+              }
               required={true}
             />
             {OrderData.order.link !== "" && (
@@ -1329,6 +1348,10 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                 name="subcategory"
                 value={OrderData.order.subcategory}
                 onChange={handleChange}
+                disabled={
+                  UserData.userData.position === DROPSHIPPER &&
+                  OrderData.order.status !== "Черновик"
+                }
                 required
               >
                 <option value="" selected disabled>
@@ -1353,6 +1376,10 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
               label="Модель"
               value={OrderData.order.model}
               handleChange={handleChange}
+              disabled={
+                UserData.userData.position === DROPSHIPPER &&
+                OrderData.order.status !== "Черновик"
+              }
               required={true}
             />
             <TextInput
@@ -1360,6 +1387,10 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
               label="Размер"
               value={OrderData.order.size}
               handleChange={handleChange}
+              disabled={
+                UserData.userData.position === DROPSHIPPER &&
+                OrderData.order.status !== "Черновик"
+              }
               required={true}
             />
             <label>
@@ -1375,29 +1406,31 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                       key={image.name}
                       className={styles["order-change__image"]}
                     >
-                      {UserData.userData.position !== "Работник склада" && (
-                        <div
-                          className={styles["order-change__delete-image"]}
-                          onClick={() => openImageSubmitPopup(image.name)}
-                        >
-                          <svg
-                            width="18"
-                            height="20"
-                            viewBox="0 0 18 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                      {UserData.userData.position !== "Работник склада" &&
+                        UserData.userData.position !== DROPSHIPPER &&
+                        OrderData.order.status !== "Черновик" && (
+                          <div
+                            className={styles["order-change__delete-image"]}
+                            onClick={() => openImageSubmitPopup(image.name)}
                           >
-                            <path
-                              d="M2.45763 18.1422C2.51857 18.8126 3.06711 19.3002 3.73754 19.3002H14.2612C14.9317 19.3002 15.4802 18.7923 15.5411 18.1422L16.7195 5.79004H1.2793L2.45763 18.1422Z"
-                              fill="black"
-                            />
-                            <path
-                              d="M16.7201 1.93002H11.5801V1.27991C11.5801 0.568849 11.0113 0 10.3002 0H7.72009C7.00903 0 6.44018 0.568849 6.44018 1.27991V1.93002H1.27991C0.568849 1.93002 0 2.49887 0 3.20993C0 3.92099 0.568849 4.48984 1.27991 4.48984H16.7201C17.4312 4.48984 18 3.92099 18 3.20993C18 2.49887 17.4312 1.93002 16.7201 1.93002Z"
-                              fill="black"
-                            />
-                          </svg>
-                        </div>
-                      )}
+                            <svg
+                              width="18"
+                              height="20"
+                              viewBox="0 0 18 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M2.45763 18.1422C2.51857 18.8126 3.06711 19.3002 3.73754 19.3002H14.2612C14.9317 19.3002 15.4802 18.7923 15.5411 18.1422L16.7195 5.79004H1.2793L2.45763 18.1422Z"
+                                fill="black"
+                              />
+                              <path
+                                d="M16.7201 1.93002H11.5801V1.27991C11.5801 0.568849 11.0113 0 10.3002 0H7.72009C7.00903 0 6.44018 0.568849 6.44018 1.27991V1.93002H1.27991C0.568849 1.93002 0 2.49887 0 3.20993C0 3.92099 0.568849 4.48984 1.27991 4.48984H16.7201C17.4312 4.48984 18 3.92099 18 3.20993C18 2.49887 17.4312 1.93002 16.7201 1.93002Z"
+                                fill="black"
+                              />
+                            </svg>
+                          </div>
+                        )}
 
                       <img
                         className={styles["order-change__image-item"]}
@@ -1413,43 +1446,45 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                 })}
             </ul>
 
-            {UserData.userData.position !== "Работник склада" && (
-              <Dropzone
-                onDrop={(e: any) =>
-                  uploadFileHandler(e, "/order-images", setUploading)
-                }
-                onDragEnter={dragHandler}
-                onDragLeave={dragLeaveHandler}
-                maxSize={MAX_SIZE}
-              >
-                {({ getRootProps, getInputProps }) => (
-                  <div
-                    className={`${styles["drag-n-drop-container"]} ${
-                      isDrag && styles["drag-n-drop-container_active"]
-                    }`}
-                  >
-                    <div {...getRootProps()}>
-                      <input {...getInputProps()} />
-                      <p className={styles["drag-n-drop-text"]}>
-                        {isDrag
-                          ? "Перетащите фото"
-                          : "Добавить фото или ctrl + v"}
-                        <svg
-                          width="18px"
-                          height="18px"
-                          viewBox="0 0 48 48"
-                          focusable="false"
-                          fill="black"
-                        >
-                          <path fill="none" d="M0 0h48v48H0V0z"></path>
-                          <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                        </svg>
-                      </p>
+            {UserData.userData.position !== "Работник склада" &&
+              UserData.userData.position !== DROPSHIPPER &&
+              OrderData.order.status !== "Черновик" && (
+                <Dropzone
+                  onDrop={(e: any) =>
+                    uploadFileHandler(e, "/order-images", setUploading)
+                  }
+                  onDragEnter={dragHandler}
+                  onDragLeave={dragLeaveHandler}
+                  maxSize={MAX_SIZE}
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <div
+                      className={`${styles["drag-n-drop-container"]} ${
+                        isDrag && styles["drag-n-drop-container_active"]
+                      }`}
+                    >
+                      <div {...getRootProps()}>
+                        <input {...getInputProps()} />
+                        <p className={styles["drag-n-drop-text"]}>
+                          {isDrag
+                            ? "Перетащите фото"
+                            : "Добавить фото или ctrl + v"}
+                          <svg
+                            width="18px"
+                            height="18px"
+                            viewBox="0 0 48 48"
+                            focusable="false"
+                            fill="black"
+                          >
+                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                          </svg>
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </Dropzone>
-            )}
+                  )}
+                </Dropzone>
+              )}
 
             {UserData.userData.position !== "Работник склада" && (
               <>
@@ -1459,10 +1494,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                     Способ оплаты<span className={styles["red-star"]}>*</span>
                   </label>
                   <select
-                    className={`${styles["order-change__select"]} ${
-                      OrderData.order.status !== "Черновик" &&
-                      styles["order-change__select_disabled"]
-                    }`}
+                    className={`${styles["order-change__select"]}`}
                     name="payment"
                     value={OrderData.order.payment}
                     onChange={handleChange}
@@ -1499,12 +1531,20 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   label="Цена CNY"
                   value={OrderData.order.priceCNY}
                   handleChange={handleChange}
+                  disabled={
+                    UserData.userData.position === DROPSHIPPER &&
+                    OrderData.order.status !== "Черновик"
+                  }
                   required={true}
                 />
                 <TextInput
                   name="priceRUB"
                   label="Цена RUB"
                   value={priceRub.toString()}
+                  disabled={
+                    UserData.userData.position === DROPSHIPPER &&
+                    OrderData.order.status !== "Черновик"
+                  }
                   required={true}
                   readonly={true}
                 />
@@ -1513,6 +1553,10 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   label="Стоимость доставки POIZON - Cклад в Китае"
                   value={OrderData.order.priceDeliveryChina}
                   handleChange={handleChange}
+                  disabled={
+                    UserData.userData.position === DROPSHIPPER &&
+                    OrderData.order.status !== "Черновик"
+                  }
                   required={true}
                 />
                 <TextInput
@@ -1520,6 +1564,10 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   label="Стоимость доставки Cклад в Китае - Cклад в РФ"
                   value={OrderData.order.priceDeliveryRussia}
                   handleChange={handleChange}
+                  disabled={
+                    UserData.userData.position === DROPSHIPPER &&
+                    OrderData.order.status !== "Черновик"
+                  }
                   required={true}
                 />
                 <TextInput
@@ -1527,6 +1575,10 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   label="Комиссия сервиса"
                   value={OrderData.order.commission}
                   handleChange={handleChange}
+                  disabled={
+                    UserData.userData.position === DROPSHIPPER &&
+                    OrderData.order.status !== "Черновик"
+                  }
                   required={true}
                 />
                 <div className={styles["order-change__input-container"]}>
@@ -1541,6 +1593,10 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                         : ""
                     }
                     onChange={handleChange}
+                    disabled={
+                      UserData.userData.position === DROPSHIPPER &&
+                      OrderData.order.status !== "Черновик"
+                    }
                   >
                     <option value="" selected disabled>
                       -- Выберите --
