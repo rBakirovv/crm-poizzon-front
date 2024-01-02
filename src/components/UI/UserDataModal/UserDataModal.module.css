@@ -29,7 +29,6 @@
   border-radius: 23px 23px 0 0;
   box-sizing: border-box;
   padding: 1.5rem 1rem 2.5rem;
-  overflow: scroll;
   visibility: hidden;
   opacity: 0;
   transition: all 0.4s ease-in-out;

@@ -1441,7 +1441,7 @@ const Delivery = () => {
           <p>
             На складе в РФ:{" "}
             {dayjs
-              .tz(OrderData.order.inRussiaStockAt)
+              .tz(new Date(OrderData.order.inRussiaStockAt!))
               .format("DD.MM.YYYY в HH:mm")}
           </p>
         )}

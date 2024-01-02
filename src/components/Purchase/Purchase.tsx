@@ -23,11 +23,31 @@ const dayjs = require("dayjs");
 
 var utc = require("dayjs/plugin/utc");
 var timezone = require("dayjs/plugin/timezone");
+var updateLocale = require("dayjs/plugin/updateLocale");
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 dayjs.tz.setDefault("Europe/Moscow");
+
+dayjs.extend(updateLocale);
+
+dayjs.updateLocale("en", {
+  months: [
+    "Январь",
+    "Февраль",
+    "Март",
+    "Апрель",
+    "Май",
+    "Июнь",
+    "Июль",
+    "Август",
+    "Сентябрь",
+    "Октябрь",
+    "Ноябрь",
+    "Декабрь",
+  ],
+});
 
 const Purchase = () => {
   const [data, setData] = useState({
@@ -548,7 +568,7 @@ const Purchase = () => {
       {OrderData.order.buyAt && (
         <p>
           Закуплен:{" "}
-          {dayjs.tz(OrderData.order.buyAt).format("DD.MM.YYYY в HH:mm")}
+          {dayjs.tz(new Date(OrderData.order.buyAt!)).format("DD.MM.YYYY в HH:mm")}
         </p>
       )}
       {OrderData.order.filledPoizonCode !== "" &&
