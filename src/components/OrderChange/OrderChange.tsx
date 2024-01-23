@@ -479,6 +479,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         splitLinksArray: OrderData.order.splitLinksArray,
         splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
         isPost: OrderData.order.isPost,
+        isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
         __v: OrderData.order.__v,
       });
     });
@@ -570,6 +571,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           splitLinksArray: OrderData.order.splitLinksArray,
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
           isPost: OrderData.order.isPost,
+          isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
           __v: OrderData.order.__v,
         });
         setUploading(false);
@@ -668,6 +670,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   splitLinksArray: OrderData.order.splitLinksArray,
                   splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
                   isPost: OrderData.order.isPost,
+                  isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
                   __v: OrderData.order.__v,
                 });
                 setUploading(false);
@@ -764,6 +767,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           splitLinksArray: OrderData.order.splitLinksArray,
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
           isPost: OrderData.order.isPost,
+          isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
           __v: OrderData.order.__v,
         });
       })
@@ -884,6 +888,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       splitLinksArray: OrderData.order.splitLinksArray,
       splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
       isPost: OrderData.order.isPost,
+      isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
       __v: OrderData.order.__v,
     });
   }, [data]);
