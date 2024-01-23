@@ -67,6 +67,7 @@ class OrderData {
     splitLinksArray: [],
     splitSecondLinksArray: [],
     isPost: false,
+    isPurchaseImagesDisabled: false,
     __v: 0,
   };
 

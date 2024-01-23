@@ -79,6 +79,7 @@ export interface IOrder {
   splitLinksArray: Array<string>;
   splitSecondLinksArray: Array<string>;
   isPost: boolean;
+  isPurchaseImagesDisabled: boolean,
   __v?: number;
 }
 

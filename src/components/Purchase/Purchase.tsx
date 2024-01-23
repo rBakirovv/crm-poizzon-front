@@ -13,6 +13,7 @@ import {
   uploadImages,
   cancelPurchase,
   notLegit,
+  setPurchaseImagesDisabled,
 } from "../../utils/Order";
 import ImagePopup from "../ImagePopup/ImagePopup";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
@@ -210,6 +211,7 @@ const Purchase = () => {
             splitLinksArray: OrderData.order.splitLinksArray,
             splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
             isPost: OrderData.order.isPost,
+            isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
             __v: OrderData.order.__v,
           });
         })
@@ -299,6 +301,7 @@ const Purchase = () => {
           splitLinksArray: OrderData.order.splitLinksArray,
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
           isPost: OrderData.order.isPost,
+          isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
           __v: OrderData.order.__v,
         });
       })
@@ -364,6 +367,15 @@ const Purchase = () => {
         setIsSubmitPopupOpen(false);
       })
       .then(() => closeCancelPopup());
+  }
+
+  function handlePurchaseImagesDisabled() {
+    setPurchaseImagesDisabled(
+      OrderData.order._id,
+      !OrderData.order.isPurchaseImagesDisabled
+    ).then((order) => {
+      OrderData.setOrder(order);
+    });
   }
 
   async function pasteHandler(e: any) {
@@ -456,6 +468,8 @@ const Purchase = () => {
                     splitSecondLinksArray:
                       OrderData.order.splitSecondLinksArray,
                     isPost: OrderData.order.isPost,
+                    isPurchaseImagesDisabled:
+                      OrderData.order.isPurchaseImagesDisabled,
                     __v: OrderData.order.__v,
                   });
                 })
@@ -551,6 +565,7 @@ const Purchase = () => {
       splitLinksArray: OrderData.order.splitLinksArray,
       splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
       isPost: OrderData.order.isPost,
+      isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
       __v: OrderData.order.__v,
     });
   }, [data]);
@@ -568,7 +583,9 @@ const Purchase = () => {
       {OrderData.order.buyAt && (
         <p>
           Закуплен:{" "}
-          {dayjs.tz(new Date(OrderData.order.buyAt!)).format("DD.MM.YYYY в HH:mm")}
+          {dayjs
+            .tz(new Date(OrderData.order.buyAt!))
+            .format("DD.MM.YYYY в HH:mm")}
         </p>
       )}
       {OrderData.order.filledPoizonCode !== "" &&
@@ -594,6 +611,22 @@ const Purchase = () => {
             </span>
           </p>
         )}
+      {!(
+        OrderData.order.status === "Черновик" ||
+        OrderData.order.status === "Проверка оплаты"
+      ) && (
+        <div
+          className={styles["purchase__chekbox-container"]}
+          style={{ marginBottom: "1rem" }}
+        >
+          <input
+            type="checkbox"
+            checked={OrderData.order.isPurchaseImagesDisabled}
+            onChange={handlePurchaseImagesDisabled}
+          />
+          <label>Скрыть скриншоты</label>
+        </div>
+      )}
       <ul className={styles["purchase__images-list"]}>
         {OrderData.order.buyProofImages.length > 0 &&
           OrderData.order.buyProofImages

@@ -1180,6 +1180,7 @@ const Delivery = () => {
               splitLinksArray: OrderData.order.splitLinksArray,
               splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
               isPost: OrderData.order.isPost,
+              isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
               __v: OrderData.order.__v,
             });
           })
@@ -1287,6 +1288,7 @@ const Delivery = () => {
                   splitLinksArray: OrderData.order.splitLinksArray,
                   splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
                   isPost: OrderData.order.isPost,
+                  isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
                   __v: OrderData.order.__v,
                 });
               })
@@ -1379,6 +1381,7 @@ const Delivery = () => {
           splitLinksArray: OrderData.order.splitLinksArray,
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
           isPost: OrderData.order.isPost,
+          isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
           __v: OrderData.order.__v,
         });
       })

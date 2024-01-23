@@ -703,7 +703,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                   dayjs.tz(new Date(currentOrder.buyAt!)).format("DD MMM.")}
               </span>
             </li>
-            {currentOrder.buyProofImages.length > 0 &&
+            {!currentOrder.isPurchaseImagesDisabled && currentOrder.buyProofImages.length > 0 &&
               currentOrder.buyProofImages.map((image, index) => {
                 return (
                   <div

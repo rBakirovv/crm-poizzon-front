@@ -1134,6 +1134,17 @@ export const setIsPost = (id: string, isPost: boolean) => {
   }).then(checkResponse);
 };
 
+export const setPurchaseImagesDisabled = (id: string, isPurchaseImagesDisabled: boolean) => {
+  return fetch(`${BASE_URL}/order/purchase-images-disable/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      isPurchaseImagesDisabled: isPurchaseImagesDisabled,
+    }),
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();

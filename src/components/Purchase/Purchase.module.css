@@ -123,6 +123,11 @@
   cursor: pointer;
 }
 
+.purchase__chekbox-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
 @media screen and (max-width: 500px) {
   .purchase__button-submit:hover {
     background: #000;
