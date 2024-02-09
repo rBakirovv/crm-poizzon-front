@@ -21,6 +21,7 @@ import {
   createOrder,
   createOrderSplit,
   deleteDraftImage,
+  setIsSplitHandler,
   updateOrderDraft,
   uploadImages,
 } from "../../utils/Order";
@@ -431,6 +432,9 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
 
                                         setImages([]);
                                         setUploading(false);
+                                      })
+                                      .then(() => {
+                                        setIsSplitHandler(OrderData.order._id, true);
                                       })
                                       .then(() => {
                                         router.replace(
