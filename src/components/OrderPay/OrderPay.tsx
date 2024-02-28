@@ -39,7 +39,8 @@ const OrderPay: FC<IOrderPayProps> = () => {
       parseFloat(OrderData.order.priceDeliveryChina) +
       parseFloat(OrderData.order.priceDeliveryRussia) +
       parseFloat(OrderData.order.commission) -
-      OrderData.order.promoCodePercent
+      OrderData.order.promoCodePercent +
+      OrderData.order.expressCost
   );
 
   function dragHandler() {
@@ -156,6 +157,19 @@ const OrderPay: FC<IOrderPayProps> = () => {
             splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
             isPost: OrderData.order.isPost,
             isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
+            expressCost: OrderData.order.expressCost,
+            payLinkExpress: OrderData.order.payLinkExpress,
+            payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+            payLinkSplitSecondExpress:
+              OrderData.order.payLinkSplitSecondExpress,
+            paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+            paymentUUIDSplitExpress: OrderData.order.paymentUUIDSplitExpress,
+            paymentUUIDSplitSecondExpress:
+              OrderData.order.paymentUUIDSplitSecondExpress,
+            payLinksExpressArray: OrderData.order.payLinksExpressArray,
+            splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
+            splitSecondLinksExpressArray:
+              OrderData.order.splitSecondLinksExpressArray,
             __v: OrderData.order.__v,
           });
         })
@@ -261,9 +275,26 @@ const OrderPay: FC<IOrderPayProps> = () => {
                     totalReorder: OrderData.order.totalReorder,
                     payLinksArray: OrderData.order.payLinksArray,
                     splitLinksArray: OrderData.order.splitLinksArray,
-                    splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+                    splitSecondLinksArray:
+                      OrderData.order.splitSecondLinksArray,
                     isPost: OrderData.order.isPost,
-                    isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
+                    isPurchaseImagesDisabled:
+                      OrderData.order.isPurchaseImagesDisabled,
+                    expressCost: OrderData.order.expressCost,
+                    payLinkExpress: OrderData.order.payLinkExpress,
+                    payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+                    payLinkSplitSecondExpress:
+                      OrderData.order.payLinkSplitSecondExpress,
+                    paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+                    paymentUUIDSplitExpress:
+                      OrderData.order.paymentUUIDSplitExpress,
+                    paymentUUIDSplitSecondExpress:
+                      OrderData.order.paymentUUIDSplitSecondExpress,
+                    payLinksExpressArray: OrderData.order.payLinksExpressArray,
+                    splitLinksExpressArray:
+                      OrderData.order.splitLinksExpressArray,
+                    splitSecondLinksExpressArray:
+                      OrderData.order.splitSecondLinksExpressArray,
                     __v: OrderData.order.__v,
                   });
                 })
@@ -363,6 +394,18 @@ const OrderPay: FC<IOrderPayProps> = () => {
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
           isPost: OrderData.order.isPost,
           isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
+          expressCost: OrderData.order.expressCost,
+          payLinkExpress: OrderData.order.payLinkExpress,
+          payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+          payLinkSplitSecondExpress: OrderData.order.payLinkSplitSecondExpress,
+          paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+          paymentUUIDSplitExpress: OrderData.order.paymentUUIDSplitExpress,
+          paymentUUIDSplitSecondExpress:
+            OrderData.order.paymentUUIDSplitSecondExpress,
+          payLinksExpressArray: OrderData.order.payLinksExpressArray,
+          splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
+          splitSecondLinksExpressArray:
+            OrderData.order.splitSecondLinksExpressArray,
           __v: OrderData.order.__v,
         });
       })

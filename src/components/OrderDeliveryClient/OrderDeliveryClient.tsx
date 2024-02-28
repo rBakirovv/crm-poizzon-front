@@ -79,65 +79,9 @@ const OrderDeliveryClient = () => {
       })
     );
   }, [data.delivery_method === "Самовывоз из пункта выдачи CDEK"]);
+  
   function handleCreateOrderRequest(e: React.SyntheticEvent) {
     e.preventDefault();
-
-    /*
-    deliveryAuthorization()
-      .then((authData) => {
-        deliveryCreate(
-          authData.token,
-          OrderData.order._id,
-          OrderData.order.model,
-          currentPVZId,
-          OrderData.order.model,
-          amount,
-          OrderData.order.deliveryPhone,
-          data.name_recipient,
-          tarif
-        )
-          .then((orderInfo) => {
-            getDeliveryInfo(authData.token, orderInfo.entity.uuid)
-              .then((orderCheckInfo) => {
-                if (orderCheckInfo.requests[0].state !== "INVALID") {
-                  updateClientDeliveryAddress(
-                    OrderData.order._id,
-                    currentPVZ,
-                    data.name_recipient,
-                    data.delivery_method,
-                    orderInfo.entity.uuid
-                  )
-                    .then(() => {
-                      if (OrderData.order.combinedOrder.length > 0) {
-                        OrderData.order.combinedOrder[0].combinedOrder.map(
-                          (orderItem) => {
-                            if (OrderData.order._id !== orderItem) {
-                              updateClientDeliveryAddress(
-                                orderItem,
-                                currentPVZ,
-                                data.name_recipient,
-                                data.delivery_method,
-                                orderInfo.entity.uuid
-                              );
-                            }
-                          }
-                        );
-                      }
-                    })
-                    .then(() => {
-                      router.replace(`/order/${router.query.deliveryId}`);
-                    })
-                    .catch((err) => console.log(err));
-                } else {
-                  alert("Ошибка! Проверьте корректность введённых данных.");
-                }
-              })
-              .catch((err) => console.log(err));
-          })
-          .catch((err) => console.log(err));
-      })
-      .catch((err) => console.log(err));
-      */
   }
 
   return (

@@ -26,15 +26,14 @@ import {
   setIsReceiptImages,
   orderDeliveryCode,
   getRecentlyArrived,
-  getDeliveryDocument,
-  createDeliveryDocument,
   setIsPost,
+  setExpressCost,
 } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import Preloader from "../UI/Preloader/Preloader";
 import ChangeAddress from "../UI/ChangeAddress/ChangeAddress";
 import Dropzone from "react-dropzone";
-import { BASE_URL } from "../../utils/constants";
+import { BASE_URL, EXPRESS_PRICE } from "../../utils/constants";
 import ImagePopup from "../ImagePopup/ImagePopup";
 
 const dayjs = require("dayjs");
@@ -109,6 +108,8 @@ const Delivery = () => {
     useState<boolean>(false);
 
   const [isSubmitPostChange, setIsSubmitPostChange] = useState<boolean>(false);
+  const [isSubmitExpressChange, setIsSubmitExpressChange] =
+    useState<boolean>(false);
 
   function dragHandler() {
     setIsDrag(true);
@@ -198,6 +199,14 @@ const Delivery = () => {
 
   function closeSubmitPostChange() {
     setIsSubmitPostChange(false);
+  }
+
+  function openSubmitExpressChange() {
+    setIsSubmitExpressChange(true);
+  }
+
+  function closeSubmitExpressChange() {
+    setIsSubmitExpressChange(false);
   }
 
   function openCombinedCDEKPopup(e: React.SyntheticEvent) {
@@ -931,74 +940,6 @@ const Delivery = () => {
       });
   }
 
-  /*
-  function openPDFHandler() {
-    deliveryAuthorization()
-      .then((authData) => {
-        setIsPreloader(true);
-
-        createDeliveryDocument(authData.token, OrderData.order.deliveryEntity)
-          .then((deliveryDocument) => {
-            if (OrderData.order.deliveryCode === "") {
-              getDeliveryInfo(authData.token, OrderData.order.deliveryEntity)
-                .then((orderData) => {
-                  updateDeliveryCDEKCode(
-                    OrderData.order._id,
-                    orderData.entity.cdek_number
-                  )
-                    .then((orderData) => {
-                      OrderData.setOrder(orderData);
-                      if (OrderData.order.combinedOrder.length > 0) {
-                        OrderData.order.combinedOrder[0].combinedOrder.map(
-                          (orderItem) => {
-                            if (OrderData.order._id !== orderItem) {
-                              updateDeliveryCDEKCode(
-                                orderItem,
-                                orderData.entity.cdek_number
-                              ).catch((err) => {
-                                setIsPreloader(false);
-                                console.log(err);
-                              });
-                            }
-                          }
-                        );
-                      }
-                    })
-                    .catch((err) => {
-                      setIsPreloader(false);
-                      console.log(err);
-                    });
-                })
-                .catch((err) => {
-                  setIsPreloader(false);
-                  console.log(err);
-                });
-            }
-            setIsPreloader(true);
-            setTimeout(() => {
-              getDeliveryDocument(authData.token, deliveryDocument.entity.uuid)
-                .then((pdfData) => {
-                  setIsPreloader(false);
-                  openPDF(pdfData.pdf);
-                })
-                .catch((err) => {
-                  setIsPreloader(false);
-                  console.log(err);
-                });
-            }, 2500);
-          })
-          .catch((err) => {
-            setIsPreloader(false);
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        setIsPreloader(false);
-        console.log(err);
-      });
-  }
-  */
-
   function openPDFBarcodeHandler() {
     deliveryAuthorization()
       .then((authData) => {
@@ -1180,7 +1121,21 @@ const Delivery = () => {
               splitLinksArray: OrderData.order.splitLinksArray,
               splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
               isPost: OrderData.order.isPost,
-              isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
+              isPurchaseImagesDisabled:
+                OrderData.order.isPurchaseImagesDisabled,
+              expressCost: OrderData.order.expressCost,
+              payLinkExpress: OrderData.order.payLinkExpress,
+              payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+              payLinkSplitSecondExpress:
+                OrderData.order.payLinkSplitSecondExpress,
+              paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+              paymentUUIDSplitExpress: OrderData.order.paymentUUIDSplitExpress,
+              paymentUUIDSplitSecondExpress:
+                OrderData.order.paymentUUIDSplitSecondExpress,
+              payLinksExpressArray: OrderData.order.payLinksExpressArray,
+              splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
+              splitSecondLinksExpressArray:
+                OrderData.order.splitSecondLinksExpressArray,
               __v: OrderData.order.__v,
             });
           })
@@ -1288,7 +1243,23 @@ const Delivery = () => {
                   splitLinksArray: OrderData.order.splitLinksArray,
                   splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
                   isPost: OrderData.order.isPost,
-                  isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
+                  isPurchaseImagesDisabled:
+                    OrderData.order.isPurchaseImagesDisabled,
+                  expressCost: OrderData.order.expressCost,
+                  payLinkExpress: OrderData.order.payLinkExpress,
+                  payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+                  payLinkSplitSecondExpress:
+                    OrderData.order.payLinkSplitSecondExpress,
+                  paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+                  paymentUUIDSplitExpress:
+                    OrderData.order.paymentUUIDSplitExpress,
+                  paymentUUIDSplitSecondExpress:
+                    OrderData.order.paymentUUIDSplitSecondExpress,
+                  payLinksExpressArray: OrderData.order.payLinksExpressArray,
+                  splitLinksExpressArray:
+                    OrderData.order.splitLinksExpressArray,
+                  splitSecondLinksExpressArray:
+                    OrderData.order.splitSecondLinksExpressArray,
                   __v: OrderData.order.__v,
                 });
               })
@@ -1382,6 +1353,18 @@ const Delivery = () => {
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
           isPost: OrderData.order.isPost,
           isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
+          expressCost: OrderData.order.expressCost,
+          payLinkExpress: OrderData.order.payLinkExpress,
+          payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+          payLinkSplitSecondExpress: OrderData.order.payLinkSplitSecondExpress,
+          paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+          paymentUUIDSplitExpress: OrderData.order.paymentUUIDSplitExpress,
+          paymentUUIDSplitSecondExpress:
+            OrderData.order.paymentUUIDSplitSecondExpress,
+          payLinksExpressArray: OrderData.order.payLinksExpressArray,
+          splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
+          splitSecondLinksExpressArray:
+            OrderData.order.splitSecondLinksExpressArray,
           __v: OrderData.order.__v,
         });
       })
@@ -1432,6 +1415,15 @@ const Delivery = () => {
 
   function handleChangePost() {
     setIsPost(OrderData.order._id, !OrderData.order.isPost).then((order) => {
+      OrderData.setOrder(order);
+    });
+  }
+
+  function handleChangeExpress() {
+    setExpressCost(
+      OrderData.order._id,
+      OrderData.order.expressCost === 0 ? EXPRESS_PRICE : 0
+    ).then((order) => {
       OrderData.setOrder(order);
     });
   }
@@ -1533,6 +1525,21 @@ const Delivery = () => {
           />
           <label>Почта РФ</label>
         </div>
+        <div
+          className={styles["delivery-receipt__chekbox-container"]}
+          style={{ marginBottom: 0, marginTop: "0.5rem" }}
+        >
+          <input
+            type="checkbox"
+            checked={OrderData.order.expressCost > 0}
+            onChange={openSubmitExpressChange}
+            disabled={
+              OrderData.order.status === "Завершён" ||
+              OrderData.order.status === "Доставляется"
+            }
+          />
+          <label>Экспресс</label>
+        </div>
         <div className={styles["delivery-packages__container"]}>
           {OrderData.order.deliveryAddress !== "" &&
             OrderData.order.deliveryEntity !== "" && (
@@ -1596,65 +1603,55 @@ const Delivery = () => {
                 </div>
               </div>
             )}
-          {
-            <div>
-              {OrderData.order.deliveryAddress !== "" &&
-                OrderData.order.deliveryEntity !== "" && (
-                  <div className={styles["delivery-packages"]}>
-                    <h4 style={{ marginTop: 0 }}>Cумма страховки</h4>
-                    <input
-                      className={styles["delivery-packages-number-input"]}
-                      type="number"
-                      name="delivery_insurance"
-                      value={data.delivery_insurance}
-                      onChange={handleChange}
-                    />
-                    <button
-                      onClick={openSubmitChangeInsurancePopup}
-                      style={{ marginTop: "0.5rem" }}
-                    >
+          {OrderData.order.deliveryAddress !== "" &&
+            OrderData.order.deliveryEntity !== "" && (
+              <div>
+                <div className={styles["delivery-packages"]}>
+                  <h4 style={{ marginTop: 0 }}>Cумма страховки</h4>
+                  <input
+                    className={styles["delivery-packages-number-input"]}
+                    type="number"
+                    name="delivery_insurance"
+                    value={data.delivery_insurance}
+                    onChange={handleChange}
+                  />
+                  <button
+                    onClick={openSubmitChangeInsurancePopup}
+                    style={{ marginTop: "0.5rem" }}
+                  >
+                    Cохр.
+                  </button>
+                </div>
+                <div className={styles["delivery-packages"]}>
+                  <h4>Номер на коробке</h4>
+                  <input
+                    className={styles["delivery-packages-number-input"]}
+                    type="number"
+                    name="delivery_number"
+                    value={data.delivery_number}
+                    onChange={handleChange}
+                  />
+                  {OrderData.order.combinedOrder.length > 0 && (
+                    <button onClick={openSubmitChangeNumberPopup}>Cохр.</button>
+                  )}
+                </div>
+                <div className={styles["delivery-packages"]}>
+                  <h4>Кол-во мест</h4>
+                  <input
+                    className={styles["delivery-packages-number-input"]}
+                    type="number"
+                    name="delivery_packages"
+                    value={data.delivery_packages}
+                    onChange={handleChange}
+                  />
+                  {OrderData.order.combinedOrder.length > 0 && (
+                    <button onClick={openSubmitChangePackagesPopup}>
                       Cохр.
                     </button>
-                  </div>
-                )}
-              {OrderData.order.deliveryAddress !== "" &&
-                OrderData.order.deliveryEntity !== "" && (
-                  <div className={styles["delivery-packages"]}>
-                    <h4>Номер на коробке</h4>
-                    <input
-                      className={styles["delivery-packages-number-input"]}
-                      type="number"
-                      name="delivery_number"
-                      value={data.delivery_number}
-                      onChange={handleChange}
-                    />
-                    {OrderData.order.combinedOrder.length > 0 && (
-                      <button onClick={openSubmitChangeNumberPopup}>
-                        Cохр.
-                      </button>
-                    )}
-                  </div>
-                )}
-              {OrderData.order.deliveryAddress !== "" &&
-                OrderData.order.deliveryEntity !== "" && (
-                  <div className={styles["delivery-packages"]}>
-                    <h4>Кол-во мест</h4>
-                    <input
-                      className={styles["delivery-packages-number-input"]}
-                      type="number"
-                      name="delivery_packages"
-                      value={data.delivery_packages}
-                      onChange={handleChange}
-                    />
-                    {OrderData.order.combinedOrder.length > 0 && (
-                      <button onClick={openSubmitChangePackagesPopup}>
-                        Cохр.
-                      </button>
-                    )}
-                  </div>
-                )}
-            </div>
-          }
+                  )}
+                </div>
+              </div>
+            )}
           <div className={styles["delivery-warehouseworker__extra-info"]}>
             {UserData.userData.position === "Работник склада" && (
               <div>
@@ -2197,6 +2194,16 @@ const Delivery = () => {
         }
         onSubmit={handleChangePost}
         closeSubmitPopup={closeSubmitPostChange}
+      />
+      <SubmitPopup
+        isSubmitPopup={isSubmitExpressChange}
+        submitText={
+          OrderData.order.expressCost > 0
+            ? "Изменить доставку на экспресс"
+            : "Изменить доставку на экспресс"
+        }
+        onSubmit={handleChangeExpress}
+        closeSubmitPopup={closeSubmitExpressChange}
       />
       <ChangeAddress isWidjet={isWidjet} closeWidjet={closeWidjet} />
       <ImagePopup

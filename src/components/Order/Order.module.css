@@ -463,7 +463,7 @@
 .checkbox__container {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
 .checkbox__button {
@@ -515,7 +515,11 @@
   gap: 0.5rem
 }
 
-.order__split-container {
+.order__options-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
   background-color: #23152C;
   border-radius: 23px;
   padding: 1rem;
@@ -524,7 +528,7 @@
 
 .order__split-price-container {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   margin-top: 1rem;
 }
 
@@ -544,4 +548,10 @@
 
 .order__split-price_active {
   color: #FFF;
+}
+
+.order__express-text {
+  color: #918698;
+  font-size: 0.9rem;
+  margin: 1rem 0 0;
 }

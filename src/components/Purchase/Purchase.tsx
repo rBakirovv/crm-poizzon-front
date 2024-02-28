@@ -212,6 +212,19 @@ const Purchase = () => {
             splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
             isPost: OrderData.order.isPost,
             isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
+            expressCost: OrderData.order.expressCost,
+            payLinkExpress: OrderData.order.payLinkExpress,
+            payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+            payLinkSplitSecondExpress:
+              OrderData.order.payLinkSplitSecondExpress,
+            paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+            paymentUUIDSplitExpress: OrderData.order.paymentUUIDSplitExpress,
+            paymentUUIDSplitSecondExpress:
+              OrderData.order.paymentUUIDSplitSecondExpress,
+            payLinksExpressArray: OrderData.order.payLinksExpressArray,
+            splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
+            splitSecondLinksExpressArray:
+              OrderData.order.splitSecondLinksExpressArray,
             __v: OrderData.order.__v,
           });
         })
@@ -302,6 +315,18 @@ const Purchase = () => {
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
           isPost: OrderData.order.isPost,
           isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
+          expressCost: OrderData.order.expressCost,
+          payLinkExpress: OrderData.order.payLinkExpress,
+          payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+          payLinkSplitSecondExpress: OrderData.order.payLinkSplitSecondExpress,
+          paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+          paymentUUIDSplitExpress: OrderData.order.paymentUUIDSplitExpress,
+          paymentUUIDSplitSecondExpress:
+            OrderData.order.paymentUUIDSplitSecondExpress,
+          payLinksExpressArray: OrderData.order.payLinksExpressArray,
+          splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
+          splitSecondLinksExpressArray:
+            OrderData.order.splitSecondLinksExpressArray,
           __v: OrderData.order.__v,
         });
       })
@@ -470,6 +495,21 @@ const Purchase = () => {
                     isPost: OrderData.order.isPost,
                     isPurchaseImagesDisabled:
                       OrderData.order.isPurchaseImagesDisabled,
+                    expressCost: OrderData.order.expressCost,
+                    payLinkExpress: OrderData.order.payLinkExpress,
+                    payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+                    payLinkSplitSecondExpress:
+                      OrderData.order.payLinkSplitSecondExpress,
+                    paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+                    paymentUUIDSplitExpress:
+                      OrderData.order.paymentUUIDSplitExpress,
+                    paymentUUIDSplitSecondExpress:
+                      OrderData.order.paymentUUIDSplitSecondExpress,
+                    payLinksExpressArray: OrderData.order.payLinksExpressArray,
+                    splitLinksExpressArray:
+                      OrderData.order.splitLinksExpressArray,
+                    splitSecondLinksExpressArray:
+                      OrderData.order.splitSecondLinksExpressArray,
                     __v: OrderData.order.__v,
                   });
                 })
@@ -566,6 +606,18 @@ const Purchase = () => {
       splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
       isPost: OrderData.order.isPost,
       isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
+      expressCost: OrderData.order.expressCost,
+      payLinkExpress: OrderData.order.payLinkExpress,
+      payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+      payLinkSplitSecondExpress: OrderData.order.payLinkSplitSecondExpress,
+      paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+      paymentUUIDSplitExpress: OrderData.order.paymentUUIDSplitExpress,
+      paymentUUIDSplitSecondExpress:
+        OrderData.order.paymentUUIDSplitSecondExpress,
+      payLinksExpressArray: OrderData.order.payLinksExpressArray,
+      splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
+      splitSecondLinksExpressArray:
+        OrderData.order.splitSecondLinksExpressArray,
       __v: OrderData.order.__v,
     });
   }, [data]);

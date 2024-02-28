@@ -70,7 +70,8 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
           parseFloat(current.priceDeliveryChina) +
           parseFloat(current.priceDeliveryRussia) +
           parseFloat(current.commission) -
-          current.promoCodePercent)
+          current.promoCodePercent +
+          current.expressCost)
       );
     }, 0);
 
@@ -94,7 +95,8 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
           parseFloat(current.priceDeliveryChina) +
           parseFloat(current.priceDeliveryRussia) +
           parseFloat(current.commission) -
-          current.promoCodePercent)
+          current.promoCodePercent +
+          current.expressCost)
       );
     }, 0);
 
@@ -118,7 +120,8 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
           parseFloat(current.priceDeliveryChina) +
           parseFloat(current.priceDeliveryRussia) +
           parseFloat(current.commission) -
-          current.promoCodePercent)
+          current.promoCodePercent +
+          current.expressCost)
       );
     }, 0);
 
@@ -142,7 +145,8 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
           parseFloat(current.priceDeliveryChina) +
           parseFloat(current.priceDeliveryRussia) +
           parseFloat(current.commission) -
-          current.promoCodePercent)
+          current.promoCodePercent +
+          current.expressCost)
       );
     }, 0);
 
@@ -166,7 +170,8 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
           parseFloat(current.priceDeliveryChina) +
           parseFloat(current.priceDeliveryRussia) +
           parseFloat(current.commission) -
-          current.promoCodePercent)
+          current.promoCodePercent +
+          current.expressCost)
       );
     }, 0);
 
@@ -190,7 +195,8 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
           parseFloat(current.priceDeliveryChina) +
           parseFloat(current.priceDeliveryRussia) +
           parseFloat(current.commission) -
-          current.promoCodePercent)
+          current.promoCodePercent +
+          current.expressCost)
       );
     }, 0);
 
@@ -203,7 +209,8 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
           parseFloat(current.priceDeliveryChina) +
           parseFloat(current.priceDeliveryRussia) +
           parseFloat(current.commission) -
-          current.promoCodePercent)
+          current.promoCodePercent +
+          current.expressCost)
       );
     }, 0);
 
@@ -247,7 +254,8 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
                     parseFloat(current.priceDeliveryChina) +
                     parseFloat(current.priceDeliveryRussia) +
                     parseFloat(current.commission) -
-                    current.promoCodePercent)
+                    current.promoCodePercent +
+                    current.expressCost)
                 );
               }, 0);
 

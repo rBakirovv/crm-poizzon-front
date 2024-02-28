@@ -313,7 +313,7 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
         parseFloat(current.priceDeliveryChina) +
         parseFloat(current.priceDeliveryRussia) +
         parseFloat(current.commission) -
-        current.promoCodePercent)
+        current.promoCodePercent) + current.expressCost
     );
   }, 0);
 

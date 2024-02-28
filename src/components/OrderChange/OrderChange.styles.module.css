@@ -1,5 +1,9 @@
 .red-star {
   color: red;
+}
+
+.red-status {
+  color: red;
   border-bottom: 1px dashed red !important; 
 }
 

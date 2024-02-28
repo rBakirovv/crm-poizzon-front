@@ -15,3 +15,4 @@ export const MANAGER = "Менеджер";
 export const WAREHOUSEWORKER = "Работник склада";
 export const DROPSHIPPER = "Дропшиппер";
 export const MAX_SIZE = 5242880 * 2;
+export const EXPRESS_PRICE = 1600;

@@ -79,7 +79,17 @@ export interface IOrder {
   splitLinksArray: Array<string>;
   splitSecondLinksArray: Array<string>;
   isPost: boolean;
-  isPurchaseImagesDisabled: boolean,
+  isPurchaseImagesDisabled: boolean;
+  expressCost: number;
+  payLinkExpress: string;
+  payLinkSplitExpress: string;
+  payLinkSplitSecondExpress: string;
+  paymentUUIDExpress: string;
+  paymentUUIDSplitExpress: string;
+  paymentUUIDSplitSecondExpress: string;
+  payLinksExpressArray: Array<string>;
+  splitLinksExpressArray: Array<string>;
+  splitSecondLinksExpressArray: Array<string>;
   __v?: number;
 }
 
@@ -167,6 +177,7 @@ export interface IMergedOrders {
   priceDeliveryRussia: string;
   commission: string;
   promoCodePercent: number;
+  expressCost: number;
 }
 
 export interface IMergedClientOrders {

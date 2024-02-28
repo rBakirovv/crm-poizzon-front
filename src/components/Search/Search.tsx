@@ -400,7 +400,7 @@ const Search = () => {
                               parseFloat(orderItem.priceDeliveryChina) +
                               parseFloat(orderItem.priceDeliveryRussia) +
                               parseFloat(orderItem.commission) -
-                              orderItem.promoCodePercent
+                              orderItem.promoCodePercent + orderItem.expressCost
                           ))}
                     {orderItem.status === "Черновик" && <br />}
                     {orderItem.status !== "Черновик" &&
@@ -410,7 +410,7 @@ const Search = () => {
                           parseFloat(orderItem.priceDeliveryChina) +
                           parseFloat(orderItem.priceDeliveryRussia) +
                           parseFloat(orderItem.commission) -
-                          orderItem.promoCodePercent
+                          orderItem.promoCodePercent + orderItem.expressCost
                       )}
                   </div>
                   <div

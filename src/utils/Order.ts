@@ -118,7 +118,7 @@ export const createOrder = (
   commission: string,
   promoCodePercent: number,
   comment: string,
-  totalReorder: boolean,
+  totalReorder: boolean
 ) => {
   return fetch(`${BASE_URL}/orders/create`, {
     credentials: "include",
@@ -186,7 +186,7 @@ export const createOrderSplit = (
       commission: commission,
       promoCodePercent: promoCodePercent,
       comment: comment,
-      totalReorder: totalReorder
+      totalReorder: totalReorder,
     }),
   }).then(checkResponse);
 };
@@ -208,6 +208,12 @@ export const updateOrderDraft = (
   paymentUUIDSplit: string,
   payLinkSplitSecond: string,
   paymentUUIDSplitSecond: string,
+  payLinkExpress: string,
+  paymentUUIDExpress: string,
+  payLinkSplitExpress: string,
+  paymentUUIDSplitExpress: string,
+  payLinkSplitSecondExpress: string,
+  paymentUUIDSplitSecondExpress: string,
   category: string,
   subcategory: string,
   brand: string,
@@ -233,6 +239,12 @@ export const updateOrderDraft = (
       paymentUUIDSplit: paymentUUIDSplit,
       payLinkSplitSecond: payLinkSplitSecond,
       paymentUUIDSplitSecond: paymentUUIDSplitSecond,
+      payLinkExpress: payLinkExpress,
+      paymentUUIDExpress: paymentUUIDExpress,
+      payLinkSplitExpress: payLinkSplitExpress,
+      paymentUUIDSplitExpress: paymentUUIDSplitExpress,
+      payLinkSplitSecondExpress: payLinkSplitSecondExpress,
+      paymentUUIDSplitSecondExpress: paymentUUIDSplitSecondExpress,
       category: category,
       subcategory: subcategory,
       brand: brand,
@@ -946,7 +958,13 @@ export const updatePayment = (
   payLinkSplit: string,
   paymentUUIDSplit: string,
   payLinkSplitSecond: string,
-  paymentUUIDSplitSecond: string
+  paymentUUIDSplitSecond: string,
+  payLinkExpress: string,
+  payLinkSplitExpress: string,
+  payLinkSplitSecondExpress: string,
+  paymentUUIDExpress: string,
+  paymentUUIDSplitExpress: string,
+  paymentUUIDSplitSecondExpress: string
 ) => {
   return fetch(`${BASE_URL}/order/update-payment/${id}`, {
     credentials: "include",
@@ -959,6 +977,12 @@ export const updatePayment = (
       paymentUUIDSplit: paymentUUIDSplit,
       payLinkSplitSecond: payLinkSplitSecond,
       paymentUUIDSplitSecond: paymentUUIDSplitSecond,
+      payLinkExpress: payLinkExpress,
+      payLinkSplitExpress: payLinkSplitExpress,
+      payLinkSplitSecondExpress: payLinkSplitSecondExpress,
+      paymentUUIDExpress: paymentUUIDExpress,
+      paymentUUIDSplitExpress: paymentUUIDSplitExpress,
+      paymentUUIDSplitSecondExpress: paymentUUIDSplitSecondExpress,
     }),
   }).then(checkResponse);
 };
@@ -1003,6 +1027,39 @@ export const addPayLinkSplitSecond = (id: string, splitLinkSecond: string) => {
     headers: HEADERS,
     body: JSON.stringify({
       splitLinkSecond: splitLinkSecond,
+    }),
+  }).then(checkResponse);
+};
+
+export const addPayLinkExpress = (id: string, link: string) => {
+  return fetch(`${BASE_URL}/order/add-pay-link-express/${id}`, {
+    credentials: "include",
+    method: "PUT",
+    headers: HEADERS,
+    body: JSON.stringify({
+      link: link,
+    }),
+  }).then(checkResponse);
+};
+
+export const addPayLinkSplitExpress = (id: string, link: string) => {
+  return fetch(`${BASE_URL}/order/add-pay-link-split-express/${id}`, {
+    credentials: "include",
+    method: "PUT",
+    headers: HEADERS,
+    body: JSON.stringify({
+      link: link,
+    }),
+  }).then(checkResponse);
+};
+
+export const addPayLinkSplitSecondExpress = (id: string, link: string) => {
+  return fetch(`${BASE_URL}/order/add-pay-link-split-second-express/${id}`, {
+    credentials: "include",
+    method: "PUT",
+    headers: HEADERS,
+    body: JSON.stringify({
+      link: link,
     }),
   }).then(checkResponse);
 };
@@ -1134,13 +1191,27 @@ export const setIsPost = (id: string, isPost: boolean) => {
   }).then(checkResponse);
 };
 
-export const setPurchaseImagesDisabled = (id: string, isPurchaseImagesDisabled: boolean) => {
+export const setPurchaseImagesDisabled = (
+  id: string,
+  isPurchaseImagesDisabled: boolean
+) => {
   return fetch(`${BASE_URL}/order/purchase-images-disable/${id}`, {
     credentials: "include",
     method: "PATCH",
     headers: HEADERS,
     body: JSON.stringify({
       isPurchaseImagesDisabled: isPurchaseImagesDisabled,
+    }),
+  }).then(checkResponse);
+};
+
+export const setExpressCost = (id: string, expressCost: number) => {
+  return fetch(`${BASE_URL}/order/express-cost/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      expressCost: expressCost,
     }),
   }).then(checkResponse);
 };

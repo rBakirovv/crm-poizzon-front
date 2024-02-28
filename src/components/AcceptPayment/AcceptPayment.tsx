@@ -10,8 +10,11 @@ import {
   acceptPaymentSplit,
   acceptPaymentSplitSecond,
   addPayLink,
+  addPayLinkExpress,
   addPayLinkSplit,
+  addPayLinkSplitExpress,
   addPayLinkSplitSecond,
+  addPayLinkSplitSecondExpress,
   orderResume,
   updateOrderDraft,
 } from "../../utils/Order";
@@ -26,12 +29,22 @@ const AcceptPayment = () => {
 
   const [isSubmitPayLinkPopup, setIsSubmitPayLinkPopup] =
     useState<boolean>(false);
-
   const [isSubmitPayLinkSplitPopup, setIsSubmitPayLinkSplitPopup] =
     useState<boolean>(false);
-
   const [isSubmitPayLinkSplitSecondPopup, setIsSubmitPayLinkSplitSecondPopup] =
     useState<boolean>(false);
+
+  const [isSubmitPayLinkExpressPopup, setIsSubmitPayLinkExpressPopup] =
+    useState<boolean>(false);
+  const [
+    isSubmitPayLinkSplitExpressPopup,
+    setIsSubmitPayLinkSplitExpressPopup,
+  ] = useState<boolean>(false);
+  const [
+    isSubmitPayLinkSplitSecondExpressPopup,
+    setIsSubmitPayLinkSplitSecondExpressPopup,
+  ] = useState<boolean>(false);
+
   const [isSubmitAcceptPaymentPopup, setIsSubmitAcceptPaymentPopup] =
     useState<boolean>(false);
   const [isSubmitAcceptSplitPopup, setIsSubmitAcceptSplitPopup] =
@@ -42,6 +55,11 @@ const AcceptPayment = () => {
   const [isPayLinks, setIsPayLinks] = useState(false);
   const [isPayLinksSplit, setIsPayLinksSplit] = useState(false);
   const [isPayLinksSplitSecond, setIsPayLinksSplitSecond] = useState(false);
+
+  const [isPayLinksExpress, setIsPayLinksExpress] = useState(false);
+  const [isPayLinksSplitExpress, setIsPayLinksSplitExpress] = useState(false);
+  const [isPayLinksSplitSecondExpress, setIsPayLinksSplitSecondExpress] =
+    useState(false);
 
   const priceRub = Math.ceil(
     parseFloat(OrderData.order.priceCNY) *
@@ -54,6 +72,15 @@ const AcceptPayment = () => {
       parseFloat(OrderData.order.priceDeliveryRussia) +
       parseFloat(OrderData.order.commission) -
       OrderData.order.promoCodePercent
+  );
+
+  const totalPriceExpress = Math.ceil(
+    priceRub +
+      parseFloat(OrderData.order.priceDeliveryChina) +
+      parseFloat(OrderData.order.priceDeliveryRussia) +
+      parseFloat(OrderData.order.commission) -
+      OrderData.order.promoCodePercent +
+      OrderData.order.expressCost
   );
 
   function openImagePopup() {
@@ -70,6 +97,30 @@ const AcceptPayment = () => {
 
   function closeSubmitPopup() {
     setIsSubmitPaymentPopupOpen(false);
+  }
+
+  function openSubmitPayLinkExpressPopup() {
+    setIsSubmitPayLinkExpressPopup(true);
+  }
+
+  function closeSubmitPayLinkExpressPopup() {
+    setIsSubmitPayLinkExpressPopup(false);
+  }
+
+  function openSubmitPayLinkSplitExpressPopup() {
+    setIsSubmitPayLinkSplitExpressPopup(true);
+  }
+
+  function closeSubmitPayLinkSplitExpressPopup() {
+    setIsSubmitPayLinkSplitExpressPopup(false);
+  }
+
+  function openSubmitPayLinkSplitSecondExpressPopup() {
+    setIsSubmitPayLinkSplitSecondExpressPopup(true);
+  }
+
+  function closeSubmitPayLinkSplitSecondExpressPopup() {
+    setIsSubmitPayLinkSplitSecondExpressPopup(false);
   }
 
   function openSubmitPayLinkPopup() {
@@ -162,6 +213,18 @@ const AcceptPayment = () => {
     setIsPayLinksSplitSecond(!isPayLinksSplitSecond);
   }
 
+  function openPayLinksExpress() {
+    setIsPayLinksExpress(!isPayLinksExpress);
+  }
+
+  function openPayLinksSplitExpress() {
+    setIsPayLinksSplitExpress(!isPayLinksSplitExpress);
+  }
+
+  function openPayLinksSplitSecondExpress() {
+    setIsPayLinksSplitSecondExpress(!isPayLinksSplitSecondExpress);
+  }
+
   function handlePayLinkSubmit() {
     createPayLink(
       OrderData.order.orderId.toString(),
@@ -179,6 +242,12 @@ const AcceptPayment = () => {
           OrderData.order.paymentUUIDSplit,
           OrderData.order.payLinkSplitSecond,
           OrderData.order.paymentUUIDSplitSecond,
+          OrderData.order.payLinkExpress,
+          OrderData.order.paymentUUIDExpress,
+          OrderData.order.payLinkSplitExpress,
+          OrderData.order.paymentUUIDSplitExpress,
+          OrderData.order.payLinkSplitSecondExpress,
+          OrderData.order.paymentUUIDSplitSecondExpress,
           OrderData.order.category,
           OrderData.order.subcategory,
           OrderData.order.brand,
@@ -219,6 +288,12 @@ const AcceptPayment = () => {
           payment.data.attributes.uuid,
           OrderData.order.payLinkSplitSecond,
           OrderData.order.paymentUUIDSplitSecond,
+          OrderData.order.payLinkExpress,
+          OrderData.order.paymentUUIDExpress,
+          OrderData.order.payLinkSplitExpress,
+          OrderData.order.paymentUUIDSplitExpress,
+          OrderData.order.payLinkSplitSecondExpress,
+          OrderData.order.paymentUUIDSplitSecondExpress,
           OrderData.order.category,
           OrderData.order.subcategory,
           OrderData.order.brand,
@@ -248,6 +323,12 @@ const AcceptPayment = () => {
                 orderUpdated.paymentUUIDSplit,
                 paymentSecond.data.attributes.url,
                 paymentSecond.data.attributes.uuid,
+                OrderData.order.payLinkExpress,
+                OrderData.order.paymentUUIDExpress,
+                OrderData.order.payLinkSplitExpress,
+                OrderData.order.paymentUUIDSplitExpress,
+                OrderData.order.payLinkSplitSecondExpress,
+                OrderData.order.paymentUUIDSplitSecondExpress,
                 OrderData.order.category,
                 OrderData.order.subcategory,
                 OrderData.order.brand,
@@ -299,6 +380,12 @@ const AcceptPayment = () => {
           OrderData.order.paymentUUIDSplit,
           payment.data.attributes.url,
           payment.data.attributes.uuid,
+          OrderData.order.payLinkExpress,
+          OrderData.order.paymentUUIDExpress,
+          OrderData.order.payLinkSplitExpress,
+          OrderData.order.paymentUUIDSplitExpress,
+          OrderData.order.payLinkSplitSecondExpress,
+          OrderData.order.paymentUUIDSplitSecondExpress,
           OrderData.order.category,
           OrderData.order.subcategory,
           OrderData.order.brand,
@@ -313,6 +400,192 @@ const AcceptPayment = () => {
           OrderData.order.comment
         ).then(() => {
           addPayLinkSplitSecond(
+            OrderData.order._id,
+            payment.data.attributes.url
+          ).then((order) => {
+            OrderData.setOrder(order);
+          });
+        });
+      }
+    });
+  }
+
+  function handlePayLinkExpressSubmit() {
+    createPayLink(
+      OrderData.order.orderId.toString(),
+      totalPriceExpress,
+      `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+      `${BASE_URL}/pay/link/${OrderData.order._id}`
+    ).then((payment) => {
+      if (payment.data.id) {
+        updateOrderDraft(
+          OrderData.order._id,
+          OrderData.order.link,
+          OrderData.order.payLink,
+          OrderData.order.paymentUUID,
+          OrderData.order.payLinkSplit,
+          OrderData.order.paymentUUIDSplit,
+          OrderData.order.payLinkSplitSecond,
+          OrderData.order.paymentUUIDSplitSecond,
+          payment.data.attributes.url,
+          payment.data.attributes.uuid,
+          OrderData.order.payLinkSplitExpress,
+          OrderData.order.paymentUUIDSplitExpress,
+          OrderData.order.payLinkSplitSecondExpress,
+          OrderData.order.paymentUUIDSplitSecondExpress,
+          OrderData.order.category,
+          OrderData.order.subcategory,
+          OrderData.order.brand,
+          OrderData.order.model,
+          OrderData.order.size,
+          OrderData.order.payment,
+          OrderData.order.priceCNY,
+          OrderData.order.priceDeliveryChina,
+          OrderData.order.priceDeliveryRussia,
+          OrderData.order.commission,
+          OrderData.order.promoCodePercent,
+          OrderData.order.comment
+        ).then(() => {
+          addPayLinkExpress(
+            OrderData.order._id,
+            payment.data.attributes.url
+          ).then((order) => {
+            OrderData.setOrder(order);
+          });
+        });
+      }
+    });
+  }
+
+  function handlePayLinkSplitExpressSubmit() {
+    createPayLink(
+      OrderData.order.orderId.toString(),
+      Math.ceil(totalPriceExpress / 2),
+      `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+      `${BASE_URL}/pay/link/${OrderData.order._id}`
+    ).then((payment) => {
+      if (payment.data.id) {
+        updateOrderDraft(
+          OrderData.order._id,
+          OrderData.order.link,
+          OrderData.order.payLink,
+          OrderData.order.paymentUUID,
+          OrderData.order.payLinkSplit,
+          OrderData.order.paymentUUIDSplit,
+          OrderData.order.payLinkSplitSecond,
+          OrderData.order.paymentUUIDSplitSecond,
+          OrderData.order.payLinkExpress,
+          OrderData.order.paymentUUIDExpress,
+          payment.data.attributes.url,
+          payment.data.attributes.uuid,
+          OrderData.order.payLinkSplitSecondExpress,
+          OrderData.order.paymentUUIDSplitSecondExpress,
+          OrderData.order.category,
+          OrderData.order.subcategory,
+          OrderData.order.brand,
+          OrderData.order.model,
+          OrderData.order.size,
+          OrderData.order.payment,
+          OrderData.order.priceCNY,
+          OrderData.order.priceDeliveryChina,
+          OrderData.order.priceDeliveryRussia,
+          OrderData.order.commission,
+          OrderData.order.promoCodePercent,
+          OrderData.order.comment
+        ).then(() => {
+          createPayLink(
+            OrderData.order.orderId.toString(),
+            Math.ceil(totalPriceExpress / 2),
+            `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+            `${BASE_URL}/pay/link/${OrderData.order._id}`
+          ).then((paymentSecond) => {
+            if (paymentSecond.data.id) {
+              updateOrderDraft(
+                OrderData.order._id,
+                OrderData.order.link,
+                OrderData.order.payLink,
+                OrderData.order.paymentUUID,
+                OrderData.order.payLinkSplit,
+                OrderData.order.paymentUUIDSplit,
+                OrderData.order.payLinkSplitSecond,
+                OrderData.order.paymentUUIDSplitSecond,
+                OrderData.order.payLinkExpress,
+                OrderData.order.paymentUUIDExpress,
+                OrderData.order.payLinkSplitExpress,
+                OrderData.order.paymentUUIDSplitExpress,
+                payment.data.attributes.url,
+                payment.data.attributes.uuid,
+                OrderData.order.category,
+                OrderData.order.subcategory,
+                OrderData.order.brand,
+                OrderData.order.model,
+                OrderData.order.size,
+                OrderData.order.payment,
+                OrderData.order.priceCNY,
+                OrderData.order.priceDeliveryChina,
+                OrderData.order.priceDeliveryRussia,
+                OrderData.order.commission,
+                OrderData.order.promoCodePercent,
+                OrderData.order.comment
+              ).then((orderUpdatedSecond) => {
+                addPayLinkSplitExpress(
+                  OrderData.order._id,
+                  payment.data.attributes.url
+                )
+                  .then(() => {
+                    addPayLinkSplitSecondExpress(
+                      OrderData.order._id,
+                      paymentSecond.data.attributes.url
+                    );
+                  })
+                  .then(() => {
+                    OrderData.setOrder(orderUpdatedSecond);
+                  });
+              });
+            }
+          });
+        });
+      }
+    });
+  }
+
+  function handlePayLinkSplitSecondExpressSubmit() {
+    createPayLink(
+      OrderData.order.orderId.toString(),
+      Math.ceil(totalPriceExpress / 2),
+      `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+      `${BASE_URL}/pay/link/${OrderData.order._id}`
+    ).then((payment) => {
+      if (payment.data.id) {
+        updateOrderDraft(
+          OrderData.order._id,
+          OrderData.order.link,
+          OrderData.order.payLink,
+          OrderData.order.paymentUUID,
+          OrderData.order.payLinkSplit,
+          OrderData.order.paymentUUIDSplit,
+          OrderData.order.payLinkSplitSecond,
+          OrderData.order.paymentUUIDSplitSecond,
+          OrderData.order.payLinkExpress,
+          OrderData.order.paymentUUIDExpress,
+          OrderData.order.payLinkSplitExpress,
+          OrderData.order.paymentUUIDSplitExpress,
+          payment.data.attributes.url,
+          payment.data.attributes.uuid,
+          OrderData.order.category,
+          OrderData.order.subcategory,
+          OrderData.order.brand,
+          OrderData.order.model,
+          OrderData.order.size,
+          OrderData.order.payment,
+          OrderData.order.priceCNY,
+          OrderData.order.priceDeliveryChina,
+          OrderData.order.priceDeliveryRussia,
+          OrderData.order.commission,
+          OrderData.order.promoCodePercent,
+          OrderData.order.comment
+        ).then(() => {
+          addPayLinkSplitSecondExpress(
             OrderData.order._id,
             payment.data.attributes.url
           ).then((order) => {
@@ -375,6 +648,18 @@ const AcceptPayment = () => {
           </>
         )}
       {OrderData.order.status === "Черновик" &&
+        (OrderData.order.payment === "Перейти по ссылке -" ||
+          OrderData.order.payment === "Сплит -") && (
+          <>
+            <button
+              className={styles["accept-payment__resume"]}
+              onClick={openSubmitPayLinkExpressPopup}
+            >
+              Обновить ссылку на оплату (экспресс)
+            </button>
+          </>
+        )}
+      {OrderData.order.status === "Черновик" &&
         !OrderData.order.isSplitPaid &&
         OrderData.order.payment === "Сплит -" && (
           <>
@@ -396,6 +681,31 @@ const AcceptPayment = () => {
               onClick={openSubmitPayLinkSplitSecondPopup}
             >
               Обновить ссылку на оплату (сплит)
+            </button>
+          </>
+        )}
+      {OrderData.order.status === "Черновик" &&
+        !OrderData.order.isSplitPaid &&
+        OrderData.order.payment === "Сплит -" && (
+          <>
+            <button
+              className={styles["accept-payment__resume"]}
+              onClick={openSubmitPayLinkSplitExpressPopup}
+            >
+              Обновить ссылку на оплату (экспресс & сплит)
+            </button>
+          </>
+        )}
+      {OrderData.order.status !== "Черновик" &&
+        !OrderData.order.isSplitPaidSecond &&
+        OrderData.order.payment === "Сплит -" &&
+        OrderData.order.isSplit && (
+          <>
+            <button
+              className={styles["accept-payment__resume"]}
+              onClick={openSubmitPayLinkSplitSecondExpressPopup}
+            >
+              Обновить ссылку на оплату (экспресс & сплит)
             </button>
           </>
         )}
@@ -472,6 +782,94 @@ const AcceptPayment = () => {
               }`}
             >
               {OrderData.order.splitSecondLinksArray.map((link) => {
+                return (
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles["accept-payment__text"]}
+                  >
+                    {link}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      {OrderData.order.payLinksExpressArray &&
+        OrderData.order.payLinksExpressArray.length > 0 && (
+          <div>
+            <h4
+              className={styles["accept-payment__links-title"]}
+              onClick={openPayLinksExpress}
+            >
+              Ссылки оплаты (экспресс)
+            </h4>
+            <div
+              className={`${styles["accept-payment__links"]} ${
+                isPayLinksExpress && styles["accept-payment__links_active"]
+              }`}
+            >
+              {OrderData.order.payLinksExpressArray.map((link) => {
+                return (
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles["accept-payment__text"]}
+                  >
+                    {link}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      {OrderData.order.splitLinksExpressArray &&
+        OrderData.order.splitLinksExpressArray.length > 0 && (
+          <div>
+            <h4
+              className={styles["accept-payment__links-title"]}
+              onClick={openPayLinksSplitExpress}
+            >
+              Ссылки оплаты (экспресс & сплит)
+            </h4>
+            <div
+              className={`${styles["accept-payment__links"]} ${
+                isPayLinksSplitExpress && styles["accept-payment__links_active"]
+              }`}
+            >
+              {OrderData.order.splitLinksExpressArray.map((link) => {
+                return (
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles["accept-payment__text"]}
+                  >
+                    {link}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      {OrderData.order.splitSecondLinksExpressArray &&
+        OrderData.order.splitSecondLinksExpressArray.length > 0 && (
+          <div>
+            <h4
+              className={styles["accept-payment__links-title"]}
+              onClick={openPayLinksSplitSecondExpress}
+            >
+              Ссылки оплаты (экспресс & сплит вторая часть)
+            </h4>
+            <div
+              className={`${styles["accept-payment__links"]} ${
+                isPayLinksSplitSecondExpress &&
+                styles["accept-payment__links_active"]
+              }`}
+            >
+              {OrderData.order.splitSecondLinksExpressArray.map((link) => {
                 return (
                   <a
                     href={link}
@@ -586,6 +984,24 @@ const AcceptPayment = () => {
         isSubmitPopup={isSubmitPayLinkSplitSecondPopup}
         closeSubmitPopup={closeSubmitPayLinkSplitSecondPopup}
         submitText="Сгенерировать новую ссылку на оплату (вторая часть)"
+      />
+      <SubmitPopup
+        onSubmit={handlePayLinkExpressSubmit}
+        isSubmitPopup={isSubmitPayLinkExpressPopup}
+        closeSubmitPopup={closeSubmitPayLinkExpressPopup}
+        submitText="Сгенерировать новую ссылку на оплату (экспресс)"
+      />
+      <SubmitPopup
+        onSubmit={handlePayLinkSplitExpressSubmit}
+        isSubmitPopup={isSubmitPayLinkSplitExpressPopup}
+        closeSubmitPopup={closeSubmitPayLinkSplitExpressPopup}
+        submitText="Сгенерировать новую ссылку на оплату (экспресс & сплит)"
+      />
+      <SubmitPopup
+        onSubmit={handlePayLinkSplitSecondExpressSubmit}
+        isSubmitPopup={isSubmitPayLinkSplitSecondExpressPopup}
+        closeSubmitPopup={closeSubmitPayLinkSplitSecondExpressPopup}
+        submitText="Сгенерировать новую ссылку на оплату (экспресс & вторая часть)"
       />
       <SubmitPopup
         onSubmit={handleAccept}

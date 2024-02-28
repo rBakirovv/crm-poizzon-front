@@ -68,6 +68,16 @@ class OrderData {
     splitSecondLinksArray: [],
     isPost: false,
     isPurchaseImagesDisabled: false,
+    expressCost: 0,
+    payLinkExpress: "",
+    payLinkSplitExpress: "",
+    payLinkSplitSecondExpress: "",
+    paymentUUIDExpress: "",
+    paymentUUIDSplitExpress: "",
+    paymentUUIDSplitSecondExpress: "",
+    payLinksExpressArray: [],
+    splitLinksExpressArray: [],
+    splitSecondLinksExpressArray: [],
     __v: 0,
   };
 

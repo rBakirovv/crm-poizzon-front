@@ -1,5 +1,9 @@
 import React, { FC, useEffect, useState } from "react";
-import { BASE_URL_FRONT, DROPSHIPPER } from "../../utils/constants";
+import {
+  BASE_URL_FRONT,
+  DROPSHIPPER,
+  EXPRESS_PRICE,
+} from "../../utils/constants";
 import TextInput from "../UI/TextInput/TextInput";
 import styles from "./OrderChange.styles.module.css";
 import { IPayments } from "../../types/interfaces";
@@ -96,14 +100,16 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
     priceRub +
       parseFloat(OrderData.order.priceDeliveryChina) +
       parseFloat(OrderData.order.priceDeliveryRussia) +
-      parseFloat(OrderData.order.commission)
+      parseFloat(OrderData.order.commission) +
+      OrderData.order.expressCost
   );
   const totalPriceWithPromo = Math.ceil(
     priceRub +
       parseFloat(OrderData.order.priceDeliveryChina) +
       parseFloat(OrderData.order.priceDeliveryRussia) +
       parseFloat(OrderData.order.commission) -
-      data.promoCodePercent
+      data.promoCodePercent +
+      OrderData.order.expressCost
   );
 
   const combinedOrdersFiltered = OrderData.mergedOrders.filter((item) => {
@@ -122,7 +128,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
             parseFloat(current.priceDeliveryChina) +
             parseFloat(current.priceDeliveryRussia) +
             parseFloat(current.commission) -
-            current.promoCodePercent)
+            current.promoCodePercent +
+            current.expressCost)
         );
       }, 0)
     );
@@ -480,6 +487,18 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
         isPost: OrderData.order.isPost,
         isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
+        expressCost: OrderData.order.expressCost,
+        payLinkExpress: OrderData.order.payLinkExpress,
+        paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+        payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+        paymentUUIDSplitExpress: OrderData.order.paymentUUIDSplitExpress,
+        payLinkSplitSecondExpress: OrderData.order.payLinkSplitSecondExpress,
+        paymentUUIDSplitSecondExpress:
+          OrderData.order.paymentUUIDSplitSecondExpress,
+        payLinksExpressArray: OrderData.order.payLinksExpressArray,
+        splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
+        splitSecondLinksExpressArray:
+          OrderData.order.splitSecondLinksExpressArray,
         __v: OrderData.order.__v,
       });
     });
@@ -572,6 +591,18 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
           isPost: OrderData.order.isPost,
           isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
+          expressCost: OrderData.order.expressCost,
+          payLinkExpress: OrderData.order.payLinkExpress,
+          paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+          payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+          paymentUUIDSplitExpress: OrderData.order.paymentUUIDSplitExpress,
+          payLinkSplitSecondExpress: OrderData.order.payLinkSplitSecondExpress,
+          paymentUUIDSplitSecondExpress:
+            OrderData.order.paymentUUIDSplitSecondExpress,
+          payLinksExpressArray: OrderData.order.payLinksExpressArray,
+          splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
+          splitSecondLinksExpressArray:
+            OrderData.order.splitSecondLinksExpressArray,
           __v: OrderData.order.__v,
         });
         setUploading(false);
@@ -670,7 +701,23 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   splitLinksArray: OrderData.order.splitLinksArray,
                   splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
                   isPost: OrderData.order.isPost,
-                  isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
+                  isPurchaseImagesDisabled:
+                    OrderData.order.isPurchaseImagesDisabled,
+                  expressCost: OrderData.order.expressCost,
+                  payLinkExpress: OrderData.order.payLinkExpress,
+                  paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+                  payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+                  paymentUUIDSplitExpress:
+                    OrderData.order.paymentUUIDSplitExpress,
+                  payLinkSplitSecondExpress:
+                    OrderData.order.payLinkSplitSecondExpress,
+                  paymentUUIDSplitSecondExpress:
+                    OrderData.order.paymentUUIDSplitSecondExpress,
+                  payLinksExpressArray: OrderData.order.payLinksExpressArray,
+                  splitLinksExpressArray:
+                    OrderData.order.splitLinksExpressArray,
+                  splitSecondLinksExpressArray:
+                    OrderData.order.splitSecondLinksExpressArray,
                   __v: OrderData.order.__v,
                 });
                 setUploading(false);
@@ -768,6 +815,18 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
           isPost: OrderData.order.isPost,
           isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
+          expressCost: OrderData.order.expressCost,
+          payLinkExpress: OrderData.order.payLinkExpress,
+          paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+          payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+          paymentUUIDSplitExpress: OrderData.order.paymentUUIDSplitExpress,
+          payLinkSplitSecondExpress: OrderData.order.payLinkSplitSecondExpress,
+          paymentUUIDSplitSecondExpress:
+            OrderData.order.paymentUUIDSplitSecondExpress,
+          payLinksExpressArray: OrderData.order.payLinksExpressArray,
+          splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
+          splitSecondLinksExpressArray:
+            OrderData.order.splitSecondLinksExpressArray,
           __v: OrderData.order.__v,
         });
       })
@@ -787,6 +846,12 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       OrderData.order.paymentUUIDSplit,
       OrderData.order.payLinkSplitSecond,
       OrderData.order.paymentUUIDSplitSecond,
+      OrderData.order.payLinkExpress,
+      OrderData.order.paymentUUIDExpress,
+      OrderData.order.payLinkSplitExpress,
+      OrderData.order.paymentUUIDSplitExpress,
+      OrderData.order.payLinkSplitSecondExpress,
+      OrderData.order.paymentUUIDSplitSecondExpress,
       OrderData.order.category,
       OrderData.order.subcategory,
       OrderData.order.brand,
@@ -889,6 +954,18 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
       isPost: OrderData.order.isPost,
       isPurchaseImagesDisabled: OrderData.order.isPurchaseImagesDisabled,
+      expressCost: OrderData.order.expressCost,
+      payLinkExpress: OrderData.order.payLinkExpress,
+      paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+      payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+      paymentUUIDSplitExpress: OrderData.order.paymentUUIDSplitExpress,
+      payLinkSplitSecondExpress: OrderData.order.payLinkSplitSecondExpress,
+      paymentUUIDSplitSecondExpress:
+        OrderData.order.paymentUUIDSplitSecondExpress,
+      payLinksExpressArray: OrderData.order.payLinksExpressArray,
+      splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
+      splitSecondLinksExpressArray:
+        OrderData.order.splitSecondLinksExpressArray,
       __v: OrderData.order.__v,
     });
   }, [data]);
@@ -1053,6 +1130,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       {OrderData.order.reorder === true && (
         <p className={styles["order-change__status_red"]}>Перезаказ</p>
       )}
+      {OrderData.order.expressCost === EXPRESS_PRICE && (
+        <p className={styles["order-change__status_red"]}>Экспресс-доставка</p>
+      )}
       {OrderData.order.poizonCode !== "" &&
         OrderData.order.inChinaStockAt !== null &&
         OrderData.order.deliveryAddress === "" &&
@@ -1075,10 +1155,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   className={`${styles["order-change__order-link"]} ${
                     item.orderStatus === "На складе в РФ" &&
                     styles["green-status"]
-                  } ${
-                    item.orderStatus === "Завершён" &&
-                    styles["red-star"]
-                  }`}
+                  } ${item.orderStatus === "Завершён" && styles["red-status"]}`}
                   href={`${BASE_URL_FRONT}/order/change/${item._id}`}
                   key={item.orderId}
                 >
@@ -1300,6 +1377,30 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   disabled={true}
                 />
               )}
+            {(OrderData.order.payment === "Перейти по ссылке -" ||
+              OrderData.order.payment === "Сплит -") &&
+              UserData.userData.position !== "Работник склада" && (
+                <TextInput
+                  name="payLinkExpress"
+                  label="Cсылка на оплату (экспресс)"
+                  value={OrderData.order.payLinkExpress}
+                  handleChange={handleChange}
+                  required={false}
+                  disabled={true}
+                />
+              )}
+            {(OrderData.order.payment === "Перейти по ссылке -" ||
+              OrderData.order.payment === "Сплит -") &&
+              UserData.userData.position !== "Работник склада" && (
+                <TextInput
+                  name="paymentUUIDExpress"
+                  label="UUID оплаты (экспресс)"
+                  value={OrderData.order.paymentUUIDExpress}
+                  handleChange={handleChange}
+                  required={false}
+                  disabled={true}
+                />
+              )}
             {OrderData.order.payment === "Сплит -" &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
@@ -1339,6 +1440,50 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   name="paymentUUIDSplitSecond"
                   label="UUID оплаты (сплит 2/2)"
                   value={OrderData.order.paymentUUIDSplitSecond}
+                  handleChange={handleChange}
+                  required={false}
+                  disabled={true}
+                />
+              )}
+            {OrderData.order.payment === "Сплит -" &&
+              UserData.userData.position !== "Работник склада" && (
+                <TextInput
+                  name="payLinkSplitExpress"
+                  label="Cсылка на оплату (экспресс & сплит 1/2)"
+                  value={OrderData.order.payLinkSplitExpress}
+                  handleChange={handleChange}
+                  required={false}
+                  disabled={true}
+                />
+              )}
+            {OrderData.order.payment === "Сплит -" &&
+              UserData.userData.position !== "Работник склада" && (
+                <TextInput
+                  name="paymentUUIDSplitExpress"
+                  label="UUID оплаты (экспресс & сплит 1/2)"
+                  value={OrderData.order.paymentUUIDSplitExpress}
+                  handleChange={handleChange}
+                  required={false}
+                  disabled={true}
+                />
+              )}
+            {OrderData.order.payment === "Сплит -" &&
+              UserData.userData.position !== "Работник склада" && (
+                <TextInput
+                  name="payLinkSplitSecondExpress"
+                  label="Cсылка на оплату (экспресс & сплит 2/2)"
+                  value={OrderData.order.payLinkSplitSecondExpress}
+                  handleChange={handleChange}
+                  required={false}
+                  disabled={true}
+                />
+              )}
+            {OrderData.order.payment === "Сплит -" &&
+              UserData.userData.position !== "Работник склада" && (
+                <TextInput
+                  name="paymentUUIDSplitSecondExpress"
+                  label="UUID оплаты (экспресс & сплит 2/2)"
+                  value={OrderData.order.paymentUUIDSplitSecondExpress}
                   handleChange={handleChange}
                   required={false}
                   disabled={true}
