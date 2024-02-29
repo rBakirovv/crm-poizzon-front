@@ -828,7 +828,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                   <strong>Экспресс-доставка</strong>{" "}
                   <a
                     className={styles["order__express-link"]}
-                    href="https://teletype.in/@stefanboltzman/K_YGAf5f5mI"
+                    href="https://teletype.in/@dewupoizonn/rYSKU7LuwOp"
                     target="_blank"
                     rel="noreferrer"
                   >
