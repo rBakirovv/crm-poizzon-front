@@ -1,7 +1,7 @@
 import styles from "./AcceptPayment.module.css";
 import OrderData from "../../store/order";
 import UserData from "../../store/user";
-import { BASE_URL, BASE_URL_FRONT } from "../../utils/constants";
+import { BASE_URL, BASE_URL_FRONT, EXPRESS_PRICE } from "../../utils/constants";
 import ImagePopup from "../ImagePopup/ImagePopup";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { useState } from "react";
@@ -80,7 +80,7 @@ const AcceptPayment = () => {
       parseFloat(OrderData.order.priceDeliveryRussia) +
       parseFloat(OrderData.order.commission) -
       OrderData.order.promoCodePercent +
-      OrderData.order.expressCost
+      EXPRESS_PRICE
   );
 
   function openImagePopup() {
@@ -511,10 +511,10 @@ const AcceptPayment = () => {
                 OrderData.order.paymentUUIDSplitSecond,
                 OrderData.order.payLinkExpress,
                 OrderData.order.paymentUUIDExpress,
-                OrderData.order.payLinkSplitExpress,
-                OrderData.order.paymentUUIDSplitExpress,
                 payment.data.attributes.url,
                 payment.data.attributes.uuid,
+                paymentSecond.data.attributes.url,
+                paymentSecond.data.attributes.uuid,
                 OrderData.order.category,
                 OrderData.order.subcategory,
                 OrderData.order.brand,
@@ -527,20 +527,18 @@ const AcceptPayment = () => {
                 OrderData.order.commission,
                 OrderData.order.promoCodePercent,
                 OrderData.order.comment
-              ).then((orderUpdatedSecond) => {
+              ).then(() => {
                 addPayLinkSplitExpress(
                   OrderData.order._id,
                   payment.data.attributes.url
-                )
-                  .then(() => {
-                    addPayLinkSplitSecondExpress(
-                      OrderData.order._id,
-                      paymentSecond.data.attributes.url
-                    );
-                  })
-                  .then(() => {
-                    OrderData.setOrder(orderUpdatedSecond);
+                ).then(() => {
+                  addPayLinkSplitSecondExpress(
+                    OrderData.order._id,
+                    paymentSecond.data.attributes.url
+                  ).then((order) => {
+                    OrderData.setOrder(order);
                   });
+                });
               });
             }
           });
