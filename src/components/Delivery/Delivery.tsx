@@ -361,7 +361,7 @@ const Delivery = () => {
       })
       .then(() => {
         getRecentlyArrived().then((orders) => {
-          WarehouseData.setordersRecentlyArrived(orders);
+          WarehouseData.setOrdersRecentlyArrived(orders);
         });
       });
   }
