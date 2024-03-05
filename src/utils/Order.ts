@@ -1216,6 +1216,17 @@ export const setExpressCost = (id: string, expressCost: number) => {
   }).then(checkResponse);
 };
 
+export const getSecondSplitByDate = (date: string) => {
+  return fetch(`${BASE_URL}/order/get-second-split-by-date`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      date: date,
+    }),
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();

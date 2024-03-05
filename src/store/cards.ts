@@ -17,6 +17,8 @@ class CardsData {
   ordersYesterdaySplitAt: Array<IOrder> = [];
   ordersYesterdaySplitSecondAt: Array<IOrder> = [];
 
+  ordersSplitSecondByDate: Array<IOrder> = [];
+
   splitDebt: Array<IOrder> = [];
 
   constructor() {
@@ -57,6 +59,10 @@ class CardsData {
 
   setSplitDebt = (orders: Array<IOrder>) => {
     this.splitDebt = orders;
+  };
+
+  setOrdersSplitSecondByDate = (orders: Array<IOrder>) => {
+    this.ordersSplitSecondByDate = orders;
   };
 }
 

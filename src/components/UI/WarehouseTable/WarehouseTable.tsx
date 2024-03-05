@@ -45,7 +45,7 @@ const WarehouseTable = observer(() => {
 
   useEffect(() => {
     getRecentlyArrived().then((orders) => {
-      WarehouseData.setordersRecentlyArrived(orders);
+      WarehouseData.setOrdersRecentlyArrived(orders);
     });
   }, []);
 

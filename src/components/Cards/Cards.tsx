@@ -5,10 +5,10 @@ import { FC, useState } from "react";
 import { updateCardsStatistics } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { observer } from "mobx-react-lite";
-import Link from "next/link";
 import UsersDataList from "../../store/usersList";
 import UserData from "../../store/user";
 import WarehouseData from "../../store/warehouse";
+import { BASE_URL_FRONT } from "../../utils/constants";
 
 interface ICardsProps {
   payments: Array<IPayments>;
@@ -301,7 +301,13 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
             {filteredTotalSplitToday &&
               filteredTotalSplitToday.map((item) => {
                 return (
-                  <Link href={`/order/change/${item._id}`}>{item.orderId}</Link>
+                  <a
+                    href={`${BASE_URL_FRONT}/order/change/${item._id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {item.orderId}
+                  </a>
                 );
               })}
           </div>
@@ -311,7 +317,15 @@ const Cards: FC<ICardsProps> = observer(({ payments }) => {
           <div className={styles["cards__paid-dropdown-links"]}>
             {filteredTotalSplitSecondToday &&
               filteredTotalSplitSecondToday.map((item) => {
-                return <Link href={item._id}>{item.orderId}</Link>;
+                return (
+                  <a
+                    href={`${BASE_URL_FRONT}/order/change/${item._id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {item.orderId}
+                  </a>
+                );
               })}
           </div>
         </div>

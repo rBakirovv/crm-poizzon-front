@@ -1,21 +1,30 @@
 .burger {
   position: fixed;
   display: none;
-  top: 65px;
+  top: 0;
   left: 0;
-  background: #fff;
   min-width: 100%;
   min-height: 100%;
+  background-color: #FFF;
   opacity: 0;
   visibility: hidden;
   transform: translateX(-100%);
+  padding-top: 65px;
   transition: all 0.2s ease-in-out;
+}
+
+html:has(.burger_active) {
+  overflow: hidden;
 }
 
 .burger_active {
   opacity: 1;
   visibility: visible;
   transform: translateX(0);
+}
+
+.burger__container {
+  background: #eed6d6;
 }
 
 .burger__buttons-container {

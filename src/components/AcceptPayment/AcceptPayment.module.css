@@ -27,7 +27,7 @@
   color: #4e7fea;
   cursor: pointer;
   border: none;
-  border-bottom: 1px dashed #4e7fea;
+  text-align: left;
   background: transparent;
   transition: all 0.4s ease-in-out;
   padding: 0;

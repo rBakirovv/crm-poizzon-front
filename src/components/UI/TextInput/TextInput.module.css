@@ -23,6 +23,8 @@
 
 @media screen and (max-width: 500px) {
   .input__item {
-    width: 300px;
+    max-width: 300px;
+    width: 100%;
+    box-sizing: border-box;
   }
 }

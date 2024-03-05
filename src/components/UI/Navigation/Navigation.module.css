@@ -2,6 +2,9 @@
   position: fixed;
   left: 1rem;
   top: 6.5rem;
+  max-height: 75%;
+  overflow: scroll;
+  padding-right: 2rem;
 }
 
 .nav__list {

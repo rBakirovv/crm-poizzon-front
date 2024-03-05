@@ -8,7 +8,7 @@ class WarehouseData {
     makeAutoObservable(this);
   }
 
-  setordersRecentlyArrived = (orders: Array<IOrder>) => {
+  setOrdersRecentlyArrived = (orders: Array<IOrder>) => {
     this.ordersRecentlyArrived = orders;
   };
 }

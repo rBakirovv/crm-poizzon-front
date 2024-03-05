@@ -194,12 +194,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: calc(100% - 40px);
+  width: calc(100% - 20px);
   height: 60px;
   box-sizing: border-box;
   border-radius: 1rem;
   background: linear-gradient(90deg, #12C2E9 0%, #C471ED 50%, #F64F59 100%);
-  font-size: 16px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 700;
   color: #fff;
@@ -330,6 +330,7 @@
 .order__status-box-container {
   display: flex;
   justify-content: space-between;
+  gap: 0.5rem;
   background-color: #23152C;
   border-radius: 23px;
   padding: 1rem;

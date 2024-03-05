@@ -24,6 +24,7 @@
   flex-direction: column;
   max-width: 500px;
   max-height: 95%;
+  overflow: scroll;
   width: 100%;
   background-color: #23152C;
   border-radius: 23px 23px 0 0;
@@ -218,4 +219,10 @@
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.04);
   padding: 0.5rem 1rem;
+}
+
+@media screen and (max-width: 600px) {
+  .user-data-modal__container_active {
+    overflow: scroll;
+  }
 }

@@ -207,15 +207,21 @@
   }
 
   .order-change__select {
-    width: 314px;
+    max-width: 314px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .order-change__input {
-    width: 300px;
+    max-width: 300px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .order-change__textarea {
-    width: 300px;
+    max-width: 300px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .order-change__order-submit {

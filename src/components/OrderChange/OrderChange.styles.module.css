@@ -4,12 +4,12 @@
 
 .red-status {
   color: red;
-  border-bottom: 1px dashed red !important; 
+  border-bottom: 1px dashed red !important;
 }
 
 .green-status {
   color: #75d843;
-  border-bottom: 1px dashed #75d843 !important; 
+  border-bottom: 1px dashed #75d843 !important;
 }
 
 .order-change {
@@ -304,15 +304,21 @@
   }
 
   .order-change__select {
-    width: 314px;
+    max-width: 314px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .order-change__input {
-    width: 300px;
+    max-width: 300px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .order-change__textarea {
-    width: 300px;
+    max-width: 300px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .order-change__order-submit {

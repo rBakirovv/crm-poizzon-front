@@ -11,25 +11,14 @@ import { getUserInfo, getUsers } from "../../utils/User";
 import Navigation from "../../components/UI/Navigation/Navigation";
 import RateData from "../../store/rate";
 import { getRate } from "../../utils/Rate";
-import { getPayments } from "../../utils/Payment";
-import PaymentsData from "../../store/payments";
-import Cards from "../../components/Cards/Cards";
 import OrderData from "../../store/order";
 import CardsData from "../../store/cards";
 import UsersDataList from "../../store/usersList";
-import WarehouseData from "../../store/warehouse";
 import {
-  getCardsUpdatedAt,
-  getOrdersAfterUpdatedAt,
-  getOrdersPaidToday,
-  getOrdersPaidYesterday,
   getOrdersSplitSecondToday,
   getOrdersSplitSecondYesterday,
-  getOrdersSplitToday,
-  getOrdersSplitYesterday,
-  getRecentlyArrived,
-  getSplitDebt,
 } from "../../utils/Order";
+import Split from "../../components/Split/Split";
 
 const Home = observer(() => {
   const router = useRouter();
@@ -38,43 +27,13 @@ const Home = observer(() => {
 
   useEffect(() => {
     setIsPreloader(true);
-    getOrdersAfterUpdatedAt()
-      .then((orders) => {
-        CardsData.setOrdersAfterUpdatedAt(orders);
-      })
-      .then(() => {
-        getOrdersPaidToday().then((paidOrders) => {
-          CardsData.setOrdersTodayPaidAt(paidOrders);
-        });
-      })
-      .then(() => {
-        getOrdersSplitToday().then((splitOrders) => {
-          CardsData.setOrdersTodaySplitAt(splitOrders);
-        });
-      })
-      .then(() => {
-        getOrdersSplitSecondToday().then((splitSecondOrders) => {
-          CardsData.setOrdersTodaySplitSecondAt(splitSecondOrders);
-        });
-      })
-      .then(() => {
-        getOrdersPaidYesterday().then((splitSecondOrdersYesterday) => {
-          CardsData.setOrdersYesterdayPaidAt(splitSecondOrdersYesterday);
-        });
-      })
-      .then(() => {
-        getOrdersSplitYesterday().then((splitOrdersYesterday) => {
-          CardsData.setOrdersYesterdaySplitAt(splitOrdersYesterday);
-        });
+    getOrdersSplitSecondToday()
+      .then((splitSecondOrders) => {
+        CardsData.setOrdersTodaySplitSecondAt(splitSecondOrders);
       })
       .then(() => {
         getOrdersSplitSecondYesterday().then((splitSecondOrdersYesterday) => {
           CardsData.setOrdersYesterdaySplitSecondAt(splitSecondOrdersYesterday);
-        });
-      })
-      .then(() => {
-        getSplitDebt().then((splitDebtOrders) => {
-          CardsData.setSplitDebt(splitDebtOrders);
         });
       })
       .then(() => setIsPreloader(false))
@@ -126,31 +85,13 @@ const Home = observer(() => {
   }, []);
 
   useEffect(() => {
-    getPayments().then((payments) => {
-      PaymentsData.setPaymentsList(payments);
-    });
-  }, []);
-
-  useEffect(() => {
-    getCardsUpdatedAt().then((data) => {
-      CardsData.setUpdatedDate(data[0]);
-    });
-  }, []);
-
-  useEffect(() => {
-    getRecentlyArrived().then((orders) => {
-      WarehouseData.setOrdersRecentlyArrived(orders);
-    });
-  }, []);
-
-  useEffect(() => {
     getUsers().then((users) => UsersDataList.setUsersList(users));
   }, []);
 
   return (
     <>
       <Head>
-        <title>poizonqq crm - статистика оплаты</title>
+        <title>poizonqq crm - статистика сплита</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
           type="Image/x-icon"
@@ -169,14 +110,7 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            {CardsData.cards.updatedAt &&
-              UserData.userData.position !== "Дропшиппер" && (
-                <Cards payments={PaymentsData.paymentsList} />
-              )}
-            {(UserData.userData.position === "Дропшиппер" ||
-              (!OrderData.orders.length && !CardsData.cards.updatedAt)) && (
-              <Preloader />
-            )}
+            {UserData.userData.position !== "Дропшиппер" && <Split />}
           </Main>
         </>
       )}
