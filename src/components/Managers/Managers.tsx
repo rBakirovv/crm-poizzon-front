@@ -35,7 +35,7 @@ const Managers = observer(() => {
       setIsUpdated(false);
 
       getManagersByDate(date, manager).then((serchedOrders) => {
-        setOrders(serchedOrders);
+        setOrders(serchedOrders.orders.concat(serchedOrders.ordersSplit));
         setIsUpdated(true);
       });
     }
