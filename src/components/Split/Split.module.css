@@ -41,3 +41,12 @@
   max-height: 10000px;
   overflow: visible;
 }
+
+.split__title {
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  border-bottom: 1px solid #000;
+  margin: 0.5rem 0 0;
+  padding-bottom: 0.5rem;
+}

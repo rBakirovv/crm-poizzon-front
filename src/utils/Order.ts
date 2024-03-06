@@ -1227,6 +1227,18 @@ export const getSecondSplitByDate = (date: string) => {
   }).then(checkResponse);
 };
 
+export const getManagersByDate = (date: string, manager: string) => {
+  return fetch(`${BASE_URL}/order/get-managers-by-date`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      date: date,
+      manager: manager,
+    }),
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();

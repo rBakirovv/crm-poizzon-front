@@ -11,7 +11,6 @@ import { getUserInfo, getUsers } from "../../utils/User";
 import Navigation from "../../components/UI/Navigation/Navigation";
 import RateData from "../../store/rate";
 import { getRate } from "../../utils/Rate";
-import OrderData from "../../store/order";
 import CardsData from "../../store/cards";
 import UsersDataList from "../../store/usersList";
 import {
@@ -19,29 +18,12 @@ import {
   getOrdersSplitSecondYesterday,
 } from "../../utils/Order";
 import Split from "../../components/Split/Split";
+import Managers from "../../components/Managers/Managers";
 
 const Home = observer(() => {
   const router = useRouter();
 
   const [isPreloader, setIsPreloader] = useState(false);
-
-  useEffect(() => {
-    setIsPreloader(true);
-    getOrdersSplitSecondToday()
-      .then((splitSecondOrders) => {
-        CardsData.setOrdersTodaySplitSecondAt(splitSecondOrders);
-      })
-      .then(() => {
-        getOrdersSplitSecondYesterday().then((splitSecondOrdersYesterday) => {
-          CardsData.setOrdersYesterdaySplitSecondAt(splitSecondOrdersYesterday);
-        });
-      })
-      .then(() => setIsPreloader(false))
-      .catch((err) => {
-        setIsPreloader(false);
-        console.log(err);
-      });
-  }, []);
 
   useEffect(() => {
     !Logged.loggedIn &&
@@ -112,7 +94,7 @@ const Home = observer(() => {
           <Main>
             {UserData.userData.position !== "Байер" &&
               UserData.userData.position !== "Работник склада" &&
-              UserData.userData.position !== "Дропшиппер" && <Split />}
+              UserData.userData.position !== "Дропшиппер" && <Managers />}
           </Main>
         </>
       )}

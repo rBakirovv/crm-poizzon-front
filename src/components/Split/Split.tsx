@@ -51,6 +51,7 @@ const Split = observer(() => {
   return (
     <section className={styles["split"]}>
       <div className={styles["split__container"]}>
+        <h2 className={styles["split__title"]}>Сплит (2 часть)</h2>
         <div className={styles["split__day"]}>
           Сегодня {dayjs.tz(Date.now()).format("DD.MM")}:
         </div>
@@ -76,7 +77,7 @@ const Split = observer(() => {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      {item.orderId}
+                      {item.orderId} {item.expressCost > 0 && "(экспресс)"}
                     </a>
                   );
                 })}
@@ -107,7 +108,7 @@ const Split = observer(() => {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      {item.orderId}
+                      {item.orderId} {item.expressCost > 0 && "(экспресс)"}
                     </a>
                   );
                 })}

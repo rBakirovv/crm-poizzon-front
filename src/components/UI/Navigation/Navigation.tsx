@@ -347,6 +347,21 @@ const Navigation = observer(() => {
               </Link>
             </li>
           )}
+        {UserData.userData.position !== "Байер" &&
+          UserData.userData.position !== "Работник склада" &&
+          UserData.userData.position !== "Дропшиппер" && (
+            <li className={styles["nav__list-item"]}>
+              <Link
+                className={`${styles["nav__list-item-link"]} ${
+                  router.pathname === "/managers" &&
+                  styles["nav__list-item-link_active"]
+                }`}
+                href="/managers"
+              >
+                Менеджеры
+              </Link>
+            </li>
+          )}
         {(UserData.userData.position === "Создатель" ||
           UserData.userData.position === "Главный администратор" ||
           UserData.userData.position === "Администратор") && (
