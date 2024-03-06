@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./Managers.module.css";
 import { observer } from "mobx-react-lite";
-import { BASE_URL_FRONT, MANAGER } from "../../utils/constants";
+import { BASE_URL_FRONT } from "../../utils/constants";
 import usersList from "../../store/usersList";
 import { getManagersByDate } from "../../utils/Order";
 import { IOrder } from "../../types/interfaces";
@@ -41,12 +41,6 @@ const Managers = observer(() => {
     }
   }
 
-  const managersList = usersList.usersList.filter((item) => {
-    if (item.position === MANAGER) {
-      return true;
-    }
-  });
-
   return (
     <section className={styles["managers"]}>
       <div className={styles["managers__container"]}>
@@ -78,8 +72,8 @@ const Managers = observer(() => {
             <option value="" selected disabled>
               -- Выберите --
             </option>
-            {managersList.length &&
-              managersList.map((item) => {
+            {usersList.usersList.length &&
+              usersList.usersList.map((item) => {
                 return <option value={item.name}>{item.name}</option>;
               })}
           </select>
