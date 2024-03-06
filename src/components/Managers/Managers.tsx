@@ -88,6 +88,9 @@ const Managers = observer(() => {
               <strong>
                 {manager} {date}:
               </strong>
+              <div style={{ marginTop: "0.5rem" }}>
+                Кол-во за день: {orders.length}
+              </div>
               <div
                 className={styles["managers__links"]}
                 style={{ marginTop: "0.5rem" }}
@@ -104,9 +107,6 @@ const Managers = observer(() => {
                       </a>
                     );
                   })}
-              </div>
-              <div style={{ marginTop: "0.5rem" }}>
-                Кол-во за день: {orders.length}
               </div>
             </div>
           </div>
