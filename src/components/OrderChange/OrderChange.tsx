@@ -1557,8 +1557,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                       className={styles["order-change__image"]}
                     >
                       {UserData.userData.position !== "Работник склада" &&
-                        UserData.userData.position !== DROPSHIPPER &&
-                        OrderData.order.status !== "Черновик" && (
+                        UserData.userData.position !== DROPSHIPPER && (
                           <div
                             className={styles["order-change__delete-image"]}
                             onClick={() => openImageSubmitPopup(image.name)}
@@ -1597,8 +1596,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
             </ul>
 
             {UserData.userData.position !== "Работник склада" &&
-              UserData.userData.position !== DROPSHIPPER &&
-              OrderData.order.status !== "Черновик" && (
+              UserData.userData.position !== DROPSHIPPER && (
                 <Dropzone
                   onDrop={(e: any) =>
                     uploadFileHandler(e, "/order-images", setUploading)
