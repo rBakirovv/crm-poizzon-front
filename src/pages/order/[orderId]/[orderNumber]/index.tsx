@@ -1,8 +1,8 @@
 import Head from "next/head";
 import { NextPage } from "next";
-import Order from "../../components/Order/Order";
-import { IMergedClientOrders, IOrder } from "../../types/interfaces";
-import { BASE_URL } from "../../utils/constants";
+import Order from "../../../../components/Order/Order";
+import { IMergedClientOrders, IOrder } from "../../../../types/interfaces";
+import { BASE_URL } from "../../../../utils/constants";
 
 interface ICurrentOrderProps {
   currentOrder: IOrder;
@@ -42,13 +42,11 @@ const Page: NextPage<ICurrentOrderProps> = ({ currentOrder, mergedData }) => {
       </Head>
       <Order currentOrder={currentOrder} mergedData={mergedData} />
       <style>
-        {
-          `
+        {`
             html {
               background-color: #1B0F22;
             }
-          `
-        }
+          `}
       </style>
     </>
   );

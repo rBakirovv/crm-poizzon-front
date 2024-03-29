@@ -64,7 +64,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
     e.preventDefault();
 
     updatePaidAt(OrderData.order._id).then(() => {
-      router.replace(`/order/${OrderData.order._id}`);
+      router.replace(`/order/${OrderData.order._id}/${OrderData.order.orderId}`);
     });
   }
 

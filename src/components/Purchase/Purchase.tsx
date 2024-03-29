@@ -669,7 +669,7 @@ const Purchase = () => {
       ) && (
         <div
           className={styles["purchase__chekbox-container"]}
-          style={{ marginBottom: "1rem" }}
+          style={{ marginBottom: "1rem", marginTop: "1rem" }}
         >
           <input
             type="checkbox"

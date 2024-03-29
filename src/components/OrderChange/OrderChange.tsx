@@ -170,7 +170,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
 
   function copyLink() {
     navigator.clipboard.writeText(
-      `${BASE_URL_FRONT}/order/${OrderData.order._id}`
+      `${BASE_URL_FRONT}/order/${OrderData.order._id}/${OrderData.order.orderId}`
     );
 
     setIsCopy(true);
@@ -1246,11 +1246,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
               </p>
               <a
                 className={styles["order-change__public-link"]}
-                href={`${BASE_URL_FRONT}/order/${OrderData.order._id}`}
+                href={`${BASE_URL_FRONT}/order/${OrderData.order._id}/${OrderData.order.orderId}`}
                 target="_blank"
                 rel="noreferrer"
               >
-                {BASE_URL_FRONT}/order/{OrderData.order._id}
+                {BASE_URL_FRONT}/order/{OrderData.order._id}/{OrderData.order.orderId}
               </a>
               <div
                 onClick={copyLink}

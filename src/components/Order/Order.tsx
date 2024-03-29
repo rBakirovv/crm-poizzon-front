@@ -164,7 +164,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
       setIsOverudeOrderModalOpen(true);
     } else {
       setExpressCost(currentOrder._id, isExpress ? EXPRESS_PRICE : 0).then(() =>
-        router.push(`pay/${currentOrder._id}`) 
+        router.replace(`/order/pay/${currentOrder._id}`)
       );
     }
   }
@@ -359,7 +359,10 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                 currentOrder.paymentUUIDSplitSecondExpress
               )
                 .then(() => {
-                  addPayLinkExpress(currentOrder._id, payment.data.attributes.url);
+                  addPayLinkExpress(
+                    currentOrder._id,
+                    payment.data.attributes.url
+                  );
                 })
                 .then(() => {
                   setIsPreload(false);
