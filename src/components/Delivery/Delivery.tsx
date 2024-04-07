@@ -3,6 +3,7 @@ import OrderData from "../../store/order";
 import UserData from "../../store/user";
 import WarehouseData from "../../store/warehouse";
 import TextInput from "../UI/TextInput/TextInput";
+import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import {
   inStockInRussia,
@@ -46,7 +47,7 @@ dayjs.extend(timezone);
 
 dayjs.tz.setDefault("Europe/Moscow");
 
-const Delivery = () => {
+const Delivery = observer(() => {
   const [data, setData] = useState({
     delivery_code: OrderData.order.deliveryCode,
     delivery_address: OrderData.order.deliveryAddress,
@@ -1033,7 +1034,7 @@ const Delivery = () => {
     e: any, // Костыль!
     folder: string,
     setUploading: React.Dispatch<React.SetStateAction<boolean>>,
-    multiple = false
+    multiple = true
   ) => {
     const formData = new FormData();
 
@@ -1045,7 +1046,9 @@ const Delivery = () => {
       const files = e;
 
       for (let i = 0; i < files.length; i++) {
-        formData.append("imagesUp", files[i]);
+        ext !== "heic" &&
+          ext !== "heif" &&
+          formData.append("imagesUp", files[i]);
       }
     } else {
       const file = e;
@@ -1156,129 +1159,127 @@ const Delivery = () => {
     } else {
       const heic2any = await import("heic2any");
 
-      heic2any
-        .default({ blob: e[0], toType: "image/jpeg" })
-        .then((fileBlob: any) => {
-          const newFile = new File([fileBlob], e[0].name + ".jpg", {
-            type: "image/jpeg",
-          });
+      const files = e;
 
-          return newFile;
-        })
-        .then((newFile) => {
-          formData.append("imagesUp", newFile);
-        })
-        .then(() => {
-          try {
-            uploadImages(formData, folder)
-              .then((data) => {
-                OrderData.setOrder({
-                  _id: OrderData.order._id,
-                  creater: OrderData.order.creater,
-                  buyer: OrderData.order.buyer,
-                  stockman: OrderData.order.stockman,
-                  createdAt: OrderData.order.createdAt,
-                  overudeAfter: OrderData.order.overudeAfter,
-                  payBeforeSplit: OrderData.order.payBeforeSplit,
-                  paidAt: OrderData.order.paidAt,
-                  buyAt: OrderData.order.buyAt,
-                  inChinaStockAt: OrderData.order.inChinaStockAt,
-                  inRussiaStockAt: OrderData.order.inRussiaStockAt,
-                  deliveredAt: OrderData.order.deliveredAt,
-                  orderId: OrderData.order.orderId,
-                  combinedOrder: OrderData.order.combinedOrder,
-                  status: OrderData.order.status,
-                  link: OrderData.order.link,
-                  payLink: OrderData.order.payLink,
-                  payLinkSplit: OrderData.order.payLinkSplit,
-                  paymentUUID: OrderData.order.paymentUUID,
-                  paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
-                  payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
-                  paymentUUIDSplitSecond:
-                    OrderData.order.paymentUUIDSplitSecond,
-                  isSplitPaid: OrderData.order.isSplitPaid,
-                  isSplitPaidSecond: OrderData.order.isSplitPaidSecond,
-                  paidAtSplit: OrderData.order.paidAtSplit,
-                  paidAtSplitSecond: OrderData.order.paidAtSplitSecond,
-                  category: OrderData.order.category,
-                  subcategory: OrderData.order.subcategory,
-                  brand: OrderData.order.brand,
-                  model: OrderData.order.model,
-                  size: OrderData.order.size,
-                  orderImages: OrderData.order.orderImages,
-                  payProofImages: OrderData.order.payProofImages,
-                  buyProofImages: OrderData.order.buyProofImages,
-                  receiptImages: OrderData.order.receiptImages.concat(
-                    data.data
-                  ),
-                  uploadedBuyProofImages:
-                    OrderData.order.uploadedBuyProofImages,
-                  uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
-                  isReceiptImages: OrderData.order.isReceiptImages,
-                  isSplit: OrderData.order.isSplit,
-                  payment: OrderData.order.payment,
-                  currentRate: OrderData.order.currentRate,
-                  priceCNY: OrderData.order.priceCNY,
-                  priceDeliveryChina: OrderData.order.priceDeliveryChina,
-                  priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
-                  commission: OrderData.order.commission,
-                  promoCodePercent: OrderData.order.promoCodePercent,
-                  comment: OrderData.order.comment,
-                  poizonCode: OrderData.order.poizonCode,
-                  filledPoizonCode: OrderData.order.filledPoizonCode,
-                  deliveryCode: OrderData.order.deliveryCode,
-                  deliveryName: OrderData.order.deliveryName,
-                  deliveryNameRecipient: OrderData.order.deliveryNameRecipient,
-                  deliveryPhone: OrderData.order.deliveryPhone,
-                  deliveryPhoneRecipient:
-                    OrderData.order.deliveryPhoneRecipient,
-                  deliveryMethod: OrderData.order.deliveryMethod,
-                  deliveryAddress: OrderData.order.deliveryAddress,
-                  deliveryEntity: OrderData.order.deliveryEntity,
-                  deliveryRelatedEntities:
-                    OrderData.order.deliveryRelatedEntities,
-                  reorder: OrderData.order.reorder,
-                  totalReorder: OrderData.order.totalReorder,
-                  payLinksArray: OrderData.order.payLinksArray,
-                  splitLinksArray: OrderData.order.splitLinksArray,
-                  splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
-                  isPost: OrderData.order.isPost,
-                  isPurchaseImagesDisabled:
-                    OrderData.order.isPurchaseImagesDisabled,
-                  expressCost: OrderData.order.expressCost,
-                  payLinkExpress: OrderData.order.payLinkExpress,
-                  payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
-                  payLinkSplitSecondExpress:
-                    OrderData.order.payLinkSplitSecondExpress,
-                  paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
-                  paymentUUIDSplitExpress:
-                    OrderData.order.paymentUUIDSplitExpress,
-                  paymentUUIDSplitSecondExpress:
-                    OrderData.order.paymentUUIDSplitSecondExpress,
-                  payLinksExpressArray: OrderData.order.payLinksExpressArray,
-                  splitLinksExpressArray:
-                    OrderData.order.splitLinksExpressArray,
-                  splitSecondLinksExpressArray:
-                    OrderData.order.splitSecondLinksExpressArray,
-                  __v: OrderData.order.__v,
-                });
-              })
-              .then(() => {
-                updateReceiptImages(
-                  OrderData.order._id,
-                  OrderData.order.receiptImages,
-                  UserData.userData.name
-                ).then((order) => OrderData.setOrder(order));
-              })
-              .then(() => {
-                setUploading(false);
-                dragLeaveHandler();
+      files.forEach((item: any, index: any) => {
+        heic2any
+          .default({ blob: e[index], toType: "image/jpeg" })
+          .then((fileBlob: any) => {
+            const newFile = new File([fileBlob], e[index].name + ".jpg", {
+              type: "image/jpeg",
+            });
+
+            return newFile;
+          })
+          .then((newFile) => formData.append("imagesUp", newFile));
+      });
+
+      setTimeout(() => {
+        try {
+          uploadImages(formData, folder)
+            .then((data) => {
+              setUploading(true);
+              OrderData.setOrder({
+                _id: OrderData.order._id,
+                creater: OrderData.order.creater,
+                buyer: OrderData.order.buyer,
+                stockman: OrderData.order.stockman,
+                createdAt: OrderData.order.createdAt,
+                overudeAfter: OrderData.order.overudeAfter,
+                payBeforeSplit: OrderData.order.payBeforeSplit,
+                paidAt: OrderData.order.paidAt,
+                buyAt: OrderData.order.buyAt,
+                inChinaStockAt: OrderData.order.inChinaStockAt,
+                inRussiaStockAt: OrderData.order.inRussiaStockAt,
+                deliveredAt: OrderData.order.deliveredAt,
+                orderId: OrderData.order.orderId,
+                combinedOrder: OrderData.order.combinedOrder,
+                status: OrderData.order.status,
+                link: OrderData.order.link,
+                payLink: OrderData.order.payLink,
+                payLinkSplit: OrderData.order.payLinkSplit,
+                paymentUUID: OrderData.order.paymentUUID,
+                paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+                payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+                paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+                isSplitPaid: OrderData.order.isSplitPaid,
+                isSplitPaidSecond: OrderData.order.isSplitPaidSecond,
+                paidAtSplit: OrderData.order.paidAtSplit,
+                paidAtSplitSecond: OrderData.order.paidAtSplitSecond,
+                category: OrderData.order.category,
+                subcategory: OrderData.order.subcategory,
+                brand: OrderData.order.brand,
+                model: OrderData.order.model,
+                size: OrderData.order.size,
+                orderImages: OrderData.order.orderImages,
+                payProofImages: OrderData.order.payProofImages,
+                buyProofImages: OrderData.order.buyProofImages,
+                receiptImages: OrderData.order.receiptImages.concat(data.data),
+                uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
+                uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
+                isReceiptImages: OrderData.order.isReceiptImages,
+                isSplit: OrderData.order.isSplit,
+                payment: OrderData.order.payment,
+                currentRate: OrderData.order.currentRate,
+                priceCNY: OrderData.order.priceCNY,
+                priceDeliveryChina: OrderData.order.priceDeliveryChina,
+                priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
+                commission: OrderData.order.commission,
+                promoCodePercent: OrderData.order.promoCodePercent,
+                comment: OrderData.order.comment,
+                poizonCode: OrderData.order.poizonCode,
+                filledPoizonCode: OrderData.order.filledPoizonCode,
+                deliveryCode: OrderData.order.deliveryCode,
+                deliveryName: OrderData.order.deliveryName,
+                deliveryNameRecipient: OrderData.order.deliveryNameRecipient,
+                deliveryPhone: OrderData.order.deliveryPhone,
+                deliveryPhoneRecipient: OrderData.order.deliveryPhoneRecipient,
+                deliveryMethod: OrderData.order.deliveryMethod,
+                deliveryAddress: OrderData.order.deliveryAddress,
+                deliveryEntity: OrderData.order.deliveryEntity,
+                deliveryRelatedEntities:
+                  OrderData.order.deliveryRelatedEntities,
+                reorder: OrderData.order.reorder,
+                totalReorder: OrderData.order.totalReorder,
+                payLinksArray: OrderData.order.payLinksArray,
+                splitLinksArray: OrderData.order.splitLinksArray,
+                splitSecondLinksArray: OrderData.order.splitSecondLinksArray,
+                isPost: OrderData.order.isPost,
+                isPurchaseImagesDisabled:
+                  OrderData.order.isPurchaseImagesDisabled,
+                expressCost: OrderData.order.expressCost,
+                payLinkExpress: OrderData.order.payLinkExpress,
+                payLinkSplitExpress: OrderData.order.payLinkSplitExpress,
+                payLinkSplitSecondExpress:
+                  OrderData.order.payLinkSplitSecondExpress,
+                paymentUUIDExpress: OrderData.order.paymentUUIDExpress,
+                paymentUUIDSplitExpress:
+                  OrderData.order.paymentUUIDSplitExpress,
+                paymentUUIDSplitSecondExpress:
+                  OrderData.order.paymentUUIDSplitSecondExpress,
+                payLinksExpressArray: OrderData.order.payLinksExpressArray,
+                splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
+                splitSecondLinksExpressArray:
+                  OrderData.order.splitSecondLinksExpressArray,
+                __v: OrderData.order.__v,
               });
-          } catch (error) {
-            dragLeaveHandler();
-            console.error(error);
-          }
-        });
+            })
+            .then(() => {
+              updateReceiptImages(
+                OrderData.order._id,
+                OrderData.order.receiptImages,
+                UserData.userData.name
+              ).then((order) => OrderData.setOrder(order));
+            })
+            .then(() => {
+              setUploading(false);
+              dragLeaveHandler();
+            });
+        } catch (error) {
+          dragLeaveHandler();
+          console.error(error);
+        }
+      }, files.length * 5000);
     }
   };
 
@@ -1324,7 +1325,7 @@ const Delivery = () => {
             (imageItem) => imageItem.name !== imageName
           ),
           uploadedBuyProofImages: OrderData.order.uploadedBuyProofImages,
-          uploadedReceiptImages: "",
+          uploadedReceiptImages: OrderData.order.uploadedReceiptImages,
           isReceiptImages: OrderData.order.isReceiptImages,
           isSplit: OrderData.order.isSplit,
           payment: OrderData.order.payment,
@@ -1928,10 +1929,10 @@ const Delivery = () => {
                   OrderData.order.status === "Доставляется" ||
                   OrderData.order.status === "Завершён") && (
                   <>
-                    <h4>Фотография квитанции</h4>
-                    {OrderData.order.uploadedReceiptImages !== "" && (
+                    <h4>Фотографии квитанции</h4>
+                    {OrderData.order.receiptImages.length > 0 && OrderData.order.uploadedReceiptImages !== "" && (
                       <p>
-                        Фотографию квитанции{" "}
+                        Фотографии квитанции{" "}
                         <span>
                           загрузил:{" "}
                           <strong>
@@ -1994,48 +1995,44 @@ const Delivery = () => {
                           })}
                       </ul>
                     )}
-                    {OrderData.order.receiptImages.length === 0 &&
-                      OrderData.order.status !== "Завершён" && (
-                        <Dropzone
-                          onDrop={(e: any) =>
-                            uploadFileHandler(e, "/order-receipt", setUploading)
-                          }
-                          onDragEnter={dragHandler}
-                          onDragLeave={dragLeaveHandler}
-                          maxSize={MAX_SIZE}
-                          multiple={false}
-                        >
-                          {({ getRootProps, getInputProps }) => (
-                            <div
-                              className={`${styles["drag-n-drop-container"]} ${
-                                isDrag && styles["drag-n-drop-container_active"]
-                              }`}
-                            >
-                              <div {...getRootProps()}>
-                                <input {...getInputProps()} />
-                                <p className={styles["drag-n-drop-text"]}>
-                                  {isDrag
-                                    ? "Перетащите фото"
-                                    : "Добавить фото или ctrl + v"}
-                                  <svg
-                                    width="18px"
-                                    height="18px"
-                                    viewBox="0 0 48 48"
-                                    focusable="false"
-                                    fill="black"
-                                  >
-                                    <path
-                                      fill="none"
-                                      d="M0 0h48v48H0V0z"
-                                    ></path>
-                                    <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                                  </svg>
-                                </p>
-                              </div>
+                    {OrderData.order.status !== "Завершён" && (
+                      <Dropzone
+                        onDrop={(e: any) =>
+                          uploadFileHandler(e, "/order-receipt", setUploading)
+                        }
+                        onDragEnter={dragHandler}
+                        onDragLeave={dragLeaveHandler}
+                        maxSize={MAX_SIZE}
+                        multiple={true}
+                      >
+                        {({ getRootProps, getInputProps }) => (
+                          <div
+                            className={`${styles["drag-n-drop-container"]} ${
+                              isDrag && styles["drag-n-drop-container_active"]
+                            }`}
+                          >
+                            <div {...getRootProps()}>
+                              <input {...getInputProps()} />
+                              <p className={styles["drag-n-drop-text"]}>
+                                {isDrag
+                                  ? "Перетащите фото"
+                                  : "Добавить фото или ctrl + v"}
+                                <svg
+                                  width="18px"
+                                  height="18px"
+                                  viewBox="0 0 48 48"
+                                  focusable="false"
+                                  fill="black"
+                                >
+                                  <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                  <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                </svg>
+                              </p>
                             </div>
-                          )}
-                        </Dropzone>
-                      )}
+                          </div>
+                        )}
+                      </Dropzone>
+                    )}
                     {OrderData.order.receiptImages.length !== 0 && (
                       <div
                         className={
@@ -2211,8 +2208,9 @@ const Delivery = () => {
         currentImage={currentImage}
         closePopup={closeImagePopup}
       />
+      {uploading && <Preloader />}
     </section>
   );
-};
+});
 
 export default Delivery;
