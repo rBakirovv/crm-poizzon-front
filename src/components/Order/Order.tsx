@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
-import { IMergedClientOrders, IOrder } from "../../types/interfaces";
+import { IMergedClientOrders, IOrder, IOrderImages } from "../../types/interfaces";
 import { BASE_URL, BASE_URL_FRONT, EXPRESS_PRICE } from "../../utils/constants";
 import Carousel from "../UI/Carousel/Carousel";
 import Timer from "../UI/Timer/Timer";
@@ -135,6 +135,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
   }
 
   function openIsReceiptImagesPopup(index: number) {
+    console.log(index)
     setIsReceiptImagesPopupOpen(true);
     setCurrentImageIndex(index);
   }
@@ -147,15 +148,15 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
     setIsOverudeOrderModalOpen(false);
   }
 
-  function nextImage() {
-    currentImageIndex === currentOrder.orderImages.length - 1
+  function nextImage(images: Array<IOrderImages>) {
+    currentImageIndex === images.length - 1
       ? setCurrentImageIndex(0)
       : setCurrentImageIndex(currentImageIndex + 1);
   }
 
-  function prevImage() {
+  function prevImage(images: Array<IOrderImages>) {
     currentImageIndex === 0
-      ? setCurrentImageIndex(currentOrder.orderImages.length - 1)
+      ? setCurrentImageIndex(images.length - 1)
       : setCurrentImageIndex(currentImageIndex - 1);
   }
 
@@ -1338,32 +1339,32 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
         images={currentOrder.orderImages}
         currentImageIndex={currentImageIndex}
         closePopup={closePopup}
-        nextImage={nextImage}
-        prevImage={prevImage}
+        nextImage={() => nextImage(currentOrder.orderImages)}
+        prevImage={() => prevImage(currentOrder.orderImages)}
       />
       <Carousel
         isImagePopupOpen={isPayProofPopupOpen}
         images={currentOrder.payProofImages}
         currentImageIndex={currentImageIndex}
         closePopup={closePayProofPopup}
-        nextImage={nextImage}
-        prevImage={prevImage}
+        nextImage={() => nextImage(currentOrder.payProofImages)}
+        prevImage={() => prevImage(currentOrder.payProofImages)}
       />
       <Carousel
         isImagePopupOpen={isBuyProofPopupOpen}
         images={currentOrder.buyProofImages}
         currentImageIndex={currentImageIndex}
         closePopup={closeBuyProofPopup}
-        nextImage={nextImage}
-        prevImage={prevImage}
+        nextImage={() => nextImage(currentOrder.buyProofImages)}
+        prevImage={() => prevImage(currentOrder.buyProofImages)}
       />
       <Carousel
         isImagePopupOpen={isReceiptImagesPopupOpen}
         images={currentOrder.receiptImages}
         currentImageIndex={currentImageIndex}
         closePopup={closeIsReceiptImagesPopup}
-        nextImage={nextImage}
-        prevImage={prevImage}
+        nextImage={() => nextImage(currentOrder.receiptImages)}
+        prevImage={() => prevImage(currentOrder.receiptImages)}
       />
       {timeLeft <= 0 && (
         <OverudeOrder
