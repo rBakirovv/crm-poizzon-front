@@ -1764,7 +1764,7 @@ const Delivery = observer(() => {
                         </p>
                       )}
                     {OrderData.order.receiptImages.length > 0 && (
-                      <ul className={styles["delivery-receipt__images-list"]}>
+                      <ul className={`${styles["delivery-receipt__images-list"]} ${styles["receipt"]}`}>
                         {OrderData.order.receiptImages
                           .slice()
                           .reverse()
