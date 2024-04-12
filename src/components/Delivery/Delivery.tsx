@@ -1764,7 +1764,7 @@ const Delivery = observer(() => {
                         </p>
                       )}
                     {OrderData.order.receiptImages.length > 0 && (
-                      <ul className={`${styles["delivery-receipt__images-list"]} ${styles["receipt"]}`}>
+                      <ul className={styles["delivery-receipt__images-list"]}>
                         {OrderData.order.receiptImages
                           .slice()
                           .reverse()
@@ -1883,7 +1883,7 @@ const Delivery = observer(() => {
             )}
           <div>
             <h4>Изображения товара</h4>
-            <ul className={styles["delivery-receipt__images-list"]}>
+            <ul className={`${styles["delivery-receipt__images-list"]} ${styles["order"]}`}>
               {OrderData.order.orderImages
                 .slice()
                 .reverse()
