@@ -10,6 +10,8 @@ import {
 import Payment from "../../store/payments";
 import TextInput from "../UI/TextInput/TextInput";
 import Preloader from "../UI/Preloader/Preloader";
+import UserData from "../../store/user";
+import { createPaymentLink } from "../../utils/PaySystem";
 
 interface IPaymentsProps {
   paymentsList: Array<IPayments>;
@@ -24,6 +26,9 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
   const [paymentData, setPaymentData] = useState({
     title: "",
     number: "",
+    id: "",
+    totalSum: "",
+    orderUrl: "",
   });
 
   // Костыль!
@@ -37,6 +42,14 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
   const [isChangeOrder, setIsChangeOrder] = useState(false);
 
   const [isPreload, setIsPreload] = useState(false);
+
+  const [url, setUrl] = useState("");
+  const [token, setToken] = useState("");
+  const [isSuccessCreateLink, setIsSuccessCreateLink] = useState(false);
+  const [isFailedCreateLink, setIsFailedCreateLink] = useState(false);
+
+  const [isCopyUrl, setIsCopyUrl] = useState(false);
+  const [isCopyToken, setIsCopyToken] = useState(false);
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
@@ -57,6 +70,9 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
         setPaymentData({
           title: "",
           number: "",
+          id: paymentData.id,
+          totalSum: paymentData.totalSum,
+          orderUrl: paymentData.orderUrl,
         });
       })
       .catch((err) => {
@@ -160,38 +176,160 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
     }
   }
 
+  function createPayLink(e: React.SyntheticEvent) {
+    e.preventDefault();
+
+    setIsPreload(true);
+    setUrl("");
+    setToken("");
+    setIsSuccessCreateLink(false);
+    setIsFailedCreateLink(false);
+
+    createPaymentLink(
+      paymentData.id,
+      parseInt(paymentData.totalSum),
+      paymentData.orderUrl
+    )
+      .then((data) => {
+        setUrl(data.data.url);
+        setToken(data.data.token);
+        setIsPreload(false);
+        setIsSuccessCreateLink(true);
+      })
+      .catch(() => {
+        setUrl("");
+        setToken("");
+        setIsFailedCreateLink(true);
+        setIsPreload(false);
+      });
+  }
+
+  function copyUrl() {
+    navigator.clipboard.writeText(url);
+
+    setIsCopyUrl(true);
+
+    setTimeout(() => {
+      setIsCopyUrl(false);
+    }, 2000);
+  }
+
+  function copyToken() {
+    navigator.clipboard.writeText(token);
+
+    setIsCopyToken(true);
+
+    setTimeout(() => {
+      setIsCopyToken(false);
+    }, 2000);
+  }
+
   return (
     <section>
       {isPreload && <Preloader />}
       <form
-        onSubmit={handleCreatePayment}
         className={styles["payments__create-form"]}
+        onSubmit={createPayLink}
       >
-        <h2 className={styles["payments__title"]}>Cоздать способ оплаты</h2>
+        <h2 className={styles["payments__title"]}>Cоздать платёжную ссылку</h2>
         <TextInput
-          label="Способ оплаты"
-          name="title"
-          placeholder="Перевод на «Тинькофф» по номеру карты"
+          label="ID заказа"
+          name="id"
           handleChange={handleChange}
-          value={paymentData.title}
+          value={paymentData.id}
+          required={true}
+        />
+        <span style={{ color: "red" }}>Каждый id должен быть уникален</span>
+        <TextInput
+          label="Cумма"
+          name="totalSum"
+          handleChange={handleChange}
+          value={paymentData.totalSum}
           required={true}
         />
         <TextInput
-          label="Номер"
-          name="number"
-          placeholder="9345 4023 8990 0901"
+          label="Ссылка на заказ"
+          name="orderUrl"
           handleChange={handleChange}
-          value={paymentData.number}
+          value={paymentData.orderUrl}
           required={true}
         />
-        <button className={styles["payments__create-submit"]}>Создать</button>
+        {isFailedCreateLink && (
+          <span style={{ color: "red" }}>
+            Ошибка! Попробуйте поменять id или ссылку на заказ
+          </span>
+        )}
+        <button className={styles["payments__create-submit"]} type="submit">
+          Создать
+        </button>
+        {isSuccessCreateLink && (
+          <div>
+            <div style={{ marginTop: "1rem" }}>url: {url}</div>
+            <div
+              style={{
+                color: "#4e7fea",
+                marginTop: "0.5rem",
+                cursor: "pointer",
+              }}
+              onClick={copyUrl}
+            >
+              {isCopyUrl ? "Cкопировано в буфер обмена" : "Скопировать"}
+            </div>
+          </div>
+        )}
+        {isSuccessCreateLink && (
+          <div>
+            <div>token: {token}</div>
+            <div
+              style={{
+                color: "#4e7fea",
+                marginTop: "0.5rem",
+                cursor: "pointer",
+              }}
+              onClick={copyToken}
+            >
+              {isCopyToken ? "Cкопировано в буфер обмена" : "Скопировать"}
+            </div>
+          </div>
+        )}
       </form>
+      {(UserData.userData.position === "Создатель" ||
+        UserData.userData.position === "Главный администратор" ||
+        UserData.userData.position === "Администратор") && (
+        <form
+          onSubmit={handleCreatePayment}
+          className={styles["payments__create-form"]}
+        >
+          <h2 className={styles["payments__title"]}>Cоздать способ оплаты</h2>
+          <TextInput
+            label="Способ оплаты"
+            name="title"
+            placeholder="Перевод на «Тинькофф» по номеру карты"
+            handleChange={handleChange}
+            value={paymentData.title}
+            required={true}
+          />
+          <TextInput
+            label="Номер"
+            name="number"
+            placeholder="9345 4023 8990 0901"
+            handleChange={handleChange}
+            value={paymentData.number}
+            required={true}
+          />
+          <button className={styles["payments__create-submit"]}>Создать</button>
+        </form>
+      )}
       <div className={styles["payments__table-container"]}>
         <div className={styles["payments__title-container"]}>
           <h2 className={styles["payments__title"]}>Cпособы оплаты</h2>
-          <button onClick={changeOrderHandler}>
-            {isChangeOrder ? "сохр" : "изм."}
-          </button>
+          {(UserData.userData.position === "Создатель" ||
+            UserData.userData.position === "Главный администратор" ||
+            UserData.userData.position === "Администратор") && (
+            <button onClick={changeOrderHandler}>
+              {isChangeOrder ? "сохр" : "изм."}
+            </button>
+          )}
         </div>
         <ul className={styles["payments__table-list"]}>
           {Payment.paymentsList.sort(sortCards).map((paymentItem) => {
@@ -206,16 +344,20 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
                 onDrop={(e) => dropHandler(e, paymentItem)}
                 draggable={isChangeOrder}
               >
-                <button
-                  onClick={() =>
-                    openSubmitPopup(
-                      paymentItem.title,
-                      paymentItem.number,
-                      paymentItem._id
-                    )
-                  }
-                  className={styles["payments__delete-button"]}
-                ></button>
+                {(UserData.userData.position === "Создатель" ||
+                  UserData.userData.position === "Главный администратор" ||
+                  UserData.userData.position === "Администратор") && (
+                  <button
+                    onClick={() =>
+                      openSubmitPopup(
+                        paymentItem.title,
+                        paymentItem.number,
+                        paymentItem._id
+                      )
+                    }
+                    className={styles["payments__delete-button"]}
+                  ></button>
+                )}
                 <div
                   className={`${styles["payments__table-info-container"]} ${
                     isChangeOrder &&

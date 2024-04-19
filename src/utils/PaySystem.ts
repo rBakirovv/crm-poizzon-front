@@ -34,6 +34,23 @@ export const createPayLink = (
   }).then(checkResponse);
 };
 
+export const createPaymentLink = (
+  id: string,
+  amount: number,
+  redirect_url: string,
+) => {
+  return fetch(`${BASE_URL}/pay/create-link`, {
+    method: "POST",
+    headers: HEADERS,
+    credentials: "include",
+    body: JSON.stringify({
+      id: id,
+      amount: amount,
+      redirect_url: redirect_url,
+    }),
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();

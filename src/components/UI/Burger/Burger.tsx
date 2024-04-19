@@ -309,8 +309,9 @@ const Burger: FC<IBurgerProps> = observer(({ isBurgerOpen, closeBurger }) => {
         )}
         {(UserData.userData.position === "Создатель" ||
           UserData.userData.position === "Главный администратор" ||
-          UserData.userData.position === "Администратор") && (
-          <li onClick={closeBurger} className={styles["nav__list-item"]}>
+          UserData.userData.position === "Администратор" ||
+          UserData.userData.position === "Менеджер") && (
+          <li className={styles["nav__list-item"]}>
             <Link
               className={`${styles["nav__list-item-link"]} ${
                 router.pathname === "/payments" &&

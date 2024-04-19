@@ -274,7 +274,8 @@ const Navigation = observer(() => {
         )}
         {(UserData.userData.position === "Создатель" ||
           UserData.userData.position === "Главный администратор" ||
-          UserData.userData.position === "Администратор") && (
+          UserData.userData.position === "Администратор" ||
+          UserData.userData.position === "Менеджер") && (
           <li className={styles["nav__list-item"]}>
             <Link
               className={`${styles["nav__list-item-link"]} ${
