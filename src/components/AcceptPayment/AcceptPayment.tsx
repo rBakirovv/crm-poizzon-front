@@ -227,17 +227,19 @@ const AcceptPayment = () => {
 
   function handlePayLinkSubmit() {
     createPayLink(
-      OrderData.order.orderId.toString(),
+      OrderData.order._id,
+      `${OrderData.order.orderId.toString()}-full-${Math.ceil(
+        Math.random() * 1000
+      )}`,
       totalPrice,
-      `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-      `${BASE_URL}/pay/link/${OrderData.order._id}`
+      `${BASE_URL_FRONT}/order/${OrderData.order._id}`
     ).then((payment) => {
-      if (payment.data.id) {
+      if (payment.success === true) {
         updateOrderDraft(
           OrderData.order._id,
           OrderData.order.link,
-          payment.data.attributes.url,
-          payment.data.attributes.uuid,
+          payment.data.url,
+          payment.data.custom_order_id,
           OrderData.order.payLinkSplit,
           OrderData.order.paymentUUIDSplit,
           OrderData.order.payLinkSplitSecond,
@@ -261,11 +263,9 @@ const AcceptPayment = () => {
           OrderData.order.promoCodePercent,
           OrderData.order.comment
         ).then(() => {
-          addPayLink(OrderData.order._id, payment.data.attributes.url).then(
-            (order) => {
-              OrderData.setOrder(order);
-            }
-          );
+          addPayLink(OrderData.order._id, payment.data.url).then((order) => {
+            OrderData.setOrder(order);
+          });
         });
       }
     });
@@ -273,19 +273,21 @@ const AcceptPayment = () => {
 
   function handlePayLinkSplitSubmit() {
     createPayLink(
-      OrderData.order.orderId.toString(),
+      OrderData.order._id,
+      `${OrderData.order.orderId.toString()}-split-${Math.ceil(
+        Math.random() * 1000
+      )}`,
       Math.ceil(totalPrice / 2),
-      `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-      `${BASE_URL}/pay/link/${OrderData.order._id}`
+      `${BASE_URL_FRONT}/order/${OrderData.order._id}`
     ).then((payment) => {
-      if (payment.data.id) {
+      if (payment.success === true) {
         updateOrderDraft(
           OrderData.order._id,
           OrderData.order.link,
           OrderData.order.payLink,
           OrderData.order.paymentUUID,
-          payment.data.attributes.url,
-          payment.data.attributes.uuid,
+          payment.data.url,
+          payment.data.custom_order_id,
           OrderData.order.payLinkSplitSecond,
           OrderData.order.paymentUUIDSplitSecond,
           OrderData.order.payLinkExpress,
@@ -308,12 +310,14 @@ const AcceptPayment = () => {
           OrderData.order.comment
         ).then((orderUpdated) => {
           createPayLink(
-            OrderData.order.orderId.toString(),
+            OrderData.order._id,
+            `${OrderData.order.orderId.toString()}-split-second-${Math.ceil(
+              Math.random() * 1000
+            )}`,
             Math.ceil(totalPrice / 2),
-            `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-            `${BASE_URL}/pay/link/${OrderData.order._id}`
+            `${BASE_URL_FRONT}/order/${OrderData.order._id}`
           ).then((paymentSecond) => {
-            if (payment.data.id) {
+            if (paymentSecond.success === true) {
               updateOrderDraft(
                 OrderData.order._id,
                 OrderData.order.link,
@@ -321,8 +325,8 @@ const AcceptPayment = () => {
                 OrderData.order.paymentUUID,
                 orderUpdated.payLinkSplit,
                 orderUpdated.paymentUUIDSplit,
-                paymentSecond.data.attributes.url,
-                paymentSecond.data.attributes.uuid,
+                paymentSecond.data.url,
+                paymentSecond.data.custom_order_id,
                 OrderData.order.payLinkExpress,
                 OrderData.order.paymentUUIDExpress,
                 OrderData.order.payLinkSplitExpress,
@@ -343,15 +347,12 @@ const AcceptPayment = () => {
                 OrderData.order.comment
               )
                 .then(() => {
-                  addPayLinkSplit(
-                    OrderData.order._id,
-                    payment.data.attributes.url
-                  );
+                  addPayLinkSplit(OrderData.order._id, payment.data.url);
                 })
                 .then(() => {
                   addPayLinkSplitSecond(
                     OrderData.order._id,
-                    paymentSecond.data.attributes.url
+                    paymentSecond.data.url
                   ).then((orderUpdatedSecond) => {
                     OrderData.setOrder(orderUpdatedSecond);
                   });
@@ -365,12 +366,14 @@ const AcceptPayment = () => {
 
   function handlePayLinkSplitSecondSubmit() {
     createPayLink(
-      OrderData.order.orderId.toString(),
+      OrderData.order._id,
+      `${OrderData.order.orderId.toString()}-split-second-${Math.ceil(
+        Math.random() * 1000
+      )}`,
       Math.ceil(totalPrice / 2),
-      `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-      `${BASE_URL}/pay/link/${OrderData.order._id}`
+      `${BASE_URL_FRONT}/order/${OrderData.order._id}`
     ).then((payment) => {
-      if (payment.data.id) {
+      if (payment.success === true) {
         updateOrderDraft(
           OrderData.order._id,
           OrderData.order.link,
@@ -378,8 +381,8 @@ const AcceptPayment = () => {
           OrderData.order.paymentUUID,
           OrderData.order.payLinkSplit,
           OrderData.order.paymentUUIDSplit,
-          payment.data.attributes.url,
-          payment.data.attributes.uuid,
+          payment.data.url,
+          payment.data.custom_order_id,
           OrderData.order.payLinkExpress,
           OrderData.order.paymentUUIDExpress,
           OrderData.order.payLinkSplitExpress,
@@ -399,12 +402,11 @@ const AcceptPayment = () => {
           OrderData.order.promoCodePercent,
           OrderData.order.comment
         ).then(() => {
-          addPayLinkSplitSecond(
-            OrderData.order._id,
-            payment.data.attributes.url
-          ).then((order) => {
-            OrderData.setOrder(order);
-          });
+          addPayLinkSplitSecond(OrderData.order._id, payment.data.url).then(
+            (order) => {
+              OrderData.setOrder(order);
+            }
+          );
         });
       }
     });
@@ -412,12 +414,14 @@ const AcceptPayment = () => {
 
   function handlePayLinkExpressSubmit() {
     createPayLink(
-      OrderData.order.orderId.toString(),
+      OrderData.order._id,
+      `${OrderData.order.orderId.toString()}-express-${Math.ceil(
+        Math.random() * 1000
+      )}`,
       totalPriceExpress,
-      `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-      `${BASE_URL}/pay/link/${OrderData.order._id}`
+      `${BASE_URL_FRONT}/order/${OrderData.order._id}`
     ).then((payment) => {
-      if (payment.data.id) {
+      if (payment.success === true) {
         updateOrderDraft(
           OrderData.order._id,
           OrderData.order.link,
@@ -427,8 +431,8 @@ const AcceptPayment = () => {
           OrderData.order.paymentUUIDSplit,
           OrderData.order.payLinkSplitSecond,
           OrderData.order.paymentUUIDSplitSecond,
-          payment.data.attributes.url,
-          payment.data.attributes.uuid,
+          payment.data.url,
+          payment.data.custom_order_id,
           OrderData.order.payLinkSplitExpress,
           OrderData.order.paymentUUIDSplitExpress,
           OrderData.order.payLinkSplitSecondExpress,
@@ -446,12 +450,11 @@ const AcceptPayment = () => {
           OrderData.order.promoCodePercent,
           OrderData.order.comment
         ).then(() => {
-          addPayLinkExpress(
-            OrderData.order._id,
-            payment.data.attributes.url
-          ).then((order) => {
-            OrderData.setOrder(order);
-          });
+          addPayLinkExpress(OrderData.order._id, payment.data.url).then(
+            (order) => {
+              OrderData.setOrder(order);
+            }
+          );
         });
       }
     });
@@ -459,12 +462,14 @@ const AcceptPayment = () => {
 
   function handlePayLinkSplitExpressSubmit() {
     createPayLink(
-      OrderData.order.orderId.toString(),
+      OrderData.order._id,
+      `${OrderData.order.orderId.toString()}-split-express-${Math.ceil(
+        Math.random() * 1000
+      )}`,
       Math.ceil(totalPriceExpress / 2),
-      `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-      `${BASE_URL}/pay/link/${OrderData.order._id}`
+      `${BASE_URL_FRONT}/order/${OrderData.order._id}`
     ).then((payment) => {
-      if (payment.data.id) {
+      if (payment.success === true) {
         updateOrderDraft(
           OrderData.order._id,
           OrderData.order.link,
@@ -476,8 +481,8 @@ const AcceptPayment = () => {
           OrderData.order.paymentUUIDSplitSecond,
           OrderData.order.payLinkExpress,
           OrderData.order.paymentUUIDExpress,
-          payment.data.attributes.url,
-          payment.data.attributes.uuid,
+          payment.data.url,
+          payment.data.custom_order_id,
           OrderData.order.payLinkSplitSecondExpress,
           OrderData.order.paymentUUIDSplitSecondExpress,
           OrderData.order.category,
@@ -492,14 +497,16 @@ const AcceptPayment = () => {
           OrderData.order.commission,
           OrderData.order.promoCodePercent,
           OrderData.order.comment
-        ).then(() => {
+        ).then((orderUpdated) => {
           createPayLink(
-            OrderData.order.orderId.toString(),
+            OrderData.order._id,
+            `${OrderData.order.orderId.toString()}-split-express-second-${Math.ceil(
+              Math.random() * 1000
+            )}`,
             Math.ceil(totalPriceExpress / 2),
-            `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-            `${BASE_URL}/pay/link/${OrderData.order._id}`
+            `${BASE_URL_FRONT}/order/${OrderData.order._id}`
           ).then((paymentSecond) => {
-            if (paymentSecond.data.id) {
+            if (paymentSecond.success === true) {
               updateOrderDraft(
                 OrderData.order._id,
                 OrderData.order.link,
@@ -511,10 +518,10 @@ const AcceptPayment = () => {
                 OrderData.order.paymentUUIDSplitSecond,
                 OrderData.order.payLinkExpress,
                 OrderData.order.paymentUUIDExpress,
-                payment.data.attributes.url,
-                payment.data.attributes.uuid,
-                paymentSecond.data.attributes.url,
-                paymentSecond.data.attributes.uuid,
+                orderUpdated.payLinkSplitExpress,
+                orderUpdated.paymentUUIDSplitExpress,
+                paymentSecond.data.url,
+                paymentSecond.data.custom_order_id,
                 OrderData.order.category,
                 OrderData.order.subcategory,
                 OrderData.order.brand,
@@ -530,11 +537,11 @@ const AcceptPayment = () => {
               ).then(() => {
                 addPayLinkSplitExpress(
                   OrderData.order._id,
-                  payment.data.attributes.url
+                  payment.data.url
                 ).then(() => {
                   addPayLinkSplitSecondExpress(
                     OrderData.order._id,
-                    paymentSecond.data.attributes.url
+                    paymentSecond.data.url
                   ).then((order) => {
                     OrderData.setOrder(order);
                   });
@@ -549,12 +556,14 @@ const AcceptPayment = () => {
 
   function handlePayLinkSplitSecondExpressSubmit() {
     createPayLink(
-      OrderData.order.orderId.toString(),
+      OrderData.order._id,
+      `${OrderData.order.orderId.toString()}-split-express-second-${Math.ceil(
+        Math.random() * 1000
+      )}`,
       Math.ceil(totalPriceExpress / 2),
-      `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-      `${BASE_URL}/pay/link/${OrderData.order._id}`
+      `${BASE_URL_FRONT}/order/${OrderData.order._id}`
     ).then((payment) => {
-      if (payment.data.id) {
+      if (payment.success === true) {
         updateOrderDraft(
           OrderData.order._id,
           OrderData.order.link,
@@ -568,8 +577,8 @@ const AcceptPayment = () => {
           OrderData.order.paymentUUIDExpress,
           OrderData.order.payLinkSplitExpress,
           OrderData.order.paymentUUIDSplitExpress,
-          payment.data.attributes.url,
-          payment.data.attributes.uuid,
+          payment.data.url,
+          payment.data.custom_order_id,
           OrderData.order.category,
           OrderData.order.subcategory,
           OrderData.order.brand,
@@ -585,7 +594,7 @@ const AcceptPayment = () => {
         ).then(() => {
           addPayLinkSplitSecondExpress(
             OrderData.order._id,
-            payment.data.attributes.url
+            payment.data.url
           ).then((order) => {
             OrderData.setOrder(order);
           });

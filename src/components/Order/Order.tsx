@@ -1,6 +1,10 @@
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
-import { IMergedClientOrders, IOrder, IOrderImages } from "../../types/interfaces";
+import {
+  IMergedClientOrders,
+  IOrder,
+  IOrderImages,
+} from "../../types/interfaces";
 import { BASE_URL, BASE_URL_FRONT, EXPRESS_PRICE } from "../../utils/constants";
 import Carousel from "../UI/Carousel/Carousel";
 import Timer from "../UI/Timer/Timer";
@@ -14,11 +18,10 @@ import {
   addPayLinkSplitExpress,
   addPayLinkSplitSecond,
   addPayLinkSplitSecondExpress,
-  getPayment,
   setExpressCost,
   updatePayment,
 } from "../../utils/Order";
-import { createPayLink } from "../../utils/PaySystem";
+import { createPayLink, getPayment } from "../../utils/PaySystem";
 import PreloaderClient from "../UI/PreloaderClient/PreloaderClient";
 
 interface IOrderProps {
@@ -135,7 +138,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
   }
 
   function openIsReceiptImagesPopup(index: number) {
-    console.log(index)
+    console.log(index);
     setIsReceiptImagesPopupOpen(true);
     setCurrentImageIndex(index);
   }
@@ -181,274 +184,311 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
   function payLinkRedirect() {
     setIsPreload(true);
 
-    getPayment(currentOrder.paymentUUID).then((paymentData) => {
-      if (paymentData.data.attributes.payment_status === "cancelled") {
-        createPayLink(
-          currentOrder.orderId.toString(),
-          totalPrice,
-          `${BASE_URL_FRONT}/order/${currentOrder._id}`,
-          `${BASE_URL}/pay/link/${currentOrder._id}`
-        )
-          .then((payment) => {
-            if (payment.data.id) {
-              updatePayment(
-                currentOrder._id,
-                payment.data.attributes.url,
-                payment.data.attributes.uuid,
-                currentOrder.payLinkSplit,
-                currentOrder.paymentUUIDSplit,
-                currentOrder.payLinkSplitSecond,
-                currentOrder.paymentUUIDSplitSecond,
-                currentOrder.payLinkExpress,
-                currentOrder.payLinkSplitExpress,
-                currentOrder.payLinkSplitSecondExpress,
-                currentOrder.paymentUUIDExpress,
-                currentOrder.paymentUUIDSplitExpress,
-                currentOrder.paymentUUIDSplitSecondExpress
-              )
-                .then(() => {
-                  addPayLink(currentOrder._id, payment.data.attributes.url);
-                })
-                .then(() => {
-                  setIsPreload(false);
-                  router.replace(payment.data.attributes.url);
-                })
-                .catch(() => {
-                  setIsPreload(false);
-                });
-            }
-          })
-          .catch(() => {
-            setIsPreload(false);
-          });
-      } else {
+    getPayment(currentOrder.paymentUUID)
+      .then((paymentData) => {
+        if (paymentData.data.status === "expired") {
+          createPayLink(
+            currentOrder._id,
+            `${currentOrder.orderId.toString()}-full-${Math.ceil(
+              Math.random() * 1000
+            )}`,
+            totalPrice,
+            `${BASE_URL_FRONT}/order/${currentOrder._id}`
+          )
+            .then((payment) => {
+              if (payment.success === true) {
+                updatePayment(
+                  currentOrder._id,
+                  payment.data.url,
+                  payment.data.custom_order_id,
+                  currentOrder.payLinkSplit,
+                  currentOrder.paymentUUIDSplit,
+                  currentOrder.payLinkSplitSecond,
+                  currentOrder.paymentUUIDSplitSecond,
+                  currentOrder.payLinkExpress,
+                  currentOrder.payLinkSplitExpress,
+                  currentOrder.payLinkSplitSecondExpress,
+                  currentOrder.paymentUUIDExpress,
+                  currentOrder.paymentUUIDSplitExpress,
+                  currentOrder.paymentUUIDSplitSecondExpress
+                )
+                  .then(() => {
+                    addPayLink(currentOrder._id, payment.data.url);
+                  })
+                  .then(() => {
+                    setIsPreload(false);
+                    router.replace(payment.data.url);
+                  })
+                  .catch(() => {
+                    setIsPreload(false);
+                  });
+              }
+            })
+            .catch(() => {
+              setIsPreload(false);
+            });
+        } else {
+          router.replace(currentOrder.payLink);
+        }
+      })
+      .catch(() => {
+        setIsPreload(false);
         router.replace(currentOrder.payLink);
-      }
-    });
+      });
   }
 
   function payLinkSplitRedirect() {
     setIsPreload(true);
 
-    getPayment(currentOrder.paymentUUIDSplit).then((paymentData) => {
-      if (paymentData.data.attributes.payment_status === "cancelled") {
-        createPayLink(
-          currentOrder.orderId.toString(),
-          Math.ceil(totalPrice / 2),
-          `${BASE_URL_FRONT}/order/${currentOrder._id}`,
-          `${BASE_URL}/pay/link/${currentOrder._id}`
-        )
-          .then((payment) => {
-            if (payment.data.id) {
-              updatePayment(
-                currentOrder._id,
-                currentOrder.payLink,
-                currentOrder.paymentUUID,
-                payment.data.attributes.url,
-                payment.data.attributes.uuid,
-                currentOrder.payLinkSplitSecond,
-                currentOrder.paymentUUIDSplitSecond,
-                currentOrder.payLinkExpress,
-                currentOrder.payLinkSplitExpress,
-                currentOrder.payLinkSplitSecondExpress,
-                currentOrder.paymentUUIDExpress,
-                currentOrder.paymentUUIDSplitExpress,
-                currentOrder.paymentUUIDSplitSecondExpress
-              )
-                .then(() => {
-                  addPayLinkSplit(
-                    currentOrder._id,
-                    payment.data.attributes.url
-                  );
-                })
-                .then(() => {
-                  setIsPreload(false);
-                  router.replace(payment.data.attributes.url);
-                })
-                .catch(() => {
-                  setIsPreload(false);
-                });
-            }
-          })
-          .catch(() => {
-            setIsPreload(false);
-          });
-      } else {
+    getPayment(currentOrder.paymentUUIDSplit)
+      .then((paymentData) => {
+        if (paymentData.data.status === "expired") {
+          createPayLink(
+            currentOrder._id,
+            `${currentOrder.orderId.toString()}-split-${Math.ceil(
+              Math.random() * 1000
+            )}`,
+            Math.ceil(totalPrice / 2),
+            `${BASE_URL_FRONT}/order/${currentOrder._id}`
+          )
+            .then((payment) => {
+              if (payment.success === true) {
+                updatePayment(
+                  currentOrder._id,
+                  currentOrder.payLink,
+                  currentOrder.paymentUUID,
+                  payment.data.url,
+                  payment.data.custom_order_id,
+                  currentOrder.payLinkSplitSecond,
+                  currentOrder.paymentUUIDSplitSecond,
+                  currentOrder.payLinkExpress,
+                  currentOrder.payLinkSplitExpress,
+                  currentOrder.payLinkSplitSecondExpress,
+                  currentOrder.paymentUUIDExpress,
+                  currentOrder.paymentUUIDSplitExpress,
+                  currentOrder.paymentUUIDSplitSecondExpress
+                )
+                  .then(() => {
+                    addPayLinkSplit(
+                      currentOrder._id,
+                      payment.data.url
+                    );
+                  })
+                  .then(() => {
+                    setIsPreload(false);
+                    router.replace(payment.data.url);
+                  })
+                  .catch(() => {
+                    setIsPreload(false);
+                  });
+              }
+            })
+            .catch(() => {
+              setIsPreload(false);
+            });
+        } else {
+          router.replace(currentOrder.payLinkSplit);
+        }
+      })
+      .catch(() => {
+        setIsPreload(false);
         router.replace(currentOrder.payLinkSplit);
-      }
-    });
+      });
   }
 
   function payLinkSplitSecondRedirect() {
     setIsPreload(true);
 
-    getPayment(currentOrder.paymentUUIDSplitSecond).then((paymentData) => {
-      if (paymentData.data.attributes.payment_status === "cancelled") {
-        createPayLink(
-          currentOrder.orderId.toString(),
-          Math.ceil(totalPrice / 2),
-          `${BASE_URL_FRONT}/order/${currentOrder._id}`,
-          `${BASE_URL}/pay/link/${currentOrder._id}`
-        )
-          .then((payment) => {
-            if (payment.data.id) {
-              updatePayment(
-                currentOrder._id,
-                currentOrder.payLink,
-                currentOrder.paymentUUID,
-                currentOrder.payLinkSplit,
-                currentOrder.paymentUUIDSplit,
-                payment.data.attributes.url,
-                payment.data.attributes.uuid,
-                currentOrder.payLinkExpress,
-                currentOrder.payLinkSplitExpress,
-                currentOrder.payLinkSplitSecondExpress,
-                currentOrder.paymentUUIDExpress,
-                currentOrder.paymentUUIDSplitExpress,
-                currentOrder.paymentUUIDSplitSecondExpress
-              )
-                .then(() => {
-                  addPayLinkSplitSecond(
-                    currentOrder._id,
-                    payment.data.attributes.url
-                  );
-                })
-                .then(() => {
-                  setIsPreload(false);
-                  router.replace(payment.data.attributes.url);
-                })
-                .catch(() => {
-                  setIsPreload(false);
-                });
-            }
-          })
-          .catch(() => {
-            setIsPreload(false);
-          });
-      } else {
+    getPayment(currentOrder.paymentUUIDSplitSecond)
+      .then((paymentData) => {
+        if (paymentData.data.status === "expired") {
+          createPayLink(
+            currentOrder._id,
+            `${currentOrder.orderId.toString()}-split-second-${Math.ceil(
+              Math.random() * 1000
+            )}`,
+            Math.ceil(totalPrice / 2),
+            `${BASE_URL_FRONT}/order/${currentOrder._id}`
+          )
+            .then((payment) => {
+              if (payment.success === true) {
+                updatePayment(
+                  currentOrder._id,
+                  currentOrder.payLink,
+                  currentOrder.paymentUUID,
+                  currentOrder.payLinkSplit,
+                  currentOrder.paymentUUIDSplit,
+                  payment.data.url,
+                  payment.data.custom_order_id,
+                  currentOrder.payLinkExpress,
+                  currentOrder.payLinkSplitExpress,
+                  currentOrder.payLinkSplitSecondExpress,
+                  currentOrder.paymentUUIDExpress,
+                  currentOrder.paymentUUIDSplitExpress,
+                  currentOrder.paymentUUIDSplitSecondExpress
+                )
+                  .then(() => {
+                    addPayLinkSplitSecond(
+                      currentOrder._id,
+                      payment.data.url
+                    );
+                  })
+                  .then(() => {
+                    setIsPreload(false);
+                    router.replace(payment.data.url);
+                  })
+                  .catch(() => {
+                    setIsPreload(false);
+                  });
+              }
+            })
+            .catch(() => {
+              setIsPreload(false);
+            });
+        } else {
+          router.replace(currentOrder.payLinkSplitSecond);
+        }
+      })
+      .catch(() => {
+        setIsPreload(false);
         router.replace(currentOrder.payLinkSplitSecond);
-      }
-    });
+      });
   }
 
   function payLinkExpressRedirect() {
     setIsPreload(true);
 
-    getPayment(currentOrder.paymentUUIDExpress).then((paymentData) => {
-      if (paymentData.data.attributes.payment_status === "cancelled") {
-        createPayLink(
-          currentOrder.orderId.toString(),
-          totalPrice,
-          `${BASE_URL_FRONT}/order/${currentOrder._id}`,
-          `${BASE_URL}/pay/link/${currentOrder._id}`
-        )
-          .then((payment) => {
-            if (payment.data.id) {
-              updatePayment(
-                currentOrder._id,
-                currentOrder.payLink,
-                currentOrder.paymentUUID,
-                currentOrder.payLinkSplit,
-                currentOrder.paymentUUIDSplit,
-                currentOrder.payLinkSplitSecond,
-                currentOrder.paymentUUIDSplitSecond,
-                payment.data.attributes.url,
-                currentOrder.payLinkSplitExpress,
-                currentOrder.payLinkSplitSecondExpress,
-                payment.data.attributes.uuid,
-                currentOrder.paymentUUIDSplitExpress,
-                currentOrder.paymentUUIDSplitSecondExpress
-              )
-                .then(() => {
-                  addPayLinkExpress(
-                    currentOrder._id,
-                    payment.data.attributes.url
-                  );
-                })
-                .then(() => {
-                  setIsPreload(false);
-                  router.replace(payment.data.attributes.url);
-                })
-                .catch(() => {
-                  setIsPreload(false);
-                });
-            }
-          })
-          .catch(() => {
-            setIsPreload(false);
-          });
-      } else {
+    getPayment(currentOrder.paymentUUIDExpress)
+      .then((paymentData) => {
+        if (paymentData.data.status === "expired") {
+          createPayLink(
+            currentOrder._id,
+            `${currentOrder.orderId.toString()}-express-${Math.ceil(
+              Math.random() * 1000
+            )}`,
+            totalPrice,
+            `${BASE_URL_FRONT}/order/${currentOrder._id}`
+          )
+            .then((payment) => {
+              if (payment.success === true) {
+                updatePayment(
+                  currentOrder._id,
+                  currentOrder.payLink,
+                  currentOrder.paymentUUID,
+                  currentOrder.payLinkSplit,
+                  currentOrder.paymentUUIDSplit,
+                  currentOrder.payLinkSplitSecond,
+                  currentOrder.paymentUUIDSplitSecond,
+                  payment.data.url,
+                  currentOrder.payLinkSplitExpress,
+                  currentOrder.payLinkSplitSecondExpress,
+                  payment.data.custom_order_id,
+                  currentOrder.paymentUUIDSplitExpress,
+                  currentOrder.paymentUUIDSplitSecondExpress
+                )
+                  .then(() => {
+                    addPayLinkExpress(
+                      currentOrder._id,
+                      payment.data.url
+                    );
+                  })
+                  .then(() => {
+                    setIsPreload(false);
+                    router.replace(payment.data.url);
+                  })
+                  .catch(() => {
+                    setIsPreload(false);
+                  });
+              }
+            })
+            .catch(() => {
+              setIsPreload(false);
+            });
+        } else {
+          router.replace(currentOrder.payLinkExpress);
+        }
+      })
+      .catch(() => {
+        setIsPreload(false);
         router.replace(currentOrder.payLinkExpress);
-      }
-    });
+      });
   }
 
   function payLinkSplitExpressRedirect() {
     setIsPreload(true);
 
-    getPayment(currentOrder.paymentUUIDSplitExpress).then((paymentData) => {
-      if (paymentData.data.attributes.payment_status === "cancelled") {
-        createPayLink(
-          currentOrder.orderId.toString(),
-          Math.ceil(totalPrice / 2),
-          `${BASE_URL_FRONT}/order/${currentOrder._id}`,
-          `${BASE_URL}/pay/link/${currentOrder._id}`
-        )
-          .then((payment) => {
-            if (payment.data.id) {
-              updatePayment(
-                currentOrder._id,
-                currentOrder.payLink,
-                currentOrder.paymentUUID,
-                currentOrder.payLinkSplit,
-                currentOrder.paymentUUIDSplit,
-                currentOrder.payLinkSplitSecond,
-                currentOrder.paymentUUIDSplitSecond,
-                currentOrder.payLinkExpress,
-                payment.data.attributes.url,
-                currentOrder.payLinkSplitSecondExpress,
-                currentOrder.paymentUUIDExpress,
-                payment.data.attributes.uuid,
-                currentOrder.paymentUUIDSplitSecondExpress
-              )
-                .then(() => {
-                  addPayLinkSplitExpress(
-                    currentOrder._id,
-                    payment.data.attributes.url
-                  );
-                })
-                .then(() => {
-                  setIsPreload(false);
-                  router.replace(payment.data.attributes.url);
-                })
-                .catch(() => {
-                  setIsPreload(false);
-                });
-            }
-          })
-          .catch(() => {
-            setIsPreload(false);
-          });
-      } else {
+    getPayment(currentOrder.paymentUUIDSplitExpress)
+      .then((paymentData) => {
+        if (paymentData.data.status === "expired") {
+          createPayLink(
+            currentOrder._id,
+            `${currentOrder.orderId.toString()}-split-express-${Math.ceil(
+              Math.random() * 1000
+            )}`,
+            Math.ceil(totalPrice / 2),
+            `${BASE_URL_FRONT}/order/${currentOrder._id}`
+          )
+            .then((payment) => {
+              if (payment.success === true) {
+                updatePayment(
+                  currentOrder._id,
+                  currentOrder.payLink,
+                  currentOrder.paymentUUID,
+                  currentOrder.payLinkSplit,
+                  currentOrder.paymentUUIDSplit,
+                  currentOrder.payLinkSplitSecond,
+                  currentOrder.paymentUUIDSplitSecond,
+                  currentOrder.payLinkExpress,
+                  payment.data.url,
+                  currentOrder.payLinkSplitSecondExpress,
+                  currentOrder.paymentUUIDExpress,
+                  payment.data.custom_order_id,
+                  currentOrder.paymentUUIDSplitSecondExpress
+                )
+                  .then(() => {
+                    addPayLinkSplitExpress(
+                      currentOrder._id,
+                      payment.data.url
+                    );
+                  })
+                  .then(() => {
+                    setIsPreload(false);
+                    router.replace(payment.data.url);
+                  })
+                  .catch(() => {
+                    setIsPreload(false);
+                  });
+              }
+            })
+            .catch(() => {
+              setIsPreload(false);
+            });
+        } else {
+          router.replace(currentOrder.payLinkSplitExpress);
+        }
+      })
+      .catch(() => {
+        setIsPreload(false);
         router.replace(currentOrder.payLinkSplitExpress);
-      }
-    });
+      });
   }
 
   function payLinkSplitExpressSecondRedirect() {
     setIsPreload(true);
 
-    getPayment(currentOrder.paymentUUIDSplitSecondExpress).then(
-      (paymentData) => {
-        if (paymentData.data.attributes.payment_status === "cancelled") {
+    getPayment(currentOrder.paymentUUIDSplitSecondExpress)
+      .then((paymentData) => {
+        if (paymentData.data.status === "expired") {
           createPayLink(
-            currentOrder.orderId.toString(),
+            currentOrder._id,
+            `${currentOrder.orderId.toString()}-split-second-express-${Math.ceil(
+              Math.random() * 1000
+            )}`,
             Math.ceil(totalPrice / 2),
-            `${BASE_URL_FRONT}/order/${currentOrder._id}`,
-            `${BASE_URL}/pay/link/${currentOrder._id}`
+            `${BASE_URL_FRONT}/order/${currentOrder._id}`
           )
             .then((payment) => {
-              if (payment.data.id) {
+              if (payment.success === true) {
                 updatePayment(
                   currentOrder._id,
                   currentOrder.payLink,
@@ -459,20 +499,20 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                   currentOrder.paymentUUIDSplitSecond,
                   currentOrder.payLinkExpress,
                   currentOrder.payLinkSplitExpress,
-                  payment.data.attributes.url,
+                  payment.data.url,
                   currentOrder.paymentUUIDExpress,
                   currentOrder.paymentUUIDSplitExpress,
-                  payment.data.attributes.uuid
+                  payment.data.custom_order_id
                 )
                   .then(() => {
                     addPayLinkSplitSecondExpress(
                       currentOrder._id,
-                      payment.data.attributes.url
+                      payment.data.url
                     );
                   })
                   .then(() => {
                     setIsPreload(false);
-                    router.replace(payment.data.attributes.url);
+                    router.replace(payment.data.url);
                   })
                   .catch(() => {
                     setIsPreload(false);
@@ -485,8 +525,11 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
         } else {
           router.replace(currentOrder.payLinkSplitSecondExpress);
         }
-      }
-    );
+      })
+      .catch(() => {
+        setIsPreload(false);
+        router.replace(currentOrder.payLinkSplitSecondExpress);
+      });
   }
 
   return (

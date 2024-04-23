@@ -943,14 +943,6 @@ export const setIsReceiptImages = (id: string, isReceiptImages: boolean) => {
   }).then(checkResponse);
 };
 
-export const getPayment = (id: string) => {
-  return fetch(`${BASE_URL}/pay/link-info/${id}`, {
-    credentials: "include",
-    method: "POST",
-    headers: HEADERS,
-  }).then(checkResponse);
-};
-
 export const updatePayment = (
   id: string,
   payLink: string,

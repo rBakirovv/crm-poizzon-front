@@ -11,13 +11,13 @@ import Payment from "../../store/payments";
 import TextInput from "../UI/TextInput/TextInput";
 import Preloader from "../UI/Preloader/Preloader";
 import UserData from "../../store/user";
-import { createPaymentLink } from "../../utils/PaySystem";
+import { createPayLink } from "../../utils/PaySystem";
 
 interface IPaymentsProps {
   paymentsList: Array<IPayments>;
 }
 
-const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
+const Payments: FC<IPaymentsProps> = ({}) => {
   const [isSubmitPopup, setIsSubmitPopup] = useState<boolean>(false);
   const [paymentTitle, setPaymentTitle] = useState<string>("");
   const [paymentNumber, setPaymentNumber] = useState<string>("");
@@ -176,7 +176,7 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
     }
   }
 
-  function createPayLink(e: React.SyntheticEvent) {
+  function handleCreatePayLink(e: React.SyntheticEvent) {
     e.preventDefault();
 
     setIsPreload(true);
@@ -185,7 +185,8 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
     setIsSuccessCreateLink(false);
     setIsFailedCreateLink(false);
 
-    createPaymentLink(
+    createPayLink(
+      "custom-link",
       paymentData.id,
       parseInt(paymentData.totalSum),
       paymentData.orderUrl
@@ -229,7 +230,7 @@ const Payments: FC<IPaymentsProps> = ({ paymentsList }) => {
       {isPreload && <Preloader />}
       <form
         className={styles["payments__create-form"]}
-        onSubmit={createPayLink}
+        onSubmit={handleCreatePayLink}
       >
         <h2 className={styles["payments__title"]}>Cоздать платёжную ссылку</h2>
         <TextInput

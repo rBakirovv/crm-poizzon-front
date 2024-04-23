@@ -5,7 +5,7 @@ import { deleteUser, createUser } from "../../utils/User";
 import UsersDataList from "../../store/usersList";
 import styles from "./Users.module.css";
 import usersList from "../../store/usersList";
-import { SUPERADMIN } from "../../utils/constants";
+import { SUPERADMIN, MAINADMIN } from "../../utils/constants";
 import TextInput from "../UI/TextInput/TextInput";
 
 interface IUsersProps {
@@ -87,7 +87,7 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
 
   return (
     <section className={styles["users"]}>
-      {userPosition === SUPERADMIN && (
+      {(userPosition === SUPERADMIN || userPosition === MAINADMIN) && (
         <form
           onSubmit={handleCreateUser}
           className={styles["users__create-form"]}
@@ -133,8 +133,14 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
               <option value="Менеджер">Менеджер</option>
               <option value="Байер">Байер</option>
               <option value="Работник склада">Работник склада</option>
-              <option value="Администратор">Администратор</option>
-              <option value="Главный администратор">Главный администратор</option>
+              {userPosition === SUPERADMIN && (
+                <option value="Администратор">Администратор</option>
+              )}
+              {userPosition === SUPERADMIN && (
+                <option value="Главный администратор">
+                  Главный администратор
+                </option>
+              )}
               <option value="Дропшиппер">Дропшиппер</option>
             </select>
           </div>
@@ -152,7 +158,7 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
       )}
       <h2 className={styles["users__table-title"]}>Пользователи:</h2>
       <div className={styles["users__table-container"]}>
-        {userPosition === SUPERADMIN && (
+        {(userPosition === SUPERADMIN || userPosition === MAINADMIN) && (
           <button
             className={styles["users__table-item-delete"]}
             onClick={handleDeleteButtonClick}
@@ -191,6 +197,16 @@ const Users: FC<IUsersProps> = ({ userPosition, userId, users }) => {
                     </p>
                     {userId !== userItem._id &&
                       userPosition === SUPERADMIN &&
+                      isDelete && (
+                        <button
+                          className={styles["users__table-delete"]}
+                          onClick={() => openSubmitPopup(userItem.email)}
+                        ></button>
+                      )}
+                    {userId !== userItem._id &&
+                      userPosition === MAINADMIN &&
+                      userItem.position !== "Создатель" &&
+                      userItem.position !== "Главный администратор" &&
                       isDelete && (
                         <button
                           className={styles["users__table-delete"]}

@@ -23,7 +23,6 @@ import {
   addPayLinkSplitSecond,
   addPayLinkSplitSecondExpress,
   createOrder,
-  createOrderSplit,
   deleteDraftImage,
   setIsSplitHandler,
   updateOrderDraft,
@@ -302,18 +301,18 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
         })
         .then((order) => {
           createPayLink(
-            order.orderId.toString(),
+            order._id,
+            `${order.orderId.toString()}-split-full`,
             totalPrice,
-            `${BASE_URL_FRONT}/order/${order._id}`,
-            `${BASE_URL}/pay/link/${order._id}`
+            `${BASE_URL_FRONT}/order/${order._id}`
           )
             .then((payment) => {
-              if (payment.data.id) {
+              if (payment.success === true) {
                 updateOrderDraft(
                   order._id,
                   order.link,
-                  payment.data.attributes.url,
-                  payment.data.attributes.uuid,
+                  payment.data.url,
+                  payment.data.custom_order_id,
                   "",
                   "",
                   "",
@@ -339,20 +338,20 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                 )
                   .then((orderUpdated) => {
                     createPayLink(
-                      order.orderId.toString(),
+                      order._id,
+                      `${order.orderId.toString()}-split`,
                       Math.ceil(totalPrice / 2),
-                      `${BASE_URL_FRONT}/order/${order._id}`,
-                      `${BASE_URL}/pay/link/${order._id}`
+                      `${BASE_URL_FRONT}/order/${order._id}`
                     )
                       .then((splitPayment) => {
-                        if (splitPayment.data.id) {
+                        if (splitPayment.success === true) {
                           updateOrderDraft(
                             order._id,
                             order.link,
                             orderUpdated.payLink,
                             orderUpdated.paymentUUID,
-                            splitPayment.data.attributes.url,
-                            splitPayment.data.attributes.uuid,
+                            splitPayment.data.url,
+                            splitPayment.data.custom_order_id,
                             "",
                             "",
                             "",
@@ -376,13 +375,13 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                           )
                             .then((orderUpdatedSecond) => {
                               createPayLink(
-                                order.orderId.toString(),
+                                order._id,
+                                `${order.orderId.toString()}-split-second`,
                                 Math.ceil(totalPrice / 2),
-                                `${BASE_URL_FRONT}/order/${order._id}`,
-                                `${BASE_URL}/pay/link/${order._id}`
+                                `${BASE_URL_FRONT}/order/${order._id}`
                               )
                                 .then((splitPaymentSecond) => {
-                                  if (splitPaymentSecond.data.id) {
+                                  if (splitPaymentSecond.success === true) {
                                     updateOrderDraft(
                                       order._id,
                                       order.link,
@@ -390,8 +389,8 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                                       orderUpdated.paymentUUID,
                                       orderUpdatedSecond.payLinkSplit,
                                       orderUpdatedSecond.paymentUUIDSplit,
-                                      splitPaymentSecond.data.attributes.url,
-                                      splitPaymentSecond.data.attributes.uuid,
+                                      splitPaymentSecond.data.url,
+                                      splitPaymentSecond.data.custom_order_id,
                                       "",
                                       "",
                                       "",
@@ -413,324 +412,324 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                                     )
                                       .then((orderUpdatedExpress) => {
                                         createPayLink(
-                                          order.orderId.toString(),
+                                          order._id,
+                                          `${order.orderId.toString()}-express`,
                                           totalPrice + EXPRESS_PRICE,
-                                          `${BASE_URL_FRONT}/order/${order._id}`,
-                                          `${BASE_URL}/pay/link/${order._id}`
+                                          `${BASE_URL_FRONT}/order/${order._id}`
                                         )
                                           .then((splitPaymentExpress) => {
-                                            updateOrderDraft(
-                                              order._id,
-                                              order.link,
-                                              orderUpdated.payLink,
-                                              orderUpdated.paymentUUID,
-                                              orderUpdatedSecond.payLinkSplit,
-                                              orderUpdatedSecond.paymentUUIDSplit,
-                                              orderUpdatedExpress.payLinkSplitSecond,
-                                              orderUpdatedExpress.paymentUUIDSplitSecond,
-                                              splitPaymentExpress.data
-                                                .attributes.url,
-                                              splitPaymentExpress.data
-                                                .attributes.uuid,
-                                              "",
-                                              "",
-                                              "",
-                                              "",
-                                              order.category,
-                                              order.subcategory,
-                                              order.brand,
-                                              order.model,
-                                              order.size,
-                                              order.payment,
-                                              order.priceCNY,
-                                              order.priceDeliveryChina,
-                                              order.priceDeliveryRussia,
-                                              order.commission,
-                                              order.promoCodePercent,
-                                              order.comment
-                                            )
-                                              .then(
-                                                (orderUpdatedExpressSplit) => {
-                                                  createPayLink(
-                                                    order.orderId.toString(),
-                                                    Math.ceil(
-                                                      (totalPrice +
-                                                        EXPRESS_PRICE) /
-                                                        2
-                                                    ),
-                                                    `${BASE_URL_FRONT}/order/${order._id}`,
-                                                    `${BASE_URL}/pay/link/${order._id}`
-                                                  )
-                                                    .then(
-                                                      (
-                                                        splitPaymentExpressSplit
-                                                      ) => {
-                                                        updateOrderDraft(
-                                                          order._id,
-                                                          order.link,
-                                                          orderUpdated.payLink,
-                                                          orderUpdated.paymentUUID,
-                                                          orderUpdatedSecond.payLinkSplit,
-                                                          orderUpdatedSecond.paymentUUIDSplit,
-                                                          orderUpdatedExpress.payLinkSplitSecond,
-                                                          orderUpdatedExpress.paymentUUIDSplitSecond,
-                                                          orderUpdatedExpressSplit.payLinkExpress,
-                                                          orderUpdatedExpressSplit.paymentUUIDExpress,
+                                            splitPaymentExpress.success ===
+                                              true &&
+                                              updateOrderDraft(
+                                                order._id,
+                                                order.link,
+                                                orderUpdated.payLink,
+                                                orderUpdated.paymentUUID,
+                                                orderUpdatedSecond.payLinkSplit,
+                                                orderUpdatedSecond.paymentUUIDSplit,
+                                                orderUpdatedExpress.payLinkSplitSecond,
+                                                orderUpdatedExpress.paymentUUIDSplitSecond,
+                                                splitPaymentExpress.data.url,
+                                                splitPaymentExpress.data
+                                                  .custom_order_id,
+                                                "",
+                                                "",
+                                                "",
+                                                "",
+                                                order.category,
+                                                order.subcategory,
+                                                order.brand,
+                                                order.model,
+                                                order.size,
+                                                order.payment,
+                                                order.priceCNY,
+                                                order.priceDeliveryChina,
+                                                order.priceDeliveryRussia,
+                                                order.commission,
+                                                order.promoCodePercent,
+                                                order.comment
+                                              )
+                                                .then(
+                                                  (
+                                                    orderUpdatedExpressSplit
+                                                  ) => {
+                                                    createPayLink(
+                                                      order._id,
+                                                      `${order.orderId.toString()}-express-split`,
+                                                      Math.ceil(
+                                                        (totalPrice +
+                                                          EXPRESS_PRICE) /
+                                                          2
+                                                      ),
+                                                      `${BASE_URL_FRONT}/order/${order._id}`
+                                                    )
+                                                      .then(
+                                                        (
                                                           splitPaymentExpressSplit
-                                                            .data.attributes
-                                                            .url,
-                                                          splitPaymentExpressSplit
-                                                            .data.attributes
-                                                            .uuid,
-                                                          "",
-                                                          "",
-                                                          order.category,
-                                                          order.subcategory,
-                                                          order.brand,
-                                                          order.model,
-                                                          order.size,
-                                                          order.payment,
-                                                          order.priceCNY,
-                                                          order.priceDeliveryChina,
-                                                          order.priceDeliveryRussia,
-                                                          order.commission,
-                                                          order.promoCodePercent,
-                                                          order.comment
-                                                        )
-                                                          .then(
-                                                            (
-                                                              orderUpdatedExpressSplitSecond
-                                                            ) => {
-                                                              createPayLink(
-                                                                order.orderId.toString(),
-                                                                Math.ceil(
-                                                                  (totalPrice +
-                                                                    EXPRESS_PRICE) /
-                                                                    2
-                                                                ),
-                                                                `${BASE_URL_FRONT}/order/${order._id}`,
-                                                                `${BASE_URL}/pay/link/${order._id}`
-                                                              )
-                                                                .then(
-                                                                  (
-                                                                    splitPaymentExpressSplitSecond
-                                                                  ) => {
-                                                                    updateOrderDraft(
-                                                                      order._id,
-                                                                      order.link,
-                                                                      orderUpdated.payLink,
-                                                                      orderUpdated.paymentUUID,
-                                                                      orderUpdatedSecond.payLinkSplit,
-                                                                      orderUpdatedSecond.paymentUUIDSplit,
-                                                                      orderUpdatedExpress.payLinkSplitSecond,
-                                                                      orderUpdatedExpress.paymentUUIDSplitSecond,
-                                                                      orderUpdatedExpressSplit.payLinkExpress,
-                                                                      orderUpdatedExpressSplit.paymentUUIDExpress,
-                                                                      orderUpdatedExpressSplitSecond.payLinkSplitExpress,
-                                                                      orderUpdatedExpressSplitSecond.paymentUUIDSplitExpress,
-                                                                      splitPaymentExpressSplitSecond
-                                                                        .data
-                                                                        .attributes
-                                                                        .url,
-                                                                      splitPaymentExpressSplitSecond
-                                                                        .data
-                                                                        .attributes
-                                                                        .uuid,
-                                                                      order.category,
-                                                                      order.subcategory,
-                                                                      order.brand,
-                                                                      order.model,
-                                                                      order.size,
-                                                                      order.payment,
-                                                                      order.priceCNY,
-                                                                      order.priceDeliveryChina,
-                                                                      order.priceDeliveryRussia,
-                                                                      order.commission,
-                                                                      order.promoCodePercent,
-                                                                      order.comment
-                                                                    )
-                                                                      .then(
-                                                                        () => {
-                                                                          addPayLink(
+                                                        ) => {
+                                                          splitPaymentExpressSplit.success ===
+                                                            true &&
+                                                            updateOrderDraft(
+                                                              order._id,
+                                                              order.link,
+                                                              orderUpdated.payLink,
+                                                              orderUpdated.paymentUUID,
+                                                              orderUpdatedSecond.payLinkSplit,
+                                                              orderUpdatedSecond.paymentUUIDSplit,
+                                                              orderUpdatedExpress.payLinkSplitSecond,
+                                                              orderUpdatedExpress.paymentUUIDSplitSecond,
+                                                              orderUpdatedExpressSplit.payLinkExpress,
+                                                              orderUpdatedExpressSplit.paymentUUIDExpress,
+                                                              splitPaymentExpressSplit
+                                                                .data.url,
+                                                              splitPaymentExpressSplit
+                                                                .data
+                                                                .custom_order_id,
+                                                              "",
+                                                              "",
+                                                              order.category,
+                                                              order.subcategory,
+                                                              order.brand,
+                                                              order.model,
+                                                              order.size,
+                                                              order.payment,
+                                                              order.priceCNY,
+                                                              order.priceDeliveryChina,
+                                                              order.priceDeliveryRussia,
+                                                              order.commission,
+                                                              order.promoCodePercent,
+                                                              order.comment
+                                                            )
+                                                              .then(
+                                                                (
+                                                                  orderUpdatedExpressSplitSecond
+                                                                ) => {
+                                                                  createPayLink(
+                                                                    order._id,
+                                                                    `${order.orderId.toString()}-express-split-second`,
+                                                                    Math.ceil(
+                                                                      (totalPrice +
+                                                                        EXPRESS_PRICE) /
+                                                                        2
+                                                                    ),
+                                                                    `${BASE_URL_FRONT}/order/${order._id}`
+                                                                  )
+                                                                    .then(
+                                                                      (
+                                                                        splitPaymentExpressSplitSecond
+                                                                      ) => {
+                                                                        splitPaymentExpressSplitSecond.success ===
+                                                                          true &&
+                                                                          updateOrderDraft(
                                                                             order._id,
-                                                                            payment
-                                                                              .data
-                                                                              .attributes
-                                                                              .url
-                                                                          ).catch(
-                                                                            (
-                                                                              err
-                                                                            ) => {
-                                                                              console.log(
-                                                                                err
-                                                                              );
-                                                                            }
-                                                                          );
-                                                                        }
-                                                                      )
-                                                                      .then(
-                                                                        () => {
-                                                                          addPayLinkSplit(
-                                                                            order._id,
-                                                                            splitPayment
-                                                                              .data
-                                                                              .attributes
-                                                                              .url
-                                                                          ).catch(
-                                                                            (
-                                                                              err
-                                                                            ) => {
-                                                                              console.log(
-                                                                                err
-                                                                              );
-                                                                            }
-                                                                          );
-                                                                        }
-                                                                      )
-                                                                      .then(
-                                                                        () => {
-                                                                          addPayLinkSplitSecond(
-                                                                            order._id,
-                                                                            splitPaymentSecond
-                                                                              .data
-                                                                              .attributes
-                                                                              .url
-                                                                          ).catch(
-                                                                            (
-                                                                              err
-                                                                            ) => {
-                                                                              console.log(
-                                                                                err
-                                                                              );
-                                                                            }
-                                                                          );
-                                                                        }
-                                                                      )
-                                                                      .then(
-                                                                        () => {
-                                                                          addPayLinkExpress(
-                                                                            order._id,
-                                                                            splitPaymentExpress
-                                                                              .data
-                                                                              .attributes
-                                                                              .url
-                                                                          );
-                                                                        }
-                                                                      )
-                                                                      .then(
-                                                                        () => {
-                                                                          addPayLinkSplitExpress(
-                                                                            order._id,
-                                                                            splitPaymentExpressSplit
-                                                                              .data
-                                                                              .attributes
-                                                                              .url
-                                                                          );
-                                                                        }
-                                                                      )
-                                                                      .then(
-                                                                        () => {
-                                                                          addPayLinkSplitSecondExpress(
-                                                                            order._id,
+                                                                            order.link,
+                                                                            orderUpdated.payLink,
+                                                                            orderUpdated.paymentUUID,
+                                                                            orderUpdatedSecond.payLinkSplit,
+                                                                            orderUpdatedSecond.paymentUUIDSplit,
+                                                                            orderUpdatedExpress.payLinkSplitSecond,
+                                                                            orderUpdatedExpress.paymentUUIDSplitSecond,
+                                                                            orderUpdatedExpressSplit.payLinkExpress,
+                                                                            orderUpdatedExpressSplit.paymentUUIDExpress,
+                                                                            orderUpdatedExpressSplitSecond.payLinkSplitExpress,
+                                                                            orderUpdatedExpressSplitSecond.paymentUUIDSplitExpress,
                                                                             splitPaymentExpressSplitSecond
                                                                               .data
-                                                                              .attributes
-                                                                              .url
-                                                                          );
-                                                                        }
-                                                                      )
-                                                                      .then(
-                                                                        () => {
-                                                                          setData(
-                                                                            {
-                                                                              link: "",
-                                                                              category:
-                                                                                "",
-                                                                              subcategory:
-                                                                                "",
-                                                                              brand:
-                                                                                "",
-                                                                              model:
-                                                                                "",
-                                                                              size: "",
-                                                                              payment:
-                                                                                "",
-                                                                              currentRate:
-                                                                                RateData
-                                                                                  .rate
-                                                                                  .rate,
-                                                                              priceCNY:
-                                                                                "0",
-                                                                              priceDeliveryChina:
-                                                                                "0",
-                                                                              priceDeliveryRussia:
-                                                                                "0",
-                                                                              commission:
-                                                                                "0",
-                                                                              promoCodePercent: 0,
-                                                                              comment:
-                                                                                "",
-                                                                            }
-                                                                          );
+                                                                              .url,
+                                                                            splitPaymentExpressSplitSecond
+                                                                              .data
+                                                                              .custom_order_id,
+                                                                            order.category,
+                                                                            order.subcategory,
+                                                                            order.brand,
+                                                                            order.model,
+                                                                            order.size,
+                                                                            order.payment,
+                                                                            order.priceCNY,
+                                                                            order.priceDeliveryChina,
+                                                                            order.priceDeliveryRussia,
+                                                                            order.commission,
+                                                                            order.promoCodePercent,
+                                                                            order.comment
+                                                                          )
+                                                                            .then(
+                                                                              () => {
+                                                                                addPayLink(
+                                                                                  order._id,
+                                                                                  payment
+                                                                                    .data
+                                                                                    .url
+                                                                                ).catch(
+                                                                                  (
+                                                                                    err
+                                                                                  ) => {
+                                                                                    console.log(
+                                                                                      err
+                                                                                    );
+                                                                                  }
+                                                                                );
+                                                                              }
+                                                                            )
+                                                                            .then(
+                                                                              () => {
+                                                                                addPayLinkSplit(
+                                                                                  order._id,
+                                                                                  splitPayment
+                                                                                    .data
+                                                                                    .url
+                                                                                ).catch(
+                                                                                  (
+                                                                                    err
+                                                                                  ) => {
+                                                                                    console.log(
+                                                                                      err
+                                                                                    );
+                                                                                  }
+                                                                                );
+                                                                              }
+                                                                            )
+                                                                            .then(
+                                                                              () => {
+                                                                                addPayLinkSplitSecond(
+                                                                                  order._id,
+                                                                                  splitPaymentSecond
+                                                                                    .data
+                                                                                    .url
+                                                                                ).catch(
+                                                                                  (
+                                                                                    err
+                                                                                  ) => {
+                                                                                    console.log(
+                                                                                      err
+                                                                                    );
+                                                                                  }
+                                                                                );
+                                                                              }
+                                                                            )
+                                                                            .then(
+                                                                              () => {
+                                                                                addPayLinkExpress(
+                                                                                  order._id,
+                                                                                  splitPaymentExpress
+                                                                                    .data
+                                                                                    .url
+                                                                                );
+                                                                              }
+                                                                            )
+                                                                            .then(
+                                                                              () => {
+                                                                                addPayLinkSplitExpress(
+                                                                                  order._id,
+                                                                                  splitPaymentExpressSplit
+                                                                                    .data
+                                                                                    .url
+                                                                                );
+                                                                              }
+                                                                            )
+                                                                            .then(
+                                                                              () => {
+                                                                                addPayLinkSplitSecondExpress(
+                                                                                  order._id,
+                                                                                  splitPaymentExpressSplitSecond
+                                                                                    .data
+                                                                                    .url
+                                                                                );
+                                                                              }
+                                                                            )
+                                                                            .then(
+                                                                              () => {
+                                                                                setData(
+                                                                                  {
+                                                                                    link: "",
+                                                                                    category:
+                                                                                      "",
+                                                                                    subcategory:
+                                                                                      "",
+                                                                                    brand:
+                                                                                      "",
+                                                                                    model:
+                                                                                      "",
+                                                                                    size: "",
+                                                                                    payment:
+                                                                                      "",
+                                                                                    currentRate:
+                                                                                      RateData
+                                                                                        .rate
+                                                                                        .rate,
+                                                                                    priceCNY:
+                                                                                      "0",
+                                                                                    priceDeliveryChina:
+                                                                                      "0",
+                                                                                    priceDeliveryRussia:
+                                                                                      "0",
+                                                                                    commission:
+                                                                                      "0",
+                                                                                    promoCodePercent: 0,
+                                                                                    comment:
+                                                                                      "",
+                                                                                  }
+                                                                                );
 
-                                                                          setImages(
-                                                                            []
-                                                                          );
-                                                                          setUploading(
-                                                                            false
-                                                                          );
-                                                                        }
-                                                                      )
-                                                                      .then(
-                                                                        () => {
-                                                                          setIsSplitHandler(
-                                                                            OrderData
-                                                                              .order
-                                                                              ._id,
-                                                                            true
-                                                                          );
-                                                                        }
-                                                                      )
-                                                                      .then(
-                                                                        () => {
-                                                                          router.replace(
-                                                                            `/order/change/${OrderData.order._id}`
-                                                                          );
-                                                                        }
-                                                                      )
-                                                                      .catch(
-                                                                        (
+                                                                                setImages(
+                                                                                  []
+                                                                                );
+                                                                                setUploading(
+                                                                                  false
+                                                                                );
+                                                                              }
+                                                                            )
+                                                                            .then(
+                                                                              () => {
+                                                                                setIsSplitHandler(
+                                                                                  OrderData
+                                                                                    .order
+                                                                                    ._id,
+                                                                                  true
+                                                                                );
+                                                                              }
+                                                                            )
+                                                                            .then(
+                                                                              () => {
+                                                                                router.replace(
+                                                                                  `/order/change/${OrderData.order._id}`
+                                                                                );
+                                                                              }
+                                                                            )
+                                                                            .catch(
+                                                                              (
+                                                                                err
+                                                                              ) => {
+                                                                                console.log(
+                                                                                  err
+                                                                                );
+                                                                              }
+                                                                            );
+                                                                      }
+                                                                    )
+                                                                    .catch(
+                                                                      (err) => {
+                                                                        console.log(
                                                                           err
-                                                                        ) => {
-                                                                          console.log(
-                                                                            err
-                                                                          );
-                                                                        }
-                                                                      );
-                                                                  }
-                                                                )
-                                                                .catch(
-                                                                  (err) => {
-                                                                    console.log(
-                                                                      err
+                                                                        );
+                                                                      }
                                                                     );
-                                                                  }
+                                                                }
+                                                              )
+                                                              .catch((err) => {
+                                                                console.log(
+                                                                  err
                                                                 );
-                                                            }
-                                                          )
-                                                          .catch((err) => {
-                                                            console.log(err);
-                                                          });
-                                                      }
-                                                    )
-                                                    .catch((err) => {
-                                                      console.log(err);
-                                                    });
-                                                }
-                                              )
-                                              .catch((err) => {
-                                                console.log(err);
-                                              });
+                                                              });
+                                                        }
+                                                      )
+                                                      .catch((err) => {
+                                                        console.log(err);
+                                                      });
+                                                  }
+                                                )
+                                                .catch((err) => {
+                                                  console.log(err);
+                                                });
                                           })
                                           .catch((err) => {
                                             console.log(err);
@@ -792,18 +791,18 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
 
           if (data.payment === "Перейти по ссылке -") {
             createPayLink(
-              order.orderId.toString(),
+              order._id,
+              `${order.orderId.toString()}-full`,
               totalPrice,
-              `${BASE_URL_FRONT}/order/${order._id}`,
-              `${BASE_URL}/pay/link/${order._id}`
+              `${BASE_URL_FRONT}/order/${order._id}`
             )
               .then((paymentFullPrice) => {
-                if (paymentFullPrice.data.id) {
+                if (paymentFullPrice.success === true) {
                   updateOrderDraft(
                     order._id,
                     order.link,
-                    paymentFullPrice.data.attributes.url,
-                    paymentFullPrice.data.attributes.uuid,
+                    paymentFullPrice.data.url,
+                    paymentFullPrice.data.custom_order_id,
                     "",
                     "",
                     "",
@@ -829,60 +828,58 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                   )
                     .then((orderUpdated) => {
                       createPayLink(
-                        order.orderId.toString(),
+                        order._id,
+                        `${order.orderId.toString()}-express-full`,
                         totalPrice + EXPRESS_PRICE,
-                        `${BASE_URL_FRONT}/order/${order._id}`,
-                        `${BASE_URL}/pay/link/${order._id}`
+                        `${BASE_URL_FRONT}/order/${order._id}`
                       ).then((paymentFullPriceExpress) => {
-                        updateOrderDraft(
-                          order._id,
-                          order.link,
-                          orderUpdated.payLink,
-                          orderUpdated.paymentUUID,
-                          "",
-                          "",
-                          "",
-                          "",
-                          paymentFullPriceExpress.data.attributes.url,
-                          paymentFullPriceExpress.data.attributes.uuid,
-                          "",
-                          "",
-                          "",
-                          "",
-                          order.category,
-                          order.subcategory,
-                          order.brand,
-                          order.model,
-                          order.size,
-                          order.payment,
-                          order.priceCNY,
-                          order.priceDeliveryChina,
-                          order.priceDeliveryRussia,
-                          order.commission,
-                          order.promoCodePercent,
-                          order.comment
-                        )
-                          .then(() => {
-                            addPayLink(
-                              order._id,
-                              paymentFullPrice.data.attributes.url
-                            );
-                          })
-                          .then(() => {
-                            addPayLinkExpress(
-                              order._id,
-                              paymentFullPriceExpress.data.attributes.url
-                            )
-                              .then((orderUpdated) => {
-                                OrderData.setOrder(orderUpdated);
-                              })
-                              .catch((err) => {
-                                console.log(err);
-                              });
-                          })
-                          .catch((err) => {
-                            console.log(err);
-                          });
+                        paymentFullPriceExpress.success === true &&
+                          updateOrderDraft(
+                            order._id,
+                            order.link,
+                            orderUpdated.payLink,
+                            orderUpdated.paymentUUID,
+                            "",
+                            "",
+                            "",
+                            "",
+                            paymentFullPriceExpress.data.url,
+                            paymentFullPriceExpress.data.custom_order_id,
+                            "",
+                            "",
+                            "",
+                            "",
+                            order.category,
+                            order.subcategory,
+                            order.brand,
+                            order.model,
+                            order.size,
+                            order.payment,
+                            order.priceCNY,
+                            order.priceDeliveryChina,
+                            order.priceDeliveryRussia,
+                            order.commission,
+                            order.promoCodePercent,
+                            order.comment
+                          )
+                            .then(() => {
+                              addPayLink(order._id, paymentFullPrice.data.url);
+                            })
+                            .then(() => {
+                              addPayLinkExpress(
+                                order._id,
+                                paymentFullPriceExpress.data.url
+                              )
+                                .then((orderUpdated) => {
+                                  OrderData.setOrder(orderUpdated);
+                                })
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
                       });
                     })
                     .catch((err) => {
