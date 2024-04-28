@@ -18,7 +18,10 @@ import {
   orderResume,
   updateOrderDraft,
 } from "../../utils/Order";
-import { createPayLink } from "../../utils/PaySystem";
+import {
+  createPayLinkAnypayments,
+  createPayLinkOnepay,
+} from "../../utils/PaySystem";
 
 const AcceptPayment = () => {
   const [isImagePaymentPopupOpen, setIsImagePaymentPopupOpen] =
@@ -226,381 +229,778 @@ const AcceptPayment = () => {
   }
 
   function handlePayLinkSubmit() {
-    createPayLink(
-      OrderData.order._id,
-      `${OrderData.order.orderId.toString()}-full-${Math.ceil(
-        Math.random() * 1000
-      )}`,
-      totalPrice,
-      `${BASE_URL_FRONT}/order/${OrderData.order._id}`
-    ).then((payment) => {
-      if (payment.success === true) {
-        updateOrderDraft(
-          OrderData.order._id,
-          OrderData.order.link,
-          payment.data.url,
-          payment.data.custom_order_id,
-          OrderData.order.payLinkSplit,
-          OrderData.order.paymentUUIDSplit,
-          OrderData.order.payLinkSplitSecond,
-          OrderData.order.paymentUUIDSplitSecond,
-          OrderData.order.payLinkExpress,
-          OrderData.order.paymentUUIDExpress,
-          OrderData.order.payLinkSplitExpress,
-          OrderData.order.paymentUUIDSplitExpress,
-          OrderData.order.payLinkSplitSecondExpress,
-          OrderData.order.paymentUUIDSplitSecondExpress,
-          OrderData.order.category,
-          OrderData.order.subcategory,
-          OrderData.order.brand,
-          OrderData.order.model,
-          OrderData.order.size,
-          OrderData.order.payment,
-          OrderData.order.priceCNY,
-          OrderData.order.priceDeliveryChina,
-          OrderData.order.priceDeliveryRussia,
-          OrderData.order.commission,
-          OrderData.order.promoCodePercent,
-          OrderData.order.comment
-        ).then(() => {
-          addPayLink(OrderData.order._id, payment.data.url).then((order) => {
-            OrderData.setOrder(order);
+    if (
+      OrderData.order.payment === "Перейти по ссылке Anypayments" ||
+      OrderData.order.payment === "Перейти по ссылке -" ||
+      OrderData.order.payment === "Сплит Anypayments" ||
+      OrderData.order.payment === "Сплит -"
+    ) {
+      createPayLinkAnypayments(
+        OrderData.order._id,
+        `${OrderData.order.orderId.toString()}-full-${Math.ceil(
+          Math.random() * 1000
+        )}`,
+        totalPrice,
+        `${BASE_URL_FRONT}/order/${OrderData.order._id}`
+      ).then((payment) => {
+        if (payment.success === true) {
+          updateOrderDraft(
+            OrderData.order._id,
+            OrderData.order.link,
+            payment.data.url,
+            payment.data.custom_order_id,
+            OrderData.order.payLinkSplit,
+            OrderData.order.paymentUUIDSplit,
+            OrderData.order.payLinkSplitSecond,
+            OrderData.order.paymentUUIDSplitSecond,
+            OrderData.order.payLinkExpress,
+            OrderData.order.paymentUUIDExpress,
+            OrderData.order.payLinkSplitExpress,
+            OrderData.order.paymentUUIDSplitExpress,
+            OrderData.order.payLinkSplitSecondExpress,
+            OrderData.order.paymentUUIDSplitSecondExpress,
+            OrderData.order.category,
+            OrderData.order.subcategory,
+            OrderData.order.brand,
+            OrderData.order.model,
+            OrderData.order.size,
+            OrderData.order.payment,
+            OrderData.order.priceCNY,
+            OrderData.order.priceDeliveryChina,
+            OrderData.order.priceDeliveryRussia,
+            OrderData.order.commission,
+            OrderData.order.promoCodePercent,
+            OrderData.order.comment
+          ).then(() => {
+            addPayLink(OrderData.order._id, payment.data.url).then((order) => {
+              OrderData.setOrder(order);
+            });
           });
-        });
-      }
-    });
+        }
+      });
+    } else if (
+      OrderData.order.payment === "Перейти по ссылке Onepay" ||
+      OrderData.order.payment === "Сплит Onepay"
+    ) {
+      createPayLinkOnepay(
+        OrderData.order._id,
+        totalPrice,
+        `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+        `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+      ).then((payment) => {
+        if (payment.data.id) {
+          updateOrderDraft(
+            OrderData.order._id,
+            OrderData.order.link,
+            payment.data.attributes.url,
+            payment.data.attributes.uuid,
+            OrderData.order.payLinkSplit,
+            OrderData.order.paymentUUIDSplit,
+            OrderData.order.payLinkSplitSecond,
+            OrderData.order.paymentUUIDSplitSecond,
+            OrderData.order.payLinkExpress,
+            OrderData.order.paymentUUIDExpress,
+            OrderData.order.payLinkSplitExpress,
+            OrderData.order.paymentUUIDSplitExpress,
+            OrderData.order.payLinkSplitSecondExpress,
+            OrderData.order.paymentUUIDSplitSecondExpress,
+            OrderData.order.category,
+            OrderData.order.subcategory,
+            OrderData.order.brand,
+            OrderData.order.model,
+            OrderData.order.size,
+            OrderData.order.payment,
+            OrderData.order.priceCNY,
+            OrderData.order.priceDeliveryChina,
+            OrderData.order.priceDeliveryRussia,
+            OrderData.order.commission,
+            OrderData.order.promoCodePercent,
+            OrderData.order.comment
+          ).then(() => {
+            addPayLink(OrderData.order._id, payment.data.attributes.url).then(
+              (order) => {
+                OrderData.setOrder(order);
+              }
+            );
+          });
+        }
+      });
+    }
   }
 
   function handlePayLinkSplitSubmit() {
-    createPayLink(
-      OrderData.order._id,
-      `${OrderData.order.orderId.toString()}-split-${Math.ceil(
-        Math.random() * 1000
-      )}`,
-      Math.ceil(totalPrice / 2),
-      `${BASE_URL_FRONT}/order/${OrderData.order._id}`
-    ).then((payment) => {
-      if (payment.success === true) {
-        updateOrderDraft(
-          OrderData.order._id,
-          OrderData.order.link,
-          OrderData.order.payLink,
-          OrderData.order.paymentUUID,
-          payment.data.url,
-          payment.data.custom_order_id,
-          OrderData.order.payLinkSplitSecond,
-          OrderData.order.paymentUUIDSplitSecond,
-          OrderData.order.payLinkExpress,
-          OrderData.order.paymentUUIDExpress,
-          OrderData.order.payLinkSplitExpress,
-          OrderData.order.paymentUUIDSplitExpress,
-          OrderData.order.payLinkSplitSecondExpress,
-          OrderData.order.paymentUUIDSplitSecondExpress,
-          OrderData.order.category,
-          OrderData.order.subcategory,
-          OrderData.order.brand,
-          OrderData.order.model,
-          OrderData.order.size,
-          OrderData.order.payment,
-          OrderData.order.priceCNY,
-          OrderData.order.priceDeliveryChina,
-          OrderData.order.priceDeliveryRussia,
-          OrderData.order.commission,
-          OrderData.order.promoCodePercent,
-          OrderData.order.comment
-        ).then((orderUpdated) => {
-          createPayLink(
+    if (
+      OrderData.order.payment === "Сплит Anypayments" ||
+      OrderData.order.payment === "Сплит -"
+    ) {
+      createPayLinkAnypayments(
+        OrderData.order._id,
+        `${OrderData.order.orderId.toString()}-split-${Math.ceil(
+          Math.random() * 1000
+        )}`,
+        Math.ceil(totalPrice / 2),
+        `${BASE_URL_FRONT}/order/${OrderData.order._id}`
+      ).then((payment) => {
+        if (payment.success === true) {
+          updateOrderDraft(
             OrderData.order._id,
-            `${OrderData.order.orderId.toString()}-split-second-${Math.ceil(
-              Math.random() * 1000
-            )}`,
-            Math.ceil(totalPrice / 2),
-            `${BASE_URL_FRONT}/order/${OrderData.order._id}`
-          ).then((paymentSecond) => {
-            if (paymentSecond.success === true) {
-              updateOrderDraft(
-                OrderData.order._id,
-                OrderData.order.link,
-                OrderData.order.payLink,
-                OrderData.order.paymentUUID,
-                orderUpdated.payLinkSplit,
-                orderUpdated.paymentUUIDSplit,
-                paymentSecond.data.url,
-                paymentSecond.data.custom_order_id,
-                OrderData.order.payLinkExpress,
-                OrderData.order.paymentUUIDExpress,
-                OrderData.order.payLinkSplitExpress,
-                OrderData.order.paymentUUIDSplitExpress,
-                OrderData.order.payLinkSplitSecondExpress,
-                OrderData.order.paymentUUIDSplitSecondExpress,
-                OrderData.order.category,
-                OrderData.order.subcategory,
-                OrderData.order.brand,
-                OrderData.order.model,
-                OrderData.order.size,
-                OrderData.order.payment,
-                OrderData.order.priceCNY,
-                OrderData.order.priceDeliveryChina,
-                OrderData.order.priceDeliveryRussia,
-                OrderData.order.commission,
-                OrderData.order.promoCodePercent,
-                OrderData.order.comment
-              )
-                .then(() => {
-                  addPayLinkSplit(OrderData.order._id, payment.data.url);
-                })
-                .then(() => {
-                  addPayLinkSplitSecond(
-                    OrderData.order._id,
-                    paymentSecond.data.url
-                  ).then((orderUpdatedSecond) => {
-                    OrderData.setOrder(orderUpdatedSecond);
+            OrderData.order.link,
+            OrderData.order.payLink,
+            OrderData.order.paymentUUID,
+            payment.data.url,
+            payment.data.custom_order_id,
+            OrderData.order.payLinkSplitSecond,
+            OrderData.order.paymentUUIDSplitSecond,
+            OrderData.order.payLinkExpress,
+            OrderData.order.paymentUUIDExpress,
+            OrderData.order.payLinkSplitExpress,
+            OrderData.order.paymentUUIDSplitExpress,
+            OrderData.order.payLinkSplitSecondExpress,
+            OrderData.order.paymentUUIDSplitSecondExpress,
+            OrderData.order.category,
+            OrderData.order.subcategory,
+            OrderData.order.brand,
+            OrderData.order.model,
+            OrderData.order.size,
+            OrderData.order.payment,
+            OrderData.order.priceCNY,
+            OrderData.order.priceDeliveryChina,
+            OrderData.order.priceDeliveryRussia,
+            OrderData.order.commission,
+            OrderData.order.promoCodePercent,
+            OrderData.order.comment
+          ).then((orderUpdated) => {
+            createPayLinkAnypayments(
+              OrderData.order._id,
+              `${OrderData.order.orderId.toString()}-split-second-${Math.ceil(
+                Math.random() * 1000
+              )}`,
+              Math.ceil(totalPrice / 2),
+              `${BASE_URL_FRONT}/order/${OrderData.order._id}`
+            ).then((paymentSecond) => {
+              if (paymentSecond.success === true) {
+                updateOrderDraft(
+                  OrderData.order._id,
+                  OrderData.order.link,
+                  OrderData.order.payLink,
+                  OrderData.order.paymentUUID,
+                  orderUpdated.payLinkSplit,
+                  orderUpdated.paymentUUIDSplit,
+                  paymentSecond.data.url,
+                  paymentSecond.data.custom_order_id,
+                  OrderData.order.payLinkExpress,
+                  OrderData.order.paymentUUIDExpress,
+                  OrderData.order.payLinkSplitExpress,
+                  OrderData.order.paymentUUIDSplitExpress,
+                  OrderData.order.payLinkSplitSecondExpress,
+                  OrderData.order.paymentUUIDSplitSecondExpress,
+                  OrderData.order.category,
+                  OrderData.order.subcategory,
+                  OrderData.order.brand,
+                  OrderData.order.model,
+                  OrderData.order.size,
+                  OrderData.order.payment,
+                  OrderData.order.priceCNY,
+                  OrderData.order.priceDeliveryChina,
+                  OrderData.order.priceDeliveryRussia,
+                  OrderData.order.commission,
+                  OrderData.order.promoCodePercent,
+                  OrderData.order.comment
+                )
+                  .then(() => {
+                    addPayLinkSplit(OrderData.order._id, payment.data.url);
+                  })
+                  .then(() => {
+                    addPayLinkSplitSecond(
+                      OrderData.order._id,
+                      paymentSecond.data.url
+                    ).then((orderUpdatedSecond) => {
+                      OrderData.setOrder(orderUpdatedSecond);
+                    });
                   });
-                });
-            }
+              }
+            });
           });
-        });
-      }
-    });
+        }
+      });
+    } else if (OrderData.order.payment === "Сплит Onepay") {
+      createPayLinkOnepay(
+        OrderData.order._id,
+        Math.ceil(totalPrice / 2),
+        `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+        `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+      ).then((payment) => {
+        if (payment.data.id) {
+          updateOrderDraft(
+            OrderData.order._id,
+            OrderData.order.link,
+            OrderData.order.payLink,
+            OrderData.order.paymentUUID,
+            payment.data.attributes.url,
+            payment.data.attributes.uuid,
+            OrderData.order.payLinkSplitSecond,
+            OrderData.order.paymentUUIDSplitSecond,
+            OrderData.order.payLinkExpress,
+            OrderData.order.paymentUUIDExpress,
+            OrderData.order.payLinkSplitExpress,
+            OrderData.order.paymentUUIDSplitExpress,
+            OrderData.order.payLinkSplitSecondExpress,
+            OrderData.order.paymentUUIDSplitSecondExpress,
+            OrderData.order.category,
+            OrderData.order.subcategory,
+            OrderData.order.brand,
+            OrderData.order.model,
+            OrderData.order.size,
+            OrderData.order.payment,
+            OrderData.order.priceCNY,
+            OrderData.order.priceDeliveryChina,
+            OrderData.order.priceDeliveryRussia,
+            OrderData.order.commission,
+            OrderData.order.promoCodePercent,
+            OrderData.order.comment
+          ).then((orderUpdated) => {
+            createPayLinkOnepay(
+              OrderData.order._id,
+              Math.ceil(totalPrice / 2),
+              `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+              `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+            ).then((paymentSecond) => {
+              if (paymentSecond.data.id) {
+                updateOrderDraft(
+                  OrderData.order._id,
+                  OrderData.order.link,
+                  OrderData.order.payLink,
+                  OrderData.order.paymentUUID,
+                  orderUpdated.payLinkSplit,
+                  orderUpdated.paymentUUIDSplit,
+                  paymentSecond.data.attributes.url,
+                  paymentSecond.data.attributes.uuid,
+                  OrderData.order.payLinkExpress,
+                  OrderData.order.paymentUUIDExpress,
+                  OrderData.order.payLinkSplitExpress,
+                  OrderData.order.paymentUUIDSplitExpress,
+                  OrderData.order.payLinkSplitSecondExpress,
+                  OrderData.order.paymentUUIDSplitSecondExpress,
+                  OrderData.order.category,
+                  OrderData.order.subcategory,
+                  OrderData.order.brand,
+                  OrderData.order.model,
+                  OrderData.order.size,
+                  OrderData.order.payment,
+                  OrderData.order.priceCNY,
+                  OrderData.order.priceDeliveryChina,
+                  OrderData.order.priceDeliveryRussia,
+                  OrderData.order.commission,
+                  OrderData.order.promoCodePercent,
+                  OrderData.order.comment
+                )
+                  .then(() => {
+                    addPayLinkSplit(
+                      OrderData.order._id,
+                      payment.data.attributes.url
+                    );
+                  })
+                  .then(() => {
+                    addPayLinkSplitSecond(
+                      OrderData.order._id,
+                      paymentSecond.data.attributes.url
+                    ).then((orderUpdatedSecond) => {
+                      OrderData.setOrder(orderUpdatedSecond);
+                    });
+                  });
+              }
+            });
+          });
+        }
+      });
+    }
   }
 
   function handlePayLinkSplitSecondSubmit() {
-    createPayLink(
-      OrderData.order._id,
-      `${OrderData.order.orderId.toString()}-split-second-${Math.ceil(
-        Math.random() * 1000
-      )}`,
-      Math.ceil(totalPrice / 2),
-      `${BASE_URL_FRONT}/order/${OrderData.order._id}`
-    ).then((payment) => {
-      if (payment.success === true) {
-        updateOrderDraft(
-          OrderData.order._id,
-          OrderData.order.link,
-          OrderData.order.payLink,
-          OrderData.order.paymentUUID,
-          OrderData.order.payLinkSplit,
-          OrderData.order.paymentUUIDSplit,
-          payment.data.url,
-          payment.data.custom_order_id,
-          OrderData.order.payLinkExpress,
-          OrderData.order.paymentUUIDExpress,
-          OrderData.order.payLinkSplitExpress,
-          OrderData.order.paymentUUIDSplitExpress,
-          OrderData.order.payLinkSplitSecondExpress,
-          OrderData.order.paymentUUIDSplitSecondExpress,
-          OrderData.order.category,
-          OrderData.order.subcategory,
-          OrderData.order.brand,
-          OrderData.order.model,
-          OrderData.order.size,
-          OrderData.order.payment,
-          OrderData.order.priceCNY,
-          OrderData.order.priceDeliveryChina,
-          OrderData.order.priceDeliveryRussia,
-          OrderData.order.commission,
-          OrderData.order.promoCodePercent,
-          OrderData.order.comment
-        ).then(() => {
-          addPayLinkSplitSecond(OrderData.order._id, payment.data.url).then(
-            (order) => {
+    if (
+      OrderData.order.payment === "Сплит Anypayments" ||
+      OrderData.order.payment === "Сплит -"
+    ) {
+      createPayLinkAnypayments(
+        OrderData.order._id,
+        `${OrderData.order.orderId.toString()}-split-second-${Math.ceil(
+          Math.random() * 1000
+        )}`,
+        Math.ceil(totalPrice / 2),
+        `${BASE_URL_FRONT}/order/${OrderData.order._id}`
+      ).then((payment) => {
+        if (payment.success === true) {
+          updateOrderDraft(
+            OrderData.order._id,
+            OrderData.order.link,
+            OrderData.order.payLink,
+            OrderData.order.paymentUUID,
+            OrderData.order.payLinkSplit,
+            OrderData.order.paymentUUIDSplit,
+            payment.data.url,
+            payment.data.custom_order_id,
+            OrderData.order.payLinkExpress,
+            OrderData.order.paymentUUIDExpress,
+            OrderData.order.payLinkSplitExpress,
+            OrderData.order.paymentUUIDSplitExpress,
+            OrderData.order.payLinkSplitSecondExpress,
+            OrderData.order.paymentUUIDSplitSecondExpress,
+            OrderData.order.category,
+            OrderData.order.subcategory,
+            OrderData.order.brand,
+            OrderData.order.model,
+            OrderData.order.size,
+            OrderData.order.payment,
+            OrderData.order.priceCNY,
+            OrderData.order.priceDeliveryChina,
+            OrderData.order.priceDeliveryRussia,
+            OrderData.order.commission,
+            OrderData.order.promoCodePercent,
+            OrderData.order.comment
+          ).then(() => {
+            addPayLinkSplitSecond(OrderData.order._id, payment.data.url).then(
+              (order) => {
+                OrderData.setOrder(order);
+              }
+            );
+          });
+        }
+      });
+    } else if (OrderData.order.payment === "Сплит Onepay") {
+      createPayLinkOnepay(
+        OrderData.order._id,
+        Math.ceil(totalPrice / 2),
+        `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+        `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+      ).then((payment) => {
+        if (payment.data.id) {
+          updateOrderDraft(
+            OrderData.order._id,
+            OrderData.order.link,
+            OrderData.order.payLink,
+            OrderData.order.paymentUUID,
+            OrderData.order.payLinkSplit,
+            OrderData.order.paymentUUIDSplit,
+            payment.data.attributes.url,
+            payment.data.attributes.uuid,
+            OrderData.order.payLinkExpress,
+            OrderData.order.paymentUUIDExpress,
+            OrderData.order.payLinkSplitExpress,
+            OrderData.order.paymentUUIDSplitExpress,
+            OrderData.order.payLinkSplitSecondExpress,
+            OrderData.order.paymentUUIDSplitSecondExpress,
+            OrderData.order.category,
+            OrderData.order.subcategory,
+            OrderData.order.brand,
+            OrderData.order.model,
+            OrderData.order.size,
+            OrderData.order.payment,
+            OrderData.order.priceCNY,
+            OrderData.order.priceDeliveryChina,
+            OrderData.order.priceDeliveryRussia,
+            OrderData.order.commission,
+            OrderData.order.promoCodePercent,
+            OrderData.order.comment
+          ).then(() => {
+            addPayLinkSplitSecond(
+              OrderData.order._id,
+              payment.data.attributes.url
+            ).then((order) => {
               OrderData.setOrder(order);
-            }
-          );
-        });
-      }
-    });
+            });
+          });
+        }
+      });
+    }
   }
 
   function handlePayLinkExpressSubmit() {
-    createPayLink(
-      OrderData.order._id,
-      `${OrderData.order.orderId.toString()}-express-${Math.ceil(
-        Math.random() * 1000
-      )}`,
-      totalPriceExpress,
-      `${BASE_URL_FRONT}/order/${OrderData.order._id}`
-    ).then((payment) => {
-      if (payment.success === true) {
-        updateOrderDraft(
-          OrderData.order._id,
-          OrderData.order.link,
-          OrderData.order.payLink,
-          OrderData.order.paymentUUID,
-          OrderData.order.payLinkSplit,
-          OrderData.order.paymentUUIDSplit,
-          OrderData.order.payLinkSplitSecond,
-          OrderData.order.paymentUUIDSplitSecond,
-          payment.data.url,
-          payment.data.custom_order_id,
-          OrderData.order.payLinkSplitExpress,
-          OrderData.order.paymentUUIDSplitExpress,
-          OrderData.order.payLinkSplitSecondExpress,
-          OrderData.order.paymentUUIDSplitSecondExpress,
-          OrderData.order.category,
-          OrderData.order.subcategory,
-          OrderData.order.brand,
-          OrderData.order.model,
-          OrderData.order.size,
-          OrderData.order.payment,
-          OrderData.order.priceCNY,
-          OrderData.order.priceDeliveryChina,
-          OrderData.order.priceDeliveryRussia,
-          OrderData.order.commission,
-          OrderData.order.promoCodePercent,
-          OrderData.order.comment
-        ).then(() => {
-          addPayLinkExpress(OrderData.order._id, payment.data.url).then(
-            (order) => {
+    if (
+      OrderData.order.payment === "Перейти по ссылке Anypayments" ||
+      OrderData.order.payment === "Перейти по ссылке -" ||
+      OrderData.order.payment === "Сплит Anypayments" ||
+      OrderData.order.payment === "Сплит -"
+    ) {
+      createPayLinkAnypayments(
+        OrderData.order._id,
+        `${OrderData.order.orderId.toString()}-express-${Math.ceil(
+          Math.random() * 1000
+        )}`,
+        totalPriceExpress,
+        `${BASE_URL_FRONT}/order/${OrderData.order._id}`
+      ).then((payment) => {
+        if (payment.success === true) {
+          updateOrderDraft(
+            OrderData.order._id,
+            OrderData.order.link,
+            OrderData.order.payLink,
+            OrderData.order.paymentUUID,
+            OrderData.order.payLinkSplit,
+            OrderData.order.paymentUUIDSplit,
+            OrderData.order.payLinkSplitSecond,
+            OrderData.order.paymentUUIDSplitSecond,
+            payment.data.url,
+            payment.data.custom_order_id,
+            OrderData.order.payLinkSplitExpress,
+            OrderData.order.paymentUUIDSplitExpress,
+            OrderData.order.payLinkSplitSecondExpress,
+            OrderData.order.paymentUUIDSplitSecondExpress,
+            OrderData.order.category,
+            OrderData.order.subcategory,
+            OrderData.order.brand,
+            OrderData.order.model,
+            OrderData.order.size,
+            OrderData.order.payment,
+            OrderData.order.priceCNY,
+            OrderData.order.priceDeliveryChina,
+            OrderData.order.priceDeliveryRussia,
+            OrderData.order.commission,
+            OrderData.order.promoCodePercent,
+            OrderData.order.comment
+          ).then(() => {
+            addPayLinkExpress(OrderData.order._id, payment.data.url).then(
+              (order) => {
+                OrderData.setOrder(order);
+              }
+            );
+          });
+        }
+      });
+    } else if (
+      OrderData.order.payment === "Перейти по ссылке Onepay" ||
+      OrderData.order.payment === "Сплит Onepay"
+    ) {
+      createPayLinkOnepay(
+        OrderData.order._id,
+        totalPriceExpress,
+        `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+        `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+      ).then((payment) => {
+        if (payment.data.id) {
+          updateOrderDraft(
+            OrderData.order._id,
+            OrderData.order.link,
+            OrderData.order.payLink,
+            OrderData.order.paymentUUID,
+            OrderData.order.payLinkSplit,
+            OrderData.order.paymentUUIDSplit,
+            OrderData.order.payLinkSplitSecond,
+            OrderData.order.paymentUUIDSplitSecond,
+            payment.data.attributes.url,
+            payment.data.attributes.uuid,
+            OrderData.order.payLinkSplitExpress,
+            OrderData.order.paymentUUIDSplitExpress,
+            OrderData.order.payLinkSplitSecondExpress,
+            OrderData.order.paymentUUIDSplitSecondExpress,
+            OrderData.order.category,
+            OrderData.order.subcategory,
+            OrderData.order.brand,
+            OrderData.order.model,
+            OrderData.order.size,
+            OrderData.order.payment,
+            OrderData.order.priceCNY,
+            OrderData.order.priceDeliveryChina,
+            OrderData.order.priceDeliveryRussia,
+            OrderData.order.commission,
+            OrderData.order.promoCodePercent,
+            OrderData.order.comment
+          ).then(() => {
+            addPayLinkExpress(
+              OrderData.order._id,
+              payment.data.attributes.url
+            ).then((order) => {
               OrderData.setOrder(order);
-            }
-          );
-        });
-      }
-    });
+            });
+          });
+        }
+      });
+    }
   }
 
   function handlePayLinkSplitExpressSubmit() {
-    createPayLink(
-      OrderData.order._id,
-      `${OrderData.order.orderId.toString()}-split-express-${Math.ceil(
-        Math.random() * 1000
-      )}`,
-      Math.ceil(totalPriceExpress / 2),
-      `${BASE_URL_FRONT}/order/${OrderData.order._id}`
-    ).then((payment) => {
-      if (payment.success === true) {
-        updateOrderDraft(
-          OrderData.order._id,
-          OrderData.order.link,
-          OrderData.order.payLink,
-          OrderData.order.paymentUUID,
-          OrderData.order.payLinkSplit,
-          OrderData.order.paymentUUIDSplit,
-          OrderData.order.payLinkSplitSecond,
-          OrderData.order.paymentUUIDSplitSecond,
-          OrderData.order.payLinkExpress,
-          OrderData.order.paymentUUIDExpress,
-          payment.data.url,
-          payment.data.custom_order_id,
-          OrderData.order.payLinkSplitSecondExpress,
-          OrderData.order.paymentUUIDSplitSecondExpress,
-          OrderData.order.category,
-          OrderData.order.subcategory,
-          OrderData.order.brand,
-          OrderData.order.model,
-          OrderData.order.size,
-          OrderData.order.payment,
-          OrderData.order.priceCNY,
-          OrderData.order.priceDeliveryChina,
-          OrderData.order.priceDeliveryRussia,
-          OrderData.order.commission,
-          OrderData.order.promoCodePercent,
-          OrderData.order.comment
-        ).then((orderUpdated) => {
-          createPayLink(
+    if (
+      OrderData.order.payment === "Сплит Anypayments" ||
+      OrderData.order.payment === "Сплит -"
+    ) {
+      createPayLinkAnypayments(
+        OrderData.order._id,
+        `${OrderData.order.orderId.toString()}-split-express-${Math.ceil(
+          Math.random() * 1000
+        )}`,
+        Math.ceil(totalPriceExpress / 2),
+        `${BASE_URL_FRONT}/order/${OrderData.order._id}`
+      ).then((payment) => {
+        if (payment.success === true) {
+          updateOrderDraft(
             OrderData.order._id,
-            `${OrderData.order.orderId.toString()}-split-express-second-${Math.ceil(
-              Math.random() * 1000
-            )}`,
-            Math.ceil(totalPriceExpress / 2),
-            `${BASE_URL_FRONT}/order/${OrderData.order._id}`
-          ).then((paymentSecond) => {
-            if (paymentSecond.success === true) {
-              updateOrderDraft(
-                OrderData.order._id,
-                OrderData.order.link,
-                OrderData.order.payLink,
-                OrderData.order.paymentUUID,
-                OrderData.order.payLinkSplit,
-                OrderData.order.paymentUUIDSplit,
-                OrderData.order.payLinkSplitSecond,
-                OrderData.order.paymentUUIDSplitSecond,
-                OrderData.order.payLinkExpress,
-                OrderData.order.paymentUUIDExpress,
-                orderUpdated.payLinkSplitExpress,
-                orderUpdated.paymentUUIDSplitExpress,
-                paymentSecond.data.url,
-                paymentSecond.data.custom_order_id,
-                OrderData.order.category,
-                OrderData.order.subcategory,
-                OrderData.order.brand,
-                OrderData.order.model,
-                OrderData.order.size,
-                OrderData.order.payment,
-                OrderData.order.priceCNY,
-                OrderData.order.priceDeliveryChina,
-                OrderData.order.priceDeliveryRussia,
-                OrderData.order.commission,
-                OrderData.order.promoCodePercent,
-                OrderData.order.comment
-              ).then(() => {
-                addPayLinkSplitExpress(
+            OrderData.order.link,
+            OrderData.order.payLink,
+            OrderData.order.paymentUUID,
+            OrderData.order.payLinkSplit,
+            OrderData.order.paymentUUIDSplit,
+            OrderData.order.payLinkSplitSecond,
+            OrderData.order.paymentUUIDSplitSecond,
+            OrderData.order.payLinkExpress,
+            OrderData.order.paymentUUIDExpress,
+            payment.data.url,
+            payment.data.custom_order_id,
+            OrderData.order.payLinkSplitSecondExpress,
+            OrderData.order.paymentUUIDSplitSecondExpress,
+            OrderData.order.category,
+            OrderData.order.subcategory,
+            OrderData.order.brand,
+            OrderData.order.model,
+            OrderData.order.size,
+            OrderData.order.payment,
+            OrderData.order.priceCNY,
+            OrderData.order.priceDeliveryChina,
+            OrderData.order.priceDeliveryRussia,
+            OrderData.order.commission,
+            OrderData.order.promoCodePercent,
+            OrderData.order.comment
+          ).then((orderUpdated) => {
+            createPayLinkAnypayments(
+              OrderData.order._id,
+              `${OrderData.order.orderId.toString()}-split-express-second-${Math.ceil(
+                Math.random() * 1000
+              )}`,
+              Math.ceil(totalPriceExpress / 2),
+              `${BASE_URL_FRONT}/order/${OrderData.order._id}`
+            ).then((paymentSecond) => {
+              if (paymentSecond.success === true) {
+                updateOrderDraft(
                   OrderData.order._id,
-                  payment.data.url
+                  OrderData.order.link,
+                  OrderData.order.payLink,
+                  OrderData.order.paymentUUID,
+                  OrderData.order.payLinkSplit,
+                  OrderData.order.paymentUUIDSplit,
+                  OrderData.order.payLinkSplitSecond,
+                  OrderData.order.paymentUUIDSplitSecond,
+                  OrderData.order.payLinkExpress,
+                  OrderData.order.paymentUUIDExpress,
+                  orderUpdated.payLinkSplitExpress,
+                  orderUpdated.paymentUUIDSplitExpress,
+                  paymentSecond.data.url,
+                  paymentSecond.data.custom_order_id,
+                  OrderData.order.category,
+                  OrderData.order.subcategory,
+                  OrderData.order.brand,
+                  OrderData.order.model,
+                  OrderData.order.size,
+                  OrderData.order.payment,
+                  OrderData.order.priceCNY,
+                  OrderData.order.priceDeliveryChina,
+                  OrderData.order.priceDeliveryRussia,
+                  OrderData.order.commission,
+                  OrderData.order.promoCodePercent,
+                  OrderData.order.comment
                 ).then(() => {
-                  addPayLinkSplitSecondExpress(
+                  addPayLinkSplitExpress(
                     OrderData.order._id,
-                    paymentSecond.data.url
-                  ).then((order) => {
-                    OrderData.setOrder(order);
+                    payment.data.url
+                  ).then(() => {
+                    addPayLinkSplitSecondExpress(
+                      OrderData.order._id,
+                      paymentSecond.data.url
+                    ).then((order) => {
+                      OrderData.setOrder(order);
+                    });
                   });
                 });
-              });
-            }
+              }
+            });
           });
-        });
-      }
-    });
+        }
+      });
+    } else if (OrderData.order.payment === "Сплит Onepay") {
+      createPayLinkOnepay(
+        OrderData.order._id,
+        Math.ceil(totalPriceExpress / 2),
+        `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+        `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+      ).then((payment) => {
+        if (payment.data.id) {
+          updateOrderDraft(
+            OrderData.order._id,
+            OrderData.order.link,
+            OrderData.order.payLink,
+            OrderData.order.paymentUUID,
+            OrderData.order.payLinkSplit,
+            OrderData.order.paymentUUIDSplit,
+            OrderData.order.payLinkSplitSecond,
+            OrderData.order.paymentUUIDSplitSecond,
+            OrderData.order.payLinkExpress,
+            OrderData.order.paymentUUIDExpress,
+            payment.data.attributes.url,
+            payment.data.attributes.uuid,
+            OrderData.order.payLinkSplitSecondExpress,
+            OrderData.order.paymentUUIDSplitSecondExpress,
+            OrderData.order.category,
+            OrderData.order.subcategory,
+            OrderData.order.brand,
+            OrderData.order.model,
+            OrderData.order.size,
+            OrderData.order.payment,
+            OrderData.order.priceCNY,
+            OrderData.order.priceDeliveryChina,
+            OrderData.order.priceDeliveryRussia,
+            OrderData.order.commission,
+            OrderData.order.promoCodePercent,
+            OrderData.order.comment
+          ).then((orderUpdated) => {
+            createPayLinkOnepay(
+              OrderData.order._id,
+              Math.ceil(totalPriceExpress / 2),
+              `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+              `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+            ).then((paymentSecond) => {
+              if (paymentSecond.data.id) {
+                updateOrderDraft(
+                  OrderData.order._id,
+                  OrderData.order.link,
+                  OrderData.order.payLink,
+                  OrderData.order.paymentUUID,
+                  OrderData.order.payLinkSplit,
+                  OrderData.order.paymentUUIDSplit,
+                  OrderData.order.payLinkSplitSecond,
+                  OrderData.order.paymentUUIDSplitSecond,
+                  OrderData.order.payLinkExpress,
+                  OrderData.order.paymentUUIDExpress,
+                  orderUpdated.payLinkSplitExpress,
+                  orderUpdated.paymentUUIDSplitExpress,
+                  paymentSecond.data.attributes.url,
+                  paymentSecond.data.attributes.uuid,
+                  OrderData.order.category,
+                  OrderData.order.subcategory,
+                  OrderData.order.brand,
+                  OrderData.order.model,
+                  OrderData.order.size,
+                  OrderData.order.payment,
+                  OrderData.order.priceCNY,
+                  OrderData.order.priceDeliveryChina,
+                  OrderData.order.priceDeliveryRussia,
+                  OrderData.order.commission,
+                  OrderData.order.promoCodePercent,
+                  OrderData.order.comment
+                ).then(() => {
+                  addPayLinkSplitExpress(
+                    OrderData.order._id,
+                    payment.data.attributes.url
+                  ).then(() => {
+                    addPayLinkSplitSecondExpress(
+                      OrderData.order._id,
+                      paymentSecond.data.attributes.url
+                    ).then((order) => {
+                      OrderData.setOrder(order);
+                    });
+                  });
+                });
+              }
+            });
+          });
+        }
+      });
+    }
   }
 
   function handlePayLinkSplitSecondExpressSubmit() {
-    createPayLink(
-      OrderData.order._id,
-      `${OrderData.order.orderId.toString()}-split-express-second-${Math.ceil(
-        Math.random() * 1000
-      )}`,
-      Math.ceil(totalPriceExpress / 2),
-      `${BASE_URL_FRONT}/order/${OrderData.order._id}`
-    ).then((payment) => {
-      if (payment.success === true) {
-        updateOrderDraft(
-          OrderData.order._id,
-          OrderData.order.link,
-          OrderData.order.payLink,
-          OrderData.order.paymentUUID,
-          OrderData.order.payLinkSplit,
-          OrderData.order.paymentUUIDSplit,
-          OrderData.order.payLinkSplitSecond,
-          OrderData.order.paymentUUIDSplitSecond,
-          OrderData.order.payLinkExpress,
-          OrderData.order.paymentUUIDExpress,
-          OrderData.order.payLinkSplitExpress,
-          OrderData.order.paymentUUIDSplitExpress,
-          payment.data.url,
-          payment.data.custom_order_id,
-          OrderData.order.category,
-          OrderData.order.subcategory,
-          OrderData.order.brand,
-          OrderData.order.model,
-          OrderData.order.size,
-          OrderData.order.payment,
-          OrderData.order.priceCNY,
-          OrderData.order.priceDeliveryChina,
-          OrderData.order.priceDeliveryRussia,
-          OrderData.order.commission,
-          OrderData.order.promoCodePercent,
-          OrderData.order.comment
-        ).then(() => {
-          addPayLinkSplitSecondExpress(
+    if (
+      OrderData.order.payment === "Сплит Anypayments" ||
+      OrderData.order.payment === "Сплит -"
+    ) {
+      createPayLinkAnypayments(
+        OrderData.order._id,
+        `${OrderData.order.orderId.toString()}-split-express-second-${Math.ceil(
+          Math.random() * 1000
+        )}`,
+        Math.ceil(totalPriceExpress / 2),
+        `${BASE_URL_FRONT}/order/${OrderData.order._id}`
+      ).then((payment) => {
+        if (payment.success === true) {
+          updateOrderDraft(
             OrderData.order._id,
-            payment.data.url
-          ).then((order) => {
-            OrderData.setOrder(order);
+            OrderData.order.link,
+            OrderData.order.payLink,
+            OrderData.order.paymentUUID,
+            OrderData.order.payLinkSplit,
+            OrderData.order.paymentUUIDSplit,
+            OrderData.order.payLinkSplitSecond,
+            OrderData.order.paymentUUIDSplitSecond,
+            OrderData.order.payLinkExpress,
+            OrderData.order.paymentUUIDExpress,
+            OrderData.order.payLinkSplitExpress,
+            OrderData.order.paymentUUIDSplitExpress,
+            payment.data.url,
+            payment.data.custom_order_id,
+            OrderData.order.category,
+            OrderData.order.subcategory,
+            OrderData.order.brand,
+            OrderData.order.model,
+            OrderData.order.size,
+            OrderData.order.payment,
+            OrderData.order.priceCNY,
+            OrderData.order.priceDeliveryChina,
+            OrderData.order.priceDeliveryRussia,
+            OrderData.order.commission,
+            OrderData.order.promoCodePercent,
+            OrderData.order.comment
+          ).then(() => {
+            addPayLinkSplitSecondExpress(
+              OrderData.order._id,
+              payment.data.url
+            ).then((order) => {
+              OrderData.setOrder(order);
+            });
           });
-        });
-      }
-    });
+        }
+      });
+    } else if (OrderData.order.payment === "Сплит Onepay") {
+      createPayLinkOnepay(
+        OrderData.order._id,
+        Math.ceil(totalPriceExpress / 2),
+        `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+        `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+      ).then((payment) => {
+        if (payment.data.id) {
+          updateOrderDraft(
+            OrderData.order._id,
+            OrderData.order.link,
+            OrderData.order.payLink,
+            OrderData.order.paymentUUID,
+            OrderData.order.payLinkSplit,
+            OrderData.order.paymentUUIDSplit,
+            OrderData.order.payLinkSplitSecond,
+            OrderData.order.paymentUUIDSplitSecond,
+            OrderData.order.payLinkExpress,
+            OrderData.order.paymentUUIDExpress,
+            OrderData.order.payLinkSplitExpress,
+            OrderData.order.paymentUUIDSplitExpress,
+            payment.data.attributes.url,
+            payment.data.attributes.uuid,
+            OrderData.order.category,
+            OrderData.order.subcategory,
+            OrderData.order.brand,
+            OrderData.order.model,
+            OrderData.order.size,
+            OrderData.order.payment,
+            OrderData.order.priceCNY,
+            OrderData.order.priceDeliveryChina,
+            OrderData.order.priceDeliveryRussia,
+            OrderData.order.commission,
+            OrderData.order.promoCodePercent,
+            OrderData.order.comment
+          ).then(() => {
+            addPayLinkSplitSecondExpress(
+              OrderData.order._id,
+              payment.data.attributes.url
+            ).then((order) => {
+              OrderData.setOrder(order);
+            });
+          });
+        }
+      });
+    }
   }
 
   return (
@@ -608,7 +1008,9 @@ const AcceptPayment = () => {
       <h4>Cпособ оплаты</h4>
       <p className={styles["accept-payment__text"]}>
         {OrderData.order.payment}
-        {OrderData.order.payment === "Сплит -" &&
+        {(OrderData.order.payment === "Сплит -" ||
+          OrderData.order.payment === "Сплит Anypayments" ||
+          OrderData.order.payment === "Сплит Onepay") &&
           !OrderData.order.isSplit &&
           " полная оплата"}
       </p>
@@ -644,7 +1046,11 @@ const AcceptPayment = () => {
         )}
       {OrderData.order.status === "Черновик" &&
         (OrderData.order.payment === "Перейти по ссылке -" ||
-          OrderData.order.payment === "Сплит -") && (
+          OrderData.order.payment === "Перейти по ссылке Anypayments" ||
+          OrderData.order.payment === "Перейти по ссылке Onepay" ||
+          OrderData.order.payment === "Сплит -" ||
+          OrderData.order.payment === "Сплит Anypayments" ||
+          OrderData.order.payment === "Сплит Onepay") && (
           <>
             <button
               className={styles["accept-payment__resume"]}
@@ -656,7 +1062,11 @@ const AcceptPayment = () => {
         )}
       {OrderData.order.status === "Черновик" &&
         (OrderData.order.payment === "Перейти по ссылке -" ||
-          OrderData.order.payment === "Сплит -") && (
+          OrderData.order.payment === "Перейти по ссылке Anypayments" ||
+          OrderData.order.payment === "Перейти по ссылке Onepay" ||
+          OrderData.order.payment === "Сплит -" ||
+          OrderData.order.payment === "Сплит Anypayments" ||
+          OrderData.order.payment === "Сплит Onepay") && (
           <>
             <button
               className={styles["accept-payment__resume"]}
@@ -668,7 +1078,9 @@ const AcceptPayment = () => {
         )}
       {OrderData.order.status === "Черновик" &&
         !OrderData.order.isSplitPaid &&
-        OrderData.order.payment === "Сплит -" && (
+        (OrderData.order.payment === "Сплит -" ||
+          OrderData.order.payment === "Сплит Anypayments" ||
+          OrderData.order.payment === "Сплит Onepay") && (
           <>
             <button
               className={styles["accept-payment__resume"]}
@@ -680,7 +1092,9 @@ const AcceptPayment = () => {
         )}
       {OrderData.order.status !== "Черновик" &&
         !OrderData.order.isSplitPaidSecond &&
-        OrderData.order.payment === "Сплит -" &&
+        (OrderData.order.payment === "Сплит -" ||
+          OrderData.order.payment === "Сплит Anypayments" ||
+          OrderData.order.payment === "Сплит Onepay") &&
         OrderData.order.isSplit && (
           <>
             <button
@@ -693,7 +1107,9 @@ const AcceptPayment = () => {
         )}
       {OrderData.order.status === "Черновик" &&
         !OrderData.order.isSplitPaid &&
-        OrderData.order.payment === "Сплит -" && (
+        (OrderData.order.payment === "Сплит -" ||
+          OrderData.order.payment === "Сплит Anypayments" ||
+          OrderData.order.payment === "Сплит Onepay") && (
           <>
             <button
               className={styles["accept-payment__resume"]}
@@ -705,7 +1121,9 @@ const AcceptPayment = () => {
         )}
       {OrderData.order.status !== "Черновик" &&
         !OrderData.order.isSplitPaidSecond &&
-        OrderData.order.payment === "Сплит -" &&
+        (OrderData.order.payment === "Сплит -" ||
+          OrderData.order.payment === "Сплит Anypayments" ||
+          OrderData.order.payment === "Сплит Onepay") &&
         OrderData.order.isSplit && (
           <>
             <button
@@ -902,7 +1320,9 @@ const AcceptPayment = () => {
             </button>
           )}
         {OrderData.order.status === "Черновик" &&
-          OrderData.order.payment === "Перейти по ссылке -" &&
+          (OrderData.order.payment === "Перейти по ссылке -" ||
+            OrderData.order.payment === "Перейти по ссылке Anypayments" ||
+            OrderData.order.payment === "Перейти по ссылке Onepay") &&
           (UserData.userData.position === "Создатель" ||
             UserData.userData.position === "Главный администратор") && (
             <button
@@ -913,7 +1333,9 @@ const AcceptPayment = () => {
             </button>
           )}
         {OrderData.order.status === "Черновик" &&
-          OrderData.order.payment === "Сплит -" &&
+          (OrderData.order.payment === "Сплит -" ||
+            OrderData.order.payment === "Сплит Anypayments" ||
+            OrderData.order.payment === "Сплит Onepay") &&
           (UserData.userData.position === "Создатель" ||
             UserData.userData.position === "Главный администратор") &&
           !OrderData.order.isSplit && (
@@ -925,7 +1347,9 @@ const AcceptPayment = () => {
             </button>
           )}
         {OrderData.order.status === "Черновик" &&
-          OrderData.order.payment === "Сплит -" &&
+          (OrderData.order.payment === "Сплит -" ||
+            OrderData.order.payment === "Сплит Anypayments" ||
+            OrderData.order.payment === "Сплит Onepay") &&
           (UserData.userData.position === "Создатель" ||
             UserData.userData.position === "Главный администратор") &&
           !OrderData.order.isSplitPaid &&
@@ -938,7 +1362,9 @@ const AcceptPayment = () => {
             </button>
           )}
         {OrderData.order.status !== "Черновик" &&
-          OrderData.order.payment === "Сплит -" &&
+          (OrderData.order.payment === "Сплит -" ||
+            OrderData.order.payment === "Сплит Anypayments" ||
+            OrderData.order.payment === "Сплит Onepay") &&
           (UserData.userData.position === "Создатель" ||
             UserData.userData.position === "Главный администратор") &&
           !OrderData.order.isSplitPaidSecond &&

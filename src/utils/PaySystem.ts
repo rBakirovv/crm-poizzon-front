@@ -4,21 +4,21 @@ const HEADERS = {
   "Content-Type": "application/json",
 };
 
-export const getPayment = (id: string) => {
-  return fetch(`${BASE_URL}/pay/link-info/${id}`, {
+export const getPaymentAnypayments = (id: string) => {
+  return fetch(`${BASE_URL}/pay/link-info-anypayments/${id}`, {
     credentials: "include",
     method: "POST",
     headers: HEADERS,
   }).then(checkResponse);
 };
 
-export const createPayLink = (
+export const createPayLinkAnypayments = (
   orderId: string,
   customId: string,
   amount: number,
-  redirect_url: string,
+  redirect_url: string
 ) => {
-  return fetch(`${BASE_URL}/pay/link`, {
+  return fetch(`${BASE_URL}/pay/link-anypayments`, {
     method: "POST",
     headers: HEADERS,
     credentials: "include",
@@ -43,7 +43,7 @@ export const createPayLinkOnepay = (
   orderId: string,
   amount: number,
   redirect_url: string,
-  callback_url: string,
+  callback_url: string
 ) => {
   return fetch(`${BASE_URL}/pay/link-one-pay`, {
     method: "POST",
@@ -57,7 +57,6 @@ export const createPayLinkOnepay = (
     }),
   }).then(checkResponse);
 };
-
 
 const checkResponse = (res: Response) => {
   if (res.ok) {

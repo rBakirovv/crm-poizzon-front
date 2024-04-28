@@ -295,6 +295,58 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       });
     }
 
+    if (target.value === "Сплит Onepay") {
+      setData({
+        ...data,
+        payment: "Сплит Onepay",
+        payLink: OrderData.order.payLink,
+        payLinkSplit: OrderData.order.payLinkSplit,
+        paymentUUID: OrderData.order.paymentUUID,
+        paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+        payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+        paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+      });
+    }
+
+    if (target.value === "Сплит Anypayments") {
+      setData({
+        ...data,
+        payment: "Сплит Anypayments",
+        payLink: OrderData.order.payLink,
+        payLinkSplit: OrderData.order.payLinkSplit,
+        paymentUUID: OrderData.order.paymentUUID,
+        paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+        payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+        paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+      });
+    }
+
+    if (target.value === "Перейти по ссылке Onepay") {
+      setData({
+        ...data,
+        payment: "Перейти по ссылке -",
+        payLink: OrderData.order.payLink,
+        payLinkSplit: OrderData.order.payLinkSplit,
+        paymentUUID: OrderData.order.paymentUUID,
+        paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+        payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+        paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+      });
+    }
+
+    if (target.value === "Перейти по ссылке Anypayments") {
+      setData({
+        ...data,
+        payment: "Перейти по ссылке -",
+        payLink: OrderData.order.payLink,
+        payLinkSplit: OrderData.order.payLinkSplit,
+        paymentUUID: OrderData.order.paymentUUID,
+        paymentUUIDSplit: OrderData.order.paymentUUIDSplit,
+        payLinkSplitSecond: OrderData.order.payLinkSplitSecond,
+        paymentUUIDSplitSecond: OrderData.order.paymentUUIDSplitSecond,
+      });
+    }
+
     if (target.value === "Перейти по ссылке -") {
       setData({
         ...data,
@@ -1111,7 +1163,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         </p>
       )}
       {(!OrderData.order.isSplitPaid || !OrderData.order.isSplitPaidSecond) &&
-        OrderData.order.payment === "Сплит -" &&
+        (OrderData.order.payment === "Сплит -" ||
+          OrderData.order.payment === "Сплит Anypayments" ||
+          OrderData.order.payment === "Сплит Onepay") &&
         OrderData.order.isSplit && (
           <p>
             <span className={styles["order-change__status_red"]}>
@@ -1250,7 +1304,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                 target="_blank"
                 rel="noreferrer"
               >
-                {BASE_URL_FRONT}/order/{OrderData.order._id}/{OrderData.order.orderId}
+                {BASE_URL_FRONT}/order/{OrderData.order._id}/
+                {OrderData.order.orderId}
               </a>
               <div
                 onClick={copyLink}
@@ -1339,7 +1394,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                 Перейти
               </a>
             )}
-            {OrderData.order.payment === "Сплит -" && (
+            {(OrderData.order.payment === "Сплит -" ||
+              OrderData.order.payment === "Сплит Anypayments" ||
+              OrderData.order.payment === "Сплит Onepay") && (
               <div className={styles["checkbox__container"]}>
                 <input
                   className={styles["checkbox__button"]}
@@ -1354,7 +1411,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
               </div>
             )}
             {(OrderData.order.payment === "Перейти по ссылке -" ||
-              OrderData.order.payment === "Сплит -") &&
+              OrderData.order.payment === "Перейти по ссылке Onepay" ||
+              OrderData.order.payment === "Перейти по ссылке Anypayments" ||
+              OrderData.order.payment === "Сплит -" ||
+              OrderData.order.payment === "Сплит Onepay" ||
+              OrderData.order.payment === "Сплит Anypayments") &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
                   name="payLink"
@@ -1366,7 +1427,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                 />
               )}
             {(OrderData.order.payment === "Перейти по ссылке -" ||
-              OrderData.order.payment === "Сплит -") &&
+              OrderData.order.payment === "Перейти по ссылке Onepay" ||
+              OrderData.order.payment === "Перейти по ссылке Anypayments" ||
+              OrderData.order.payment === "Сплит -" ||
+              OrderData.order.payment === "Сплит Onepay" ||
+              OrderData.order.payment === "Сплит Anypayments") &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
                   name="paymentUUID"
@@ -1378,7 +1443,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                 />
               )}
             {(OrderData.order.payment === "Перейти по ссылке -" ||
-              OrderData.order.payment === "Сплит -") &&
+              OrderData.order.payment === "Перейти по ссылке Onepay" ||
+              OrderData.order.payment === "Перейти по ссылке Anypayments" ||
+              OrderData.order.payment === "Сплит -" ||
+              OrderData.order.payment === "Сплит Onepay" ||
+              OrderData.order.payment === "Сплит Anypayments") &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
                   name="payLinkExpress"
@@ -1390,7 +1459,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                 />
               )}
             {(OrderData.order.payment === "Перейти по ссылке -" ||
-              OrderData.order.payment === "Сплит -") &&
+              OrderData.order.payment === "Перейти по ссылке Onepay" ||
+              OrderData.order.payment === "Перейти по ссылке Anypayments" ||
+              OrderData.order.payment === "Сплит -" ||
+              OrderData.order.payment === "Сплит Onepay" ||
+              OrderData.order.payment === "Сплит Anypayments") &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
                   name="paymentUUIDExpress"
@@ -1401,7 +1474,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   disabled={true}
                 />
               )}
-            {OrderData.order.payment === "Сплит -" &&
+            {(OrderData.order.payment === "Сплит -" ||
+              OrderData.order.payment === "Сплит Onepay" ||
+              OrderData.order.payment === "Сплит Anypayments") &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
                   name="payLinkSplit"
@@ -1412,7 +1487,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   disabled={true}
                 />
               )}
-            {OrderData.order.payment === "Сплит -" &&
+            {(OrderData.order.payment === "Сплит -" ||
+              OrderData.order.payment === "Сплит Onepay" ||
+              OrderData.order.payment === "Сплит Anypayments") &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
                   name="paymentUUIDSplit"
@@ -1423,7 +1500,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   disabled={true}
                 />
               )}
-            {OrderData.order.payment === "Сплит -" &&
+            {(OrderData.order.payment === "Сплит -" ||
+              OrderData.order.payment === "Сплит Onepay" ||
+              OrderData.order.payment === "Сплит Anypayments") &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
                   name="payLinkSplitSecond"
@@ -1434,7 +1513,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   disabled={true}
                 />
               )}
-            {OrderData.order.payment === "Сплит -" &&
+            {(OrderData.order.payment === "Сплит -" ||
+              OrderData.order.payment === "Сплит Onepay") &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
                   name="paymentUUIDSplitSecond"
@@ -1445,7 +1525,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   disabled={true}
                 />
               )}
-            {OrderData.order.payment === "Сплит -" &&
+            {(OrderData.order.payment === "Сплит -" ||
+              OrderData.order.payment === "Сплит Onepay") &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
                   name="payLinkSplitExpress"
@@ -1456,7 +1537,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   disabled={true}
                 />
               )}
-            {OrderData.order.payment === "Сплит -" &&
+            {(OrderData.order.payment === "Сплит -" ||
+              OrderData.order.payment === "Сплит Onepay" ||
+              OrderData.order.payment === "Сплит Anypayments") &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
                   name="paymentUUIDSplitExpress"
@@ -1467,7 +1550,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   disabled={true}
                 />
               )}
-            {OrderData.order.payment === "Сплит -" &&
+            {(OrderData.order.payment === "Сплит -" ||
+              OrderData.order.payment === "Сплит Onepay" ||
+              OrderData.order.payment === "Сплит Anypayments") &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
                   name="payLinkSplitSecondExpress"
@@ -1478,7 +1563,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   disabled={true}
                 />
               )}
-            {OrderData.order.payment === "Сплит -" &&
+            {(OrderData.order.payment === "Сплит -" ||
+              OrderData.order.payment === "Сплит Onepay" ||
+              OrderData.order.payment === "Сплит Anypayments") &&
               UserData.userData.position !== "Работник склада" && (
                 <TextInput
                   name="paymentUUIDSplitSecondExpress"

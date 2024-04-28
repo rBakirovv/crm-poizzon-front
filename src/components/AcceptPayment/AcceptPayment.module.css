@@ -33,10 +33,6 @@
   padding: 0;
 }
 
-.accept-payment__resume:hover {
-  border-bottom: 1px dashed transparent;
-}
-
 .accept-payment__resume:not(:first-of-type) {
   margin-top: 1rem;
 }

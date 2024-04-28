@@ -11,7 +11,10 @@ import Payment from "../../store/payments";
 import TextInput from "../UI/TextInput/TextInput";
 import Preloader from "../UI/Preloader/Preloader";
 import UserData from "../../store/user";
-import { createPayLink, createPayLinkOnepay } from "../../utils/PaySystem";
+import {
+  createPayLinkAnypayments,
+  createPayLinkOnepay,
+} from "../../utils/PaySystem";
 import { BASE_URL, BASE_URL_FRONT } from "../../utils/constants";
 
 interface IPaymentsProps {
@@ -202,8 +205,10 @@ const Payments: FC<IPaymentsProps> = ({}) => {
     setIsSuccessCreateLinkAnypayments(false);
     setIsFailedCreateLinkAnypayments(false);
 
-    createPayLink(
-      paymentData.idAnypayments === "" ? "undefined" : paymentData.idAnypayments,
+    createPayLinkAnypayments(
+      paymentData.idAnypayments === ""
+        ? "undefined"
+        : paymentData.idAnypayments,
       paymentData.alternativeIdAnypayments,
       parseInt(paymentData.totalSumAnypayments),
       `${BASE_URL_FRONT}/order/${paymentData.idAnypayments}`
