@@ -256,7 +256,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
             currentOrder._id,
             totalPrice,
             `${BASE_URL_FRONT}/order/${paymentData._id}`,
-            `${BASE_URL}/onepay-handler/${paymentData._id}`
+            `${BASE_URL}/pay/onepay-handler/${paymentData._id}`
           )
             .then((payment) => {
               if (payment.data.id) {
@@ -362,7 +362,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
             currentOrder._id,
             Math.ceil(totalPrice / 2),
             `${BASE_URL_FRONT}/order/${paymentData._id}`,
-            `${BASE_URL}/onepay-handler/${paymentData._id}`
+            `${BASE_URL}/pay/onepay-handler/${paymentData._id}`
           )
             .then((payment) => {
               if (payment.data.id) {
@@ -472,7 +472,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
               currentOrder._id,
               Math.ceil(totalPrice / 2),
               `${BASE_URL_FRONT}/order/${paymentData._id}`,
-              `${BASE_URL}/onepay-handler/${paymentData._id}`
+              `${BASE_URL}/pay/onepay-handler/${paymentData._id}`
             )
               .then((payment) => {
                 if (payment.data.id) {
@@ -587,7 +587,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
             currentOrder._id,
             totalPrice,
             `${BASE_URL_FRONT}/order/${paymentData._id}`,
-            `${BASE_URL}/onepay-handler/${paymentData._id}`
+            `${BASE_URL}/pay/onepay-handler/${paymentData._id}`
           )
             .then((payment) => {
               if (payment.data.id) {
@@ -700,7 +700,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
               currentOrder._id,
               Math.ceil(totalPrice / 2),
               `${BASE_URL_FRONT}/order/${paymentData._id}`,
-              `${BASE_URL}/onepay-handler/${paymentData._id}`
+              `${BASE_URL}/pay/onepay-handler/${paymentData._id}`
             )
               .then((payment) => {
                 if (payment.data.id) {
@@ -814,7 +814,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
               currentOrder._id,
               Math.ceil(totalPrice / 2),
               `${BASE_URL_FRONT}/order/${paymentData._id}`,
-              `${BASE_URL}/onepay-handler/${paymentData._id}`
+              `${BASE_URL}/pay/onepay-handler/${paymentData._id}`
             )
               .then((payment) => {
                 if (payment.data.id) {

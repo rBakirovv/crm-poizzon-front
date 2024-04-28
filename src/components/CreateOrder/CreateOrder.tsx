@@ -766,7 +766,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       orderData._id,
       totalPrice,
       `${BASE_URL_FRONT}/order/${orderData._id}`,
-      `${BASE_URL}/onepay-handler/${orderData._id}`
+      `${BASE_URL}/pay/onepay-handler/${orderData._id}`
     )
       .then((paymentFullPrice) => {
         paymentFullPrice.data.id &&
@@ -802,7 +802,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
               orderData._id,
               totalPrice + EXPRESS_PRICE,
               `${BASE_URL_FRONT}/order/${orderData._id}`,
-              `${BASE_URL}/onepay-handler/${orderData._id}`
+              `${BASE_URL}/pay/onepay-handler/${orderData._id}`
             ).then((paymentFullPriceExpress) => {
               paymentFullPriceExpress.data.id &&
                 updateOrderDraft(
@@ -861,7 +861,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       orderData._id,
       totalPrice,
       `${BASE_URL_FRONT}/order/${orderData._id}`,
-      `${BASE_URL}/onepay-handler/${orderData._id}`
+      `${BASE_URL}/pay/onepay-handler/${orderData._id}`
     )
       .then((payment) => {
         payment.data.id &&
@@ -897,7 +897,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
               orderData._id,
               Math.ceil(totalPrice / 2),
               `${BASE_URL_FRONT}/order/${orderData._id}`,
-              `${BASE_URL}/onepay-handler/${orderData._id}`
+              `${BASE_URL}/pay/onepay-handler/${orderData._id}`
             ).then((splitPayment) => {
               splitPayment.data.id &&
                 updateOrderDraft(
@@ -932,7 +932,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                     orderData._id,
                     Math.ceil(totalPrice / 2),
                     `${BASE_URL_FRONT}/order/${orderData._id}`,
-                    `${BASE_URL}/onepay-handler/${orderData._id}`
+                    `${BASE_URL}/pay/onepay-handler/${orderData._id}`
                   ).then((splitPaymentSecond) => {
                     splitPaymentSecond.data.id &&
                       updateOrderDraft(
@@ -967,7 +967,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                           orderData._id,
                           totalPrice + EXPRESS_PRICE,
                           `${BASE_URL_FRONT}/order/${orderData._id}`,
-                          `${BASE_URL}/onepay-handler/${orderData._id}`
+                          `${BASE_URL}/pay/onepay-handler/${orderData._id}`
                         ).then((splitPaymentExpress) => {
                           splitPaymentExpress.data.id &&
                             updateOrderDraft(
@@ -1002,7 +1002,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                                 orderData._id,
                                 Math.ceil((totalPrice + EXPRESS_PRICE) / 2),
                                 `${BASE_URL_FRONT}/order/${orderData._id}`,
-                                `${BASE_URL}/onepay-handler/${orderData._id}`
+                                `${BASE_URL}/pay/onepay-handler/${orderData._id}`
                               ).then((splitPaymentExpressSplit) => {
                                 splitPaymentExpressSplit.data.id &&
                                   updateOrderDraft(
@@ -1041,7 +1041,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                                         (totalPrice + EXPRESS_PRICE) / 2
                                       ),
                                       `${BASE_URL_FRONT}/order/${orderData._id}`,
-                                      `${BASE_URL}/onepay-handler/${orderData._id}`
+                                      `${BASE_URL}/pay/onepay-handler/${orderData._id}`
                                     ).then((splitPaymentExpressSplitSecond) => {
                                       splitPaymentExpressSplitSecond.data.id &&
                                         updateOrderDraft(

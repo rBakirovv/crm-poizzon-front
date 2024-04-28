@@ -286,7 +286,7 @@ const AcceptPayment = () => {
         OrderData.order._id,
         totalPrice,
         `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-        `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+        `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
       ).then((payment) => {
         if (payment.data.id) {
           updateOrderDraft(
@@ -428,7 +428,7 @@ const AcceptPayment = () => {
         OrderData.order._id,
         Math.ceil(totalPrice / 2),
         `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-        `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+        `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
       ).then((payment) => {
         if (payment.data.id) {
           updateOrderDraft(
@@ -463,7 +463,7 @@ const AcceptPayment = () => {
               OrderData.order._id,
               Math.ceil(totalPrice / 2),
               `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-              `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+              `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
             ).then((paymentSecond) => {
               if (paymentSecond.data.id) {
                 updateOrderDraft(
@@ -571,7 +571,7 @@ const AcceptPayment = () => {
         OrderData.order._id,
         Math.ceil(totalPrice / 2),
         `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-        `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+        `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
       ).then((payment) => {
         if (payment.data.id) {
           updateOrderDraft(
@@ -674,7 +674,7 @@ const AcceptPayment = () => {
         OrderData.order._id,
         totalPriceExpress,
         `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-        `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+        `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
       ).then((payment) => {
         if (payment.data.id) {
           updateOrderDraft(
@@ -818,7 +818,7 @@ const AcceptPayment = () => {
         OrderData.order._id,
         Math.ceil(totalPriceExpress / 2),
         `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-        `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+        `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
       ).then((payment) => {
         if (payment.data.id) {
           updateOrderDraft(
@@ -853,7 +853,7 @@ const AcceptPayment = () => {
               OrderData.order._id,
               Math.ceil(totalPriceExpress / 2),
               `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-              `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+              `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
             ).then((paymentSecond) => {
               if (paymentSecond.data.id) {
                 updateOrderDraft(
@@ -960,7 +960,7 @@ const AcceptPayment = () => {
         OrderData.order._id,
         Math.ceil(totalPriceExpress / 2),
         `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-        `${BASE_URL}/onepay-handler/${OrderData.order._id}`
+        `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
       ).then((payment) => {
         if (payment.data.id) {
           updateOrderDraft(

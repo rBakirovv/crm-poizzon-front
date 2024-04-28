@@ -260,7 +260,7 @@ const Payments: FC<IPaymentsProps> = ({}) => {
       paymentData.idOnepay,
       parseInt(paymentData.totalSumOnepay),
       `${BASE_URL_FRONT}/order/${paymentData.idOnepay}`,
-      `${BASE_URL}/onepay-handler/${paymentData.idOnepay}`
+      `${BASE_URL}/pay/onepay-handler/${paymentData.idOnepay}`
     )
       .then((data) => {
         setUrlOnepay(data.data.attributes.url);
