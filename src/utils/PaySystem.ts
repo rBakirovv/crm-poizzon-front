@@ -31,6 +31,27 @@ export const createPayLinkAnypayments = (
   }).then(checkResponse);
 };
 
+export const createPayLinkSurchargeAnypayments = (
+  orderId: string,
+  customId: string,
+  amount: number,
+  redirect_url: string,
+  comment: string
+) => {
+  return fetch(`${BASE_URL}/pay/surcharge-link-anypayments`, {
+    method: "POST",
+    headers: HEADERS,
+    credentials: "include",
+    body: JSON.stringify({
+      orderId: orderId,
+      customId: customId,
+      amount: amount,
+      redirect_url: redirect_url,
+      comment: comment,
+    }),
+  }).then(checkResponse);
+};
+
 export const getPaymentOnepay = (id: string) => {
   return fetch(`${BASE_URL}/pay/link-info-one-pay/${id}`, {
     credentials: "include",

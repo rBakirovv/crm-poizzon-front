@@ -15,15 +15,25 @@ import {
   addPayLinkSplitExpress,
   addPayLinkSplitSecond,
   addPayLinkSplitSecondExpress,
+  addSurcharge,
   orderResume,
+  setIsSurcharge,
   updateOrderDraft,
+  updateSurcharge,
 } from "../../utils/Order";
 import {
   createPayLinkAnypayments,
   createPayLinkOnepay,
+  createPayLinkSurchargeAnypayments,
 } from "../../utils/PaySystem";
+import TextInput from "../UI/TextInput/TextInput";
+import { error } from "console";
 
 const AcceptPayment = () => {
+  const [data, setData] = useState({
+    totalSum: "",
+  });
+
   const [isImagePaymentPopupOpen, setIsImagePaymentPopupOpen] =
     useState<boolean>(false);
 
@@ -54,10 +64,15 @@ const AcceptPayment = () => {
     useState<boolean>(false);
   const [isSubmitAcceptSplitSecondPopup, setIsSubmitAcceptSplitSecondPopup] =
     useState<boolean>(false);
+  const [isSubmitAcceptSurchargePopup, setIsSubmitAcceptSurchargePopup] =
+    useState<boolean>(false);
+  const [isSubmitCreateSurchargePopup, setIsSubmitCreateSurchargePopup] =
+    useState<boolean>(false);
 
   const [isPayLinks, setIsPayLinks] = useState(false);
   const [isPayLinksSplit, setIsPayLinksSplit] = useState(false);
   const [isPayLinksSplitSecond, setIsPayLinksSplitSecond] = useState(false);
+  const [isSurchargeDropdown, setIsSurchargeDropdown] = useState(false);
 
   const [isPayLinksExpress, setIsPayLinksExpress] = useState(false);
   const [isPayLinksSplitExpress, setIsPayLinksSplitExpress] = useState(false);
@@ -85,6 +100,17 @@ const AcceptPayment = () => {
       OrderData.order.promoCodePercent +
       EXPRESS_PRICE
   );
+
+  function handleChange(e: React.SyntheticEvent) {
+    const target = e.target as HTMLInputElement;
+
+    const { name, value } = target;
+
+    setData({
+      ...data,
+      [name]: value,
+    });
+  }
 
   function openImagePopup() {
     setIsImagePaymentPopupOpen(true);
@@ -174,6 +200,22 @@ const AcceptPayment = () => {
     setIsSubmitAcceptSplitSecondPopup(false);
   }
 
+  function openSubmitAcceptSurchargePopup() {
+    setIsSubmitAcceptSurchargePopup(true);
+  }
+
+  function closeSubmitAcceptSurchargePopup() {
+    setIsSubmitAcceptSurchargePopup(false);
+  }
+
+  function openSubmitCreateSurchargePopup() {
+    setIsSubmitCreateSurchargePopup(true);
+  }
+
+  function closeSubmitCreateSurchargePopup() {
+    setIsSubmitCreateSurchargePopup(false);
+  }
+
   function handlePaymentSubmit() {
     acceptPayment(OrderData.order._id).then((order) => {
       OrderData.setOrder(order);
@@ -226,6 +268,10 @@ const AcceptPayment = () => {
 
   function openPayLinksSplitSecondExpress() {
     setIsPayLinksSplitSecondExpress(!isPayLinksSplitSecondExpress);
+  }
+
+  function openSurchargeDropdown() {
+    setIsSurchargeDropdown(!isSurchargeDropdown);
   }
 
   function handlePayLinkSubmit() {
@@ -1003,6 +1049,48 @@ const AcceptPayment = () => {
     }
   }
 
+  /* Принять досрочно */
+  function handleSurchargeAccept() {
+    setIsSurcharge(OrderData.order._id, false).then(() => {
+      updateSurcharge(OrderData.order._id, "", "", 0).then((order) => {
+        OrderData.setOrder(order);
+      });
+    });
+  }
+  /* Создать */
+  function handleSurchargeCreate() {
+    createPayLinkSurchargeAnypayments(
+      OrderData.order._id,
+      `${OrderData.order.orderId.toString()}-surcharge-${Math.ceil(
+        Math.random() * 1000
+      )}`,
+      parseInt(data.totalSum),
+      `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+      "surcharge"
+    ).then((payment) => {
+      if (payment.success === true) {
+        setIsSurcharge(OrderData.order._id, true)
+          .then(() => {
+            updateSurcharge(
+              OrderData.order._id,
+              payment.data.url,
+              payment.data.custom_order_id,
+              parseInt(data.totalSum)
+            ).then(() => {
+              addSurcharge(OrderData.order._id, payment.data.url).then(
+                (order) => {
+                  OrderData.setOrder(order);
+                }
+              );
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    });
+  }
+
   return (
     <div className={styles["accept-payment"]}>
       <h4>Cпособ оплаты</h4>
@@ -1014,6 +1102,19 @@ const AcceptPayment = () => {
           !OrderData.order.isSplit &&
           " полная оплата"}
       </p>
+      <>
+        <h4>Создать ссылку доплаты</h4>
+        <div style={{ marginBottom: "1rem" }}>
+          <TextInput
+            label="Cумма"
+            name="totalSum"
+            handleChange={handleChange}
+            value={data.totalSum}
+            required={true}
+          />
+        </div>
+        <button onClick={openSubmitCreateSurchargePopup}>Создать</button>
+      </>
       {OrderData.order.payProofImages.length !== 0 && (
         <>
           <h4>Подтверждение оплаты</h4>
@@ -1309,6 +1410,35 @@ const AcceptPayment = () => {
             </div>
           </div>
         )}
+      {OrderData.order.surchargePayLinksArray &&
+        OrderData.order.surchargePayLinksArray.length > 0 && (
+          <div>
+            <h4
+              className={styles["accept-payment__links-title"]}
+              onClick={openSurchargeDropdown}
+            >
+              Ссылки доплаты
+            </h4>
+            <div
+              className={`${styles["accept-payment__links"]} ${
+                isSurchargeDropdown && styles["accept-payment__links_active"]
+              }`}
+            >
+              {OrderData.order.surchargePayLinksArray.map((link) => {
+                return (
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles["accept-payment__text"]}
+                  >
+                    {link}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        )}
       <div className={styles["accept-payment__buttons"]}>
         {OrderData.order.status === "Проверка оплаты" &&
           UserData.userData.position !== "Менеджер" && (
@@ -1374,6 +1504,16 @@ const AcceptPayment = () => {
               onClick={openSubmitAcceptSplitSecondPopup}
             >
               Принять сплит (2) досрочно
+            </button>
+          )}
+        {OrderData.order.isSurcharge &&
+          (UserData.userData.position === "Создатель" ||
+            UserData.userData.position === "Главный администратор") && (
+            <button
+              className={styles["accept-payment__submit"]}
+              onClick={openSubmitAcceptSurchargePopup}
+            >
+              Принять доплату досрочно
             </button>
           )}
       </div>
@@ -1453,6 +1593,18 @@ const AcceptPayment = () => {
         isSubmitPopup={isSubmitAcceptSplitSecondPopup}
         closeSubmitPopup={closeSubmitAcceptSplitSecondPopup}
         submitText="Принять сплит (2) досрочно"
+      />
+      <SubmitPopup
+        onSubmit={handleSurchargeAccept}
+        isSubmitPopup={isSubmitAcceptSurchargePopup}
+        closeSubmitPopup={closeSubmitAcceptSurchargePopup}
+        submitText="Принять доплату досрочно"
+      />
+      <SubmitPopup
+        onSubmit={handleSurchargeCreate}
+        isSubmitPopup={isSubmitCreateSurchargePopup}
+        closeSubmitPopup={closeSubmitCreateSurchargePopup}
+        submitText={`Создать доплату ${data.totalSum} ₽`}
       />
     </div>
   );

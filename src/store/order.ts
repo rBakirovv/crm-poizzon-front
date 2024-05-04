@@ -78,6 +78,11 @@ class OrderData {
     payLinksExpressArray: [],
     splitLinksExpressArray: [],
     splitSecondLinksExpressArray: [],
+    isSurcharge: false,
+    surchargePayLink: "",
+    surchargeUUID: "",
+    surchargePayLinksArray: [],
+    surchargeTotal: 0,
     __v: 0,
   };
 

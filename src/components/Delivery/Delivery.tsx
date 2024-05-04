@@ -1159,6 +1159,11 @@ const Delivery = observer(() => {
               splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
               splitSecondLinksExpressArray:
                 OrderData.order.splitSecondLinksExpressArray,
+              isSurcharge: OrderData.order.isSurcharge,
+              surchargePayLink: OrderData.order.surchargePayLink,
+              surchargeUUID: OrderData.order.surchargeUUID,
+              surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
+              surchargeTotal: OrderData.order.surchargeTotal,
               __v: OrderData.order.__v,
             });
           })
@@ -1281,6 +1286,11 @@ const Delivery = observer(() => {
                 splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
                 splitSecondLinksExpressArray:
                   OrderData.order.splitSecondLinksExpressArray,
+                isSurcharge: OrderData.order.isSurcharge,
+                surchargePayLink: OrderData.order.surchargePayLink,
+                surchargeUUID: OrderData.order.surchargeUUID,
+                surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
+                surchargeTotal: OrderData.order.surchargeTotal,
                 __v: OrderData.order.__v,
               });
             })
@@ -1386,6 +1396,11 @@ const Delivery = observer(() => {
           splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
           splitSecondLinksExpressArray:
             OrderData.order.splitSecondLinksExpressArray,
+          isSurcharge: OrderData.order.isSurcharge,
+          surchargePayLink: OrderData.order.surchargePayLink,
+          surchargeUUID: OrderData.order.surchargeUUID,
+          surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
+          surchargeTotal: OrderData.order.surchargeTotal,
           __v: OrderData.order.__v,
         });
       })
@@ -1739,7 +1754,8 @@ const Delivery = observer(() => {
         </div>
         <div className={styles["delivery__data-container"]}>
           {UserData.userData.position !== "Менеджер" &&
-            UserData.userData.position !== "Байер" && OrderData.order.deliveryNameRecipient &&(
+            UserData.userData.position !== "Байер" &&
+            OrderData.order.deliveryNameRecipient && (
               <form
                 className={`${styles["delivery-form"]} ${
                   UserData.userData.position === "Работник склада" &&
@@ -1883,7 +1899,9 @@ const Delivery = observer(() => {
             )}
           <div>
             <h4>Изображения товара</h4>
-            <ul className={`${styles["delivery-receipt__images-list"]} ${styles["order"]}`}>
+            <ul
+              className={`${styles["delivery-receipt__images-list"]} ${styles["order"]}`}
+            >
               {OrderData.order.orderImages
                 .slice()
                 .reverse()

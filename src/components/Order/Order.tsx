@@ -18,12 +18,16 @@ import {
   addPayLinkSplitExpress,
   addPayLinkSplitSecond,
   addPayLinkSplitSecondExpress,
+  addSurcharge,
   setExpressCost,
+  setIsSurcharge,
   updatePayment,
+  updateSurcharge,
 } from "../../utils/Order";
 import {
   createPayLinkAnypayments,
   createPayLinkOnepay,
+  createPayLinkSurchargeAnypayments,
   getPaymentAnypayments,
   getPaymentOnepay,
 } from "../../utils/PaySystem";
@@ -857,6 +861,53 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
         }
       );
     }
+  }
+
+  function surchargeRedirect() {
+    setIsPreload(true);
+
+    getPaymentAnypayments(currentOrder.surchargeUUID)
+      .then((paymentData) => {
+        if (paymentData.data.status === "expired") {
+          createPayLinkSurchargeAnypayments(
+            currentOrder._id,
+            `${currentOrder.orderId.toString()}-surcharge-${Math.ceil(
+              Math.random() * 1000
+            )}`,
+            currentOrder.surchargeTotal,
+            `${BASE_URL_FRONT}/order/${currentOrder._id}`,
+            "surcharge"
+          ).then((payment) => {
+            if (payment.success === true) {
+              setIsSurcharge(currentOrder._id, true)
+                .then(() => {
+                  updateSurcharge(
+                    currentOrder._id,
+                    payment.data.url,
+                    payment.data.custom_order_id,
+                    currentOrder.surchargeTotal
+                  )
+                    .then(() => {
+                      addSurcharge(currentOrder._id, payment.data.url);
+                    })
+                    .then(() => {
+                      setIsPreload(false);
+                      router.replace(payment.data.url);
+                    });
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }
+          });
+        } else {
+          router.replace(currentOrder.surchargePayLink);
+        }
+      })
+      .catch(() => {
+        setIsPreload(false);
+        router.replace(currentOrder.surchargePayLink);
+      });
   }
 
   return (
@@ -1707,6 +1758,17 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                 <span>{Math.ceil(totalPrice / 2)} ₽</span>
               </button>
             )}
+          {currentOrder.isSurcharge && (
+            <button
+              className={`${styles["order__pay-button"]} ${styles["order__pay-button-surcharge"]}`}
+              onClick={surchargeRedirect}
+            >
+              <span className={styles["order__pay-button-span"]}>
+                Доплатить
+              </span>
+              <span>{Math.ceil(currentOrder.surchargeTotal)} ₽</span>
+            </button>
+          )}
           {mergedData.length > 0 && (
             <div className={styles["order__orders-pull-container"]}>
               <h2

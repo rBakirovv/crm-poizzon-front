@@ -551,6 +551,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
         splitSecondLinksExpressArray:
           OrderData.order.splitSecondLinksExpressArray,
+        isSurcharge: OrderData.order.isSurcharge,
+        surchargePayLink: OrderData.order.surchargePayLink,
+        surchargeUUID: OrderData.order.surchargeUUID,
+        surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
+        surchargeTotal: OrderData.order.surchargeTotal,
         __v: OrderData.order.__v,
       });
     });
@@ -655,6 +660,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
           splitSecondLinksExpressArray:
             OrderData.order.splitSecondLinksExpressArray,
+          isSurcharge: OrderData.order.isSurcharge,
+          surchargePayLink: OrderData.order.surchargePayLink,
+          surchargeUUID: OrderData.order.surchargeUUID,
+          surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
+          surchargeTotal: OrderData.order.surchargeTotal,
           __v: OrderData.order.__v,
         });
         setUploading(false);
@@ -770,6 +780,12 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                     OrderData.order.splitLinksExpressArray,
                   splitSecondLinksExpressArray:
                     OrderData.order.splitSecondLinksExpressArray,
+                  isSurcharge: OrderData.order.isSurcharge,
+                  surchargePayLink: OrderData.order.surchargePayLink,
+                  surchargeUUID: OrderData.order.surchargeUUID,
+                  surchargePayLinksArray:
+                    OrderData.order.surchargePayLinksArray,
+                  surchargeTotal: OrderData.order.surchargeTotal,
                   __v: OrderData.order.__v,
                 });
                 setUploading(false);
@@ -879,6 +895,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
           splitSecondLinksExpressArray:
             OrderData.order.splitSecondLinksExpressArray,
+          isSurcharge: OrderData.order.isSurcharge,
+          surchargePayLink: OrderData.order.surchargePayLink,
+          surchargeUUID: OrderData.order.surchargeUUID,
+          surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
+          surchargeTotal: OrderData.order.surchargeTotal,
           __v: OrderData.order.__v,
         });
       })
@@ -1018,6 +1039,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
       splitSecondLinksExpressArray:
         OrderData.order.splitSecondLinksExpressArray,
+      isSurcharge: OrderData.order.isSurcharge,
+      surchargePayLink: OrderData.order.surchargePayLink,
+      surchargeUUID: OrderData.order.surchargeUUID,
+      surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
+      surchargeTotal: OrderData.order.surchargeTotal,
       __v: OrderData.order.__v,
     });
   }, [data]);
@@ -1173,6 +1199,13 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
             </span>
           </p>
         )}
+      {OrderData.order.isSurcharge && (
+        <p>
+          <span className={styles["order-change__status_red"]}>
+            Доплата не погашена
+          </span>
+        </p>
+      )}
       {OrderData.order.comment !== "" && (
         <p>
           Комментарий:{" "}
@@ -1437,6 +1470,28 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   name="paymentUUID"
                   label="UUID оплаты"
                   value={OrderData.order.paymentUUID}
+                  handleChange={handleChange}
+                  required={false}
+                  disabled={true}
+                />
+              )}
+            {OrderData.order.isSurcharge &&
+              UserData.userData.position !== "Работник склада" && (
+                <TextInput
+                  name="payLink"
+                  label="Cсылка на доплату"
+                  value={OrderData.order.surchargePayLink}
+                  handleChange={handleChange}
+                  required={false}
+                  disabled={true}
+                />
+              )}
+            {OrderData.order.isSurcharge &&
+              UserData.userData.position !== "Работник склада" && (
+                <TextInput
+                  name="paymentUUID"
+                  label="UUID доплаты"
+                  value={OrderData.order.surchargeUUID}
                   handleChange={handleChange}
                   required={false}
                   disabled={true}

@@ -1242,6 +1242,46 @@ export const changeComment = (id: string, comment: string) => {
   }).then(checkResponse);
 };
 
+export const setIsSurcharge = (id: string, isSurcharge: boolean) => {
+  return fetch(`${BASE_URL}/order/is-surcharge/${id}`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      isSurcharge: isSurcharge,
+    }),
+  }).then(checkResponse);
+};
+
+export const updateSurcharge = (
+  id: string,
+  surchargePayLink: string,
+  surchargeUUID: string,
+  surchargeTotal: number,
+) => {
+  return fetch(`${BASE_URL}/order/update-surcharge/${id}`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      surchargePayLink: surchargePayLink,
+      surchargeUUID: surchargeUUID,
+      surchargeTotal: surchargeTotal,
+    }),
+  }).then(checkResponse);
+};
+
+export const addSurcharge = (id: string, link: string) => {
+  return fetch(`${BASE_URL}/order/add-pay-link-surcharge/${id}`, {
+    credentials: "include",
+    method: "PUT",
+    headers: HEADERS,
+    body: JSON.stringify({
+      link: link,
+    }),
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();

@@ -211,6 +211,10 @@
   padding: 0 1rem;
 }
 
+.order__pay-button-surcharge {
+  bottom: 90px;
+}
+
 .order__pay-button:active {
   transform: translateX(-50%) scale(1.025);
 }
@@ -256,6 +260,10 @@
 
 .order__content-container:has(.order__pay-button) {
   padding-bottom: 100px;
+}
+
+.order__content-container:has(.order__pay-button-surcharge) {
+  padding-bottom: 170px;
 }
 
 .order__images-container {

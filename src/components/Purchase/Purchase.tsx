@@ -225,6 +225,11 @@ const Purchase = () => {
             splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
             splitSecondLinksExpressArray:
               OrderData.order.splitSecondLinksExpressArray,
+            isSurcharge: OrderData.order.isSurcharge,
+            surchargePayLink: OrderData.order.surchargePayLink,
+            surchargeUUID: OrderData.order.surchargeUUID,
+            surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
+            surchargeTotal: OrderData.order.surchargeTotal,
             __v: OrderData.order.__v,
           });
         })
@@ -327,6 +332,11 @@ const Purchase = () => {
           splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
           splitSecondLinksExpressArray:
             OrderData.order.splitSecondLinksExpressArray,
+          isSurcharge: OrderData.order.isSurcharge,
+          surchargePayLink: OrderData.order.surchargePayLink,
+          surchargeUUID: OrderData.order.surchargeUUID,
+          surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
+          surchargeTotal: OrderData.order.surchargeTotal,
           __v: OrderData.order.__v,
         });
       })
@@ -510,6 +520,12 @@ const Purchase = () => {
                       OrderData.order.splitLinksExpressArray,
                     splitSecondLinksExpressArray:
                       OrderData.order.splitSecondLinksExpressArray,
+                    isSurcharge: OrderData.order.isSurcharge,
+                    surchargePayLink: OrderData.order.surchargePayLink,
+                    surchargeUUID: OrderData.order.surchargeUUID,
+                    surchargePayLinksArray:
+                      OrderData.order.surchargePayLinksArray,
+                      surchargeTotal: OrderData.order.surchargeTotal,
                     __v: OrderData.order.__v,
                   });
                 })
@@ -618,6 +634,11 @@ const Purchase = () => {
       splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
       splitSecondLinksExpressArray:
         OrderData.order.splitSecondLinksExpressArray,
+      isSurcharge: OrderData.order.isSurcharge,
+      surchargePayLink: OrderData.order.surchargePayLink,
+      surchargeUUID: OrderData.order.surchargeUUID,
+      surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
+      surchargeTotal: OrderData.order.surchargeTotal,
       __v: OrderData.order.__v,
     });
   }, [data]);

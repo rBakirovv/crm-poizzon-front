@@ -11,11 +11,8 @@ import Payment from "../../store/payments";
 import TextInput from "../UI/TextInput/TextInput";
 import Preloader from "../UI/Preloader/Preloader";
 import UserData from "../../store/user";
-import {
-  createPayLinkAnypayments,
-  createPayLinkOnepay,
-} from "../../utils/PaySystem";
-import { BASE_URL, BASE_URL_FRONT } from "../../utils/constants";
+import { createPayLinkAnypayments } from "../../utils/PaySystem";
+import { BASE_URL_FRONT } from "../../utils/constants";
 
 interface IPaymentsProps {
   paymentsList: Array<IPayments>;
@@ -56,17 +53,9 @@ const Payments: FC<IPaymentsProps> = ({}) => {
     useState(false);
   const [isFailedCreateLinkAnypayments, setIsFailedCreateLinkAnypayments] =
     useState(false);
-  const [urlOnepay, setUrlOnepay] = useState("");
-  const [tokenOnepay, setTokenOnepay] = useState("");
-  const [isSuccessCreateLinkOnepay, setIsSuccessCreateLinkOnepay] =
-    useState(false);
-  const [isFailedCreateLinkOnepay, setIsFailedCreateLinkOnepay] =
-    useState(false);
 
   const [isCopyUrlAnypayments, setIsCopyUrlAnypayments] = useState(false);
   const [isCopyTokenAnypayments, setIsCopyTokenAnypayments] = useState(false);
-  const [isCopyUrlOnepay, setIsCopyUrlOnepay] = useState(false);
-  const [isCopyTokenOnepay, setIsCopyTokenOnepay] = useState(false);
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
@@ -247,55 +236,6 @@ const Payments: FC<IPaymentsProps> = ({}) => {
     }, 2000);
   }
 
-  function handleCreatePayLinkOnepay(e: React.SyntheticEvent) {
-    e.preventDefault();
-
-    setIsPreload(true);
-    setUrlOnepay("");
-    setTokenOnepay("");
-    setIsSuccessCreateLinkOnepay(false);
-    setIsFailedCreateLinkOnepay(false);
-
-    createPayLinkOnepay(
-      paymentData.idOnepay,
-      parseInt(paymentData.totalSumOnepay),
-      `${BASE_URL_FRONT}/order/${paymentData.idOnepay}`,
-      `${BASE_URL}/pay/onepay-handler/${paymentData.idOnepay}`
-    )
-      .then((data) => {
-        setUrlOnepay(data.data.attributes.url);
-        setTokenOnepay(data.data.attributes.uuid);
-        setIsPreload(false);
-        setIsSuccessCreateLinkOnepay(true);
-      })
-      .catch(() => {
-        setUrlOnepay("");
-        setTokenOnepay("");
-        setIsFailedCreateLinkOnepay(true);
-        setIsPreload(false);
-      });
-  }
-
-  function copyUrlOnepay() {
-    navigator.clipboard.writeText(urlOnepay);
-
-    setIsCopyUrlOnepay(true);
-
-    setTimeout(() => {
-      setIsCopyUrlOnepay(false);
-    }, 2000);
-  }
-
-  function copyTokenOnepay() {
-    navigator.clipboard.writeText(tokenOnepay);
-
-    setIsCopyTokenOnepay(true);
-
-    setTimeout(() => {
-      setIsCopyTokenOnepay(false);
-    }, 2000);
-  }
-
   return (
     <section>
       {isPreload && <Preloader />}
@@ -370,69 +310,6 @@ const Payments: FC<IPaymentsProps> = ({}) => {
               {isCopyTokenAnypayments
                 ? "Cкопировано в буфер обмена"
                 : "Скопировать"}
-            </div>
-          </div>
-        )}
-      </form>
-      <form
-        className={styles["payments__create-form"]}
-        onSubmit={handleCreatePayLinkOnepay}
-      >
-        <h2 className={styles["payments__title"]}>
-          Cоздать платёжную ссылку onepay
-        </h2>
-        <TextInput
-          label="Длинный ID заказа"
-          name="idOnepay"
-          handleChange={handleChange}
-          value={paymentData.idOnepay}
-          required={true}
-        />
-        <span style={{ color: "red" }}>
-          Обязательно длинный id для работы автоматической проверки оплаты
-        </span>
-        <TextInput
-          label="Cумма"
-          name="totalSumOnepay"
-          handleChange={handleChange}
-          value={paymentData.totalSumOnepay}
-          required={true}
-        />
-        {isFailedCreateLinkOnepay && (
-          <span style={{ color: "red" }}>
-            Ошибка! Попробуйте поменять id или ссылку на заказ
-          </span>
-        )}
-        <button className={styles["payments__create-submit"]} type="submit">
-          Создать
-        </button>
-        {isSuccessCreateLinkOnepay && (
-          <div>
-            <div style={{ marginTop: "1rem" }}>url: {urlOnepay}</div>
-            <div
-              style={{
-                color: "#4e7fea",
-                marginTop: "0.5rem",
-                cursor: "pointer",
-              }}
-              onClick={copyUrlOnepay}
-            >
-              {isCopyUrlOnepay ? "Cкопировано в буфер обмена" : "Скопировать"}
-            </div>
-          </div>
-        )}
-        {isSuccessCreateLinkOnepay && (
-          <div>
-            <div>token: {tokenOnepay}</div>
-            <div
-              style={{
-                color: "#4e7fea",
-                marginTop: "0.5rem",
-                cursor: "pointer",
-              }}
-              onClick={copyTokenOnepay}
-            >
-              {isCopyTokenOnepay ? "Cкопировано в буфер обмена" : "Скопировать"}
             </div>
           </div>
         )}

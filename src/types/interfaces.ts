@@ -90,6 +90,11 @@ export interface IOrder {
   payLinksExpressArray: Array<string>;
   splitLinksExpressArray: Array<string>;
   splitSecondLinksExpressArray: Array<string>;
+  isSurcharge: boolean;
+  surchargePayLink: string;
+  surchargeUUID: string;
+  surchargePayLinksArray: Array<string>;
+  surchargeTotal: number,
   __v?: number;
 }
 
