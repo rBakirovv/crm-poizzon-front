@@ -9,6 +9,7 @@ import {
   acceptPayment,
   acceptPaymentSplit,
   acceptPaymentSplitSecond,
+  acceptSurcharge,
   addPayLink,
   addPayLinkExpress,
   addPayLinkSplit,
@@ -1077,8 +1078,10 @@ const AcceptPayment = () => {
 
   function handleSurchargeAccept() {
     setIsSurcharge(OrderData.order._id, false).then(() => {
-      updateSurcharge(OrderData.order._id, "", "", 0).then((order) => {
-        OrderData.setOrder(order);
+      updateSurcharge(OrderData.order._id, "", "", 0).then(() => {
+        acceptSurcharge(OrderData.order._id).then((order) => {
+          OrderData.setOrder(order);
+        });
       });
     });
   }

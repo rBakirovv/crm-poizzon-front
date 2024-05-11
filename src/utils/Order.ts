@@ -1257,7 +1257,7 @@ export const updateSurcharge = (
   id: string,
   surchargePayLink: string,
   surchargeUUID: string,
-  surchargeTotal: number,
+  surchargeTotal: number
 ) => {
   return fetch(`${BASE_URL}/order/update-surcharge/${id}`, {
     credentials: "include",
@@ -1268,6 +1268,14 @@ export const updateSurcharge = (
       surchargeUUID: surchargeUUID,
       surchargeTotal: surchargeTotal,
     }),
+  }).then(checkResponse);
+};
+
+export const acceptSurcharge = (id: string) => {
+  return fetch(`${BASE_URL}/order/accept-surcharge/${id}`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
   }).then(checkResponse);
 };
 
