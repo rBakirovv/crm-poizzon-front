@@ -1342,6 +1342,15 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                           .format("DD MMM.")}
                     </span>
                   )}
+                {currentOrder.paidAtSurcharge && (
+                  <span>
+                    Доплата:{" "}
+                    {currentOrder.paidAtSurcharge &&
+                      dayjs
+                        .tz(new Date(currentOrder.paidAtSurcharge!))
+                        .format("DD MMM.")}
+                  </span>
+                )}
               </div>
             </li>
             <li

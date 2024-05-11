@@ -83,6 +83,7 @@ class OrderData {
     surchargeUUID: "",
     surchargePayLinksArray: [],
     surchargeTotal: 0,
+    paidAtSurcharge: new Date(Date.now()),
     __v: 0,
   };
 

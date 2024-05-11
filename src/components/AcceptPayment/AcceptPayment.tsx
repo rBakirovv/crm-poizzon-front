@@ -57,6 +57,7 @@ const AcceptPayment = () => {
     isSubmitPayLinkSplitSecondExpressPopup,
     setIsSubmitPayLinkSplitSecondExpressPopup,
   ] = useState<boolean>(false);
+  const [isRecreateLinks, setIsRecreateLinks] = useState(false);
 
   const [isSubmitAcceptPaymentPopup, setIsSubmitAcceptPaymentPopup] =
     useState<boolean>(false);
@@ -272,6 +273,14 @@ const AcceptPayment = () => {
 
   function openSurchargeDropdown() {
     setIsSurchargeDropdown(!isSurchargeDropdown);
+  }
+
+  function openSubmitRecreateAllLinks() {
+    setIsRecreateLinks(true);
+  }
+
+  function closeSubmitRecreateAllLinks() {
+    setIsRecreateLinks(false);
   }
 
   function handlePayLinkSubmit() {
@@ -1049,7 +1058,23 @@ const AcceptPayment = () => {
     }
   }
 
-  /* Принять досрочно */
+  function recreateAllLinks() {
+    const createPayLinkPromise = new Promise((resolve, reject) => {
+      resolve(handlePayLinkSubmit());
+    });
+
+    createPayLinkPromise
+      .then(() => {
+        handlePayLinkSplitSubmit();
+      })
+      .then(() => {
+        handlePayLinkExpressSubmit();
+      })
+      .then(() => {
+        handlePayLinkSplitExpressSubmit();
+      });
+  }
+
   function handleSurchargeAccept() {
     setIsSurcharge(OrderData.order._id, false).then(() => {
       updateSurcharge(OrderData.order._id, "", "", 0).then((order) => {
@@ -1057,7 +1082,7 @@ const AcceptPayment = () => {
       });
     });
   }
-  /* Создать */
+
   function handleSurchargeCreate() {
     createPayLinkSurchargeAnypayments(
       OrderData.order._id,
@@ -1102,19 +1127,21 @@ const AcceptPayment = () => {
           !OrderData.order.isSplit &&
           " полная оплата"}
       </p>
-      <>
-        <h4>Создать ссылку доплаты</h4>
-        <div style={{ marginBottom: "1rem" }}>
-          <TextInput
-            label="Cумма"
-            name="totalSum"
-            handleChange={handleChange}
-            value={data.totalSum}
-            required={true}
-          />
-        </div>
-        <button onClick={openSubmitCreateSurchargePopup}>Создать</button>
-      </>
+      {!OrderData.order.paidAtSurcharge && (
+        <>
+          <h4>Создать ссылку доплаты</h4>
+          <div style={{ marginBottom: "1rem" }}>
+            <TextInput
+              label="Cумма"
+              name="totalSum"
+              handleChange={handleChange}
+              value={data.totalSum}
+              required={true}
+            />
+          </div>
+          <button onClick={openSubmitCreateSurchargePopup}>Создать</button>
+        </>
+      )}
       {OrderData.order.payProofImages.length !== 0 && (
         <>
           <h4>Подтверждение оплаты</h4>
@@ -1232,6 +1259,22 @@ const AcceptPayment = () => {
               onClick={openSubmitPayLinkSplitSecondExpressPopup}
             >
               Обновить ссылку на оплату (экспресс & сплит)
+            </button>
+          </>
+        )}
+      {OrderData.order.status === "Черновик" &&
+        (OrderData.order.payment === "Перейти по ссылке -" ||
+          OrderData.order.payment === "Перейти по ссылке Anypayments" ||
+          OrderData.order.payment === "Перейти по ссылке Onepay" ||
+          OrderData.order.payment === "Сплит -" ||
+          OrderData.order.payment === "Сплит Anypayments" ||
+          OrderData.order.payment === "Сплит Onepay") && (
+          <>
+            <button
+              className={styles["accept-payment__resume"]}
+              onClick={openSubmitRecreateAllLinks}
+            >
+              Обновить все ссылки на оплату
             </button>
           </>
         )}
@@ -1575,6 +1618,12 @@ const AcceptPayment = () => {
         isSubmitPopup={isSubmitPayLinkSplitSecondExpressPopup}
         closeSubmitPopup={closeSubmitPayLinkSplitSecondExpressPopup}
         submitText="Сгенерировать новую ссылку на оплату (экспресс & вторая часть)"
+      />
+      <SubmitPopup
+        onSubmit={recreateAllLinks}
+        isSubmitPopup={isRecreateLinks}
+        closeSubmitPopup={closeSubmitRecreateAllLinks}
+        submitText={`Сгенерировать новые ссылки на оплату`}
       />
       <SubmitPopup
         onSubmit={handleAccept}

@@ -556,6 +556,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         surchargeUUID: OrderData.order.surchargeUUID,
         surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
         surchargeTotal: OrderData.order.surchargeTotal,
+        paidAtSurcharge: OrderData.order.paidAtSurcharge,
         __v: OrderData.order.__v,
       });
     });
@@ -665,6 +666,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           surchargeUUID: OrderData.order.surchargeUUID,
           surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
           surchargeTotal: OrderData.order.surchargeTotal,
+          paidAtSurcharge: OrderData.order.paidAtSurcharge,
           __v: OrderData.order.__v,
         });
         setUploading(false);
@@ -786,6 +788,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   surchargePayLinksArray:
                     OrderData.order.surchargePayLinksArray,
                   surchargeTotal: OrderData.order.surchargeTotal,
+                  paidAtSurcharge: OrderData.order.paidAtSurcharge,
                   __v: OrderData.order.__v,
                 });
                 setUploading(false);
@@ -900,6 +903,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           surchargeUUID: OrderData.order.surchargeUUID,
           surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
           surchargeTotal: OrderData.order.surchargeTotal,
+          paidAtSurcharge: OrderData.order.paidAtSurcharge,
           __v: OrderData.order.__v,
         });
       })
@@ -1044,6 +1048,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       surchargeUUID: OrderData.order.surchargeUUID,
       surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
       surchargeTotal: OrderData.order.surchargeTotal,
+      paidAtSurcharge: OrderData.order.paidAtSurcharge,
       __v: OrderData.order.__v,
     });
   }, [data]);

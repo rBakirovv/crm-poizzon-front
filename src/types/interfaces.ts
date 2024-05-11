@@ -95,6 +95,7 @@ export interface IOrder {
   surchargeUUID: string;
   surchargePayLinksArray: Array<string>;
   surchargeTotal: number,
+  paidAtSurcharge: Date,
   __v?: number;
 }
 

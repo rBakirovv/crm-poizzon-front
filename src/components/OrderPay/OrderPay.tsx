@@ -175,6 +175,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
               surchargeUUID: OrderData.order.surchargeUUID,
               surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
               surchargeTotal: OrderData.order.surchargeTotal,
+              paidAtSurcharge: OrderData.order.paidAtSurcharge,
             __v: OrderData.order.__v,
           });
         })
@@ -305,6 +306,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
                       surchargeUUID: OrderData.order.surchargeUUID,
                       surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
                       surchargeTotal: OrderData.order.surchargeTotal,
+                      paidAtSurcharge: OrderData.order.paidAtSurcharge,
                     __v: OrderData.order.__v,
                   });
                 })
@@ -421,6 +423,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
             surchargeUUID: OrderData.order.surchargeUUID,
             surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
             surchargeTotal: OrderData.order.surchargeTotal,
+            paidAtSurcharge: OrderData.order.paidAtSurcharge,
           __v: OrderData.order.__v,
         });
       })
