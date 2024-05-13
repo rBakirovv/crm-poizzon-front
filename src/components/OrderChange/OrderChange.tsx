@@ -6,7 +6,7 @@ import {
 } from "../../utils/constants";
 import TextInput from "../UI/TextInput/TextInput";
 import styles from "./OrderChange.styles.module.css";
-import { IPayments } from "../../types/interfaces";
+import { IMergedOrders, IPayments } from "../../types/interfaces";
 import OrderData from "../../store/order";
 import UserData from "../../store/user";
 import PromoCodeData from "../../store/promo-code";
@@ -1211,14 +1211,6 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           </span>
         </p>
       )}
-      {OrderData.order.comment !== "" && (
-        <p>
-          Комментарий:{" "}
-          <span className={styles["order-change__status_red"]}>
-            {OrderData.order.comment}
-          </span>
-        </p>
-      )}
       {OrderData.order.reorder === true && (
         <p className={styles["order-change__status_red"]}>Перезаказ</p>
       )}
@@ -1240,7 +1232,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           <span className={styles["order-change__status_orange"]}>
             Объединён с:
           </span>
-          {OrderData.mergedOrders.map((item: any) => {
+          {OrderData.mergedOrders.map((item: IMergedOrders) => {
             return (
               item.orderId !== OrderData.order.orderId && (
                 <Link
@@ -1265,6 +1257,28 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           Общая сумма: <span>{combinedOrdersTotal}</span>
         </p>
       )}
+      {OrderData.order.comment !== "" && (
+        <p>
+          Комментарий:{" "}
+          <span className={styles["order-change__status_red"]}>
+            {OrderData.order.comment}
+          </span>
+        </p>
+      )}
+      {OrderData.order.combinedOrder.length > 0 &&
+        OrderData.mergedOrders.map((item: IMergedOrders) => {
+          if (
+            item._id !== OrderData.order._id &&
+            item.isSplitPaid === true &&
+            item.isSplitPaidSecond === false
+          ) {
+            return (
+              <p className={styles["order-change__status_red"]}>
+                В позиции {item.orderId} сплит не погашен
+              </p>
+            );
+          }
+        })}
       <div className={styles["order-change__nav-bar"]}>
         <p
           className={`${styles["order-change__nav-item"]} ${

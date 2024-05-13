@@ -521,6 +521,7 @@
 .order__status-bar-dates {
   display: flex;
   flex-direction: column;
+  text-align: right;
   gap: 0.5rem
 }
 

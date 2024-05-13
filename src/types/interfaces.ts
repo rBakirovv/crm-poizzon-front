@@ -94,8 +94,8 @@ export interface IOrder {
   surchargePayLink: string;
   surchargeUUID: string;
   surchargePayLinksArray: Array<string>;
-  surchargeTotal: number,
-  paidAtSurcharge: Date,
+  surchargeTotal: number;
+  paidAtSurcharge: Date;
   __v?: number;
 }
 
@@ -184,6 +184,9 @@ export interface IMergedOrders {
   commission: string;
   promoCodePercent: number;
   expressCost: number;
+  payment: string;
+  isSplitPaid: boolean;
+  isSplitPaidSecond: boolean;
 }
 
 export interface IMergedClientOrders {
