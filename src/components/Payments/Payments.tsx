@@ -11,7 +11,10 @@ import Payment from "../../store/payments";
 import TextInput from "../UI/TextInput/TextInput";
 import Preloader from "../UI/Preloader/Preloader";
 import UserData from "../../store/user";
-import { createPayLinkAnypayments } from "../../utils/PaySystem";
+import {
+  cashedOutAnypayments,
+  createPayLinkAnypayments,
+} from "../../utils/PaySystem";
 import { BASE_URL_FRONT } from "../../utils/constants";
 
 interface IPaymentsProps {
@@ -33,6 +36,8 @@ const Payments: FC<IPaymentsProps> = ({}) => {
     idOnepay: "",
     totalSumOnepay: "",
     orderUrlOnepay: "",
+    totalSumCashOut: "",
+    cardNumber: "",
   });
 
   // Костыль!
@@ -46,6 +51,11 @@ const Payments: FC<IPaymentsProps> = ({}) => {
   const [isChangeOrder, setIsChangeOrder] = useState(false);
 
   const [isPreload, setIsPreload] = useState(false);
+
+  const [isCashOutError, setIsCashOutError] = useState(false);
+  const [isCashOutSuccess, setIsCashOutSuccess] = useState(false);
+
+  const [isSubmitPopupCashOut, setIsSubmitPopupCashOut] = useState(false);
 
   const [urlAnypayments, setUrlAnypayments] = useState("");
   const [tokenAnypayments, setTokenAnypayments] = useState("");
@@ -61,6 +71,11 @@ const Payments: FC<IPaymentsProps> = ({}) => {
     const target = e.target as HTMLInputElement;
 
     const { name, value } = target;
+
+    if (name === "totalSumCashOut" || name === "cardNumber") {
+      setIsCashOutError(false);
+      setIsCashOutSuccess(false);
+    }
 
     setPaymentData({
       ...paymentData,
@@ -82,6 +97,8 @@ const Payments: FC<IPaymentsProps> = ({}) => {
           idOnepay: paymentData.idOnepay,
           totalSumOnepay: paymentData.totalSumOnepay,
           orderUrlOnepay: paymentData.orderUrlOnepay,
+          totalSumCashOut: paymentData.totalSumCashOut,
+          cardNumber: paymentData.cardNumber,
         });
       })
       .catch((err) => {
@@ -108,6 +125,16 @@ const Payments: FC<IPaymentsProps> = ({}) => {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  function openSubmitPopupCashOut(e: React.SyntheticEvent) {
+    e.preventDefault();
+
+    setIsSubmitPopupCashOut(true);
+  }
+
+  function closeSubmitPopupCashOut() {
+    setIsSubmitPopupCashOut(false);
   }
 
   function dragOverHandler(e: React.SyntheticEvent) {
@@ -236,6 +263,23 @@ const Payments: FC<IPaymentsProps> = ({}) => {
     }, 2000);
   }
 
+  function cashOutHandler() {
+    cashedOutAnypayments(
+      parseInt(paymentData.totalSumCashOut),
+      `cash-out-${Math.ceil(Math.random() * 100000)}`,
+      paymentData.cardNumber
+    )
+      .then(() => {
+        setIsCashOutSuccess(true);
+        setIsCashOutError(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsCashOutError(true);
+        setIsCashOutSuccess(false);
+      });
+  }
+
   return (
     <section>
       {isPreload && <Preloader />}
@@ -314,6 +358,31 @@ const Payments: FC<IPaymentsProps> = ({}) => {
           </div>
         )}
       </form>
+      {UserData.userData.position === "Создатель" && (
+        <form
+          onSubmit={openSubmitPopupCashOut}
+          className={styles["payments__create-form"]}
+        >
+          <h2 className={styles["payments__title"]}>Вывод</h2>
+          <TextInput
+            label="Cумма вывода"
+            name="totalSumCashOut"
+            handleChange={handleChange}
+            value={paymentData.totalSumCashOut}
+            required={true}
+          />
+          <TextInput
+            label="Номер карты"
+            name="cardNumber"
+            handleChange={handleChange}
+            value={paymentData.cardNumber}
+            required={true}
+          />
+          {isCashOutError && <span style={{ color: "red" }}>Ошибка!</span>}
+          {isCashOutSuccess && <span style={{ color: "green" }}>Успешно!</span>}
+          <button className={styles["payments__create-submit"]}>Вывести</button>
+        </form>
+      )}
       {(UserData.userData.position === "Создатель" ||
         UserData.userData.position === "Главный администратор" ||
         UserData.userData.position === "Администратор") && (
@@ -402,6 +471,12 @@ const Payments: FC<IPaymentsProps> = ({}) => {
         isSubmitPopup={isSubmitPopup}
         closeSubmitPopup={closeSubmitPopup}
         onSubmit={submitPopupFunction}
+      />
+      <SubmitPopup
+        submitText={`Создать вывод ${paymentData.totalSumCashOut}₽ на карту ${paymentData.cardNumber}`}
+        isSubmitPopup={isSubmitPopupCashOut}
+        closeSubmitPopup={closeSubmitPopupCashOut}
+        onSubmit={cashOutHandler}
       />
     </section>
   );

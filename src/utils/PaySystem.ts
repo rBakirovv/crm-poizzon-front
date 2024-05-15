@@ -79,6 +79,23 @@ export const createPayLinkOnepay = (
   }).then(checkResponse);
 };
 
+export const cashedOutAnypayments = (
+  amount: number,
+  custom_id: string,
+  account_number: string
+) => {
+  return fetch(`${BASE_URL}/pay/cashed-out-anypayments`, {
+    method: "POST",
+    headers: HEADERS,
+    credentials: "include",
+    body: JSON.stringify({
+      amount: amount,
+      custom_id: custom_id,
+      account_number: account_number,
+    }),
+  }).then(checkResponse);
+};
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();
