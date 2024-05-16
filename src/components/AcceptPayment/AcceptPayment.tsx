@@ -339,7 +339,7 @@ const AcceptPayment = () => {
       OrderData.order.payment === "Сплит Onepay"
     ) {
       createPayLinkOnepay(
-        OrderData.order._id,
+        OrderData.order.orderId.toString(),
         totalPrice,
         `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
         `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
@@ -481,7 +481,7 @@ const AcceptPayment = () => {
       });
     } else if (OrderData.order.payment === "Сплит Onepay") {
       createPayLinkOnepay(
-        OrderData.order._id,
+        OrderData.order.orderId.toString(),
         Math.ceil(totalPrice / 2),
         `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
         `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
@@ -516,7 +516,7 @@ const AcceptPayment = () => {
             OrderData.order.comment
           ).then((orderUpdated) => {
             createPayLinkOnepay(
-              OrderData.order._id,
+              OrderData.order.orderId.toString(),
               Math.ceil(totalPrice / 2),
               `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
               `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
@@ -624,7 +624,7 @@ const AcceptPayment = () => {
       });
     } else if (OrderData.order.payment === "Сплит Onepay") {
       createPayLinkOnepay(
-        OrderData.order._id,
+        OrderData.order.orderId.toString(),
         Math.ceil(totalPrice / 2),
         `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
         `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
@@ -727,7 +727,7 @@ const AcceptPayment = () => {
       OrderData.order.payment === "Сплит Onepay"
     ) {
       createPayLinkOnepay(
-        OrderData.order._id,
+        OrderData.order.orderId.toString(),
         totalPriceExpress,
         `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
         `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
@@ -871,7 +871,7 @@ const AcceptPayment = () => {
       });
     } else if (OrderData.order.payment === "Сплит Onepay") {
       createPayLinkOnepay(
-        OrderData.order._id,
+        OrderData.order.orderId.toString(),
         Math.ceil(totalPriceExpress / 2),
         `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
         `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
@@ -906,7 +906,7 @@ const AcceptPayment = () => {
             OrderData.order.comment
           ).then((orderUpdated) => {
             createPayLinkOnepay(
-              OrderData.order._id,
+              OrderData.order.orderId.toString(),
               Math.ceil(totalPriceExpress / 2),
               `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
               `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`
@@ -1013,7 +1013,7 @@ const AcceptPayment = () => {
       });
     } else if (OrderData.order.payment === "Сплит Onepay") {
       createPayLinkOnepay(
-        OrderData.order._id,
+        OrderData.order.orderId.toString(),
         Math.ceil(totalPriceExpress / 2),
         `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
         `${BASE_URL}/pay/onepay-handler/${OrderData.order._id}`

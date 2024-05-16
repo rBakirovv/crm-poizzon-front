@@ -257,7 +257,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
       getPaymentOnepay(currentOrder.paymentUUID).then((paymentData) => {
         if (paymentData.data.attributes.payment_status === "cancelled") {
           createPayLinkOnepay(
-            currentOrder._id,
+            currentOrder.orderId.toString(),
             totalPrice,
             `${BASE_URL_FRONT}/order/${paymentData._id}`,
             `${BASE_URL}/pay/onepay-handler/${paymentData._id}`
@@ -363,7 +363,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
       getPaymentOnepay(currentOrder.paymentUUIDSplit).then((paymentData) => {
         if (paymentData.data.attributes.payment_status === "cancelled") {
           createPayLinkOnepay(
-            currentOrder._id,
+            currentOrder.orderId.toString(),
             Math.ceil(totalPrice / 2),
             `${BASE_URL_FRONT}/order/${paymentData._id}`,
             `${BASE_URL}/pay/onepay-handler/${paymentData._id}`
@@ -473,7 +473,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
         (paymentData) => {
           if (paymentData.data.attributes.payment_status === "cancelled") {
             createPayLinkOnepay(
-              currentOrder._id,
+              currentOrder.orderId.toString(),
               Math.ceil(totalPrice / 2),
               `${BASE_URL_FRONT}/order/${paymentData._id}`,
               `${BASE_URL}/pay/onepay-handler/${paymentData._id}`
@@ -588,7 +588,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
       getPaymentOnepay(currentOrder.paymentUUIDExpress).then((paymentData) => {
         if (paymentData.data.attributes.payment_status === "cancelled") {
           createPayLinkOnepay(
-            currentOrder._id,
+            currentOrder.orderId.toString(),
             totalPrice,
             `${BASE_URL_FRONT}/order/${paymentData._id}`,
             `${BASE_URL}/pay/onepay-handler/${paymentData._id}`
@@ -701,7 +701,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
         (paymentData) => {
           if (paymentData.data.attributes.payment_status === "cancelled") {
             createPayLinkOnepay(
-              currentOrder._id,
+              currentOrder.orderId.toString(),
               Math.ceil(totalPrice / 2),
               `${BASE_URL_FRONT}/order/${paymentData._id}`,
               `${BASE_URL}/pay/onepay-handler/${paymentData._id}`
@@ -815,7 +815,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
         (paymentData) => {
           if (paymentData.data.attributes.payment_status === "cancelled") {
             createPayLinkOnepay(
-              currentOrder._id,
+              currentOrder.orderId.toString(),
               Math.ceil(totalPrice / 2),
               `${BASE_URL_FRONT}/order/${paymentData._id}`,
               `${BASE_URL}/pay/onepay-handler/${paymentData._id}`

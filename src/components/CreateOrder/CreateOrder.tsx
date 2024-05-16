@@ -763,7 +763,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
 
   function createLinksOnepay(orderData: IOrder) {
     createPayLinkOnepay(
-      orderData._id,
+      orderData.orderId.toString(),
       totalPrice,
       `${BASE_URL_FRONT}/order/${orderData._id}`,
       `${BASE_URL}/pay/onepay-handler/${orderData._id}`
@@ -799,7 +799,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
             orderData.comment
           ).then((orderUpdated) => {
             createPayLinkOnepay(
-              orderData._id,
+              orderData.orderId.toString(),
               totalPrice + EXPRESS_PRICE,
               `${BASE_URL_FRONT}/order/${orderData._id}`,
               `${BASE_URL}/pay/onepay-handler/${orderData._id}`
@@ -858,7 +858,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
 
   function createLinksSplitOnepay(orderData: IOrder) {
     createPayLinkOnepay(
-      orderData._id,
+      orderData.orderId.toString(),
       totalPrice,
       `${BASE_URL_FRONT}/order/${orderData._id}`,
       `${BASE_URL}/pay/onepay-handler/${orderData._id}`
@@ -894,7 +894,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
             orderData.comment
           ).then((orderUpdated) => {
             createPayLinkOnepay(
-              orderData._id,
+              orderData.orderId.toString(),
               Math.ceil(totalPrice / 2),
               `${BASE_URL_FRONT}/order/${orderData._id}`,
               `${BASE_URL}/pay/onepay-handler/${orderData._id}`
@@ -929,7 +929,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                   orderData.comment
                 ).then((orderUpdatedSecond) => {
                   createPayLinkOnepay(
-                    orderData._id,
+                    orderData.orderId.toString(),
                     Math.ceil(totalPrice / 2),
                     `${BASE_URL_FRONT}/order/${orderData._id}`,
                     `${BASE_URL}/pay/onepay-handler/${orderData._id}`
@@ -964,7 +964,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                         orderData.comment
                       ).then((orderUpdatedExpress) => {
                         createPayLinkOnepay(
-                          orderData._id,
+                          orderData.orderId.toString(),
                           totalPrice + EXPRESS_PRICE,
                           `${BASE_URL_FRONT}/order/${orderData._id}`,
                           `${BASE_URL}/pay/onepay-handler/${orderData._id}`
@@ -999,7 +999,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                               orderData.comment
                             ).then((orderUpdatedExpressSplit) => {
                               createPayLinkOnepay(
-                                orderData._id,
+                                orderData.orderId.toString(),
                                 Math.ceil((totalPrice + EXPRESS_PRICE) / 2),
                                 `${BASE_URL_FRONT}/order/${orderData._id}`,
                                 `${BASE_URL}/pay/onepay-handler/${orderData._id}`
@@ -1036,7 +1036,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
                                     orderData.comment
                                   ).then((orderUpdatedExpressSplitSecond) => {
                                     createPayLinkOnepay(
-                                      orderData._id,
+                                      orderData.orderId.toString(),
                                       Math.ceil(
                                         (totalPrice + EXPRESS_PRICE) / 2
                                       ),
