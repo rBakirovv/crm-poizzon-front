@@ -72,6 +72,12 @@
   margin-top: 2rem;
 }
 
+.accept-payment__checkbox {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
 @media screen and (max-width: 500px) {
   .accept-payment__submit:hover {
     background: #000;

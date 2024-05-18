@@ -20,6 +20,7 @@ import {
   addPayLinkSplitSecondExpress,
   addSurcharge,
   setExpressCost,
+  setIsSplitHandler,
   setIsSurcharge,
   updatePayment,
   updateSurcharge,
@@ -177,7 +178,9 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
       setIsOverudeOrderModalOpen(true);
     } else {
       setExpressCost(currentOrder._id, isExpress ? EXPRESS_PRICE : 0).then(() =>
-        router.replace(`/order/pay/${currentOrder._id}`)
+        setIsSplitHandler(currentOrder._id, isSplit ? true : false).then(() => {
+          router.replace(`/order/pay/${currentOrder._id}`);
+        })
       );
     }
   }
@@ -1198,7 +1201,8 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
           <div className={styles["order__options-container"]}>
             {(currentOrder.payment === "Сплит -" ||
               currentOrder.payment === "Сплит Anypayments" ||
-              currentOrder.payment === "Сплит Onepay") && (
+              currentOrder.payment === "Сплит Onepay" ||
+              currentOrder.payment === "Сплит уточняйте у менеджера") && (
               <div className={styles["order__split-container"]}>
                 <div className={styles["checkbox__container"]}>
                   <input
@@ -1306,7 +1310,8 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
               Оплачен{" "}
               <div className={styles["order__status-bar-dates"]}>
                 {currentOrder.status !== "Черновик" &&
-                  currentOrder.status !== "Проверка оплаты" && (
+                  currentOrder.status !== "Проверка оплаты" &&
+                  currentOrder.payment !== "Сплит уточняйте у менеджера" && (
                     <span>
                       {currentOrder.paidAt &&
                         dayjs
@@ -1318,7 +1323,8 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                   currentOrder.status !== "Проверка оплаты" &&
                   (currentOrder.payment === "Сплит -" ||
                     currentOrder.payment === "Сплит Anypayments" ||
-                    currentOrder.payment === "Сплит Onepay") &&
+                    currentOrder.payment === "Сплит Onepay" ||
+                    currentOrder.payment === "Сплит уточняйте у менеджера") &&
                   currentOrder.isSplitPaid && (
                     <span>
                       Первая часть:{" "}
@@ -1332,7 +1338,8 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                   currentOrder.status !== "Проверка оплаты" &&
                   (currentOrder.payment === "Сплит -" ||
                     currentOrder.payment === "Сплит Anypayments" ||
-                    currentOrder.payment === "Сплит Onepay") &&
+                    currentOrder.payment === "Сплит Onepay" ||
+                    currentOrder.payment === "Сплит уточняйте у менеджера") &&
                   currentOrder.isSplitPaidSecond && (
                     <span>
                       Вторая часть:{" "}
@@ -1491,7 +1498,8 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
             currentOrder.payment !== "Перейти по ссылке Onepay" &&
             currentOrder.payment !== "Сплит -" &&
             currentOrder.payment !== "Сплит Anypayments" &&
-            currentOrder.payment !== "Сплит Onepay" && (
+            currentOrder.payment !== "Сплит Onepay" &&
+            !isSplit && (
               <button
                 className={styles["order__pay-button"]}
                 onClick={handleTimeLeft}
@@ -1508,6 +1516,32 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                   Оплатить
                 </span>
                 <span>{totalPrice} ₽</span>
+              </button>
+            )}
+          {currentOrder.status === "Черновик" &&
+            currentOrder.payment !== "Перейти по ссылке -" &&
+            currentOrder.payment !== "Перейти по ссылке Anypayments" &&
+            currentOrder.payment !== "Перейти по ссылке Onepay" &&
+            currentOrder.payment !== "Сплит -" &&
+            currentOrder.payment !== "Сплит Anypayments" &&
+            currentOrder.payment !== "Сплит Onepay" &&
+            isSplit && (
+              <button
+                className={styles["order__pay-button"]}
+                onClick={handleTimeLeft}
+              >
+                {isBrowser && (
+                  <Timer
+                    createdAt={currentOrder.createdAt}
+                    dedline={currentOrder.overudeAfter}
+                    timeLeft={timeLeft}
+                    setTimeLeft={setTimeLeft}
+                  />
+                )}
+                <span className={styles["order__pay-button-span"]}>
+                  Оплатить в сплит
+                </span>
+                <span>{Math.ceil(totalPrice / 2)} ₽</span>
               </button>
             )}
           {currentOrder.status === "Черновик" &&
@@ -1769,7 +1803,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
             )}
           {currentOrder.isSurcharge && (
             <button
-              className={`${styles["order__pay-button"]} ${styles["order__pay-button-surcharge"]}`}
+              className={`${styles["order__pay-button-surcharge"]}`}
               onClick={surchargeRedirect}
             >
               <span className={styles["order__pay-button-span"]}>

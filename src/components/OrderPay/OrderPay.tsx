@@ -64,7 +64,9 @@ const OrderPay: FC<IOrderPayProps> = () => {
     e.preventDefault();
 
     updatePaidAt(OrderData.order._id).then(() => {
-      router.replace(`/order/${OrderData.order._id}/${OrderData.order.orderId}`);
+      router.replace(
+        `/order/${OrderData.order._id}/${OrderData.order.orderId}`
+      );
     });
   }
 
@@ -170,12 +172,12 @@ const OrderPay: FC<IOrderPayProps> = () => {
             splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
             splitSecondLinksExpressArray:
               OrderData.order.splitSecondLinksExpressArray,
-              isSurcharge: OrderData.order.isSurcharge,
-              surchargePayLink: OrderData.order.surchargePayLink,
-              surchargeUUID: OrderData.order.surchargeUUID,
-              surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
-              surchargeTotal: OrderData.order.surchargeTotal,
-              paidAtSurcharge: OrderData.order.paidAtSurcharge,
+            isSurcharge: OrderData.order.isSurcharge,
+            surchargePayLink: OrderData.order.surchargePayLink,
+            surchargeUUID: OrderData.order.surchargeUUID,
+            surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
+            surchargeTotal: OrderData.order.surchargeTotal,
+            paidAtSurcharge: OrderData.order.paidAtSurcharge,
             __v: OrderData.order.__v,
           });
         })
@@ -301,12 +303,13 @@ const OrderPay: FC<IOrderPayProps> = () => {
                       OrderData.order.splitLinksExpressArray,
                     splitSecondLinksExpressArray:
                       OrderData.order.splitSecondLinksExpressArray,
-                      isSurcharge: OrderData.order.isSurcharge,
-                      surchargePayLink: OrderData.order.surchargePayLink,
-                      surchargeUUID: OrderData.order.surchargeUUID,
-                      surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
-                      surchargeTotal: OrderData.order.surchargeTotal,
-                      paidAtSurcharge: OrderData.order.paidAtSurcharge,
+                    isSurcharge: OrderData.order.isSurcharge,
+                    surchargePayLink: OrderData.order.surchargePayLink,
+                    surchargeUUID: OrderData.order.surchargeUUID,
+                    surchargePayLinksArray:
+                      OrderData.order.surchargePayLinksArray,
+                    surchargeTotal: OrderData.order.surchargeTotal,
+                    paidAtSurcharge: OrderData.order.paidAtSurcharge,
                     __v: OrderData.order.__v,
                   });
                 })
@@ -418,12 +421,12 @@ const OrderPay: FC<IOrderPayProps> = () => {
           splitLinksExpressArray: OrderData.order.splitLinksExpressArray,
           splitSecondLinksExpressArray:
             OrderData.order.splitSecondLinksExpressArray,
-            isSurcharge: OrderData.order.isSurcharge,
-            surchargePayLink: OrderData.order.surchargePayLink,
-            surchargeUUID: OrderData.order.surchargeUUID,
-            surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
-            surchargeTotal: OrderData.order.surchargeTotal,
-            paidAtSurcharge: OrderData.order.paidAtSurcharge,
+          isSurcharge: OrderData.order.isSurcharge,
+          surchargePayLink: OrderData.order.surchargePayLink,
+          surchargeUUID: OrderData.order.surchargeUUID,
+          surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
+          surchargeTotal: OrderData.order.surchargeTotal,
+          paidAtSurcharge: OrderData.order.paidAtSurcharge,
           __v: OrderData.order.__v,
         });
       })
@@ -475,8 +478,12 @@ const OrderPay: FC<IOrderPayProps> = () => {
                 {OrderData.order.brand} {OrderData.order.model}
               </h4>
               <h4 className={styles["order-pay__text"]}>Сумма оплаты</h4>
-              <p className={styles["order-pay__title"]}>{totalPrice} ₽</p>
-
+              <p className={styles["order-pay__title"]}>
+                {!OrderData.order.isSplit
+                  ? totalPrice
+                  : Math.ceil(totalPrice / 2)}{" "}
+                ₽
+              </p>
               <h4 className={styles["order-pay__text"]}>Cпособ оплаты</h4>
               {OrderData.order.payment !== "Перейти по ссылке -" &&
                 OrderData.order.payment !== undefined &&
@@ -505,7 +512,9 @@ const OrderPay: FC<IOrderPayProps> = () => {
                       {OrderData.order.payment}
                     </p>
                     {OrderData.order.payment !== "Уточняйте у менеджера -" &&
-                      OrderData.order.payment !== "Перейти по ссылке -" && (
+                      OrderData.order.payment !== "Перейти по ссылке -" &&
+                      OrderData.order.payment !==
+                        "Сплит уточняйте у менеджера" && (
                         <div
                           onClick={copyLink}
                           className={

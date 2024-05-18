@@ -1196,7 +1196,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       {(!OrderData.order.isSplitPaid || !OrderData.order.isSplitPaidSecond) &&
         (OrderData.order.payment === "Сплит -" ||
           OrderData.order.payment === "Сплит Anypayments" ||
-          OrderData.order.payment === "Сплит Onepay") &&
+          OrderData.order.payment === "Сплит Onepay" ||
+          OrderData.order.payment === "Сплит уточняйте у менеджера") &&
         OrderData.order.isSplit && (
           <p>
             <span className={styles["order-change__status_red"]}>
@@ -1211,6 +1212,15 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           </span>
         </p>
       )}
+      {OrderData.order.payment === "Сплит уточняйте у менеджера" &&
+        OrderData.order.status !== "Черновик" &&
+        OrderData.order.isSplit && (
+          <p>
+            <span className={styles["order-change__status_red"]}>
+              Сплит уточняйте у менеджера, внимательнее к скриншотам
+            </span>
+          </p>
+        )}
       {OrderData.order.reorder === true && (
         <p className={styles["order-change__status_red"]}>Перезаказ</p>
       )}
@@ -1448,7 +1458,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
             )}
             {(OrderData.order.payment === "Сплит -" ||
               OrderData.order.payment === "Сплит Anypayments" ||
-              OrderData.order.payment === "Сплит Onepay") && (
+              OrderData.order.payment === "Сплит Onepay" ||
+              OrderData.order.payment === "Сплит уточняйте у менеджера") && (
               <div className={styles["checkbox__container"]}>
                 <input
                   className={styles["checkbox__button"]}

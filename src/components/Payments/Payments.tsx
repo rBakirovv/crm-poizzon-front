@@ -15,7 +15,7 @@ import {
   cashedOutAnypayments,
   createPayLinkAnypayments,
 } from "../../utils/PaySystem";
-import { BASE_URL_FRONT } from "../../utils/constants";
+import { BASE_URL_FRONT, MAINADMIN, SUPERADMIN } from "../../utils/constants";
 
 interface IPaymentsProps {
   paymentsList: Array<IPayments>;
@@ -38,6 +38,7 @@ const Payments: FC<IPaymentsProps> = ({}) => {
     orderUrlOnepay: "",
     totalSumCashOut: "",
     cardNumber: "",
+    secretCode: "",
   });
 
   // Костыль!
@@ -99,6 +100,7 @@ const Payments: FC<IPaymentsProps> = ({}) => {
           orderUrlOnepay: paymentData.orderUrlOnepay,
           totalSumCashOut: paymentData.totalSumCashOut,
           cardNumber: paymentData.cardNumber,
+          secretCode: paymentData.secretCode,
         });
       })
       .catch((err) => {
@@ -267,7 +269,8 @@ const Payments: FC<IPaymentsProps> = ({}) => {
     cashedOutAnypayments(
       parseInt(paymentData.totalSumCashOut),
       `cash-out-${Math.ceil(Math.random() * 100000)}`,
-      paymentData.cardNumber
+      paymentData.cardNumber,
+      paymentData.secretCode
     )
       .then(() => {
         setIsCashOutSuccess(true);
@@ -358,7 +361,8 @@ const Payments: FC<IPaymentsProps> = ({}) => {
           </div>
         )}
       </form>
-      {UserData.userData.position === "Создатель" && (
+      {(UserData.userData.position === SUPERADMIN ||
+        UserData.userData.position === MAINADMIN) && (
         <form
           onSubmit={openSubmitPopupCashOut}
           className={styles["payments__create-form"]}
@@ -376,6 +380,13 @@ const Payments: FC<IPaymentsProps> = ({}) => {
             name="cardNumber"
             handleChange={handleChange}
             value={paymentData.cardNumber}
+            required={true}
+          />
+          <TextInput
+            label="Секретный код"
+            name="secretCode"
+            handleChange={handleChange}
+            value={paymentData.secretCode}
             required={true}
           />
           {isCashOutError && <span style={{ color: "red" }}>Ошибка!</span>}

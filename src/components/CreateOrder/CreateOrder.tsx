@@ -32,7 +32,10 @@ import ImagePopup from "../ImagePopup/ImagePopup";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { useRouter } from "next/router";
 import Preloader from "../UI/Preloader/Preloader";
-import { createPayLinkAnypayments, createPayLinkOnepay } from "../../utils/PaySystem";
+import {
+  createPayLinkAnypayments,
+  createPayLinkOnepay,
+} from "../../utils/PaySystem";
 
 interface ICreateOrderProps {
   payments: Array<IPayments>;
@@ -363,6 +366,11 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
             } else if (data.payment === "Сплит Onepay") {
               createLinksSplitOnepay(order);
             }
+          }
+        })
+        .then(() => {
+          if (data.payment === "Сплит уточняйте у менеджера") {
+            setIsSplitHandler(OrderData.order._id, true);
           }
         })
         .then(() => {

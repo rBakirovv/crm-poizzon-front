@@ -1482,6 +1482,9 @@ const Delivery = observer(() => {
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" &&
           OrderData.order.payment !== "Сплит -" &&
+          OrderData.order.payment !== "Сплит Anypayments" &&
+          OrderData.order.payment !== "Сплит Onepay" &&
+          OrderData.order.payment !== "Сплит уточняйте у менеджера" &&
           !OrderData.order.isPost && (
             <button
               onClick={openPDFBarcodeHandler}
@@ -1503,7 +1506,10 @@ const Delivery = observer(() => {
           )}
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" &&
-          OrderData.order.payment === "Сплит -" &&
+          (OrderData.order.payment === "Сплит -" ||
+            OrderData.order.payment === "Сплит Anypayments" ||
+            OrderData.order.payment === "Сплит Onepay" ||
+            OrderData.order.payment === "Сплит уточняйте у менеджера") &&
           OrderData.order.isSplit &&
           OrderData.order.isSplitPaid &&
           OrderData.order.isSplitPaidSecond &&

@@ -28,7 +28,6 @@ import {
   createPayLinkSurchargeAnypayments,
 } from "../../utils/PaySystem";
 import TextInput from "../UI/TextInput/TextInput";
-import { error } from "console";
 
 const AcceptPayment = () => {
   const [data, setData] = useState({
@@ -80,6 +79,8 @@ const AcceptPayment = () => {
   const [isPayLinksSplitExpress, setIsPayLinksSplitExpress] = useState(false);
   const [isPayLinksSplitSecondExpress, setIsPayLinksSplitSecondExpress] =
     useState(false);
+
+  const [isSecondSplitSurcharge, setIsSecondSplitSurcharge] = useState(false);
 
   const priceRub = Math.ceil(
     parseFloat(OrderData.order.priceCNY) *
@@ -282,6 +283,10 @@ const AcceptPayment = () => {
 
   function closeSubmitRecreateAllLinks() {
     setIsRecreateLinks(false);
+  }
+
+  function secondSplitSurchargeClickHandler() {
+    setIsSecondSplitSurcharge(!isSecondSplitSurcharge);
   }
 
   function handlePayLinkSubmit() {
@@ -1087,64 +1092,123 @@ const AcceptPayment = () => {
   }
 
   function handleSurchargeCreate() {
-    createPayLinkSurchargeAnypayments(
-      OrderData.order._id,
-      `${OrderData.order.orderId.toString()}-surcharge-${Math.ceil(
-        Math.random() * 1000
-      )}`,
-      parseInt(data.totalSum),
-      `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
-      "surcharge"
-    ).then((payment) => {
-      if (payment.success === true) {
-        setIsSurcharge(OrderData.order._id, true)
-          .then(() => {
-            updateSurcharge(
-              OrderData.order._id,
-              payment.data.url,
-              payment.data.custom_order_id,
-              parseInt(data.totalSum)
-            ).then(() => {
-              addSurcharge(OrderData.order._id, payment.data.url).then(
-                (order) => {
-                  OrderData.setOrder(order);
-                }
-              );
+    if (isSecondSplitSurcharge) {
+      createPayLinkSurchargeAnypayments(
+        OrderData.order._id,
+        `${OrderData.order.orderId.toString()}-surcharge-${Math.ceil(
+          Math.random() * 1000
+        )}`,
+        parseInt(data.totalSum),
+        `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+        "surcharge-second-split"
+      ).then((payment) => {
+        if (payment.success === true) {
+          setIsSurcharge(OrderData.order._id, true)
+            .then(() => {
+              updateSurcharge(
+                OrderData.order._id,
+                payment.data.url,
+                payment.data.custom_order_id,
+                parseInt(data.totalSum)
+              ).then(() => {
+                addSurcharge(OrderData.order._id, payment.data.url)
+                  .then((order) => {
+                    OrderData.setOrder(order);
+                  })
+                  .then(() => {
+                    setData({
+                      totalSum: "",
+                    });
+                    setIsSecondSplitSurcharge(false);
+                  });
+              });
+            })
+            .catch((err) => {
+              console.log(err);
             });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    });
+        }
+      });
+    } else {
+      createPayLinkSurchargeAnypayments(
+        OrderData.order._id,
+        `${OrderData.order.orderId.toString()}-surcharge-${Math.ceil(
+          Math.random() * 1000
+        )}`,
+        parseInt(data.totalSum),
+        `${BASE_URL_FRONT}/order/${OrderData.order._id}`,
+        "surcharge"
+      ).then((payment) => {
+        if (payment.success === true) {
+          setIsSurcharge(OrderData.order._id, true)
+            .then(() => {
+              updateSurcharge(
+                OrderData.order._id,
+                payment.data.url,
+                payment.data.custom_order_id,
+                parseInt(data.totalSum)
+              ).then(() => {
+                addSurcharge(OrderData.order._id, payment.data.url)
+                  .then((order) => {
+                    OrderData.setOrder(order);
+                  })
+                  .then(() => {
+                    setData({
+                      totalSum: "",
+                    });
+                  });
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      });
+    }
   }
 
   return (
     <div className={styles["accept-payment"]}>
-      <h4>Cпособ оплаты</h4>
+      <h4>Способ оплаты</h4>
       <p className={styles["accept-payment__text"]}>
         {OrderData.order.payment}
         {(OrderData.order.payment === "Сплит -" ||
           OrderData.order.payment === "Сплит Anypayments" ||
-          OrderData.order.payment === "Сплит Onepay") &&
+          OrderData.order.payment === "Сплит Onepay" ||
+          OrderData.order.payment === "Сплит уточняйте у менеджера") &&
           !OrderData.order.isSplit &&
           " полная оплата"}
       </p>
-      {!OrderData.order.paidAtSurcharge && (
-        <>
-          <h4>Создать ссылку доплаты</h4>
-          <div style={{ marginBottom: "1rem" }}>
-            <TextInput
-              label="Cумма"
-              name="totalSum"
-              handleChange={handleChange}
-              value={data.totalSum}
-              required={true}
-            />
-          </div>
-          <button onClick={openSubmitCreateSurchargePopup}>Создать</button>
-        </>
-      )}
+      {(!OrderData.order.paidAtSurcharge ||
+        (OrderData.order.payment === "Сплит уточняйте у менеджера" &&
+          !OrderData.order.paidAtSurcharge &&
+          !OrderData.order.isSplitPaidSecond)) &&
+        OrderData.order.status !== "Черновик" &&
+        OrderData.order.status !== "Проверка оплаты" && (
+          <>
+            <h4>Создать ссылку доплаты</h4>
+            <div style={{ marginBottom: "1rem" }}>
+              <TextInput
+                label="Cумма"
+                name="totalSum"
+                handleChange={handleChange}
+                value={data.totalSum}
+                required={true}
+              />
+            </div>
+            {OrderData.order.payment === "Сплит уточняйте у менеджера" &&
+              !OrderData.order.isSplitPaidSecond && (
+                <div className={styles["accept-payment__checkbox"]}>
+                  <input
+                    onChange={secondSplitSurchargeClickHandler}
+                    type="checkbox"
+                    checked={isSecondSplitSurcharge}
+                  />
+                  <label>Доплата для сплита</label>
+                </div>
+              )}
+            <button onClick={openSubmitCreateSurchargePopup}>Создать</button>
+          </>
+        )}
       {OrderData.order.payProofImages.length !== 0 && (
         <>
           <h4>Подтверждение оплаты</h4>
@@ -1487,7 +1551,8 @@ const AcceptPayment = () => {
         )}
       <div className={styles["accept-payment__buttons"]}>
         {OrderData.order.status === "Проверка оплаты" &&
-          UserData.userData.position !== "Менеджер" && (
+          UserData.userData.position !== "Менеджер" &&
+          OrderData.order.payment !== "Сплит уточняйте у менеджера" && (
             <button
               className={styles["accept-payment__submit"]}
               onClick={openSubmitPopup}
@@ -1495,7 +1560,8 @@ const AcceptPayment = () => {
               Принять оплату
             </button>
           )}
-        {OrderData.order.status === "Черновик" &&
+        {(OrderData.order.status === "Черновик" ||
+          OrderData.order.status === "Проверка оплаты") &&
           (OrderData.order.payment === "Перейти по ссылке -" ||
             OrderData.order.payment === "Перейти по ссылке Anypayments" ||
             OrderData.order.payment === "Перейти по ссылке Onepay") &&
@@ -1508,7 +1574,8 @@ const AcceptPayment = () => {
               Принять оплату досрочно
             </button>
           )}
-        {OrderData.order.status === "Черновик" &&
+        {(OrderData.order.status === "Черновик" ||
+          OrderData.order.status === "Проверка оплаты") &&
           (OrderData.order.payment === "Сплит -" ||
             OrderData.order.payment === "Сплит Anypayments" ||
             OrderData.order.payment === "Сплит Onepay") &&
@@ -1522,7 +1589,19 @@ const AcceptPayment = () => {
               Принять оплату досрочно
             </button>
           )}
-        {OrderData.order.status === "Черновик" &&
+        {(OrderData.order.status === "Черновик" ||
+          OrderData.order.status === "Проверка оплаты") &&
+          OrderData.order.payment === "Сплит уточняйте у менеджера" &&
+          !OrderData.order.isSplit && (
+            <button
+              className={styles["accept-payment__submit"]}
+              onClick={openSubmitAcceptPaymentPopup}
+            >
+              Принять оплату
+            </button>
+          )}
+        {(OrderData.order.status === "Черновик" ||
+          OrderData.order.status === "Проверка оплаты") &&
           (OrderData.order.payment === "Сплит -" ||
             OrderData.order.payment === "Сплит Anypayments" ||
             OrderData.order.payment === "Сплит Onepay") &&
@@ -1537,10 +1616,25 @@ const AcceptPayment = () => {
               Принять сплит (1) досрочно
             </button>
           )}
+        {OrderData.order.status === "Проверка оплаты" &&
+          OrderData.order.payment === "Сплит уточняйте у менеджера" &&
+          (UserData.userData.position === "Создатель" ||
+            UserData.userData.position === "Главный администратор") &&
+          !OrderData.order.isSplitPaid &&
+          OrderData.order.isSplit && (
+            <button
+              className={styles["accept-payment__submit"]}
+              onClick={openSubmitAcceptSplitPopup}
+            >
+              Принять сплит (1)
+            </button>
+          )}
         {OrderData.order.status !== "Черновик" &&
+          OrderData.order.status !== "Проверка оплаты" &&
           (OrderData.order.payment === "Сплит -" ||
             OrderData.order.payment === "Сплит Anypayments" ||
-            OrderData.order.payment === "Сплит Onepay") &&
+            OrderData.order.payment === "Сплит Onepay" ||
+            OrderData.order.payment === "Сплит уточняйте у менеджера") &&
           (UserData.userData.position === "Создатель" ||
             UserData.userData.position === "Главный администратор") &&
           !OrderData.order.isSplitPaidSecond &&
@@ -1638,7 +1732,11 @@ const AcceptPayment = () => {
         onSubmit={handleSplitAccept}
         isSubmitPopup={isSubmitAcceptSplitPopup}
         closeSubmitPopup={closeSubmitAcceptSplitPopup}
-        submitText="Принять сплит (1) досрочно"
+        submitText={`Принять сплит (1) ${
+          OrderData.order.payment === "Сплит уточняйте у менеджера"
+            ? ""
+            : "досрочно"
+        }`}
       />
       <SubmitPopup
         onSubmit={handleSplitSecondAccept}
@@ -1650,7 +1748,11 @@ const AcceptPayment = () => {
         onSubmit={handleSurchargeAccept}
         isSubmitPopup={isSubmitAcceptSurchargePopup}
         closeSubmitPopup={closeSubmitAcceptSurchargePopup}
-        submitText="Принять доплату досрочно"
+        submitText={`Принять доплату ${
+          OrderData.order.payment === "Сплит уточняйте у менеджера"
+            ? ""
+            : "досрочно"
+        }`}
       />
       <SubmitPopup
         onSubmit={handleSurchargeCreate}
