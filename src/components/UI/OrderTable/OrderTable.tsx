@@ -64,6 +64,9 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
   const [isCopyLink, setIsCopyLink] = useState(false);
   const [isCopyTg, setIsCopyTg] = useState(false);
 
+  const [isCopyLinkIndex, setIsCopyLinkIndex] = useState<number | null>(null);
+  const [isCopyTgIndex, setIsCopyTgIndex] = useState<number | null>(null);
+
   const [inStockInRussiaOrders, setInStockInRussiaOrders] = useState<
     Array<IOrder>
   >([]);
@@ -313,7 +316,8 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
         parseFloat(current.priceDeliveryChina) +
         parseFloat(current.priceDeliveryRussia) +
         parseFloat(current.commission) -
-        current.promoCodePercent) + current.expressCost
+        current.promoCodePercent) +
+      current.expressCost
     );
   }, 0);
 
@@ -326,18 +330,22 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
   }
 
   function handleCopyLinkClick() {
+    setIsCopyTg(false);
     setIsCopyLink(!isCopyLink);
   }
 
   function handleCopyTgClick() {
+    setIsCopyLink(false);
     setIsCopyTg(!isCopyTg);
   }
 
-  function handleCopyLink(id: string) {
+  function handleCopyLink(id: string, index: number) {
+    setIsCopyLinkIndex(index);
     navigator.clipboard.writeText(`${BASE_URL_FRONT}/order/${id}`);
   }
 
-  function handleCopyTg(tg: string) {
+  function handleCopyTg(tg: string, index: number) {
+    setIsCopyTgIndex(index);
     if (tg[0] === "@") {
       navigator.clipboard.writeText(tg.slice(1));
     } else {
@@ -406,7 +414,7 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
           <ul className={styles["orders-table__table"]}>
             {OrderData.orders &&
               OrderData.orders.length &&
-              OrderData.orders.map((orderItem) => {
+              OrderData.orders.map((orderItem, index) => {
                 return (
                   <li
                     key={orderItem._id}
@@ -444,16 +452,22 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
                     )}
                     {status === "Недавно прибывшие" && isCopyLink && (
                       <button
-                        className={styles["orders-table__delete-item"]}
-                        onClick={() => handleCopyLink(orderItem._id)}
+                        className={`${styles["orders-table__delete-item"]} ${
+                          index === isCopyLinkIndex && styles["active"]
+                        }`}
+                        onClick={() => handleCopyLink(orderItem._id, index)}
                       >
                         ✓
                       </button>
                     )}
                     {status === "Недавно прибывшие" && isCopyTg && (
                       <button
-                        className={styles["orders-table__delete-item"]}
-                        onClick={() => handleCopyTg(orderItem.deliveryName!)}
+                        className={`${styles["orders-table__delete-item"]} ${
+                          index === isCopyTgIndex && styles["active"]
+                        }`}
+                        onClick={() =>
+                          handleCopyTg(orderItem.deliveryName!, index)
+                        }
                       >
                         ✓
                       </button>

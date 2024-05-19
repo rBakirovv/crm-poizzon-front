@@ -1534,7 +1534,9 @@ const Delivery = observer(() => {
           )}
         {OrderData.order.deliveryAddress !== "" &&
           OrderData.order.deliveryEntity !== "" &&
-          OrderData.order.payment === "Сплит -" &&
+          (OrderData.order.payment === "Сплит -" ||
+            OrderData.order.payment === "Сплит Anypayments" ||
+            OrderData.order.payment === "Сплит Onepay") &&
           !OrderData.order.isSplit &&
           !OrderData.order.isPost && (
             <button
