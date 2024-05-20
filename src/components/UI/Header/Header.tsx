@@ -117,6 +117,12 @@ const Header: FC<IHeaderProps> = ({
             </span>{" "}
             CRM
           </Link>
+          <button
+            className={`${styles["header__burger-button"]} ${
+              isBurgerOpen && styles["header__burger-button_active"]
+            }`}
+            onClick={handleBurgerClick}
+          ></button>
           <div className={styles["header__buttons-container"]}>
             {userPosition !== "Байер" && userPosition !== "Работник склада" && (
               <Link
@@ -137,12 +143,6 @@ const Header: FC<IHeaderProps> = ({
             {userPosition}
             <div className={styles["header__position-icon"]}></div>
           </Link>
-          <button
-            className={`${styles["header__burger-button"]} ${
-              isBurgerOpen && styles["header__burger-button_active"]
-            }`}
-            onClick={handleBurgerClick}
-          ></button>
           <Burger isBurgerOpen={isBurgerOpen} closeBurger={closeBurger} />
         </div>
       )}

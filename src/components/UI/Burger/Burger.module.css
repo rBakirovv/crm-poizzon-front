@@ -29,7 +29,7 @@ html:has(.burger_active) {
 }
 
 .burger__buttons-container {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 0.5rem;
   margin: 1rem 0 0 1rem;
@@ -78,7 +78,7 @@ html:has(.burger_active) {
   flex-direction: column;
   gap: 0.5rem;
   list-style-type: none;
-  margin: 0.5rem 0 0;
+  margin: 0;
   height: 100%;
   box-sizing: border-box;
   padding: 1rem;
@@ -177,6 +177,12 @@ html:has(.burger_active) {
 @media screen and (max-width: 1200px) {
   .burger {
     display: block;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .burger__buttons-container {
+    display: flex;
   }
 }
 

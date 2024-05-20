@@ -140,11 +140,11 @@
 }
 
 @media screen and (max-width: 1200px) {
-  .header__container-title {
-    display: none;
+  .header__buttons-container {
+    margin-left: 1rem;
   }
 
-  .header__buttons-container {
+  .header__container-title {
     display: none;
   }
 
@@ -170,7 +170,14 @@
   }
 }
 
+@media screen and (max-width: 700px) {
+  .header__buttons-container {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 500px) {
+
   .header__order-container {
     width: 95%;
   }
