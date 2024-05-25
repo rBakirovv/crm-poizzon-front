@@ -1,0 +1,104 @@
+.carousel {
+  display: flex;
+  position: fixed;
+  z-index: 999;
+  justify-content: center;
+  align-items: center;
+  overflow-y: scroll;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  transition: all 0.25s ease-in-out;
+  visibility: hidden;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  opacity: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+.carousel_active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.carousel__container {
+  position: relative;
+}
+
+.carousel__image {
+  max-width: 75vw;
+  max-height: 75vh;
+  transition: all 0.25s ease-in-out;
+  transform: scale(0);
+}
+
+.carousel_active .carousel__image {
+  transform: scale(1);
+}
+
+.carousel__nav {
+  font-size: 1.5rem;
+  font-weight: 500;
+  position: fixed;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  gap: 0.5rem;
+}
+
+.carousel__nav-button {
+  font-size: 2rem;
+  color: #fff;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.carousel__nav-button:active {
+  color: #d96e3a;
+}
+
+.carousel__close {
+  font-size: 2rem;
+  font-weight: 500;
+  position: absolute;
+  background-color: transparent;
+  color: #fff;
+  border: none;
+  border: none;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-55%);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel__close:active {
+  color: #d96e3a;
+}
+
+.carousel__nav-button:nth-child(2) {
+  transform: rotate(180deg);
+}
+
+@media screen and (max-width: 500px) {
+  .carousel__image {
+    transform: translateY(30px);
+    max-height: 75vh;
+  }
+
+  .carousel__close {
+    position: absolute;
+    right: 10px;
+  }
+}
