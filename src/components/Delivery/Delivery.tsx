@@ -1912,7 +1912,7 @@ const Delivery = observer(() => {
                   </>
                 )}
                 <TextInput
-                  label="Трек-номер CDEK"
+                  label="Трек-номер CDEK/Почта РФ"
                   name="delivery_code"
                   value={data.delivery_code}
                   required={false}
@@ -2142,7 +2142,8 @@ const Delivery = observer(() => {
             </div>
           </div>
         )}
-        {OrderData.order.status !== "Завершён" && (
+        {(OrderData.order.status === "На складе в РФ" ||
+          OrderData.order.status === "Доставляется") && (
           <button
             onClick={openSubmitChangePopup}
             className={styles["delivery__submit-button"]}
@@ -2150,7 +2151,7 @@ const Delivery = observer(() => {
           >
             {OrderData.order.status === "На складе в РФ"
               ? "Отправлено"
-              : "Сохранить CDEK"}
+              : "Сохранить трек-номер"}
           </button>
         )}
         {OrderData.order.combinedOrder.length > 0 &&

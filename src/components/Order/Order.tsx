@@ -101,6 +101,8 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
 
   const [isPreload, setIsPreload] = useState(false);
 
+  const [isUserDataModalActive, setIsUserDataModalActive] = useState(true);
+
   const priceRub = Math.ceil(
     parseFloat(currentOrder.priceCNY) * parseFloat(currentOrder.currentRate)
   );
@@ -913,6 +915,10 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
       });
   }
 
+  function closeUserDataModalActive() {
+    setIsUserDataModalActive(false);
+  }
+
   return (
     <section className={styles["order"]}>
       <div className={styles["order__container"]}>
@@ -1462,7 +1468,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
             >
               Передан в доставку
             </li>
-            {currentOrder.deliveryCode !== "" && (
+            {currentOrder.deliveryCode !== "" && !currentOrder.isPost && (
               <a
                 href={`https://www.cdek.ru/ru/tracking?order_id=${currentOrder.deliveryCode}`}
                 className={styles["order-typography-link"]}
@@ -1470,6 +1476,21 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
                 rel="noreferrer"
               >
                 Трек-номер CDEK:
+                <span
+                  className={`${styles["order-span"]} ${styles["order-span-link"]}`}
+                >
+                  {currentOrder.deliveryCode}
+                </span>
+              </a>
+            )}
+            {currentOrder.deliveryCode !== "" && currentOrder.isPost && (
+              <a
+                href={`https://www.pochta.ru/tracking?barcode=${currentOrder.deliveryCode}`}
+                className={styles["order-typography-link"]}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Трек-номер Почта России:
                 <span
                   className={`${styles["order-span"]} ${styles["order-span-link"]}`}
                 >
@@ -1880,12 +1901,14 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
       {currentOrder.deliveryAddress === "" &&
         currentOrder.status !== "Черновик" &&
         currentOrder.status !== "Проверка оплаты" &&
-        currentOrder.status !== "Завершён" && (
+        currentOrder.status !== "Завершён" &&
+        isUserDataModalActive && (
           <UserDataModal
             _id={currentOrder._id}
             orderId={currentOrder.orderId}
             comment={currentOrder.model}
             combinedOrder={currentOrder.combinedOrder}
+            closeUserDataModalActive={closeUserDataModalActive}
           />
         )}
       {isPreload && <PreloaderClient />}
