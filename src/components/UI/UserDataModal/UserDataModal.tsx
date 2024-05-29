@@ -530,7 +530,7 @@ const UserDataModal: FC<IUserDataModalProps> = ({
           </div>
           <span className={styles["user-data-modal__wrn"]}>
             Наблюдаются проблемы с работой СДЭК. Рекомендуется выбрать способ
-            доаставки Почта России
+            доставки Почта России
           </span>
           {!isPostDeliveyMethod && (
             <button
