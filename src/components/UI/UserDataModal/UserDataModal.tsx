@@ -59,16 +59,12 @@ const UserDataModal: FC<IUserDataModalProps> = ({
 
   const [isPhoneValid, setIsPhoneValid] = useState<boolean>(false);
 
-  const [isPostDeliveyMethod, setIsPostDeliveyMethod] = useState(true);
+  const [isPostDeliveyMethod, setIsPostDeliveyMethod] = useState(false);
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
 
     const { name, value } = target;
-
-    /*startTransition(() => {
-    });
-    */
 
     setData({
       ...data,
@@ -349,6 +345,24 @@ const UserDataModal: FC<IUserDataModalProps> = ({
     }
   }, [data.deliveryPhone]);
 
+  /*
+          <div className={styles["checkbox__container"]}>
+            <input
+              className={styles["checkbox__button"]}
+              checked={isPostDeliveyMethod}
+              onChange={postDeliveyMethodChangeHandler}
+              type="checkbox"
+            />
+            <label className={styles["checkbox__title"]}>
+              <strong>Почта России</strong>
+            </label>
+          </div>
+          <span className={styles["user-data-modal__wrn"]}>
+            Наблюдаются проблемы с работой СДЭК. Рекомендуется выбрать способ
+            доставки Почта России
+          </span>
+  */
+
   return (
     <>
       {isPreload && <PreloaderClient />}
@@ -517,21 +531,6 @@ const UserDataModal: FC<IUserDataModalProps> = ({
               />
             </div>
           </div>
-          <div className={styles["checkbox__container"]}>
-            <input
-              className={styles["checkbox__button"]}
-              checked={isPostDeliveyMethod}
-              onChange={postDeliveyMethodChangeHandler}
-              type="checkbox"
-            />
-            <label className={styles["checkbox__title"]}>
-              <strong>Почта России</strong>
-            </label>
-          </div>
-          <span className={styles["user-data-modal__wrn"]}>
-            Наблюдаются проблемы с работой СДЭК. Рекомендуется выбрать способ
-            доставки Почта России
-          </span>
           {!isPostDeliveyMethod && (
             <button
               className={`${styles["order-pay__pay-submit"]} ${
