@@ -196,3 +196,8 @@
   flex-direction: column;
   gap: 0.5rem;
 }
+
+.orders-table__checkbox {
+  display: flex;
+  gap: 0.5rem;
+}

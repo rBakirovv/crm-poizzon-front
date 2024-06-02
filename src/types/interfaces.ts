@@ -195,3 +195,8 @@ export interface IMergedClientOrders {
   model: string;
   subcategory: string;
 }
+
+export interface IDeliveryMethod {
+  isCDEKBreakdown: boolean;
+  _id: string;
+}

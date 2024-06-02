@@ -12,6 +12,7 @@ import {
 } from "../../../utils/Order";
 import { BASE_URL_FRONT } from "../../../utils/constants";
 import PreloaderClient from "../PreloaderClient/PreloaderClient";
+import { IDeliveryMethod } from "../../../types/interfaces";
 
 interface IUserDataModalProps {
   _id: string;
@@ -19,6 +20,7 @@ interface IUserDataModalProps {
   comment: string;
   combinedOrder: any /* костыль */;
   closeUserDataModalActive: () => void;
+  deliveryMethodData: Array<IDeliveryMethod>;
 }
 
 const UserDataModal: FC<IUserDataModalProps> = ({
@@ -27,6 +29,7 @@ const UserDataModal: FC<IUserDataModalProps> = ({
   comment,
   combinedOrder,
   closeUserDataModalActive,
+  deliveryMethodData,
 }) => {
   const inputCityRef = useRef(null);
   const inputAddressRef = useRef(null);
@@ -59,7 +62,7 @@ const UserDataModal: FC<IUserDataModalProps> = ({
 
   const [isPhoneValid, setIsPhoneValid] = useState<boolean>(false);
 
-  const [isPostDeliveyMethod, setIsPostDeliveyMethod] = useState(false);
+  const [isPostDeliveyMethod, setIsPostDeliveyMethod] = useState(deliveryMethodData[0].isCDEKBreakdown === true ? true : false);
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
@@ -345,24 +348,6 @@ const UserDataModal: FC<IUserDataModalProps> = ({
     }
   }, [data.deliveryPhone]);
 
-  /*
-          <div className={styles["checkbox__container"]}>
-            <input
-              className={styles["checkbox__button"]}
-              checked={isPostDeliveyMethod}
-              onChange={postDeliveyMethodChangeHandler}
-              type="checkbox"
-            />
-            <label className={styles["checkbox__title"]}>
-              <strong>Почта России</strong>
-            </label>
-          </div>
-          <span className={styles["user-data-modal__wrn"]}>
-            Наблюдаются проблемы с работой СДЭК. Рекомендуется выбрать способ
-            доставки Почта России
-          </span>
-  */
-
   return (
     <>
       {isPreload && <PreloaderClient />}
@@ -531,6 +516,25 @@ const UserDataModal: FC<IUserDataModalProps> = ({
               />
             </div>
           </div>
+          {deliveryMethodData[0].isCDEKBreakdown && (
+            <>
+              <div className={styles["checkbox__container"]}>
+                <input
+                  className={styles["checkbox__button"]}
+                  checked={isPostDeliveyMethod}
+                  onChange={postDeliveyMethodChangeHandler}
+                  type="checkbox"
+                />
+                <label className={styles["checkbox__title"]}>
+                  <strong>Почта России</strong>
+                </label>
+              </div>
+              <span className={styles["user-data-modal__wrn"]}>
+                Наблюдаются проблемы с работой СДЭК. Рекомендуется выбрать
+                способ доставки Почта России
+              </span>
+            </>
+          )}
           {!isPostDeliveyMethod && (
             <button
               className={`${styles["order-pay__pay-submit"]} ${

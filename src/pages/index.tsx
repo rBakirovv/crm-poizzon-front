@@ -19,6 +19,8 @@ import { deleteOrder, getCurrentOrder, deleteOrderImage } from "../utils/Order";
 import { IOrder, IOrderImages } from "../types/interfaces";
 import { getPayments } from "../utils/Payment";
 import PaymentsData from "../store/payments";
+import { getDeliveryMethod } from "../utils/DeliveryMethod";
+import deliveryMethod from "../store/deliveryMethod";
 
 const Home = observer(() => {
   const router = useRouter();
@@ -115,6 +117,12 @@ const Home = observer(() => {
       .catch((err) => {
         console.log(err);
       });
+  }, []);
+
+  useEffect(() => {
+    getDeliveryMethod().then((data) => {
+      deliveryMethod.setDeliveryMethod(data[0]);
+    });
   }, []);
 
   return (

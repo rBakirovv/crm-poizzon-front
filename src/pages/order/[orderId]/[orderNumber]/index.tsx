@@ -1,15 +1,16 @@
 import Head from "next/head";
 import { NextPage } from "next";
 import Order from "../../../../components/Order/Order";
-import { IMergedClientOrders, IOrder } from "../../../../types/interfaces";
+import { IDeliveryMethod, IMergedClientOrders, IOrder } from "../../../../types/interfaces";
 import { BASE_URL } from "../../../../utils/constants";
 
 interface ICurrentOrderProps {
   currentOrder: IOrder;
   mergedData: Array<IMergedClientOrders>;
+  deliveryMethodData: Array<IDeliveryMethod>;
 }
 
-const Page: NextPage<ICurrentOrderProps> = ({ currentOrder, mergedData }) => {
+const Page: NextPage<ICurrentOrderProps> = ({ currentOrder, mergedData, deliveryMethodData }) => {
   return (
     <>
       <Head>
@@ -40,7 +41,7 @@ const Page: NextPage<ICurrentOrderProps> = ({ currentOrder, mergedData }) => {
         ></meta>
         <meta name="next-head-count" content="5"></meta>
       </Head>
-      <Order currentOrder={currentOrder} mergedData={mergedData} />
+      <Order currentOrder={currentOrder} mergedData={mergedData} deliveryMethodData={deliveryMethodData}/>
       <style>
         {`
             html {
@@ -53,15 +54,21 @@ const Page: NextPage<ICurrentOrderProps> = ({ currentOrder, mergedData }) => {
 };
 
 Page.getInitialProps = async (ctx) => {
-  const res = await fetch(`${BASE_URL}/order/current/${ctx.query.orderId}`);
-  const data = await res.json();
+  const orderRes = await fetch(`${BASE_URL}/order/current/${ctx.query.orderId}`);
+  const orderData = await orderRes.json();
 
   const mergedRes = await fetch(
     `${BASE_URL}/order/client-merge-info/${ctx.query.orderId}`
   );
   const mergedData = await mergedRes.json();
 
-  return { currentOrder: data, mergedData: mergedData };
+
+  const deliveryMethodRes = await fetch(
+    `${BASE_URL}/delivery-method/get`
+  )
+  const deliveryMethodData = await deliveryMethodRes.json();
+
+  return { currentOrder: orderData, mergedData: mergedData, deliveryMethodData: deliveryMethodData };
 };
 
 export default Page;

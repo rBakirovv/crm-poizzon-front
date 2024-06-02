@@ -20,6 +20,8 @@ import UserData from "../../../store/user";
 import PaymentsData from "../../../store/payments";
 import { observer } from "mobx-react-lite";
 import { BASE_URL_FRONT } from "../../../utils/constants";
+import deliveryMethod from "../../../store/deliveryMethod";
+import { setIsCDEKBreakdown } from "../../../utils/DeliveryMethod";
 
 const dayjs = require("dayjs");
 
@@ -353,6 +355,17 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
     }
   }
 
+  function isCDEKBreakdownHandler() {
+    setIsCDEKBreakdown(
+      deliveryMethod.deliveryMethod._id,
+      !deliveryMethod.deliveryMethod.isCDEKBreakdown
+    ).then(() => {
+      deliveryMethod.setIsCDEKBreakdown(
+        !deliveryMethod.deliveryMethod.isCDEKBreakdown
+      );
+    });
+  }
+
   return (
     <>
       <div className={styles["orders-table__container"]}>
@@ -650,6 +663,16 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
             >
               {!isCopyTg ? "@telegram" : "Закрыть"}
             </button>
+          )}
+          {status === "Ожидает данные" && (
+            <div className={styles["orders-table__checkbox"]}>
+              <input
+                type="checkbox"
+                checked={deliveryMethod.deliveryMethod.isCDEKBreakdown}
+                onChange={isCDEKBreakdownHandler}
+              />
+              <label>Проблемы со СДЭК</label>
+            </div>
           )}
         </div>
         {status === "Черновик" && (

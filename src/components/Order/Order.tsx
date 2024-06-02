@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
 import {
+  IDeliveryMethod,
   IMergedClientOrders,
   IOrder,
   IOrderImages,
@@ -37,6 +38,7 @@ import PreloaderClient from "../UI/PreloaderClient/PreloaderClient";
 interface IOrderProps {
   currentOrder: IOrder;
   mergedData: Array<IMergedClientOrders>;
+  deliveryMethodData: Array<IDeliveryMethod>;
 }
 
 const dayjs = require("dayjs");
@@ -69,7 +71,7 @@ dayjs.updateLocale("en", {
   ],
 });
 
-const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
+const Order: FC<IOrderProps> = ({ currentOrder, mergedData, deliveryMethodData }) => {  
   const router = useRouter();
 
   const [isBrowser, setIsBrowser] = useState<boolean>(false);
@@ -1909,6 +1911,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData }) => {
             comment={currentOrder.model}
             combinedOrder={currentOrder.combinedOrder}
             closeUserDataModalActive={closeUserDataModalActive}
+            deliveryMethodData={deliveryMethodData}
           />
         )}
       {isPreload && <PreloaderClient />}
