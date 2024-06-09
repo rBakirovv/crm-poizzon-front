@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-import { IOrder } from "../../types/interfaces";
-import {
-  getOrderByNumber,
-  mergeOrders,
-  unmergeOrders,
-} from "../../utils/Order";
+import { getOrderByNumber, unmergeOrders } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import TextInput from "../UI/TextInput/TextInput";
 import styles from "./Merge.module.css";
+import Link from "next/link";
 
 const Merge = () => {
   const [data, setData] = useState({
@@ -16,9 +12,7 @@ const Merge = () => {
 
   const [isSubmitPopup, setIsSubmitPopup] = useState(false);
 
-  const [isUnmerge, setIsUnmerge] = useState(false);
-
-  let ordersList: Array<string> = [];
+  const [isUnmerge, setIsUnmerge] = useState(true);
 
   function openSubmitPopup(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -54,25 +48,6 @@ const Merge = () => {
         .catch((err) => console.log(err));
 
       await setData({ orders: "" });
-    } else {
-      await data.orders.match(/(-?\d+(\.\d+)?)/g)?.map((item) => {
-        getOrderByNumber(item)
-          .then((order) => {
-            order.map((orderItem: IOrder) => {
-              ordersList.push(orderItem._id);
-            });
-          })
-          .then(() => {
-            ordersList.length ===
-              data.orders.match(/(-?\d+(\.\d+)?)/g)?.length &&
-              ordersList.map((item, index) => {
-                mergeOrders(ordersList[index], ordersList);
-              });
-          })
-          .catch((err) => console.log(err));
-      });
-
-      await setData({ orders: "" });
     }
   }
 
@@ -84,7 +59,9 @@ const Merge = () => {
     <section className={styles["merge"]}>
       <div className={styles["merge__container"]}>
         <form className={styles["merge__form"]} onSubmit={openSubmitPopup}>
-          <h2 className={styles["merge__form-title"]}>Объединить заказы</h2>
+          <h2 className={styles["merge__form-title"]}>
+            Объединить/Разъединить заказы
+          </h2>
           <TextInput
             label="Номера заказов через запятую"
             name="orders"
@@ -105,6 +82,9 @@ const Merge = () => {
             onChange={handleUnmergeChange}
           />
           <span>Удалить объединение</span>
+        </div>
+        <div style={{ color: "red", marginTop: "1rem" }}>
+          Объединение заказов происходит <Link href="/search-order"><strong>в поиске</strong></Link>
         </div>
       </div>
       <SubmitPopup

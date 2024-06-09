@@ -1,18 +1,24 @@
 import styles from "./Search.module.css";
 import TextInput from "../UI/TextInput/TextInput";
 import OrderData from "../../store/order";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { IOrder } from "../../types/interfaces";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
-import { mergeOrders, searchOrder, unmergeOrders } from "../../utils/Order";
+import {
+  //getCurrentOrder,
+  mergeOrders,
+  searchOrder,
+  unmergeOrders,
+} from "../../utils/Order";
+//import order from "../../store/order";
 
 const dayjs = require("dayjs");
 
 var utc = require("dayjs/plugin/utc");
 var timezone = require("dayjs/plugin/timezone");
 
-var debounce = require("lodash.debounce");
+//var debounce = require("lodash.debounce");
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -42,6 +48,10 @@ const Search = () => {
   const [isSubmitUnmergePopup, setIsSubmitUnmergePopup] = useState(false);
 
   const [currentOrderItem, setCurrentOrderItem] = useState<IOrder>();
+
+  const [ordersDeliveryAddressArray, setOrdersDeliveryAddressArray] = useState<
+    Array<string>
+  >([]);
 
   const lastPageIndex = Math.ceil(OrderData.ordersTableLength / itemsPerPage);
 
@@ -97,7 +107,7 @@ const Search = () => {
     }
 
     if (target.name === "current_page") {
-      handleChangePage(parseInt(target.value))
+      handleChangePage(parseInt(target.value));
     }
   }
 
@@ -140,12 +150,14 @@ const Search = () => {
   function mergeItemClickHandler(
     e: React.SyntheticEvent,
     id: string,
-    number: number
+    number: number,
+    deliveryAddress: string
   ) {
     e.preventDefault();
 
     if (!ordersArray.includes(id)) {
       setOrdersArray(ordersArray.concat(id));
+      setOrdersDeliveryAddressArray(ordersDeliveryAddressArray.concat(deliveryAddress));
       setNumbersArray(numbersArray.concat(number));
     }
   }
@@ -161,21 +173,30 @@ const Search = () => {
   }
 
   async function submitMergePopupFunction() {
-    await ordersArray.map((item, index) => {
-      mergeOrders(ordersArray[index], ordersArray);
-    });
+    if ((ordersDeliveryAddressArray.every((v) => v === ordersDeliveryAddressArray[0])) && !ordersDeliveryAddressArray.includes("")) {
+      await ordersArray.map((item, index) => {
+        mergeOrders(ordersArray[index], ordersArray);
+      });
 
-    await setOrdersArray([]);
-    await setNumbersArray([]);
-    await setIsMerge(false);
+      await setOrdersArray([]);
+      await setNumbersArray([]);
+      await setOrdersDeliveryAddressArray([]);
+      await setIsMerge(false);
 
-    await searchOrder(
-      currentPage - 1,
-      parseInt(data.search) ? parseInt(data.search) : data.search
-    ).then((orders) => {
-      setSearchedOrders(orders.orders);
-      OrderData.setOrdersTableLength(orders.total);
-    });
+      await searchOrder(
+        currentPage - 1,
+        parseInt(data.search) ? parseInt(data.search) : data.search
+      ).then((orders) => {
+        setSearchedOrders(orders.orders);
+        OrderData.setOrdersTableLength(orders.total);
+      });
+    } else {
+      alert(`Ошибка!
+      \n Адерс досатвки в заказах не совпадает или адрес не указан
+      \n ${numbersArray.map((item, index) => {
+        return `${numbersArray[index]} : ${ordersDeliveryAddressArray[index] !== "" ? ordersDeliveryAddressArray[index] : "без адреса"}\n`;
+      })}`);
+    }
   }
 
   async function submitUnmergePopupFunction() {
@@ -343,7 +364,8 @@ const Search = () => {
                           mergeItemClickHandler(
                             e,
                             orderItem._id,
-                            orderItem.orderId
+                            orderItem.orderId,
+                            orderItem.deliveryAddress
                           )
                         }
                         className={styles["orders-table__item-merge"]}
@@ -400,7 +422,8 @@ const Search = () => {
                               parseFloat(orderItem.priceDeliveryChina) +
                               parseFloat(orderItem.priceDeliveryRussia) +
                               parseFloat(orderItem.commission) -
-                              orderItem.promoCodePercent + orderItem.expressCost
+                              orderItem.promoCodePercent +
+                              orderItem.expressCost
                           ))}
                     {orderItem.status === "Черновик" && <br />}
                     {orderItem.status !== "Черновик" &&
@@ -410,7 +433,8 @@ const Search = () => {
                           parseFloat(orderItem.priceDeliveryChina) +
                           parseFloat(orderItem.priceDeliveryRussia) +
                           parseFloat(orderItem.commission) -
-                          orderItem.promoCodePercent + orderItem.expressCost
+                          orderItem.promoCodePercent +
+                          orderItem.expressCost
                       )}
                   </div>
                   <div
