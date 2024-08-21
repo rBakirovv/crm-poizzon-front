@@ -1598,7 +1598,7 @@ const Delivery = observer(() => {
         </div>
         {UserData.userData.position === "Работник склада" &&
           OrderData.order.deliveryAddress !== "" && (
-            <div style={{marginBottom: "1rem"}}>
+            <div style={{ marginBottom: "1rem" }}>
               <h4>Адрес доставки</h4>
               <div className={styles["delivery__input-container"]}>
                 <p className={styles["delivery-copy"]} onClick={copyAddress}>
@@ -1799,17 +1799,15 @@ const Delivery = observer(() => {
         </div>
         <div className={styles["delivery__data-container"]}>
           {UserData.userData.position !== "Менеджер" &&
-            UserData.userData.position !== "Байер" &&
-            OrderData.order.deliveryNameRecipient && (
+            UserData.userData.position !== "Байер" && (
               <form
                 className={`${styles["delivery-form"]} ${
                   UserData.userData.position === "Работник склада" &&
+                  OrderData.order.deliveryAddress &&
                   styles["delivery-form_warehouse"]
                 }`}
               >
-                {(OrderData.order.status === "На складе в РФ" ||
-                  OrderData.order.status === "Доставляется" ||
-                  OrderData.order.status === "Завершён") && (
+                {
                   <>
                     <h4>Фотографии квитанции</h4>
                     {OrderData.order.receiptImages.length > 0 &&
@@ -1932,7 +1930,7 @@ const Delivery = observer(() => {
                       </div>
                     )}
                   </>
-                )}
+                }
                 <TextInput
                   label="Трек-номер CDEK/Почта РФ"
                   name="delivery_code"
