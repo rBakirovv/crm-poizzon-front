@@ -505,7 +505,7 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
                       } ${styles["orders-table__header-item_number"]} ${
                         orderItem.reorder === true &&
                         styles["orders-table__reorder"]
-                      }`}
+                      } ${orderItem.expressCost > 0 && styles["express-del"]}`}
                       href={`/order/change/${orderItem._id}`}
                       onClick={resetOrderСhapter}
                     >
