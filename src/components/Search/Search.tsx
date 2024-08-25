@@ -43,6 +43,7 @@ const Search = () => {
   const [isUnmergeCheckbox, setIsUnmergeCheckbox] = useState<boolean>(false);
   const [ordersArray, setOrdersArray] = useState<Array<string>>([]);
   const [numbersArray, setNumbersArray] = useState<Array<number>>([]);
+  const [expressCostArray, setExpressCostArray] = useState<Array<number>>([]);
 
   const [isSubmitMergePopup, setIsSubmitMergePopup] = useState(false);
   const [isSubmitUnmergePopup, setIsSubmitUnmergePopup] = useState(false);
@@ -151,14 +152,18 @@ const Search = () => {
     e: React.SyntheticEvent,
     id: string,
     number: number,
-    deliveryAddress: string
+    deliveryAddress: string,
+    expressCost: number
   ) {
     e.preventDefault();
 
     if (!ordersArray.includes(id)) {
       setOrdersArray(ordersArray.concat(id));
-      setOrdersDeliveryAddressArray(ordersDeliveryAddressArray.concat(deliveryAddress));
+      setOrdersDeliveryAddressArray(
+        ordersDeliveryAddressArray.concat(deliveryAddress)
+      );
       setNumbersArray(numbersArray.concat(number));
+      setExpressCostArray(expressCostArray.concat(expressCost));
     }
   }
 
@@ -173,29 +178,54 @@ const Search = () => {
   }
 
   async function submitMergePopupFunction() {
-    if ((ordersDeliveryAddressArray.every((v) => v === ordersDeliveryAddressArray[0])) && !ordersDeliveryAddressArray.includes("")) {
-      await ordersArray.map((item, index) => {
-        mergeOrders(ordersArray[index], ordersArray);
-      });
+    if (
+      ordersDeliveryAddressArray.every(
+        (v) => v === ordersDeliveryAddressArray[0]
+      ) &&
+      !ordersDeliveryAddressArray.includes("")
+    ) {
+      if (
+        expressCostArray.includes(0) &&
+        Math.max.apply(null, expressCostArray) > 0
+      ) {
+        alert(`Ошибка!
+          \n один из заказов имеет экспресс доставку
+          \n ${expressCostArray.map((item, index) => {
+            return `${numbersArray[index]} : ${
+              expressCostArray[index] > 0
+                ? "экспресс доставка"
+                : "обычная доставка"
+            }\n`;
+          })}
+          `);
+      } else {
+        await ordersArray.map((item, index) => {
+          mergeOrders(ordersArray[index], ordersArray);
+        });
 
-      await setOrdersArray([]);
-      await setNumbersArray([]);
-      await setOrdersDeliveryAddressArray([]);
-      await setIsMerge(false);
+        await setOrdersArray([]);
+        await setNumbersArray([]);
+        await setOrdersDeliveryAddressArray([]);
+        await setIsMerge(false);
 
-      await searchOrder(
-        currentPage - 1,
-        parseInt(data.search) ? parseInt(data.search) : data.search
-      ).then((orders) => {
-        setSearchedOrders(orders.orders);
-        OrderData.setOrdersTableLength(orders.total);
-      });
+        await searchOrder(
+          currentPage - 1,
+          parseInt(data.search) ? parseInt(data.search) : data.search
+        ).then((orders) => {
+          setSearchedOrders(orders.orders);
+          OrderData.setOrdersTableLength(orders.total);
+        });
+      }
     } else {
       alert(`Ошибка!
-      \n Адерс досатвки в заказах не совпадает или адрес не указан
-      \n ${numbersArray.map((item, index) => {
-        return `${numbersArray[index]} : ${ordersDeliveryAddressArray[index] !== "" ? ordersDeliveryAddressArray[index] : "без адреса"}\n`;
-      })}`);
+        \n Адерс досатвки в заказах не совпадает или адрес не указан
+        \n ${numbersArray.map((item, index) => {
+          return `${numbersArray[index]} : ${
+            ordersDeliveryAddressArray[index] !== ""
+              ? ordersDeliveryAddressArray[index]
+              : "без адреса"
+          }\n`;
+        })}`);
     }
   }
 
@@ -354,7 +384,9 @@ const Search = () => {
                       orderItem.status === "Завершён" &&
                       styles["orders-table__finished"]
                     } 
-                       ${styles["orders-table__header-item_number"]}`}
+                       ${styles["orders-table__header-item_number"]} ${
+                      orderItem.expressCost > 0 && styles["express-del"]
+                    }`}
                     href={`/order/change/${orderItem._id}`}
                     onClick={resetOrderСhapter}
                   >
@@ -365,7 +397,8 @@ const Search = () => {
                             e,
                             orderItem._id,
                             orderItem.orderId,
-                            orderItem.deliveryAddress
+                            orderItem.deliveryAddress,
+                            orderItem.expressCost
                           )
                         }
                         className={styles["orders-table__item-merge"]}
