@@ -510,6 +510,9 @@ const OrderTable: FC<IOrderTable> = observer(({ status }) => {
                       onClick={resetOrderСhapter}
                     >
                       {orderItem.orderId}
+                      {orderItem.isSplit && (
+                        <div className={styles["split-badge"]}>Сплит</div>
+                      )}
                     </Link>
                     <div
                       className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_date"]}`}

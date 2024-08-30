@@ -95,11 +95,11 @@
 }
 
 .orders-table__combined::after {
-  content: "O6!";
+  content: "Oбъед.";
   position: absolute;
-  left: 5px;
-  bottom: 5px;
-  font-size: 0.75rem;
+  left: 1px;
+  bottom: 1px;
+  font-size: 0.5rem;
 }
 
 .orders-table__item {
@@ -108,6 +108,7 @@
   border: 1px solid #b4b3b3;
   border-top: none;
   border-right: none;
+  min-height: 45px;
 }
 
 .orders-table__delete-item {
@@ -125,6 +126,7 @@
 }
 
 .orders-table__info-item {
+  position: relative;
   font-weight: 400;
   display: flex;
   justify-content: center;
@@ -203,10 +205,19 @@
 }
 
 .express-del::before {
-  content: 'express';
+  content: 'Express';
   position: absolute;
   top: 1px;
   left: 1px;
+  font-size: 8px;
+  color: #ff7f00;
+}
+
+.split-badge {
+  position: absolute;
+  z-index: 2;
+  bottom: 1px;
+  right: 1px;
   font-size: 8px;
   color: #ff7f00;
 }

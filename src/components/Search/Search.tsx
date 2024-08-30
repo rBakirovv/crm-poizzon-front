@@ -417,6 +417,9 @@ const Search = () => {
                       </button>
                     )}
                     {orderItem.orderId}
+                    {orderItem.isSplit && (
+                      <div className={styles["split-badge"]}>Сплит</div>
+                    )}
                   </Link>
                   <div
                     className={`${styles["orders-table__info-item"]} ${styles["orders-table__header-item_status"]}`}
