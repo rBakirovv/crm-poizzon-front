@@ -81,7 +81,7 @@
 }
 
 .orders-table__combined::after {
-  content: "O6!";
+  content: "Oбъед.";
   position: absolute;
   left: 5px;
   bottom: 5px;
