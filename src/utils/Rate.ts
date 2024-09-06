@@ -31,6 +31,33 @@ export const updateRate = (id: string, newRate: string) => {
   }).then(checkResponse);
 };
 
+export const getVeritableRate = () => {
+  return fetch(`${BASE_URL}/veritable-rate`, {
+    credentials: "include",
+    method: "GET",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const createVeritableRate = () => {
+  return fetch(`${BASE_URL}/veritable-rate/create`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const updateVeritableRate = (id: string, newRate: string) => {
+  return fetch(`${BASE_URL}/veritable-rate/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      newRate,
+    }),
+  }).then(checkResponse);
+};
+
 export const getCommissionData = () => {
   return fetch(`${BASE_URL}/commission`, {
     credentials: "include",

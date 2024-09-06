@@ -8,8 +8,9 @@ import Preloader from "../../components/UI/Preloader/Preloader";
 import UserData from "../../store/user";
 import Logged from "../../store/logged";
 import { getUserInfo } from "../../utils/User";
-import { getCommissionData, getRate } from "../../utils/Rate";
+import { getCommissionData, getRate, getVeritableRate } from "../../utils/Rate";
 import RateData from "../../store/rate";
+import VeritableRateData from "../../store/veritableRate";
 import CommissionData from "../../store/commission";
 import Navigation from "../../components/UI/Navigation/Navigation";
 import { ADMIN, MAINADMIN, SUPERADMIN } from "../../utils/constants";
@@ -58,6 +59,12 @@ const Home = observer(() => {
   }, []);
 
   useEffect(() => {
+    getVeritableRate().then((rates) => {
+      rates.length > 0 ? VeritableRateData.setNewRate(rates[0]) : setIsFirstRate(true);
+    });
+  }, []);
+
+  useEffect(() => {
     getCommissionData().then((commission) => {
       CommissionData.setUpdatedCommission(commission);
     });
@@ -84,9 +91,10 @@ const Home = observer(() => {
           />
           <Navigation />
           <Main>
-            {(UserData.userData.position === SUPERADMIN || UserData.userData.position === MAINADMIN || UserData.userData.position === ADMIN) && CommissionData.commission._id !== "" ? (
+            {(UserData.userData.position === SUPERADMIN || UserData.userData.position === MAINADMIN || UserData.userData.position === ADMIN) ? (
               <RateComponent
                 currentRate={RateData.rate}
+                veritableRate={VeritableRateData.veritableRate}
                 isFirstRate={isFirstRate}
               />
             ) : (

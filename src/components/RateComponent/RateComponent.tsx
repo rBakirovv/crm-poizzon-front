@@ -5,19 +5,24 @@ import {
   createRate,
   updateCommissionStatistics,
   updateRate,
+  updateVeritableRate,
 } from "../../utils/Rate";
 import RateData from "../../store/rate";
+import VeritableRateData from "../../store/veritableRate";
 import UserData from "../../store/user";
 import CommissionData from "../../store/commission";
 import { IRate } from "../../types/interfaces";
+import { observer } from "mobx-react-lite";
 
 interface IRateComponentProps {
   currentRate: IRate;
+  veritableRate: IRate;
   isFirstRate: boolean;
 }
 
-const RateComponent: FC<IRateComponentProps> = ({
+const RateComponent: FC<IRateComponentProps> = observer(({
   currentRate,
+  veritableRate,
   isFirstRate,
 }) => {
   const [data, setData] = useState({
@@ -50,17 +55,27 @@ const RateComponent: FC<IRateComponentProps> = ({
 
   const [isSubmitPopup, setIsSubmitPopup] = useState(false);
 
-  const [isSubmitCommissionPopup, setIsSubmitCommissionPopup] = useState(false);
+  const [isVeritableRateSubmitPopup, setIsVeritableRateSubmitPopup] =
+    useState(false);
 
-  const regexRate = /^\d+(?:[\.,]\d+)?$/;
+  const [isSubmitCommissionPopup, setIsSubmitCommissionPopup] = useState(false);
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
 
-    RateData.setNewRate({
-      rate: target.value,
-      _id: currentRate._id,
-    });
+    if (target.name === "rate") {
+      RateData.setNewRate({
+        rate: target.value,
+        _id: currentRate._id,
+      });
+    }
+
+    if (target.name === "veritableRate") {
+      VeritableRateData.setNewRate({
+        rate: target.value,
+        _id: veritableRate._id,
+      });
+    }
   }
 
   function handleChangeCommission(e: React.SyntheticEvent) {
@@ -80,6 +95,14 @@ const RateComponent: FC<IRateComponentProps> = ({
 
   function closeSubmitPopup() {
     setIsSubmitPopup(false);
+  }
+
+  function openVeritableRateSubmitPopup() {
+    setIsVeritableRateSubmitPopup(true);
+  }
+
+  function closeVeritableRateSubmitPopup() {
+    setIsVeritableRateSubmitPopup(false);
   }
 
   function openCommissionPopup() {
@@ -104,6 +127,19 @@ const RateComponent: FC<IRateComponentProps> = ({
     updateRate(currentRate._id!, currentRate.rate)
       .then((updatedRate) => {
         RateData.setNewRate({
+          rate: updatedRate.rate,
+          _id: updatedRate._id,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleSubmitChangeVeritableRate() {
+    updateVeritableRate(veritableRate._id!, veritableRate.rate)
+      .then((updatedRate) => {
+        VeritableRateData.setNewRate({
           rate: updatedRate.rate,
           _id: updatedRate._id,
         });
@@ -146,15 +182,6 @@ const RateComponent: FC<IRateComponentProps> = ({
     });
   }
 
-  useEffect(() => {
-    if (!regexRate.test(RateData.rate.rate)) {
-      RateData.setNewRate({
-        rate: "0.00",
-        _id: currentRate._id,
-      });
-    }
-  }, [currentRate]);
-
   return (
     <section className={styles["rate"]}>
       <div className={styles["rate__container"]}>
@@ -186,6 +213,26 @@ const RateComponent: FC<IRateComponentProps> = ({
             <button
               className={styles["rate__submit"]}
               onClick={openSubmitPopup}
+              type="button"
+            >
+              Сохранить
+            </button>
+          )}
+        </form>
+        <h2 className={styles["rate__title"]}>Истинный курс CNY</h2>
+        <form className={styles["rate__form"]}>
+          <input
+            className={styles["rate__input"]}
+            name="veritableRate"
+            type="text"
+            value={veritableRate.rate}
+            onChange={handleChange}
+          />
+          {(UserData.userData.position === "Создатель" ||
+            UserData.userData.position === "Главный администратор") && (
+            <button
+              className={styles["rate__submit"]}
+              onClick={openVeritableRateSubmitPopup}
               type="button"
             >
               Сохранить
@@ -488,6 +535,12 @@ const RateComponent: FC<IRateComponentProps> = ({
         isSubmitPopup={isSubmitPopup}
         closeSubmitPopup={closeSubmitPopup}
       />
+      <SubmitPopup
+        submitText={`Выставить ист. курс CNY ${VeritableRateData.veritableRate.rate}₽`}
+        onSubmit={handleSubmitChangeVeritableRate}
+        isSubmitPopup={isVeritableRateSubmitPopup}
+        closeSubmitPopup={closeVeritableRateSubmitPopup}
+      />
       {isSubmitCommissionPopup && (
         <SubmitPopup
           submitText={`Изменить коммисию/стоимость достави`}
@@ -498,6 +551,6 @@ const RateComponent: FC<IRateComponentProps> = ({
       )}
     </section>
   );
-};
+});
 
 export default RateComponent;

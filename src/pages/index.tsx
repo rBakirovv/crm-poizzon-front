@@ -12,8 +12,9 @@ import { getLongDrafts, getOrders, getOrdersTable } from "../utils/Order";
 import OrderData from "../store/order";
 import OrdersBar from "../store/ordersBar";
 import Navigation from "../components/UI/Navigation/Navigation";
-import { getRate } from "../utils/Rate";
+import { getRate, getVeritableRate } from "../utils/Rate";
 import RateData from "../store/rate";
+import VeritableRateData from "../store/veritableRate";
 import OrdersList from "../components/OrdersList/OrdersList";
 import { deleteOrder, getCurrentOrder, deleteOrderImage } from "../utils/Order";
 import { IOrder, IOrderImages } from "../types/interfaces";
@@ -113,6 +114,16 @@ const Home = observer(() => {
     getRate()
       .then((rates) => {
         RateData.setNewRate(rates[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    getVeritableRate()
+      .then((rates) => {
+        VeritableRateData.setNewRate(rates[0]);
       })
       .catch((err) => {
         console.log(err);
