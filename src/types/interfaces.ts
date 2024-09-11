@@ -12,6 +12,7 @@ export interface IPayments {
   number: string;
   _id: string;
   paymentOrder: number;
+  servicePercentage: string;
 }
 
 export interface IOrder {
@@ -56,7 +57,9 @@ export interface IOrder {
   payment: string;
   isSplit: boolean;
   currentRate: string;
+  veritableRate: string;
   priceCNY: string;
+  veritablePriceCNY: string;
   priceDeliveryChina: string;
   priceDeliveryRussia: string;
   commission: string;
@@ -96,6 +99,7 @@ export interface IOrder {
   surchargePayLinksArray: Array<string>;
   surchargeTotal: number;
   paidAtSurcharge: Date;
+  servicePercentage: string;
   __v?: number;
 }
 

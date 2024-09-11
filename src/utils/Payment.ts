@@ -43,6 +43,18 @@ export const updatePaymentOrder = (id: string, order: number) => {
   }).then(checkResponse);
 };
 
+export const changeServicePercentage = (id: string, servicePercentage: string) => {
+  return fetch(`${BASE_URL}/payments/update-service-percentage/${id}`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: HEADERS,
+    body: JSON.stringify({
+      servicePercentage: servicePercentage,
+    }),
+  }).then(checkResponse);
+};
+
+
 const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();

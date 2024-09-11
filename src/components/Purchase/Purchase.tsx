@@ -4,7 +4,13 @@ import TextInput from "../UI/TextInput/TextInput";
 import OrderData from "../../store/order";
 import UserData from "../../store/user";
 import styles from "./Purchase.module.css";
-import { BASE_URL, MAX_SIZE } from "../../utils/constants";
+import {
+  ADMIN,
+  BASE_URL,
+  MAINADMIN,
+  MAX_SIZE,
+  SUPERADMIN,
+} from "../../utils/constants";
 import {
   deletePurchaseImage,
   inPurchase,
@@ -14,6 +20,8 @@ import {
   cancelPurchase,
   notLegit,
   setPurchaseImagesDisabled,
+  changeVeritableRate,
+  changeVeritablePriceCNY,
 } from "../../utils/Order";
 import ImagePopup from "../ImagePopup/ImagePopup";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
@@ -53,6 +61,8 @@ dayjs.updateLocale("en", {
 const Purchase = () => {
   const [data, setData] = useState({
     poizon_code: OrderData.order.poizonCode,
+    veritableRate: OrderData.order.veritableRate,
+    veritablePriceCNY: OrderData.order.veritablePriceCNY,
   });
 
   const [uploading, setUploading] = useState<boolean>(false);
@@ -63,6 +73,12 @@ const Purchase = () => {
   const [isSubmitPopupOpen, setIsSubmitPopupOpen] = useState<boolean>(false);
   const [isCancelPopupOpen, setIsCancelPopupOpen] = useState<boolean>(false);
   const [isLegitPopupOpen, setIsLegitPopupOpen] = useState<boolean>(false);
+  const [isChangeVeritableRatePopupOpen, setIsChangeVeritableRatePopupOpen] =
+    useState<boolean>(false);
+  const [
+    isChangeVeritablePriceCNYPopupOpen,
+    setIsChangeVeritablePriceCNYPopupOpen,
+  ] = useState<boolean>(false);
 
   const [isDrag, setIsDrag] = useState(false);
 
@@ -121,6 +137,26 @@ const Purchase = () => {
 
   function closeImagePopup() {
     setIsImagePopupOpen(false);
+  }
+
+  function openChangeVeritableRatePopup(e: React.SyntheticEvent) {
+    e.preventDefault();
+    setIsChangeVeritableRatePopupOpen(true);
+  }
+
+  function closeChangeVeritableRatePopup() {
+    setIsChangeVeritableRatePopupOpen(false);
+    setIsSubmitPopupOpen(false);
+  }
+
+  function openChangeVeritablePriceCNYPopup(e: React.SyntheticEvent) {
+    e.preventDefault();
+    setIsChangeVeritablePriceCNYPopupOpen(true);
+  }
+
+  function closeChangeVeritablePriceCNYPopup() {
+    setIsChangeVeritablePriceCNYPopupOpen(false);
+    setIsSubmitPopupOpen(false);
   }
 
   const uploadFileHandler = async (
@@ -188,7 +224,9 @@ const Purchase = () => {
             isSplit: OrderData.order.isSplit,
             payment: OrderData.order.payment,
             currentRate: OrderData.order.currentRate,
+            veritableRate: OrderData.order.veritableRate,
             priceCNY: OrderData.order.priceCNY,
+            veritablePriceCNY: OrderData.order.veritablePriceCNY,
             priceDeliveryChina: OrderData.order.priceDeliveryChina,
             priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
             commission: OrderData.order.commission,
@@ -231,6 +269,7 @@ const Purchase = () => {
             surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
             surchargeTotal: OrderData.order.surchargeTotal,
             paidAtSurcharge: OrderData.order.paidAtSurcharge,
+            servicePercentage: OrderData.order.servicePercentage,
             __v: OrderData.order.__v,
           });
         })
@@ -297,7 +336,9 @@ const Purchase = () => {
           isSplit: OrderData.order.isSplit,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
+          veritableRate: OrderData.order.veritableRate,
           priceCNY: OrderData.order.priceCNY,
+          veritablePriceCNY: OrderData.order.veritablePriceCNY,
           priceDeliveryChina: OrderData.order.priceDeliveryChina,
           priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
           commission: OrderData.order.commission,
@@ -339,6 +380,7 @@ const Purchase = () => {
           surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
           surchargeTotal: OrderData.order.surchargeTotal,
           paidAtSurcharge: OrderData.order.paidAtSurcharge,
+          servicePercentage: OrderData.order.servicePercentage,
           __v: OrderData.order.__v,
         });
       })
@@ -415,6 +457,30 @@ const Purchase = () => {
     });
   }
 
+  function handleChangeVeritableRate() {
+    changeVeritableRate(OrderData.order._id, data.veritableRate)
+      .then((updatedOrder) => {
+        OrderData.setOrder(updatedOrder);
+      })
+      .then(() => {
+        setIsCancelPopupOpen(false);
+        setIsSubmitPopupOpen(false);
+      })
+      .then(() => closeCancelPopup());
+  }
+
+  function handleChangeVeritablePriceCNY() {
+    changeVeritablePriceCNY(OrderData.order._id, data.veritablePriceCNY)
+      .then((updatedOrder) => {
+        OrderData.setOrder(updatedOrder);
+      })
+      .then(() => {
+        setIsCancelPopupOpen(false);
+        setIsSubmitPopupOpen(false);
+      })
+      .then(() => closeCancelPopup());
+  }
+
   async function pasteHandler(e: any) {
     // Костыль!
     if (e.clipboardData) {
@@ -478,7 +544,9 @@ const Purchase = () => {
                     isSplit: OrderData.order.isSplit,
                     payment: OrderData.order.payment,
                     currentRate: OrderData.order.currentRate,
+                    veritableRate: OrderData.order.veritableRate,
                     priceCNY: OrderData.order.priceCNY,
+                    veritablePriceCNY: OrderData.order.veritablePriceCNY,
                     priceDeliveryChina: OrderData.order.priceDeliveryChina,
                     priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
                     commission: OrderData.order.commission,
@@ -527,8 +595,9 @@ const Purchase = () => {
                     surchargeUUID: OrderData.order.surchargeUUID,
                     surchargePayLinksArray:
                       OrderData.order.surchargePayLinksArray,
-                      surchargeTotal: OrderData.order.surchargeTotal,
-                      paidAtSurcharge: OrderData.order.paidAtSurcharge,
+                    surchargeTotal: OrderData.order.surchargeTotal,
+                    paidAtSurcharge: OrderData.order.paidAtSurcharge,
+                    servicePercentage: OrderData.order.servicePercentage,
                     __v: OrderData.order.__v,
                   });
                 })
@@ -601,7 +670,9 @@ const Purchase = () => {
       isSplit: OrderData.order.isSplit,
       payment: OrderData.order.payment,
       currentRate: OrderData.order.currentRate,
+      veritableRate: data.veritableRate,
       priceCNY: OrderData.order.priceCNY,
+      veritablePriceCNY: data.veritablePriceCNY,
       priceDeliveryChina: OrderData.order.priceDeliveryChina,
       priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
       commission: OrderData.order.commission,
@@ -643,6 +714,7 @@ const Purchase = () => {
       surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
       surchargeTotal: OrderData.order.surchargeTotal,
       paidAtSurcharge: OrderData.order.paidAtSurcharge,
+      servicePercentage: OrderData.order.servicePercentage,
       __v: OrderData.order.__v,
     });
   }, [data]);
@@ -657,6 +729,60 @@ const Purchase = () => {
         required={false}
         disabled={UserData.userData.position === "Работник склада"}
       />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+          gap: "1rem",
+          marginTop: "1rem",
+        }}
+      >
+        <TextInput
+          label="Ист. крус"
+          name="veritableRate"
+          value={OrderData.order.veritableRate}
+          handleChange={handleChange}
+          required={false}
+        />
+        {(UserData.userData.position === SUPERADMIN ||
+          UserData.userData.position === MAINADMIN ||
+          UserData.userData.position === ADMIN) && (
+          <button
+            onClick={openChangeVeritableRatePopup}
+            type="button"
+            style={{ height: "max-content" }}
+          >
+            изм. & сохр.
+          </button>
+        )}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+          gap: "1rem",
+          marginTop: "1rem",
+        }}
+      >
+        <TextInput
+          label="Юани ист."
+          name="veritablePriceCNY"
+          value={OrderData.order.veritablePriceCNY}
+          handleChange={handleChange}
+          required={false}
+        />
+        {(UserData.userData.position === SUPERADMIN ||
+          UserData.userData.position === MAINADMIN ||
+          UserData.userData.position === ADMIN) && (
+          <button
+            onClick={openChangeVeritablePriceCNYPopup}
+            type="button"
+            style={{ height: "max-content" }}
+          >
+            изм. & сохр.
+          </button>
+        )}
+      </div>
       {OrderData.order.buyAt && (
         <p>
           Закуплен:{" "}
@@ -854,7 +980,7 @@ const Purchase = () => {
         currentImage={currentImage}
         closePopup={closeImagePopup}
       />
-      {OrderData.order.status !== "Ожидает закупки" && (
+      {OrderData.order.status !== "Ожидает закупки" && isSubmitPopupOpen && (
         <SubmitPopup
           onSubmit={handlePurchaseSubmit}
           isSubmitPopup={isSubmitPopupOpen}
@@ -862,7 +988,7 @@ const Purchase = () => {
           submitText="Изменить данные заказа или товар закуплен"
         />
       )}
-      {OrderData.order.status === "Ожидает закупки" && (
+      {OrderData.order.status === "Ожидает закупки" && isSubmitPopupOpen && (
         <SubmitPopup
           onSubmit={handleAcceptPurchaseSubmit}
           isSubmitPopup={isSubmitPopupOpen}
@@ -870,18 +996,38 @@ const Purchase = () => {
           submitText="Изменить статус товара На закупке"
         />
       )}
-      <SubmitPopup
-        onSubmit={handleReorder}
-        isSubmitPopup={isCancelPopupOpen}
-        closeSubmitPopup={closeCancelPopup}
-        submitText="Изменить статус товара Ожидает закупки"
-      />
-      <SubmitPopup
-        onSubmit={handleNotLegit}
-        isSubmitPopup={isLegitPopupOpen}
-        closeSubmitPopup={closeLegitPopup}
-        submitText="Товар не легит"
-      />
+      {isCancelPopupOpen && (
+        <SubmitPopup
+          onSubmit={handleReorder}
+          isSubmitPopup={isCancelPopupOpen}
+          closeSubmitPopup={closeCancelPopup}
+          submitText="Изменить статус товара Ожидает закупки"
+        />
+      )}
+      {isLegitPopupOpen && (
+        <SubmitPopup
+          onSubmit={handleNotLegit}
+          isSubmitPopup={isLegitPopupOpen}
+          closeSubmitPopup={closeLegitPopup}
+          submitText="Товар не легит"
+        />
+      )}
+      {isChangeVeritableRatePopupOpen && (
+        <SubmitPopup
+          onSubmit={handleChangeVeritableRate}
+          isSubmitPopup={isChangeVeritableRatePopupOpen}
+          closeSubmitPopup={closeChangeVeritableRatePopup}
+          submitText={`Установить ист. курс ${data.veritableRate}₽`}
+        />
+      )}
+      {isChangeVeritablePriceCNYPopupOpen && (
+        <SubmitPopup
+          onSubmit={handleChangeVeritablePriceCNY}
+          isSubmitPopup={isChangeVeritablePriceCNYPopupOpen}
+          closeSubmitPopup={closeChangeVeritablePriceCNYPopup}
+          submitText={`Установить юани ист. ${data.veritablePriceCNY}₽`}
+        />
+      )}
       {uploading && <Preloader />}
     </form>
   );

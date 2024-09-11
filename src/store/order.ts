@@ -45,6 +45,8 @@ class OrderData {
     payment: "",
     currentRate: "0",
     priceCNY: "0",
+    veritableRate: "0",
+    veritablePriceCNY: "0",
     priceDeliveryChina: "0",
     priceDeliveryRussia: "0",
     commission: "0",
@@ -84,6 +86,7 @@ class OrderData {
     surchargePayLinksArray: [],
     surchargeTotal: 0,
     paidAtSurcharge: new Date(Date.now()),
+    servicePercentage: "",
     __v: 0,
   };
 

@@ -135,7 +135,9 @@ const OrderPay: FC<IOrderPayProps> = () => {
             isSplit: OrderData.order.isSplit,
             payment: OrderData.order.payment,
             currentRate: OrderData.order.currentRate,
+            veritableRate: OrderData.order.veritableRate,
             priceCNY: OrderData.order.priceCNY,
+            veritablePriceCNY: OrderData.order.veritablePriceCNY,
             priceDeliveryChina: OrderData.order.priceDeliveryChina,
             priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
             commission: OrderData.order.commission,
@@ -178,6 +180,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
             surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
             surchargeTotal: OrderData.order.surchargeTotal,
             paidAtSurcharge: OrderData.order.paidAtSurcharge,
+            servicePercentage: OrderData.order.servicePercentage,
             __v: OrderData.order.__v,
           });
         })
@@ -260,7 +263,9 @@ const OrderPay: FC<IOrderPayProps> = () => {
                     isReceiptImages: OrderData.order.isReceiptImages,
                     payment: OrderData.order.payment,
                     currentRate: OrderData.order.currentRate,
+                    veritableRate: OrderData.order.veritableRate,
                     priceCNY: OrderData.order.priceCNY,
+                    veritablePriceCNY: OrderData.order.veritablePriceCNY,
                     priceDeliveryChina: OrderData.order.priceDeliveryChina,
                     priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
                     commission: OrderData.order.commission,
@@ -310,6 +315,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
                       OrderData.order.surchargePayLinksArray,
                     surchargeTotal: OrderData.order.surchargeTotal,
                     paidAtSurcharge: OrderData.order.paidAtSurcharge,
+                    servicePercentage: OrderData.order.servicePercentage,
                     __v: OrderData.order.__v,
                   });
                 })
@@ -385,7 +391,9 @@ const OrderPay: FC<IOrderPayProps> = () => {
           isSplit: OrderData.order.isSplit,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
+          veritableRate: OrderData.order.veritableRate,
           priceCNY: OrderData.order.priceCNY,
+          veritablePriceCNY: OrderData.order.veritablePriceCNY,
           priceDeliveryChina: OrderData.order.priceDeliveryChina,
           priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
           commission: OrderData.order.commission,
@@ -427,6 +435,7 @@ const OrderPay: FC<IOrderPayProps> = () => {
           surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
           surchargeTotal: OrderData.order.surchargeTotal,
           paidAtSurcharge: OrderData.order.paidAtSurcharge,
+          servicePercentage: OrderData.order.servicePercentage,
           __v: OrderData.order.__v,
         });
       })

@@ -3,6 +3,7 @@ import TextInput from "../UI/TextInput/TextInput";
 import styles from "./CreateOrder.module.css";
 import PromoCodeData from "../../store/promo-code";
 import RateData from "../../store/rate";
+import VeritableRateData from "../../store/veritableRate";
 import UserData from "../../store/user";
 import OrderData from "../../store/order";
 import CommissionData from "../../store/commission";
@@ -77,6 +78,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
   const priceRub = Math.ceil(
     parseFloat(data.priceCNY) * parseFloat(RateData.rate.rate)
   );
+
   const totalPrice = Math.ceil(
     priceRub +
       parseFloat(data.priceDeliveryChina) +
@@ -92,6 +94,12 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
       parseFloat(data.commission) -
       data.promoCodePercent
   );
+
+  const paymentItem = payments.find((item) => {
+    if (`${item.title} ${item.number}` === data.payment) {
+      return true;
+    }
+  });
 
   function dragHandler() {
     setIsDrag(true);
@@ -290,13 +298,15 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
         images,
         data.payment,
         RateData.rate.rate,
+        VeritableRateData.veritableRate.rate,
         data.priceCNY,
         data.priceDeliveryChina,
         data.priceDeliveryRussia,
         data.commission,
         data.promoCodePercent,
         data.comment,
-        isReorder
+        isReorder,
+        paymentItem!.servicePercentage,
       )
         .then((order) => {
           OrderData.setOrder(order);
@@ -348,13 +358,15 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
         images,
         data.payment,
         RateData.rate.rate,
+        VeritableRateData.veritableRate.rate,
         data.priceCNY,
         data.priceDeliveryChina,
         data.priceDeliveryRussia,
         data.commission,
         data.promoCodePercent,
         data.comment,
-        isReorder
+        isReorder,
+        paymentItem!.servicePercentage,
       )
         .then((order) => {
           OrderData.setOrder(order);

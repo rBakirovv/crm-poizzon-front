@@ -6,6 +6,8 @@ import {
   deletePayment,
   createPayment,
   updatePaymentOrder,
+  changeServicePercentage,
+  getPayments,
 } from "../../utils/Payment";
 import Payment from "../../store/payments";
 import TextInput from "../UI/TextInput/TextInput";
@@ -27,6 +29,8 @@ const Payments: FC<IPaymentsProps> = ({}) => {
   const [paymentNumber, setPaymentNumber] = useState<string>("");
   const [paymentId, setPaymentId] = useState<any>("");
 
+  const [currentPaymentId, setCurrentPaymentId] = useState<string>("");
+
   const [paymentData, setPaymentData] = useState({
     title: "",
     number: "",
@@ -39,6 +43,7 @@ const Payments: FC<IPaymentsProps> = ({}) => {
     totalSumCashOut: "",
     cardNumber: "",
     secretCode: "",
+    servicePercentage: "",
   });
 
   // Костыль!
@@ -67,6 +72,9 @@ const Payments: FC<IPaymentsProps> = ({}) => {
 
   const [isCopyUrlAnypayments, setIsCopyUrlAnypayments] = useState(false);
   const [isCopyTokenAnypayments, setIsCopyTokenAnypayments] = useState(false);
+
+  const [isChangeServicePercentage, setIsChangeServicePercentage] =
+    useState(false);
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
@@ -101,6 +109,7 @@ const Payments: FC<IPaymentsProps> = ({}) => {
           totalSumCashOut: paymentData.totalSumCashOut,
           cardNumber: paymentData.cardNumber,
           secretCode: paymentData.secretCode,
+          servicePercentage: paymentData.servicePercentage,
         });
       })
       .catch((err) => {
@@ -127,6 +136,57 @@ const Payments: FC<IPaymentsProps> = ({}) => {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  function handleChangeServicePercentage(
+    id: string,
+    servicePercentage: string
+  ) {
+    if (!isChangeServicePercentage) {
+      setCurrentPaymentId(id);
+      setIsChangeServicePercentage(true);
+
+      setPaymentData({
+        title: paymentData.title,
+        number: paymentData.number,
+        idAnypayments: paymentData.idAnypayments,
+        alternativeIdAnypayments: paymentData.alternativeIdAnypayments,
+        totalSumAnypayments: paymentData.totalSumAnypayments,
+        idOnepay: paymentData.idOnepay,
+        totalSumOnepay: paymentData.totalSumOnepay,
+        orderUrlOnepay: paymentData.orderUrlOnepay,
+        totalSumCashOut: paymentData.totalSumCashOut,
+        cardNumber: paymentData.cardNumber,
+        secretCode: paymentData.secretCode,
+        servicePercentage: servicePercentage,
+      });
+    } else {
+      setIsChangeServicePercentage(false);
+      setCurrentPaymentId("");
+
+      changeServicePercentage(id, paymentData.servicePercentage)
+        .then(() => {
+          setPaymentData({
+            title: paymentData.title,
+            number: paymentData.number,
+            idAnypayments: paymentData.idAnypayments,
+            alternativeIdAnypayments: paymentData.alternativeIdAnypayments,
+            totalSumAnypayments: paymentData.totalSumAnypayments,
+            idOnepay: paymentData.idOnepay,
+            totalSumOnepay: paymentData.totalSumOnepay,
+            orderUrlOnepay: paymentData.orderUrlOnepay,
+            totalSumCashOut: paymentData.totalSumCashOut,
+            cardNumber: paymentData.cardNumber,
+            secretCode: paymentData.secretCode,
+            servicePercentage: "",
+          });
+        })
+        .then(() => {
+          getPayments().then((payments) => {
+            Payment.setPaymentsList(payments);
+          });
+        });
+    }
   }
 
   function openSubmitPopupCashOut(e: React.SyntheticEvent) {
@@ -471,6 +531,41 @@ const Payments: FC<IPaymentsProps> = ({}) => {
                   <p className={styles["payments__table-info-number"]}>
                     {paymentItem.number}
                   </p>
+                  {(UserData.userData.position === SUPERADMIN ||
+                    UserData.userData.position === MAINADMIN) && (
+                    <div style={{ marginTop: "1rem" }}>
+                      Процент:{" "}
+                      {isChangeServicePercentage &&
+                      paymentItem._id === currentPaymentId ? (
+                        <input
+                          type="text"
+                          name="servicePercentage"
+                          value={paymentData.servicePercentage}
+                          onChange={handleChange}
+                        />
+                      ) : (
+                        `${
+                          paymentItem.servicePercentage
+                            ? paymentItem.servicePercentage
+                            : ""
+                        } %`
+                      )}
+                      <button
+                        style={{ marginLeft: "0.5rem" }}
+                        onClick={() =>
+                          handleChangeServicePercentage(
+                            paymentItem._id,
+                            paymentData.servicePercentage
+                          )
+                        }
+                      >
+                        {isChangeServicePercentage &&
+                        paymentItem._id === currentPaymentId
+                          ? "сохр."
+                          : "изм."}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </li>
             );

@@ -1130,7 +1130,9 @@ const Delivery = observer(() => {
               isSplit: OrderData.order.isSplit,
               payment: OrderData.order.payment,
               currentRate: OrderData.order.currentRate,
+              veritableRate: OrderData.order.veritableRate,
               priceCNY: OrderData.order.priceCNY,
+              veritablePriceCNY: OrderData.order.veritablePriceCNY,
               priceDeliveryChina: OrderData.order.priceDeliveryChina,
               priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
               commission: OrderData.order.commission,
@@ -1174,6 +1176,7 @@ const Delivery = observer(() => {
               surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
               surchargeTotal: OrderData.order.surchargeTotal,
               paidAtSurcharge: OrderData.order.paidAtSurcharge,
+              servicePercentage: OrderData.order.servicePercentage,
               __v: OrderData.order.__v,
             });
           })
@@ -1256,7 +1259,9 @@ const Delivery = observer(() => {
                 isSplit: OrderData.order.isSplit,
                 payment: OrderData.order.payment,
                 currentRate: OrderData.order.currentRate,
+                veritableRate: OrderData.order.veritableRate,
                 priceCNY: OrderData.order.priceCNY,
+                veritablePriceCNY: OrderData.order.veritablePriceCNY,
                 priceDeliveryChina: OrderData.order.priceDeliveryChina,
                 priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
                 commission: OrderData.order.commission,
@@ -1302,6 +1307,7 @@ const Delivery = observer(() => {
                 surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
                 surchargeTotal: OrderData.order.surchargeTotal,
                 paidAtSurcharge: OrderData.order.paidAtSurcharge,
+                servicePercentage: OrderData.order.servicePercentage,
                 __v: OrderData.order.__v,
               });
             })
@@ -1371,7 +1377,9 @@ const Delivery = observer(() => {
           isSplit: OrderData.order.isSplit,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
+          veritableRate: OrderData.order.veritableRate,
           priceCNY: OrderData.order.priceCNY,
+          veritablePriceCNY: OrderData.order.veritablePriceCNY,
           priceDeliveryChina: OrderData.order.priceDeliveryChina,
           priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
           commission: OrderData.order.commission,
@@ -1413,6 +1421,7 @@ const Delivery = observer(() => {
           surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
           surchargeTotal: OrderData.order.surchargeTotal,
           paidAtSurcharge: OrderData.order.paidAtSurcharge,
+          servicePercentage: OrderData.order.servicePercentage,
           __v: OrderData.order.__v,
         });
       })

@@ -112,13 +112,15 @@ export const createOrder = (
   orderImages: Array<IOrderImages>,
   payment: string,
   currentRate: string,
+  veritableRate: string,
   priceCNY: string,
   priceDeliveryChina: string,
   priceDeliveryRussia: string,
   commission: string,
   promoCodePercent: number,
   comment: string,
-  totalReorder: boolean
+  totalReorder: boolean,
+  servicePercentage: string,
 ) => {
   return fetch(`${BASE_URL}/orders/create`, {
     credentials: "include",
@@ -135,6 +137,7 @@ export const createOrder = (
       orderImages: orderImages,
       payment: payment,
       currentRate: currentRate,
+      veritableRate: veritableRate,
       priceCNY: priceCNY,
       priceDeliveryChina: priceDeliveryChina,
       priceDeliveryRussia: priceDeliveryRussia,
@@ -142,6 +145,7 @@ export const createOrder = (
       promoCodePercent: promoCodePercent,
       comment: comment,
       totalReorder: totalReorder,
+      servicePercentage: servicePercentage,
     }),
   }).then(checkResponse);
 };
@@ -1286,6 +1290,31 @@ export const addSurcharge = (id: string, link: string) => {
     headers: HEADERS,
     body: JSON.stringify({
       link: link,
+    }),
+  }).then(checkResponse);
+};
+
+export const changeVeritableRate = (id: string, veritableRate: string) => {
+  return fetch(`${BASE_URL}/order/change-veritable-rate/${id}`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      veritableRate: veritableRate,
+    }),
+  }).then(checkResponse);
+};
+
+export const changeVeritablePriceCNY = (
+  id: string,
+  veritablePriceCNY: string
+) => {
+  return fetch(`${BASE_URL}/order/change-veritable-price-CNY/${id}`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      veritablePriceCNY: veritablePriceCNY,
     }),
   }).then(checkResponse);
 };

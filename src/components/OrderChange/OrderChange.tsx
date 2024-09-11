@@ -96,13 +96,16 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
     parseFloat(OrderData.order.priceCNY) *
       parseFloat(OrderData.order.currentRate)
   );
+
   const totalPrice = Math.ceil(
     priceRub +
       parseFloat(OrderData.order.priceDeliveryChina) +
       parseFloat(OrderData.order.priceDeliveryRussia) +
       parseFloat(OrderData.order.commission) +
+      data.promoCodePercent +
       OrderData.order.expressCost
   );
+
   const totalPriceWithPromo = Math.ceil(
     priceRub +
       parseFloat(OrderData.order.priceDeliveryChina) +
@@ -110,6 +113,13 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       parseFloat(OrderData.order.commission) -
       data.promoCodePercent +
       OrderData.order.expressCost
+  );
+
+  const veritablePrice = Math.ceil(
+    totalPrice -
+      totalPrice * (parseFloat(OrderData.order.servicePercentage) / 100) -
+      parseFloat(OrderData.order.veritablePriceCNY) *
+        parseFloat(OrderData.order.veritableRate)
   );
 
   const combinedOrdersFiltered = OrderData.mergedOrders.filter((item) => {
@@ -515,7 +525,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         isSplit: !isSplit,
         payment: OrderData.order.payment,
         currentRate: OrderData.order.currentRate,
+        veritableRate: OrderData.order.veritableRate,
         priceCNY: OrderData.order.priceCNY,
+        veritablePriceCNY: OrderData.order.veritablePriceCNY,
         priceDeliveryChina: OrderData.order.priceDeliveryChina,
         priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
         commission: OrderData.order.commission,
@@ -557,6 +569,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
         surchargeTotal: OrderData.order.surchargeTotal,
         paidAtSurcharge: OrderData.order.paidAtSurcharge,
+        servicePercentage: OrderData.order.servicePercentage,
         __v: OrderData.order.__v,
       });
     });
@@ -625,7 +638,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           isSplit: OrderData.order.isSplit,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
+          veritableRate: OrderData.order.veritableRate,
           priceCNY: OrderData.order.priceCNY,
+          veritablePriceCNY: OrderData.order.veritablePriceCNY,
           priceDeliveryChina: OrderData.order.priceDeliveryChina,
           priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
           commission: OrderData.order.commission,
@@ -667,6 +682,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
           surchargeTotal: OrderData.order.surchargeTotal,
           paidAtSurcharge: OrderData.order.paidAtSurcharge,
+          servicePercentage: OrderData.order.servicePercentage,
           __v: OrderData.order.__v,
         });
         setUploading(false);
@@ -740,7 +756,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   isSplit: OrderData.order.isSplit,
                   payment: OrderData.order.payment,
                   currentRate: OrderData.order.currentRate,
+                  veritableRate: OrderData.order.veritableRate,
                   priceCNY: OrderData.order.priceCNY,
+                  veritablePriceCNY: OrderData.order.veritablePriceCNY,
                   priceDeliveryChina: OrderData.order.priceDeliveryChina,
                   priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
                   commission: OrderData.order.commission,
@@ -789,6 +807,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                     OrderData.order.surchargePayLinksArray,
                   surchargeTotal: OrderData.order.surchargeTotal,
                   paidAtSurcharge: OrderData.order.paidAtSurcharge,
+                  servicePercentage: OrderData.order.servicePercentage,
                   __v: OrderData.order.__v,
                 });
                 setUploading(false);
@@ -862,7 +881,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           isSplit: OrderData.order.isSplit,
           payment: OrderData.order.payment,
           currentRate: OrderData.order.currentRate,
+          veritableRate: OrderData.order.veritableRate,
           priceCNY: OrderData.order.priceCNY,
+          veritablePriceCNY: OrderData.order.veritablePriceCNY,
           priceDeliveryChina: OrderData.order.priceDeliveryChina,
           priceDeliveryRussia: OrderData.order.priceDeliveryRussia,
           commission: OrderData.order.commission,
@@ -904,6 +925,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
           surchargeTotal: OrderData.order.surchargeTotal,
           paidAtSurcharge: OrderData.order.paidAtSurcharge,
+          servicePercentage: OrderData.order.servicePercentage,
           __v: OrderData.order.__v,
         });
       })
@@ -1008,6 +1030,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       payment: data.payment,
       currentRate: OrderData.order.currentRate,
       priceCNY: data.priceCNY,
+      veritableRate: OrderData.order.veritableRate,
+      veritablePriceCNY: OrderData.order.veritablePriceCNY,
       priceDeliveryChina: data.priceDeliveryChina,
       priceDeliveryRussia: data.priceDeliveryRussia,
       commission: data.commission,
@@ -1049,6 +1073,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       surchargePayLinksArray: OrderData.order.surchargePayLinksArray,
       surchargeTotal: OrderData.order.surchargeTotal,
       paidAtSurcharge: OrderData.order.paidAtSurcharge,
+      servicePercentage: OrderData.order.servicePercentage,
       __v: OrderData.order.__v,
     });
   }, [data]);
@@ -1987,6 +2012,13 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                       ? totalPriceWithPromo.toString()
                       : totalPrice.toString()
                   }
+                  required={true}
+                  readonly={true}
+                />
+                <TextInput
+                  name="veritablePrice"
+                  label="Истинная стоимость"
+                  value={veritablePrice.toString()}
                   required={true}
                   readonly={true}
                 />

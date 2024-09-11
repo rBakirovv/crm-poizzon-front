@@ -12,8 +12,9 @@ import Navigation from "../../components/UI/Navigation/Navigation";
 import { getCurrentOrder } from "../../utils/Order";
 import OrderData from "../../store/order";
 import RateData from "../../store/rate";
+import VeritableRateData from "../../store/veritableRate";
 import CommissionData from "../../store/commission";
-import { getCommissionData, getRate } from "../../utils/Rate";
+import { getCommissionData, getRate, getVeritableRate } from "../../utils/Rate";
 import { getPayments } from "../../utils/Payment";
 import { getPoromoCodes } from "../../utils/PoromoCode";
 import PaymentsData from "../../store/payments";
@@ -69,6 +70,16 @@ const Home = observer(() => {
     getRate()
       .then((rates) => {
         RateData.setNewRate(rates[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    getVeritableRate()
+      .then((rates) => {
+        VeritableRateData.setNewRate(rates[0]);
       })
       .catch((err) => {
         console.log(err);
