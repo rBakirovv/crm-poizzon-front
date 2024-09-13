@@ -627,6 +627,38 @@ const Purchase = () => {
     return () => document.removeEventListener("paste", pasteHandler);
   }, []);
 
+  const symbolsReg = /(?:[а-яёa-z]\d|\d[в-яёa-z])/i;
+
+  useEffect(() => {
+    if (symbolsReg.test(data.veritableRate)) {
+      setData({
+        poizon_code: data.poizon_code,
+        veritableRate: OrderData.order.veritableRate,
+        veritablePriceCNY: data.veritablePriceCNY,
+      });
+    }
+  }, [data.veritableRate]);
+
+  useEffect(() => {
+    if (symbolsReg.test(data.veritablePriceCNY)) {
+      setData({
+        poizon_code: data.poizon_code,
+        veritableRate: data.veritableRate,
+        veritablePriceCNY: OrderData.order.veritablePriceCNY,
+      });
+    }
+  }, [data.veritablePriceCNY]);
+
+  /*
+  useEffect(() => {
+    setData({
+      poizon_code: data.poizon_code,
+      veritableRate: data.veritableRate,
+      veritablePriceCNY: data.veritablePriceCNY.replace(symbolsReg, ""),
+    });
+  }, [data.veritablePriceCNY]);
+  */
+
   useEffect(() => {
     OrderData.setOrder({
       _id: OrderData.order._id,
