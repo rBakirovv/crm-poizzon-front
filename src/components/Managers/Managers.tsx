@@ -11,7 +11,6 @@ const Managers = observer(() => {
   const [manager, setManager] = useState<string>("");
 
   const [orders, setOrders] = useState<Array<IOrder>>([]);
-  const [ordersSplit, setOrdersSplit] = useState<Array<IOrder>>([]);
 
   const [isUpdated, setIsUpdated] = useState(false);
 
@@ -35,13 +34,10 @@ const Managers = observer(() => {
     if (date !== "" && manager !== "") {
       setIsUpdated(false);
 
-      getManagersByDate(date, manager)
-        .then((serchedOrders) => {
-          setOrders(serchedOrders.orders);
-          setOrdersSplit(serchedOrders.ordersSplit);
-          setIsUpdated(true);
-        })
-        .then(() => {});
+      getManagersByDate(date, manager).then((serchedOrders) => {
+        setOrders(serchedOrders.orders.concat(serchedOrders.ordersSplit));
+        setIsUpdated(true);
+      });
     }
   }
 
@@ -107,7 +103,8 @@ const Managers = observer(() => {
                         target="_blank"
                         rel="noreferrer"
                       >
-                        {item.orderId} {item.expressCost > 0 && "(экспресс)"} {item.isSplit && "(сплит)"}
+                        {item.orderId} {item.expressCost > 0 && "(экспресс)"}{" "}
+                        {item.isSplit && "(сплит)"}
                       </a>
                     );
                   })}
