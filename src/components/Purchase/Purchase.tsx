@@ -171,6 +171,7 @@ const Purchase = () => {
 
       for (let i = 0; i < files.length; i++) {
         formData.append("imagesUp", files[i]);
+
       }
     } else {
       const file = e;
