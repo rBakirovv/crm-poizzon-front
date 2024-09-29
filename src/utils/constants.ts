@@ -9,8 +9,8 @@
 export const API_PAYMENT_KEY =
   "43527fb3dd744f5290c90da1427c981d02f6eee69cb7fd00";
 // test -->
-export const BASE_URL = "http://api-test.poizonqq.ru";
-export const BASE_URL_FRONT = "http://front-test.poizonqq.ru";
+export const BASE_URL = "https://api-test.poizonqq.ru";
+export const BASE_URL_FRONT = "https://front-test.poizonqq.ru";
 // <-- test 
 export const BASE_PAYMENT_URL = "https://onepayments.tech";
 export const SUPERADMIN = "Создатель";
