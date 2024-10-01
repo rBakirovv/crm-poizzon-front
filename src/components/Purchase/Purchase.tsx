@@ -22,10 +22,13 @@ import {
   setPurchaseImagesDisabled,
   changeVeritableRate,
   changeVeritablePriceCNY,
+  getOrderByNumber,
+  reorderOrderReset,
+  reorderOrderCopy,
 } from "../../utils/Order";
 import ImagePopup from "../ImagePopup/ImagePopup";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
-import { IOrderImages } from "../../types/interfaces";
+import { IOrder, IOrderImages } from "../../types/interfaces";
 import Preloader from "../UI/Preloader/Preloader";
 
 const dayjs = require("dayjs");
@@ -63,6 +66,8 @@ const Purchase = () => {
     poizon_code: OrderData.order.poizonCode,
     veritableRate: OrderData.order.veritableRate,
     veritablePriceCNY: OrderData.order.veritablePriceCNY,
+    reorder: "",
+    reorderAmount: "",
   });
 
   const [uploading, setUploading] = useState<boolean>(false);
@@ -79,8 +84,12 @@ const Purchase = () => {
     isChangeVeritablePriceCNYPopupOpen,
     setIsChangeVeritablePriceCNYPopupOpen,
   ] = useState<boolean>(false);
+  const [isReorderPopupOpen, setIsReorderPopupOpen] = useState<boolean>(false);
 
   const [isDrag, setIsDrag] = useState(false);
+
+  const [isReorderCheckbox, setIsReorderCheckbox] = useState(true);
+  const [isReturnCheckbox, setIsReturnCheckbox] = useState(false);
 
   function handleChange(e: React.SyntheticEvent) {
     const target = e.target as HTMLInputElement;
@@ -159,6 +168,16 @@ const Purchase = () => {
     setIsSubmitPopupOpen(false);
   }
 
+  function openReorderPopup(e: React.SyntheticEvent) {
+    e.preventDefault();
+    setIsReorderPopupOpen(true);
+  }
+
+  function closeReorderPopup() {
+    setIsReorderPopupOpen(false);
+    setIsSubmitPopupOpen(false);
+  }
+
   const uploadFileHandler = async (
     e: any, // Костыль!
     folder: string,
@@ -171,7 +190,6 @@ const Purchase = () => {
 
       for (let i = 0; i < files.length; i++) {
         formData.append("imagesUp", files[i]);
-
       }
     } else {
       const file = e;
@@ -271,6 +289,7 @@ const Purchase = () => {
             surchargeTotal: OrderData.order.surchargeTotal,
             paidAtSurcharge: OrderData.order.paidAtSurcharge,
             servicePercentage: OrderData.order.servicePercentage,
+            addedValue: OrderData.order.addedValue,
             __v: OrderData.order.__v,
           });
         })
@@ -382,6 +401,7 @@ const Purchase = () => {
           surchargeTotal: OrderData.order.surchargeTotal,
           paidAtSurcharge: OrderData.order.paidAtSurcharge,
           servicePercentage: OrderData.order.servicePercentage,
+          addedValue: OrderData.order.addedValue,
           __v: OrderData.order.__v,
         });
       })
@@ -599,6 +619,7 @@ const Purchase = () => {
                     surchargeTotal: OrderData.order.surchargeTotal,
                     paidAtSurcharge: OrderData.order.paidAtSurcharge,
                     servicePercentage: OrderData.order.servicePercentage,
+                    addedValue: OrderData.order.addedValue,
                     __v: OrderData.order.__v,
                   });
                 })
@@ -636,6 +657,8 @@ const Purchase = () => {
         poizon_code: data.poizon_code,
         veritableRate: OrderData.order.veritableRate,
         veritablePriceCNY: data.veritablePriceCNY,
+        reorder: data.reorder,
+        reorderAmount: data.reorderAmount,
       });
     }
   }, [data.veritableRate]);
@@ -646,6 +669,8 @@ const Purchase = () => {
         poizon_code: data.poizon_code,
         veritableRate: data.veritableRate,
         veritablePriceCNY: OrderData.order.veritablePriceCNY,
+        reorder: data.reorder,
+        reorderAmount: data.reorderAmount,
       });
     }
   }, [data.veritablePriceCNY]);
@@ -748,9 +773,61 @@ const Purchase = () => {
       surchargeTotal: OrderData.order.surchargeTotal,
       paidAtSurcharge: OrderData.order.paidAtSurcharge,
       servicePercentage: OrderData.order.servicePercentage,
+      addedValue: OrderData.order.addedValue,
       __v: OrderData.order.__v,
     });
   }, [data]);
+
+  function handleReorderClick(e: React.SyntheticEvent) {
+    if (isReorderCheckbox) {
+      openReorderPopup(e);
+    } else {
+      // [!]
+    }
+  }
+
+  function reorderHandler() {
+    getOrderByNumber(data.reorder).then((order: Array<IOrder>) => {
+      const orderItem = order[0];
+      reorderOrderReset(orderItem._id).then(() => {
+        reorderOrderCopy(
+          OrderData.order._id,
+          data.reorderAmount,
+          orderItem.servicePercentage,
+          orderItem.veritablePriceCNY,
+          orderItem.veritableRate,
+          orderItem.deliveryAddress,
+          orderItem.deliveryEntity,
+          orderItem.deliveryMethod,
+          orderItem.deliveryName,
+          orderItem.deliveryNameRecipient,
+          orderItem.deliveryPhone,
+          orderItem.paidAt,
+          orderItem.paidAtSplit,
+          orderItem.paidAtSplitSecond,
+          orderItem.priceCNY,
+          orderItem.priceDeliveryChina,
+          orderItem.priceDeliveryRussia,
+          orderItem.promoCodePercent,
+          orderItem.commission,
+          orderItem.currentRate,
+          orderItem.expressCost
+        ).then((changedOrder) => {
+          OrderData.setOrder(changedOrder);
+        });
+      });
+    });
+  }
+
+  function reorderCheckboxHandler() {
+    setIsReorderCheckbox(true);
+    setIsReturnCheckbox(false);
+  }
+
+  function returnCheckboxHandler() {
+    setIsReturnCheckbox(true);
+    setIsReorderCheckbox(false);
+  }
 
   return (
     <form onSubmit={openSubmitPopup} className={styles["purchase"]}>
@@ -944,6 +1021,74 @@ const Purchase = () => {
             )}
           </Dropzone>
         )}
+      <div>
+        <TextInput
+          label="Номер перезаказа"
+          name="reorder"
+          value={data.reorder}
+          handleChange={handleChange}
+          required={false}
+        />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-end",
+            gap: "1rem",
+            marginTop: "1rem",
+          }}
+        >
+          <TextInput
+            label="Сумма перезаказа/возврата"
+            name="reorderAmount"
+            value={data.reorderAmount}
+            handleChange={handleChange}
+            required={false}
+          />
+          {(UserData.userData.position === SUPERADMIN ||
+            UserData.userData.position === MAINADMIN ||
+            UserData.userData.position === ADMIN) && (
+            <button
+              onClick={handleReorderClick}
+              type="button"
+              disabled={
+                (isReorderCheckbox && data.reorderAmount === "") ||
+                data.reorder === ""
+              }
+              style={{ height: "max-content" }}
+            >
+              прим.
+            </button>
+          )}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            marginTop: "0.5rem",
+            gap: "0.5rem",
+          }}
+        >
+          <input
+            checked={isReorderCheckbox}
+            onClick={reorderCheckboxHandler}
+            type="checkbox"
+          />
+          <label>Перезаказ</label>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            marginTop: "0.25rem",
+            gap: "0.5rem",
+          }}
+        >
+          <input
+            checked={isReturnCheckbox}
+            onClick={returnCheckboxHandler}
+            type="checkbox"
+          />
+          <label>Возврат</label>
+        </div>
+      </div>
       {UserData.userData.position !== "Менеджер" &&
         UserData.userData.position !== "Работник склада" && (
           <div
@@ -1059,6 +1204,14 @@ const Purchase = () => {
           isSubmitPopup={isChangeVeritablePriceCNYPopupOpen}
           closeSubmitPopup={closeChangeVeritablePriceCNYPopup}
           submitText={`Установить юани ист. ${data.veritablePriceCNY}₽`}
+        />
+      )}
+      {isReorderPopupOpen && (
+        <SubmitPopup
+          onSubmit={reorderHandler}
+          isSubmitPopup={isReorderPopupOpen}
+          closeSubmitPopup={closeReorderPopup}
+          submitText={`Перезаказать ${data.reorder} с доплатой ${data.reorderAmount} ₽`}
         />
       )}
       {uploading && <Preloader />}

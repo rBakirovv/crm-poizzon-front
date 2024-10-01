@@ -87,6 +87,7 @@ class OrderData {
     surchargeTotal: 0,
     paidAtSurcharge: new Date(Date.now()),
     servicePercentage: "",
+    addedValue: "",
     __v: 0,
   };
 

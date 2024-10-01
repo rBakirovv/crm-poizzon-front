@@ -100,6 +100,7 @@ export interface IOrder {
   surchargeTotal: number;
   paidAtSurcharge: Date;
   servicePercentage: string;
+  addedValue: string;
   __v?: number;
 }
 

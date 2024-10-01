@@ -120,7 +120,7 @@ export const createOrder = (
   promoCodePercent: number,
   comment: string,
   totalReorder: boolean,
-  servicePercentage: string,
+  servicePercentage: string
 ) => {
   return fetch(`${BASE_URL}/orders/create`, {
     credentials: "include",
@@ -1315,6 +1315,66 @@ export const changeVeritablePriceCNY = (
     headers: HEADERS,
     body: JSON.stringify({
       veritablePriceCNY: veritablePriceCNY,
+    }),
+  }).then(checkResponse);
+};
+
+export const reorderOrderReset = (id: string) => {
+  return fetch(`${BASE_URL}/order/reorder-reset/${id}`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+  }).then(checkResponse);
+};
+
+export const reorderOrderCopy = (
+  id: string,
+  addedValue: string,
+  servicePercentage: string,
+  veritablePriceCNY: string,
+  veritableRate: string,
+  deliveryAddress: string,
+  deliveryEntity: string,
+  deliveryMethod: string,
+  deliveryName: string,
+  deliveryNameRecipient: string,
+  deliveryPhone: string,
+  paidAt: Date | null,
+  paidAtSplit: Date | null,
+  paidAtSplitSecond: Date | null,
+  priceCNY: string,
+  priceDeliveryChina: string,
+  priceDeliveryRussia: string,
+  promoCodePercent: number,
+  commission: string,
+  currentRate: string,
+  expressCost: number
+) => {
+  return fetch(`${BASE_URL}/order/reorder-copy/${id}`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      addedValue: addedValue,
+      servicePercentage,
+      veritablePriceCNY,
+      veritableRate,
+      deliveryAddress,
+      deliveryEntity,
+      deliveryMethod,
+      deliveryName,
+      deliveryNameRecipient,
+      deliveryPhone,
+      paidAt,
+      paidAtSplit,
+      paidAtSplitSecond,
+      priceCNY,
+      priceDeliveryChina,
+      priceDeliveryRussia,
+      promoCodePercent,
+      commission,
+      currentRate,
+      expressCost,
     }),
   }).then(checkResponse);
 };

@@ -103,7 +103,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       parseFloat(OrderData.order.priceDeliveryRussia) +
       parseFloat(OrderData.order.commission) +
       data.promoCodePercent +
-      OrderData.order.expressCost
+      OrderData.order.expressCost +
+      (OrderData.order.addedValue ? parseInt(OrderData.order.addedValue) : 0)
   );
 
   const totalPriceWithPromo = Math.ceil(
@@ -112,14 +113,20 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       parseFloat(OrderData.order.priceDeliveryRussia) +
       parseFloat(OrderData.order.commission) -
       data.promoCodePercent +
-      OrderData.order.expressCost
+      OrderData.order.expressCost +
+      (OrderData.order.addedValue ? parseInt(OrderData.order.addedValue) : 0)
   );
 
   const veritablePrice = Math.ceil(
     totalPrice -
-      totalPrice * (parseFloat(OrderData.order.servicePercentage) / 100) -
+      totalPrice *
+        ((OrderData.order.servicePercentage
+          ? parseFloat(OrderData.order.servicePercentage)
+          : 0) /
+          100) -
       parseFloat(OrderData.order.veritablePriceCNY) *
-        parseFloat(OrderData.order.veritableRate)
+        parseFloat(OrderData.order.veritableRate) +
+      (OrderData.order.addedValue ? parseInt(OrderData.order.addedValue) : 0)
   );
 
   const combinedOrdersFiltered = OrderData.mergedOrders.filter((item) => {
@@ -570,6 +577,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         surchargeTotal: OrderData.order.surchargeTotal,
         paidAtSurcharge: OrderData.order.paidAtSurcharge,
         servicePercentage: OrderData.order.servicePercentage,
+        addedValue: OrderData.order.addedValue,
         __v: OrderData.order.__v,
       });
     });
@@ -683,6 +691,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           surchargeTotal: OrderData.order.surchargeTotal,
           paidAtSurcharge: OrderData.order.paidAtSurcharge,
           servicePercentage: OrderData.order.servicePercentage,
+          addedValue: OrderData.order.addedValue,
           __v: OrderData.order.__v,
         });
         setUploading(false);
@@ -808,6 +817,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   surchargeTotal: OrderData.order.surchargeTotal,
                   paidAtSurcharge: OrderData.order.paidAtSurcharge,
                   servicePercentage: OrderData.order.servicePercentage,
+                  addedValue: OrderData.order.addedValue,
                   __v: OrderData.order.__v,
                 });
                 setUploading(false);
@@ -926,6 +936,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           surchargeTotal: OrderData.order.surchargeTotal,
           paidAtSurcharge: OrderData.order.paidAtSurcharge,
           servicePercentage: OrderData.order.servicePercentage,
+          addedValue: OrderData.order.addedValue,
           __v: OrderData.order.__v,
         });
       })
@@ -1074,6 +1085,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       surchargeTotal: OrderData.order.surchargeTotal,
       paidAtSurcharge: OrderData.order.paidAtSurcharge,
       servicePercentage: OrderData.order.servicePercentage,
+      addedValue: OrderData.order.addedValue,
       __v: OrderData.order.__v,
     });
   }, [data]);

@@ -306,7 +306,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
         data.promoCodePercent,
         data.comment,
         isReorder,
-        paymentItem!.servicePercentage,
+        paymentItem!.servicePercentage
       )
         .then((order) => {
           OrderData.setOrder(order);
@@ -366,7 +366,7 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
         data.promoCodePercent,
         data.comment,
         isReorder,
-        paymentItem!.servicePercentage,
+        paymentItem!.servicePercentage
       )
         .then((order) => {
           OrderData.setOrder(order);
@@ -1292,9 +1292,11 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
     }
   };
 
+  /*
   function reorderHandler() {
     setIsReorder(!isReorder);
   }
+  */
 
   useEffect(() => {
     document.addEventListener("paste", pasteHandler);
@@ -1580,16 +1582,6 @@ const CreateOrder: FC<ICreateOrderProps> = ({ payments }) => {
               value={data.comment}
             ></textarea>
           </div>
-          {UserData.userData.position !== DROPSHIPPER && (
-            <div className={styles["order-change__reorder-checkbox"]}>
-              <input
-                type="checkbox"
-                checked={isReorder}
-                onChange={reorderHandler}
-              />
-              <label>Перезаказ</label>
-            </div>
-          )}
           <button
             className={`${styles["order-change__order-submit"]}`}
             type="submit"
