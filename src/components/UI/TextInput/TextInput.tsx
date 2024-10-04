@@ -1,4 +1,3 @@
-import { FC } from "react";
 import styles from "./TextInput.module.css";
 
 interface IInputProps {
@@ -14,7 +13,7 @@ interface IInputProps {
   disabled?: boolean;
 }
 
-const TextInput: FC<IInputProps> = ({
+const TextInput: React.FC<IInputProps> = ({
   label,
   name,
   placeholder,

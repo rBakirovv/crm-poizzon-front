@@ -25,6 +25,9 @@ import {
   getOrderByNumber,
   reorderOrderReset,
   reorderOrderCopy,
+  setAddedValue,
+  setTakenAwayValue,
+  setReturnValue,
 } from "../../utils/Order";
 import ImagePopup from "../ImagePopup/ImagePopup";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
@@ -68,6 +71,7 @@ const Purchase = () => {
     veritablePriceCNY: OrderData.order.veritablePriceCNY,
     reorder: "",
     reorderAmount: "",
+    reorderAmountMinus: "",
   });
 
   const [uploading, setUploading] = useState<boolean>(false);
@@ -85,6 +89,7 @@ const Purchase = () => {
     setIsChangeVeritablePriceCNYPopupOpen,
   ] = useState<boolean>(false);
   const [isReorderPopupOpen, setIsReorderPopupOpen] = useState<boolean>(false);
+  const [isReturnPopupOpen, setIsReturnPopupOpen] = useState<boolean>(false);
 
   const [isDrag, setIsDrag] = useState(false);
 
@@ -175,6 +180,16 @@ const Purchase = () => {
 
   function closeReorderPopup() {
     setIsReorderPopupOpen(false);
+    setIsSubmitPopupOpen(false);
+  }
+
+  function openReturnPopup(e: React.SyntheticEvent) {
+    e.preventDefault();
+    setIsReturnPopupOpen(true);
+  }
+
+  function closeReturnPopup() {
+    setIsReturnPopupOpen(false);
     setIsSubmitPopupOpen(false);
   }
 
@@ -290,6 +305,8 @@ const Purchase = () => {
             paidAtSurcharge: OrderData.order.paidAtSurcharge,
             servicePercentage: OrderData.order.servicePercentage,
             addedValue: OrderData.order.addedValue,
+            takenAwayValue: OrderData.order.takenAwayValue,
+            returnValue: OrderData.order.returnValue,
             __v: OrderData.order.__v,
           });
         })
@@ -402,6 +419,8 @@ const Purchase = () => {
           paidAtSurcharge: OrderData.order.paidAtSurcharge,
           servicePercentage: OrderData.order.servicePercentage,
           addedValue: OrderData.order.addedValue,
+          takenAwayValue: OrderData.order.takenAwayValue,
+          returnValue: OrderData.order.returnValue,
           __v: OrderData.order.__v,
         });
       })
@@ -620,6 +639,8 @@ const Purchase = () => {
                     paidAtSurcharge: OrderData.order.paidAtSurcharge,
                     servicePercentage: OrderData.order.servicePercentage,
                     addedValue: OrderData.order.addedValue,
+                    takenAwayValue: OrderData.order.takenAwayValue,
+                    returnValue: OrderData.order.returnValue,
                     __v: OrderData.order.__v,
                   });
                 })
@@ -659,6 +680,7 @@ const Purchase = () => {
         veritablePriceCNY: data.veritablePriceCNY,
         reorder: data.reorder,
         reorderAmount: data.reorderAmount,
+        reorderAmountMinus: data.reorderAmountMinus,
       });
     }
   }, [data.veritableRate]);
@@ -671,6 +693,7 @@ const Purchase = () => {
         veritablePriceCNY: OrderData.order.veritablePriceCNY,
         reorder: data.reorder,
         reorderAmount: data.reorderAmount,
+        reorderAmountMinus: data.reorderAmountMinus,
       });
     }
   }, [data.veritablePriceCNY]);
@@ -774,6 +797,8 @@ const Purchase = () => {
       paidAtSurcharge: OrderData.order.paidAtSurcharge,
       servicePercentage: OrderData.order.servicePercentage,
       addedValue: OrderData.order.addedValue,
+      takenAwayValue: OrderData.order.takenAwayValue,
+      returnValue: OrderData.order.returnValue,
       __v: OrderData.order.__v,
     });
   }, [data]);
@@ -782,7 +807,7 @@ const Purchase = () => {
     if (isReorderCheckbox) {
       openReorderPopup(e);
     } else {
-      // [!]
+      openReturnPopup(e);
     }
   }
 
@@ -792,7 +817,6 @@ const Purchase = () => {
       reorderOrderReset(orderItem._id).then(() => {
         reorderOrderCopy(
           OrderData.order._id,
-          data.reorderAmount,
           orderItem.servicePercentage,
           orderItem.veritablePriceCNY,
           orderItem.veritableRate,
@@ -812,11 +836,55 @@ const Purchase = () => {
           orderItem.commission,
           orderItem.currentRate,
           orderItem.expressCost
-        ).then((changedOrder) => {
-          OrderData.setOrder(changedOrder);
-        });
+        )
+          .then((changedOrder) => {
+            OrderData.setOrder(changedOrder);
+          })
+          .then(() => {
+            if (data.reorderAmount !== "") {
+              setAddedValue(OrderData.order._id, data.reorderAmount);
+            } else if (data.reorderAmountMinus !== "") {
+              setTakenAwayValue(
+                OrderData.order._id,
+                `-${Math.abs(parseInt(data.reorderAmountMinus))}`
+              );
+            }
+          })
+          .then(() => {
+            setIsCancelPopupOpen(false);
+            setIsSubmitPopupOpen(false);
+          })
+          .then(() => {
+            closeCancelPopup();
+            closeSubmitPopup();
+          })
+          .then(() => {
+            setData({
+              poizon_code: data.poizon_code,
+              veritableRate: data.veritableRate,
+              veritablePriceCNY: OrderData.order.veritablePriceCNY,
+              reorder: "",
+              reorderAmount: "",
+              reorderAmountMinus: "",
+            });
+          });
       });
     });
+  }
+
+  function returnHandler() {
+    setReturnValue(OrderData.order._id, true)
+      .then((changedOrder) => {
+        OrderData.setOrder(changedOrder);
+      })
+      .then(() => {
+        setIsCancelPopupOpen(false);
+        setIsSubmitPopupOpen(false);
+      })
+      .then(() => {
+        closeCancelPopup();
+        closeSubmitPopup();
+      });
   }
 
   function reorderCheckboxHandler() {
@@ -940,9 +1008,9 @@ const Purchase = () => {
           <label>Скрыть скриншоты</label>
         </div>
       )}
-      <ul className={styles["purchase__images-list"]}>
-        {OrderData.order.buyProofImages.length > 0 &&
-          OrderData.order.buyProofImages
+      {OrderData.order.buyProofImages.length > 0 && (
+        <ul className={styles["purchase__images-list"]}>
+          {OrderData.order.buyProofImages
             .slice()
             .reverse()
             .map((image) => {
@@ -982,7 +1050,8 @@ const Purchase = () => {
                 </li>
               );
             })}
-      </ul>
+        </ul>
+      )}
       {OrderData.order.status === "На закупке" &&
         UserData.userData.position !== "Менеджер" &&
         UserData.userData.position !== "Работник склада" && (
@@ -1022,71 +1091,88 @@ const Purchase = () => {
           </Dropzone>
         )}
       <div>
-        <TextInput
-          label="Номер перезаказа"
-          name="reorder"
-          value={data.reorder}
-          handleChange={handleChange}
-          required={false}
-        />
+        {isReorderCheckbox && (
+          <div>
+            <TextInput
+              label="Номер перезаказа"
+              name="reorder"
+              value={data.reorder}
+              handleChange={handleChange}
+              required={false}
+            />
+            <div
+              style={{
+                marginTop: "1rem",
+              }}
+            >
+              <TextInput
+                label="Сумма перезаказа"
+                name="reorderAmount"
+                value={data.reorderAmount}
+                handleChange={handleChange}
+                required={false}
+              />
+            </div>
+            <div style={{ marginTop: "1rem" }}>
+              <TextInput
+                label="Сумма перезаказа (отрицательная)"
+                name="reorderAmountMinus"
+                value={data.reorderAmountMinus}
+                handleChange={handleChange}
+                required={false}
+              />
+            </div>
+          </div>
+        )}
         <div
           style={{
             display: "flex",
-            alignItems: "flex-end",
-            gap: "1rem",
+            alignItems: "center",
             marginTop: "1rem",
+            gap: "1rem",
           }}
         >
-          <TextInput
-            label="Сумма перезаказа/возврата"
-            name="reorderAmount"
-            value={data.reorderAmount}
-            handleChange={handleChange}
-            required={false}
-          />
+          <div>
+            <div
+              style={{
+                display: "flex",
+                gap: "0.5rem",
+              }}
+            >
+              <input
+                checked={isReorderCheckbox}
+                onClick={reorderCheckboxHandler}
+                type="checkbox"
+              />
+              <label>Перезаказ</label>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                marginTop: "0.5rem",
+                gap: "0.5rem",
+              }}
+            >
+              <input
+                checked={isReturnCheckbox}
+                onClick={returnCheckboxHandler}
+                type="checkbox"
+              />
+              <label>Возврат</label>
+            </div>
+          </div>
           {(UserData.userData.position === SUPERADMIN ||
             UserData.userData.position === MAINADMIN ||
             UserData.userData.position === ADMIN) && (
             <button
               onClick={handleReorderClick}
               type="button"
-              disabled={
-                (isReorderCheckbox && data.reorderAmount === "") ||
-                data.reorder === ""
-              }
+              disabled={isReorderCheckbox && data.reorder === ""}
               style={{ height: "max-content" }}
             >
               прим.
             </button>
           )}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            marginTop: "0.5rem",
-            gap: "0.5rem",
-          }}
-        >
-          <input
-            checked={isReorderCheckbox}
-            onClick={reorderCheckboxHandler}
-            type="checkbox"
-          />
-          <label>Перезаказ</label>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            marginTop: "0.25rem",
-            gap: "0.5rem",
-          }}
-        >
-          <input
-            checked={isReturnCheckbox}
-            onClick={returnCheckboxHandler}
-            type="checkbox"
-          />
-          <label>Возврат</label>
         </div>
       </div>
       {UserData.userData.position !== "Менеджер" &&
@@ -1211,7 +1297,19 @@ const Purchase = () => {
           onSubmit={reorderHandler}
           isSubmitPopup={isReorderPopupOpen}
           closeSubmitPopup={closeReorderPopup}
-          submitText={`Перезаказать ${data.reorder} с доплатой ${data.reorderAmount} ₽`}
+          submitText={`Перезаказать ${data.reorder} с доплатой ${
+            data.reorderAmount !== ""
+              ? data.reorderAmount
+              : `-${Math.abs(parseInt(data.reorderAmountMinus))}`
+          } ₽`}
+        />
+      )}
+      {isReturnPopupOpen && (
+        <SubmitPopup
+          onSubmit={returnHandler}
+          isSubmitPopup={isReturnPopupOpen}
+          closeSubmitPopup={closeReturnPopup}
+          submitText={`Возврат заказа`}
         />
       )}
       {uploading && <Preloader />}

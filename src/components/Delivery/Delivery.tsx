@@ -1178,6 +1178,8 @@ const Delivery = observer(() => {
               paidAtSurcharge: OrderData.order.paidAtSurcharge,
               servicePercentage: OrderData.order.servicePercentage,
               addedValue: OrderData.order.addedValue,
+              takenAwayValue: OrderData.order.takenAwayValue,
+              returnValue: OrderData.order.returnValue,
               __v: OrderData.order.__v,
             });
           })
@@ -1310,6 +1312,8 @@ const Delivery = observer(() => {
                 paidAtSurcharge: OrderData.order.paidAtSurcharge,
                 servicePercentage: OrderData.order.servicePercentage,
                 addedValue: OrderData.order.addedValue,
+                takenAwayValue: OrderData.order.takenAwayValue,
+                returnValue: OrderData.order.returnValue,
                 __v: OrderData.order.__v,
               });
             })
@@ -1425,6 +1429,8 @@ const Delivery = observer(() => {
           paidAtSurcharge: OrderData.order.paidAtSurcharge,
           servicePercentage: OrderData.order.servicePercentage,
           addedValue: OrderData.order.addedValue,
+          takenAwayValue: OrderData.order.takenAwayValue,
+          returnValue: OrderData.order.returnValue,
           __v: OrderData.order.__v,
         });
       })

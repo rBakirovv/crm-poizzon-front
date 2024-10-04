@@ -1329,7 +1329,6 @@ export const reorderOrderReset = (id: string) => {
 
 export const reorderOrderCopy = (
   id: string,
-  addedValue: string,
   servicePercentage: string,
   veritablePriceCNY: string,
   veritableRate: string,
@@ -1355,7 +1354,6 @@ export const reorderOrderCopy = (
     method: "POST",
     headers: HEADERS,
     body: JSON.stringify({
-      addedValue: addedValue,
       servicePercentage,
       veritablePriceCNY,
       veritableRate,
@@ -1375,6 +1373,39 @@ export const reorderOrderCopy = (
       commission,
       currentRate,
       expressCost,
+    }),
+  }).then(checkResponse);
+};
+
+export const setAddedValue = (id: string, addedValue: string) => {
+  return fetch(`${BASE_URL}/order/added-value/${id}`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      addedValue: addedValue,
+    }),
+  }).then(checkResponse);
+};
+
+export const setTakenAwayValue = (id: string, takenAwayValue: string) => {
+  return fetch(`${BASE_URL}/order/taken-away-value/${id}`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      takenAwayValue: takenAwayValue,
+    }),
+  }).then(checkResponse);
+};
+
+export const setReturnValue = (id: string, returnValue: boolean) => {
+  return fetch(`${BASE_URL}/order/return-value/${id}`, {
+    credentials: "include",
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      returnValue: returnValue,
     }),
   }).then(checkResponse);
 };

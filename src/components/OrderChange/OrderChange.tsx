@@ -97,6 +97,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       parseFloat(OrderData.order.currentRate)
   );
 
+  const returnPercentage = OrderData.order.returnValue ? 1 : 0;
+
   const totalPrice = Math.ceil(
     priceRub +
       parseFloat(OrderData.order.priceDeliveryChina) +
@@ -104,7 +106,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       parseFloat(OrderData.order.commission) +
       data.promoCodePercent +
       OrderData.order.expressCost +
-      (OrderData.order.addedValue ? parseInt(OrderData.order.addedValue) : 0)
+      (OrderData.order.addedValue ? parseFloat(OrderData.order.addedValue) : 0)
   );
 
   const totalPriceWithPromo = Math.ceil(
@@ -114,19 +116,19 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       parseFloat(OrderData.order.commission) -
       data.promoCodePercent +
       OrderData.order.expressCost +
-      (OrderData.order.addedValue ? parseInt(OrderData.order.addedValue) : 0)
+      (OrderData.order.addedValue ? parseFloat(OrderData.order.addedValue) : 0)
   );
 
   const veritablePrice = Math.ceil(
     totalPrice -
       totalPrice *
         ((OrderData.order.servicePercentage
-          ? parseFloat(OrderData.order.servicePercentage)
+          ? parseFloat(OrderData.order.servicePercentage) + returnPercentage
           : 0) /
           100) -
       parseFloat(OrderData.order.veritablePriceCNY) *
-        parseFloat(OrderData.order.veritableRate) +
-      (OrderData.order.addedValue ? parseInt(OrderData.order.addedValue) : 0)
+        parseFloat(OrderData.order.veritableRate) -
+      (OrderData.order.returnValue ? totalPrice : 0)
   );
 
   const combinedOrdersFiltered = OrderData.mergedOrders.filter((item) => {
@@ -578,6 +580,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
         paidAtSurcharge: OrderData.order.paidAtSurcharge,
         servicePercentage: OrderData.order.servicePercentage,
         addedValue: OrderData.order.addedValue,
+        takenAwayValue: OrderData.order.takenAwayValue,
+        returnValue: OrderData.order.returnValue,
         __v: OrderData.order.__v,
       });
     });
@@ -692,6 +696,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           paidAtSurcharge: OrderData.order.paidAtSurcharge,
           servicePercentage: OrderData.order.servicePercentage,
           addedValue: OrderData.order.addedValue,
+          takenAwayValue: OrderData.order.takenAwayValue,
+          returnValue: OrderData.order.returnValue,
           __v: OrderData.order.__v,
         });
         setUploading(false);
@@ -818,6 +824,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   paidAtSurcharge: OrderData.order.paidAtSurcharge,
                   servicePercentage: OrderData.order.servicePercentage,
                   addedValue: OrderData.order.addedValue,
+                  takenAwayValue: OrderData.order.takenAwayValue,
+                  returnValue: OrderData.order.returnValue,
                   __v: OrderData.order.__v,
                 });
                 setUploading(false);
@@ -937,6 +945,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
           paidAtSurcharge: OrderData.order.paidAtSurcharge,
           servicePercentage: OrderData.order.servicePercentage,
           addedValue: OrderData.order.addedValue,
+          takenAwayValue: OrderData.order.takenAwayValue,
+          returnValue: OrderData.order.returnValue,
           __v: OrderData.order.__v,
         });
       })
@@ -1086,6 +1096,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       paidAtSurcharge: OrderData.order.paidAtSurcharge,
       servicePercentage: OrderData.order.servicePercentage,
       addedValue: OrderData.order.addedValue,
+      takenAwayValue: OrderData.order.takenAwayValue,
+      returnValue: OrderData.order.returnValue,
       __v: OrderData.order.__v,
     });
   }, [data]);
@@ -1326,6 +1338,9 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
             );
           }
         })}
+      {OrderData.order.returnValue && (
+        <p className={styles["order-change__status_red"]}>Возврат</p>
+      )}
       <div className={styles["order-change__nav-bar"]}>
         <p
           className={`${styles["order-change__nav-item"]} ${
