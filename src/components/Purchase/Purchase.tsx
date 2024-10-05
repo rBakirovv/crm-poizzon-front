@@ -836,38 +836,58 @@ const Purchase = () => {
           orderItem.commission,
           orderItem.currentRate,
           orderItem.expressCost
-        )
-          .then((changedOrder) => {
-            OrderData.setOrder(changedOrder);
-          })
-          .then(() => {
-            if (data.reorderAmount !== "") {
-              setAddedValue(OrderData.order._id, data.reorderAmount);
-            } else if (data.reorderAmountMinus !== "") {
-              setTakenAwayValue(
-                OrderData.order._id,
-                `-${Math.abs(parseInt(data.reorderAmountMinus))}`
-              );
-            }
-          })
-          .then(() => {
-            setIsCancelPopupOpen(false);
-            setIsSubmitPopupOpen(false);
-          })
-          .then(() => {
-            closeCancelPopup();
-            closeSubmitPopup();
-          })
-          .then(() => {
-            setData({
-              poizon_code: data.poizon_code,
-              veritableRate: data.veritableRate,
-              veritablePriceCNY: OrderData.order.veritablePriceCNY,
-              reorder: "",
-              reorderAmount: "",
-              reorderAmountMinus: "",
-            });
-          });
+        ).then(() => {
+          if (data.reorderAmount !== "") {
+            setAddedValue(OrderData.order._id, data.reorderAmount)
+              .then((changedOrder) => {
+                OrderData.setOrder(changedOrder);
+              })
+              .then(() => {
+                setIsCancelPopupOpen(false);
+                setIsSubmitPopupOpen(false);
+              })
+              .then(() => {
+                closeCancelPopup();
+                closeSubmitPopup();
+              })
+              .then(() => {
+                setData({
+                  poizon_code: data.poizon_code,
+                  veritableRate: data.veritableRate,
+                  veritablePriceCNY: OrderData.order.veritablePriceCNY,
+                  reorder: "",
+                  reorderAmount: "",
+                  reorderAmountMinus: "",
+                });
+              });
+          } else if (data.reorderAmountMinus !== "") {
+            setTakenAwayValue(
+              OrderData.order._id,
+              `-${Math.abs(parseInt(data.reorderAmountMinus))}`
+            )
+              .then((changedOrder) => {
+                OrderData.setOrder(changedOrder);
+              })
+              .then(() => {
+                setIsCancelPopupOpen(false);
+                setIsSubmitPopupOpen(false);
+              })
+              .then(() => {
+                closeCancelPopup();
+                closeSubmitPopup();
+              })
+              .then(() => {
+                setData({
+                  poizon_code: data.poizon_code,
+                  veritableRate: data.veritableRate,
+                  veritablePriceCNY: OrderData.order.veritablePriceCNY,
+                  reorder: "",
+                  reorderAmount: "",
+                  reorderAmountMinus: "",
+                });
+              });
+          }
+        });
       });
     });
   }
@@ -1092,7 +1112,7 @@ const Purchase = () => {
         )}
       <div>
         {isReorderCheckbox && (
-          <div>
+          <div style={{marginTop: "1rem"}}>
             <TextInput
               label="Номер перезаказа"
               name="reorder"

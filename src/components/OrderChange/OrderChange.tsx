@@ -97,7 +97,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       parseFloat(OrderData.order.currentRate)
   );
 
-  const returnPercentage = OrderData.order.returnValue ? 1 : 0;
+  //const returnPercentage = OrderData.order.returnValue ? 1 : 0;
 
   const totalPrice = Math.ceil(
     priceRub +
@@ -123,12 +123,25 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
     totalPrice -
       totalPrice *
         ((OrderData.order.servicePercentage
-          ? parseFloat(OrderData.order.servicePercentage) + returnPercentage
+          ? parseFloat(OrderData.order.servicePercentage)
           : 0) /
           100) -
       parseFloat(OrderData.order.veritablePriceCNY) *
-        parseFloat(OrderData.order.veritableRate) -
+        parseFloat(OrderData.order.veritableRate) +
+      (OrderData.order.takenAwayValue
+        ? parseFloat(OrderData.order.takenAwayValue)
+        : 0) -
       (OrderData.order.returnValue ? totalPrice : 0)
+  );
+
+  const veritablePriceReturned = Math.ceil(
+    totalPrice -
+      totalPrice *
+        ((OrderData.order.servicePercentage
+          ? parseFloat(OrderData.order.servicePercentage) + 1
+          : 1) /
+          100 +
+          1)
   );
 
   const combinedOrdersFiltered = OrderData.mergedOrders.filter((item) => {
@@ -2045,7 +2058,11 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                 <TextInput
                   name="veritablePrice"
                   label="Истинная стоимость"
-                  value={veritablePrice.toString()}
+                  value={
+                    OrderData.order.returnValue
+                      ? veritablePriceReturned.toString()
+                      : veritablePrice.toString()
+                  }
                   required={true}
                   readonly={true}
                 />
