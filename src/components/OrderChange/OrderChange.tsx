@@ -119,6 +119,16 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       (OrderData.order.addedValue ? parseFloat(OrderData.order.addedValue) : 0)
   );
 
+  const totalPriceTakenAway = Math.ceil(
+    parseFloat(OrderData.order.veritablePriceCNY) *
+      parseFloat(OrderData.order.veritableRate) +
+      parseFloat(OrderData.order.priceDeliveryChina) +
+      parseFloat(OrderData.order.priceDeliveryRussia) +
+      parseFloat(OrderData.order.commission) +
+      data.promoCodePercent +
+      OrderData.order.expressCost
+  );
+
   const veritablePrice = Math.ceil(
     totalPrice -
       totalPrice *
@@ -2055,6 +2065,15 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   required={true}
                   readonly={true}
                 />
+                {OrderData.order.takenAwayValue !== "" && (
+                  <TextInput
+                    name="totalPriceTakenAway"
+                    label="Общая стоимость с учетом отриц. перезаказа"
+                    value={totalPriceTakenAway.toString()}
+                    required={true}
+                    readonly={true}
+                  />
+                )}
                 <TextInput
                   name="veritablePrice"
                   label="Истинная стоимость"
