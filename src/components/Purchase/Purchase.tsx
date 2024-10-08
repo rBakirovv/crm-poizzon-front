@@ -831,9 +831,12 @@ const Purchase = () => {
           orderItem.paidAt,
           orderItem.paidAtSplit,
           orderItem.paidAtSplitSecond,
+          /*
           data.reorderAmountMinus !== ""
             ? OrderData.order.priceCNY
             : orderItem.priceCNY,
+          */
+          orderItem.priceCNY,
           orderItem.priceDeliveryChina,
           orderItem.priceDeliveryRussia,
           orderItem.promoCodePercent,
