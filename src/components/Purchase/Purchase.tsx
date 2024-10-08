@@ -818,7 +818,9 @@ const Purchase = () => {
         reorderOrderCopy(
           OrderData.order._id,
           orderItem.servicePercentage,
-          orderItem.veritablePriceCNY,
+          data.reorderAmountMinus !== ""
+            ? OrderData.order.veritablePriceCNY
+            : orderItem.veritablePriceCNY,
           orderItem.veritableRate,
           orderItem.deliveryAddress,
           orderItem.deliveryEntity,
