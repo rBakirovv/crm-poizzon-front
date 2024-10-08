@@ -818,7 +818,9 @@ const Purchase = () => {
         reorderOrderCopy(
           OrderData.order._id,
           orderItem.servicePercentage,
-          orderItem.veritablePriceCNY,
+          data.reorderAmountMinus !== ""
+            ? OrderData.order.veritablePriceCNY
+            : orderItem.veritablePriceCNY,
           orderItem.veritableRate,
           orderItem.deliveryAddress,
           orderItem.deliveryEntity,
@@ -1112,7 +1114,7 @@ const Purchase = () => {
         )}
       <div>
         {isReorderCheckbox && (
-          <div style={{marginTop: "1rem"}}>
+          <div style={{ marginTop: "1rem" }}>
             <TextInput
               label="Номер перезаказа"
               name="reorder"
@@ -1187,7 +1189,10 @@ const Purchase = () => {
             <button
               onClick={handleReorderClick}
               type="button"
-              disabled={isReorderCheckbox && data.reorder === ""}
+              disabled={
+                (isReorderCheckbox && data.reorder === "") ||
+                (data.reorderAmount !== "" && data.reorderAmountMinus !== "")
+              }
               style={{ height: "max-content" }}
             >
               прим.
