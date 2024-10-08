@@ -818,9 +818,7 @@ const Purchase = () => {
         reorderOrderCopy(
           OrderData.order._id,
           orderItem.servicePercentage,
-          data.reorderAmountMinus !== ""
-            ? OrderData.order.veritablePriceCNY
-            : orderItem.veritablePriceCNY,
+          orderItem.veritablePriceCNY,
           orderItem.veritableRate,
           orderItem.deliveryAddress,
           orderItem.deliveryEntity,
@@ -831,7 +829,9 @@ const Purchase = () => {
           orderItem.paidAt,
           orderItem.paidAtSplit,
           orderItem.paidAtSplitSecond,
-          orderItem.priceCNY,
+          data.reorderAmountMinus !== ""
+            ? OrderData.order.priceCNY
+            : orderItem.priceCNY,
           orderItem.priceDeliveryChina,
           orderItem.priceDeliveryRussia,
           orderItem.promoCodePercent,
@@ -1189,10 +1189,7 @@ const Purchase = () => {
             <button
               onClick={handleReorderClick}
               type="button"
-              disabled={
-                (isReorderCheckbox && data.reorder === "") ||
-                (data.reorderAmount !== "" && data.reorderAmountMinus !== "")
-              }
+              disabled={isReorderCheckbox && data.reorder === ""}
               style={{ height: "max-content" }}
             >
               прим.
