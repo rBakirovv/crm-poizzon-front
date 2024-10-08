@@ -137,8 +137,8 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
   const veritablePriceReturned = Math.ceil(
     totalPrice -
       totalPrice *
-        ((OrderData.order.servicePercentage
-          ? parseFloat(OrderData.order.servicePercentage) + 1
+        ((OrderData.order.servicePercentage !== ""
+          ? parseFloat(OrderData.order.servicePercentage)
           : 1) /
           100 +
           1)
