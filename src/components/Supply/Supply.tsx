@@ -127,7 +127,6 @@ const Supply = observer(() => {
 
     getOrdersBySupplies(SupplyData.supply._id!)
       .then((orders) => {
-        console.log(orders);
         SupplyData.setSuppliesOrders(orders);
       })
       .then(() => setIsPreloader(false))
