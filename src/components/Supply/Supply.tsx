@@ -81,6 +81,38 @@ const Supply = observer(() => {
       return sum + parseFloat(current.priceDeliveryRussia);
     }, 0);
 
+  const totalSupplyVeritablePrice =
+    SupplyData.suppliesOrders &&
+    SupplyData.suppliesOrders.reduce(function (sum, current) {
+      const priceRub = Math.ceil(
+        parseFloat(current.priceCNY) * parseFloat(current.currentRate)
+      );
+
+      const totalPrice =
+        priceRub +
+        parseFloat(current.priceDeliveryChina) +
+        parseFloat(current.priceDeliveryRussia) +
+        parseFloat(current.commission) +
+        current.promoCodePercent +
+        current.expressCost +
+        (current.addedValue ? parseFloat(current.addedValue) : 0);
+
+      const veritablePrice = Math.ceil(
+        totalPrice -
+          totalPrice *
+            ((current.servicePercentage
+              ? parseFloat(current.servicePercentage)
+              : 0) /
+              100) -
+          parseFloat(current.veritablePriceCNY) *
+            parseFloat(current.veritableRate) +
+          (current.takenAwayValue ? parseFloat(current.takenAwayValue) : 0) -
+          (current.returnValue ? totalPrice : 0)
+      );
+
+      return sum + veritablePrice;
+    }, 0);
+
   const handleSelectDateChange = (e: React.SyntheticEvent) => {
     const target = e.target as HTMLInputElement;
 
@@ -95,6 +127,7 @@ const Supply = observer(() => {
 
     getOrdersBySupplies(SupplyData.supply._id!)
       .then((orders) => {
+        console.log(orders);
         SupplyData.setSuppliesOrders(orders);
       })
       .then(() => setIsPreloader(false))
@@ -322,6 +355,7 @@ const Supply = observer(() => {
           <>
             <p>Стоимость поставки Китай: {totalSupplyChina} ₽</p>
             <p>Стоимость поставки Россия: {totalSupplyRussia} ₽</p>
+            <p>Ист. стоимость: {totalSupplyVeritablePrice} ₽</p>
           </>
         )}
         <button
