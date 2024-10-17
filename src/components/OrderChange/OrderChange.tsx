@@ -18,6 +18,7 @@ import {
   uploadImages,
   deleteOrderImage,
   setIsSplitHandler,
+  changeVeritablePriceCNY,
 } from "../../utils/Order";
 import SubmitPopup from "../SubmitPopup/SubmitPopup";
 import { BASE_URL } from "../../utils/constants";
@@ -1008,7 +1009,16 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
       OrderData.order.promoCodePercent,
       OrderData.order.comment
     ).then((order) => {
-      OrderData.setOrder(order);
+      if (OrderData.order.status === "Черновик") {
+        changeVeritablePriceCNY(
+          OrderData.order._id,
+          OrderData.order.priceCNY
+        ).then((updatedVeritablePriceCNYOrder) => {
+          OrderData.setOrder(updatedVeritablePriceCNYOrder);
+        });
+      } else {
+        OrderData.setOrder(order);
+      }
     });
 
     window.scrollTo({
@@ -2098,7 +2108,7 @@ const OrderChange: FC<IOrderChangeProps> = observer(({ payments }) => {
                   className={`${styles["order-change__order-submit"]}`}
                   type="submit"
                 >
-                  Cохранить
+                  Сохранить
                 </button>
               </>
             )}
