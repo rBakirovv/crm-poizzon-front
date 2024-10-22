@@ -113,6 +113,7 @@ const Supply = observer(() => {
       return sum + veritablePrice;
     }, 0);
 
+  /*
   SupplyData.suppliesOrders &&
     SupplyData.suppliesOrders.map((current) => {
       const priceRub = Math.ceil(
@@ -145,6 +146,7 @@ const Supply = observer(() => {
         console.log(`Проблемный: ${current.orderId}`);
       }
     });
+    */
 
   const handleSelectDateChange = (e: React.SyntheticEvent) => {
     const target = e.target as HTMLInputElement;
@@ -337,6 +339,37 @@ const Supply = observer(() => {
                       (findItem) => findItem.poizonCode === item
                     );
 
+                    const priceRub = Math.ceil(
+                      parseFloat(currentOrder?.priceCNY!) *
+                        parseFloat(currentOrder?.currentRate!)
+                    );
+
+                    const totalPrice =
+                      priceRub +
+                      parseFloat(currentOrder?.priceDeliveryChina!) +
+                      parseFloat(currentOrder?.priceDeliveryRussia!) +
+                      parseFloat(currentOrder?.commission!) +
+                      currentOrder?.promoCodePercent! +
+                      currentOrder?.expressCost! +
+                      (currentOrder?.addedValue!
+                        ? parseFloat(currentOrder?.addedValue!)
+                        : 0);
+
+                    const veritablePrice = Math.ceil(
+                      totalPrice -
+                        totalPrice *
+                          ((currentOrder?.servicePercentage!
+                            ? parseFloat(currentOrder?.servicePercentage!)
+                            : 0) /
+                            100) -
+                        parseFloat(currentOrder?.veritablePriceCNY!) *
+                          parseFloat(currentOrder?.veritableRate!) +
+                        (currentOrder?.takenAwayValue!
+                          ? parseFloat(currentOrder?.takenAwayValue!)
+                          : 0) -
+                        (currentOrder?.returnValue! ? totalPrice : 0)
+                    );
+
                     return (
                       <li
                         key={index}
@@ -355,7 +388,10 @@ const Supply = observer(() => {
                             X
                           </button>
                         )}
-                        {item} {typeof (parseFloat(currentOrder?.veritableRate!) * parseFloat(currentOrder?.veritablePriceCNY!)) !== "number" ? "[!] problem [!]" : ""}
+                        {item}{" "}
+                        {typeof veritablePrice !== "number"
+                          ? "[!] problem [!]"
+                          : ""}
                       </li>
                     );
                   })}
