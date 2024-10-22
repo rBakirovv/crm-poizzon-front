@@ -110,7 +110,11 @@ const Supply = observer(() => {
           (current.returnValue ? totalPrice : 0)
       );
 
-      return sum + veritablePrice;
+      if (typeof veritablePrice !== "number") {
+        console.log(`Проблемный: ${current.orderId}`);
+      }
+
+      return sum + typeof veritablePrice === "number" ? veritablePrice : 0;
     }, 0);
 
   const handleSelectDateChange = (e: React.SyntheticEvent) => {
