@@ -388,7 +388,7 @@ const Supply = observer(() => {
                             X
                           </button>
                         )}
-                        {item}{" "}
+                        {item} {veritablePrice}
                         {typeof veritablePrice !== "number"
                           ? "[!] problem [!]"
                           : ""}
