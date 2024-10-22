@@ -355,7 +355,7 @@ const Supply = observer(() => {
                             X
                           </button>
                         )}
-                        {item}
+                        {item} {typeof (parseFloat(currentOrder?.veritableRate!) * parseFloat(currentOrder?.veritablePriceCNY!)) !== "number" ? "[!] problem [!]" : ""}
                       </li>
                     );
                   })}
