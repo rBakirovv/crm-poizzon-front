@@ -110,12 +110,41 @@ const Supply = observer(() => {
           (current.returnValue ? totalPrice : 0)
       );
 
+      return sum + veritablePrice;
+    }, 0);
+
+  SupplyData.suppliesOrders &&
+    SupplyData.suppliesOrders.map((current) => {
+      const priceRub = Math.ceil(
+        parseFloat(current.priceCNY) * parseFloat(current.currentRate)
+      );
+
+      const totalPrice =
+        priceRub +
+        parseFloat(current.priceDeliveryChina) +
+        parseFloat(current.priceDeliveryRussia) +
+        parseFloat(current.commission) +
+        current.promoCodePercent +
+        current.expressCost +
+        (current.addedValue ? parseFloat(current.addedValue) : 0);
+
+      const veritablePrice = Math.ceil(
+        totalPrice -
+          totalPrice *
+            ((current.servicePercentage
+              ? parseFloat(current.servicePercentage)
+              : 0) /
+              100) -
+          parseFloat(current.veritablePriceCNY) *
+            parseFloat(current.veritableRate) +
+          (current.takenAwayValue ? parseFloat(current.takenAwayValue) : 0) -
+          (current.returnValue ? totalPrice : 0)
+      );
+
       if (typeof veritablePrice !== "number") {
         console.log(`Проблемный: ${current.orderId}`);
       }
-
-      return sum + typeof veritablePrice === "number" ? veritablePrice : 0;
-    }, 0);
+    });
 
   const handleSelectDateChange = (e: React.SyntheticEvent) => {
     const target = e.target as HTMLInputElement;
