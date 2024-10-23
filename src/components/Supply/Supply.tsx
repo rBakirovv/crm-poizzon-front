@@ -374,6 +374,9 @@ const Supply = observer(() => {
                       <li
                         key={index}
                         className={`${styles["supply__code"]} ${
+                          Number.isNaN(veritablePrice) &&
+                          styles["supply__code_red"]
+                        } ${
                           currentOrder?.status !== "На складе в РФ" &&
                           currentOrder?.status !== "Доставляется" &&
                           currentOrder?.status !== "Завершён" &&
@@ -388,10 +391,7 @@ const Supply = observer(() => {
                             X
                           </button>
                         )}
-                        {item} {veritablePrice}
-                        {typeof veritablePrice !== "number"
-                          ? "[!] problem [!]"
-                          : ""}
+                        {item} ${Number.isNaN(veritablePrice) ? "NaN" : ""}
                       </li>
                     );
                   })}
