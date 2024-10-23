@@ -391,7 +391,7 @@ const Supply = observer(() => {
                             X
                           </button>
                         )}
-                        {item} ${Number.isNaN(veritablePrice) ? "NaN" : ""}
+                        {item} {Number.isNaN(veritablePrice) ? "NaN" : ""}
                       </li>
                     );
                   })}
