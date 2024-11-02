@@ -1267,7 +1267,7 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData, deliveryMethodData }
                   <strong>Экспресс-доставка</strong>{" "}
                   <a
                     className={styles["order__express-link"]}
-                    href="https://teletype.in/@dewupoizonn/rYSKU7LuwOp"
+                    href="https://telegra.ph/Aviadostavka--bystro-i-nadezhno-11-02"
                     target="_blank"
                     rel="noreferrer"
                   >
