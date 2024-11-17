@@ -13,6 +13,13 @@
   bottom: 0;
   right: 0;
   overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.user-data-modal--active {
+  opacity: 1;
+  visibility: visible;
 }
 
 .user-data-modal__container {

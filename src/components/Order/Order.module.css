@@ -595,3 +595,24 @@
   font-size: 0.9rem;
   margin: 1rem 0 0;
 }
+
+.original_original__coCuN {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.25rem 0 0 20px;
+  cursor: pointer;
+}
+
+.original_original_main__cdIzR {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #58C94E;
+  font-weight: 700;
+}
+
+.original_help__SGOz_ {
+  display: flex;
+  align-items: center;
+}

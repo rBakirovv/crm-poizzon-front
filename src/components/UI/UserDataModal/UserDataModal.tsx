@@ -351,7 +351,11 @@ const UserDataModal: FC<IUserDataModalProps> = ({
   return (
     <>
       {isPreload && <PreloaderClient />}
-      <div className={styles["user-data-modal"]}>
+      <div
+      className={`${styles["user-data-modal"]} ${
+        styles["user-data-modal--active"]
+      }`}
+    >
         <button
           className={styles["user-data-modal__close"]}
           onClick={closeUserDataModalActive}

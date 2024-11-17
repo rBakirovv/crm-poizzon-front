@@ -34,6 +34,7 @@ import {
   getPaymentOnepay,
 } from "../../utils/PaySystem";
 import PreloaderClient from "../UI/PreloaderClient/PreloaderClient";
+import OriginalModal from "../UI/OriginalModal/OriginalModal";
 
 interface IOrderProps {
   currentOrder: IOrder;
@@ -71,7 +72,11 @@ dayjs.updateLocale("en", {
   ],
 });
 
-const Order: FC<IOrderProps> = ({ currentOrder, mergedData, deliveryMethodData }) => {  
+const Order: FC<IOrderProps> = ({
+  currentOrder,
+  mergedData,
+  deliveryMethodData,
+}) => {
   const router = useRouter();
 
   const [isBrowser, setIsBrowser] = useState<boolean>(false);
@@ -104,6 +109,8 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData, deliveryMethodData }
   const [isPreload, setIsPreload] = useState(false);
 
   const [isUserDataModalActive, setIsUserDataModalActive] = useState(true);
+
+  const [isOriginalModalActive, setIsOriginalModalActive] = useState(false);
 
   const priceRub = Math.ceil(
     parseFloat(currentOrder.priceCNY) * parseFloat(currentOrder.currentRate)
@@ -163,6 +170,14 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData, deliveryMethodData }
 
   function closeOverudeOrderPopup() {
     setIsOverudeOrderModalOpen(false);
+  }
+
+  function openOriginalModalPopup() {
+    setIsOriginalModalActive(true);
+  }
+
+  function closeOriginalModalPopup() {
+    setIsOriginalModalActive(false);
   }
 
   function nextImage(images: Array<IOrderImages>) {
@@ -1035,6 +1050,67 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData, deliveryMethodData }
           </h2>
           <div className={styles["order__number-container"]}>
             Заказ № {currentOrder.orderId}
+          </div>
+
+          <div
+            className={styles["original_original__coCuN"]}
+            onClick={openOriginalModalPopup}
+            style={{ width: "max-content" }}
+          >
+            <div className={styles["original_original_main__cdIzR"]}>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 22C6.47667 22 2 17.5233 2 12C2 6.47667 6.47667 2 12 2C17.5233 2 22 6.47667 22 12C22 17.5233 17.5233 22 12 22Z"
+                  fill="#58C94E"
+                />
+                <path
+                  d="M16 10L11 15L8 12"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Оригинал
+            </div>
+            <div className={styles["original_help__SGOz_"]}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="19"
+                fill="none"
+                data-sentry-element="QuestionMarkSvg"
+                data-sentry-source-file="original.tsx"
+              >
+                <g stroke="#fff" opacity="0.6">
+                  <rect
+                    width="17"
+                    height="17.199"
+                    x="0.5"
+                    y="0.5"
+                    stroke-opacity="0.2"
+                    rx="8.5"
+                  ></rect>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9.207 5h.011M8 8.625h1.208v4.833h1.209"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+            <span
+              className="original-on-click_original_on_click__ayDKG"
+              data-sentry-component="OriginalOnClick"
+              data-sentry-source-file="original-on-click.tsx"
+            ></span>
           </div>
 
           <div className={styles["order__status-box-container"]}>
@@ -1914,6 +1990,10 @@ const Order: FC<IOrderProps> = ({ currentOrder, mergedData, deliveryMethodData }
             deliveryMethodData={deliveryMethodData}
           />
         )}
+      <OriginalModal
+        closeOriginalModalPopup={closeOriginalModalPopup}
+        isOriginalModalActive={isOriginalModalActive}
+      />
       {isPreload && <PreloaderClient />}
     </section>
   );
