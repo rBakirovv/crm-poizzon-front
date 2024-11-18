@@ -10,11 +10,18 @@ const OriginalModal: FC<IOriginalModalProps> = ({
   closeOriginalModalPopup,
   isOriginalModalActive,
 }) => {
+  const handleOverlayClick = (event: React.SyntheticEvent) => {
+    if (event.target === event.currentTarget) {
+      closeOriginalModalPopup();
+    }
+  };
+
   return (
     <div
       className={`${styles["user-data-modal"]} ${
         isOriginalModalActive && styles["user-data-modal--active"]
       }`}
+      onClick={handleOverlayClick}
     >
       <button
         onClick={closeOriginalModalPopup}
